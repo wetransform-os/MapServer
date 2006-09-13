@@ -1,0 +1,316 @@
+mapserver (4.8.4-1) unstable; urgency=low
+
+  * New upstream release
+  * Update for new Python policy (Closes: #373461, #360576)
+  * Install shp2mysql.pl as shp2mysql
+  * Remove question from long desc for php mapscript debconf questions
+  * Remove shp2pdf, since mapserver is build without PDFlib (non-free)
+  * Suggest libdbi-perl for mapserver-bin for shp2mysql
+  * Fix shebang lines in debian/php*-config
+  * Remove python mapscript build dirs on clean
+  * Bump Standards-Version (no changes)
+  * Fix gdal build-dep - new upstream is libgdal1-1.3.2-dev (Closes: #383140, #383830, #386073)
+  * Update debconf templates and translations
+
+ -- Paul Wise <pabs3@bonedaddy.net>  Mon, 21 Aug 2006 09:47:48 +0800
+
+mapserver (4.8.3-2) unstable; urgency=low
+
+  [ Petter Reinholdtsen ]
+  * Fix typos in the config and prerm scripts for
+    php[45]-mapscript. (Closes: #363115)
+
+ -- Petter Reinholdtsen <pere@debian.org>  Mon,  1 May 2006 08:43:05 +0200
+
+mapserver (4.8.3-1) unstable; urgency=low
+
+  [ Schuyler Erle ]
+  * New upstream bugfix release 4.8.3
+  * Include patch for sarge backporting and instructions in
+    README.sarge.
+
+  [ Paul Wise ]
+  * New upstream bugfix release 4.8.2
+    - drop 10_python_build: useless, only for Windows
+  * Add php_mapscript.so to apache2 php.ini as well. This is a workaround
+    for #346184, upstream is looking into it.
+  * Install shp2pdf and tile4ms too. Closes: #359615
+  * Change priority to extra in line with ftpmaster override
+
+  [ Petter Reinholdtsen ]
+  * Remove the generated files mapscript/csharp/Makefile and
+    mapscript/php3/Makefile when cleaning up the source directory, to
+    avoid noise in the debian diff.
+
+ -- Petter Reinholdtsen <pere@debian.org>  Sat,  1 Apr 2006 11:14:50 +0200
+
+mapserver (4.8.1-2) unstable; urgency=low
+
+  [ Paul Wise ]
+  * Make the build target no longer depend on build-indep. This is not
+    policy-compliant (see 7.6 and 4.8), but it is needed to work around
+    the fact that the autobuilders call debian/rules build (instead of
+    build-arch), but do not install Build-Depends-Indep packages.
+    build-indep is an indirect dependency of the binary and binary-indep
+    targets, so non-autobuilder builds will still work.
+
+ -- Petter Reinholdtsen <pere@debian.org>  Mon, 20 Feb 2006 11:10:25 +0100
+
+mapserver (4.8.1-1) unstable; urgency=low
+
+  [ Paul Wise ]
+  * New upstream release
+  * Build mapscript html docs using python-docutils and add to mapserver-doc
+  * Add some more things to mapserver-doc
+  * Move the bindings examples into examples subdirs, remove execute perms
+  * Add a TODO.Debian so we don't forget some things
+  * Completely revamp copyright information, remove php4-mapscript.copyright
+  * Prevent FTBFS when using sudo instead of fakeroot (Closes: #351869)
+  * Change Priority to match the override set by the ftpmasters
+
+ -- Petter Reinholdtsen <pere@debian.org>  Sun, 19 Feb 2006 12:51:08 +0100
+
+mapserver (4.6.2-1) unstable; urgency=low
+
+  [ Paul Wise ]
+  * New upstream bugfix release
+  * debian/control: Use Homepage recommendations from the developers reference
+  * Remove useless files: README.debian, php*-mapscript.dirs
+  * Use HISTORY.TXT as the changelog
+  * Change mapserver-doc Architecture to all instead of any
+  * Add a watch file that works with the mapserver plone website
+  * Enable geos support
+  * Move mapserv cgi to /usr/lib/cgi-bin, since it is useless in /usr/bin
+  * Switch from priority optional to extra since mapserver depends on proj
+    and gdal, which are both priority extra.
+  * Remove minor version from Standards-Version, since it is not needed.
+  * Fix gdal build-dep - new upstream is libgdal1-1.3.1-dev (Closes: #350437)
+  * Update debian/rules to use -arch/-indep targets for binary/install/build
+  * Fix case of Build-Conflicts in debian/control
+
+ -- Petter Reinholdtsen <pere@debian.org>  Tue, 31 Jan 2006 20:46:47 +0100
+
+mapserver (4.6.1-6) unstable; urgency=low
+
+  * Install php extensions into the directory output by php-configN and depend
+    on the phpapi virtual package specified by php-configN (Closes: #339007)
+  * Add myself to Uploaders.
+  * Upload sponsored by Petter Reinholdtsen.
+
+ -- Paul Wise <pabs3@bonedaddy.net>  Tue,  6 Dec 2005 15:35:52 +0800
+
+mapserver (4.6.1-5) unstable; urgency=low
+
+  [ Petter Reinholdtsen ]
+  * Add support for php5 mapscript.  New binary package
+    php5-mapscript.  Based on patch from Jon Saints.  (Closes: #333057)
+  * Renamed templates name from php4/* to php4-mapscript/* to match
+    package name.
+  * Fix typo 'Curently'->'Currently' in package description.
+
+ -- Petter Reinholdtsen <pere@debian.org>  Sun, 13 Nov 2005 18:23:30 +0100
+
+mapserver (4.6.1-4) unstable; urgency=low
+
+  * Add Swedish translation by Daniel Nylander. (Closes: #333097)
+  * Change build depend from libcurl3-dev to
+    'libcurl3-gnutls-dev | libcurl3-dev', to cope with the recent
+    change with libcurl and still be easy to backport to sarge.
+    Based on patch from Jon Saints.  (Closes: #336834)
+  * Build-conflict on libcurl3-openssl-dev, to make sure the requested
+    curl library is used by the autobuilders.
+  * Set priority extra for php4-mapscript, to match override files.
+
+ -- Petter Reinholdtsen <pere@debian.org>  Fri,  4 Nov 2005 23:29:24 +0100
+
+mapserver (4.6.1-3) unstable; urgency=low
+
+  * Make sure the strptime() return value have the correct
+    type. (Closes: #328030)
+
+ -- Petter Reinholdtsen <pere@debian.org>  Wed, 14 Sep 2005 00:16:15 +0200
+
+mapserver (4.6.1-2) unstable; urgency=low
+
+  * Change priority from extra to optional to match override file.
+
+ -- Petter Reinholdtsen <pere@debian.org>  Sun, 11 Sep 2005 11:57:10 +0200
+
+mapserver (4.6.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * Dependencies are now installable in sid.  (Closes: #325593)
+  * Use '${misc:Depends}' instead of 'debconf' as dependency to allow
+    cdebconf to be used.
+  * Change depend for php4-mapscript from 'libapache-mod-php4' to
+    'libapache-mod-php4 | phpapi-20020918', as it work with several
+    php packages. (Closes: #322887)
+  * Reindend all copyright files to make them easier to read.  Use
+    last email address of Thomas Sondag in them.  Remove
+    perl-mapscript.copyright as it is identical to changelog.  Keep
+    php4-mapscript.copyright as it is slightly different.
+  * Remove emacs headers from the botton of the changelog and fix invalid
+    date string, to keep dpkg-genchanges happy.
+  * Avoid bashism in debian/php4-mapscript.prerm.
+
+ -- Petter Reinholdtsen <pere@debian.org>  Sun, 11 Sep 2005 11:16:44 +0200
+
+mapserver (4.6.0-1) experimental; urgency=low
+
+  * New upstream release.
+  * Uploading to experimental to get the new php4-mapscript package
+    past NEW while we wait for the c++ transition.
+  * Petter Reinholdtsen
+    - Update the section of the packages to match the debian archive
+      override file.
+    - Change the priority of all packages from optional to extra, as
+      this package depend on proj and gdal which is priority extra.
+    - rm 35_init_vars, not needed any more.
+    - Updated to standard version 3.6.2.1.
+  * Tilman Koschnick
+    - Reactivate php support. (Closes: #306194)
+    - debian/patches/:
+      - update 10_python_build.dpatch
+      - update 20_php_build.dpatch
+      - rm 30_typo_gdal.dpatch (included upstream)
+      - update 35_init_vars.dpatch
+      - rm 40_array_init.dpatch (included upstream)
+      - update 50_clean.dpatch
+  * Debconf translations
+    - Added French (fr) from Steve Petruzzello. (Closes: #303159)
+    - Added Vietnamese (vi) from Clytie Siddall. (Closes: #312750)
+    - Added Czech (cs) from Miroslav Kure. (Closes: #318277)
+
+ -- Petter Reinholdtsen <pere@debian.org>  Tue,  2 Aug 2005 20:37:08 +0200
+
+mapserver (4.4.1-2) unstable; urgency=low
+
+  * Petter Reinholdtsen
+    - Fix typo in package description.
+    - Build using gcc from unstable. (Closes: #302114)
+    - Remove generated config.log in debian/rules, until 50_clean.dpatch
+      is available upstream, to make sure the file is removed at the
+      right time.
+    - Prepare the debconf question for translations.  The PHP support
+      is currently disabled, so the template text is currently unused.
+
+ -- Petter Reinholdtsen <pere@debian.org>  Thu, 31 Mar 2005 00:42:36 +0200
+
+mapserver (4.4.1-1) unstable; urgency=low
+
+  * Petter Reinholdtsen
+    - Initial upload. (Closes: #138971)
+    - Set the Debian GIS project as the maintainer, and Thomas Sondag,
+      Schuyler Erle and myself as uploaders.
+    - Do not build libmapserver-dev any more.  It can't be used without
+      the defines used during compilation, the ABI is not stable, and
+      there are no client programs using it at the moment.
+    - 40_array_init.dpatch: New patch to make array initialization
+      in mapprojhack.c ANSI C.  The patch is already in upstream CVS.
+    - Reindent the license text in debian/copyright, to make it easier
+      to read.
+    - 50_clean.dpatch: New patch to make sure 'make distclean'
+      complete the work even if config.* is missing.
+    - Drop php support, as the php version in Debian is built without
+      the required regex support.  Document the changes in
+      60_php_drop.dpatch.
+
+ -- Petter Reinholdtsen <pere@debian.org>  Sat, 19 Mar 2005 23:49:59 +0100
+
+mapserver (4.4.1-0.dgis.unstable.2) unstable; urgency=low
+
+  * Make big change in packages descriptions fields
+  * Add suggested packages
+  * add pere patch :
+  * Drop the home made patch system, and use dpatch instead.
+  * Remove tabs from empty lines in rules.
+  * Remove dh_testroot where it isn't needed to keep debuild happy and
+    make sure clean and build can be done as a normal user.
+  * Use $(RM) instead of 'rm -f' and 'rm'.
+  * Petter Reinholdtsen
+    - 30_typo_gdal.dpatch: New patch to fix typo in mapdrawgdal.c.
+      The patch is already in upstream CVS.
+    - 35_init_vars.dpatch: New patch to initialize a few variables.
+      The patch is sent upstream.
+
+ -- Thomas Sondag <thomas@microdop.org>  Fri, 21 Jan 2005 15:09:09 +0100
+
+mapserver (4.4.1-0.dgis.unstable.1) unstable; urgency=low
+
+  * update release number 
+  * New upstram release
+  * Major change to rule the files for make a double build one for php 
+    and another one for the rest
+  * Change dep to php4-dev
+  
+ -- Thomas Sondag <thomas@microdop.org>  Fri, 07 Jan 2005 16:16:37 +0100
+
+mapserver (4.2.5-2) unstable; urgency=low
+
+  * Add python Binding
+  * Add patch to Makefile.vc for python binding
+  * Add mapserver binary and tools
+  * Add mapserver documentation package
+  * Change name of php-mapscript to php4-mapscript
+  * Change dependency of php4-mapscript to php4-cgi-mapscript
+  * Add more documentation to perl php mapscript
+  * Add configure section to debian rules
+  * configure with thread safe support
+
+ -- Thomas Sondag <thomas@microdop.org>  Fri, 29 Oct 2004 13:06:50 +0200 
+
+mapserver (4.2.5-1) unstable; urgency=low
+
+  * New upstream version 
+
+ -- Thomas Sondag <thomas@microdop.org>  Mon, 25 Oct 2004 19:13:21 +0200 
+
+mapserver (4.2.0-2) unstable; urgency=low
+
+  * Build For Sarge
+  * Removing libming support (Where is it ? not found in Sarge)
+  
+ -- Thomas Sondag <thomas@microdop.org>  Sun, 25 Jul 2004 15:45:20 +0200
+
+mapserver (4.2.0-1) stable; urgency=low
+
+  * New upstream version
+
+ -- Thomas Sondag <thomas@microdop.org>  Sun,  4 Jul 2004 01:23:00 +0200
+
+mapserver (4.0.2-1) stable; urgency=low
+
+  * New upstream version
+  * adding --without-tiff for fixing problem with perl-mapscript
+
+ -- Thomas Sondag <thomas@microdop.org>  Wed, 04 Feb 2004 19:24:56 +0100
+ 
+mapserver (4.0-1) stable; urgency=low
+
+  * New release
+
+ -- Thomas Sondag <thomas@microdop.org>  Sun, 12 Oct 2003 18:44:57 +0200 
+
+mapserver (3.6.4-5) stable; urgency=low
+
+  * Add patch for msWriteImage function (write image directly to stdout)
+
+ -- Thomas Sondag <thomas.sondag@educagri.fr>  Mon, 28 Jul 2003 14:17:27 +0100
+
+mapserver (3.6.4-4) stable; urgency=low
+
+  * hum nothing 
+
+ -- Thomas Sondag <thomas.sondag@educagri.fr>  Mon, 13 May  2003 14:17:27 +0100
+
+mapserver (3.6.4-3) unstable; urgency=low
+
+  * Added proj 
+
+ -- Thomas Sondag <thomas.sondag@educagri.fr>  Mon, 07 Feb 2003 14:17:27 +0100
+
+mapserver (3.6.4-1) unstable; urgency=low
+
+  * Initial release.
+
+ -- Thomas Sondag <thomas.sondag@educagri.fr>  Mon, 13 Jan 2003 13:32:27 +0100

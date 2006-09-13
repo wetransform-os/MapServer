@@ -1,0 +1,22 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 50_clean.dpatch by Petter Reinholdtsen <pere@hungry.com>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Make sure 'make distclean' complete the job even if config.* is
+## DP: missing.  Remove generated makefiles as well.
+
+
+@DPATCH@
+diff -urNad mapserver.orig/Makefile.in mapserver/Makefile.in
+--- mapserver.orig/Makefile.in	2005-07-29 16:13:03.000000000 +0200
++++ mapserver/Makefile.in	2005-07-29 20:11:45.357687219 +0200
+@@ -342,7 +342,8 @@
+ 
+ distclean:
+ 	$(MAKE) clean
+-	rm config.*
++	$(RM) Makefile mapscript/java/Makefile
++	$(RM) config.log config.status
+ 	if test -d autom4te.cache ; then \
+ 	  rm -f -r autom4te.cache ; \
+ 	fi

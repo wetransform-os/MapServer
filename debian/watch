@@ -1,0 +1,2 @@
+version=2
+http://mapserver.gis.umn.edu/download/current/ (?:.*/)?mapserver-?_?([\d+\.]+|\d+)\.tar.* debian uupdate

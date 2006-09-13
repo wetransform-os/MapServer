@@ -1,0 +1,21 @@
+Backporting MapServer 4.8.* to Sarge
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Schuyler Erle <schuyler@nocat.net> 1 Apr 2006
+
+1) Patch the debian/control and debian/rules files.
+
+$ cd debian
+$ patch -p2 <patches/sarge-backport.patch
+
+2) Change the version to 4.8.x-0.0.dgis.sarge.1.
+
+$ cd ..
+$ debchange 
+
+3) Rebuild.
+
+$ dpkg-buildpackage -sa
+
+4) Upload.
+
+=30=

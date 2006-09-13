@@ -1,0 +1,288 @@
+#!/usr/bin/make -f
+# Made with the aid of debmake, by Christoph Lameter,
+# based on the sample debian/rules file for GNU hello by Ian Jackson.
+
+# Uncomment this to turn on verbose mode. 
+#export DH_VERBOSE=1
+
+# This is the debhelper compatability version to use.
+export DH_COMPAT=5
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+ 
+package=mapserver
+
+version=$(shell expr `pwd` : '.*-\([0-9.]*\)')
+version_major=$(shell expr `pwd` : '.*-\([0-9]*\).[0-9.]*')
+CURDIR := $(shell pwd)
+PYVERS=$(shell pyversions -r debian/control)
+PHP4API=$(shell php-config4 --phpapi)
+PHP4DIR=$(shell php-config4 --extension-dir)
+PHP5API=$(shell php-config5 --phpapi)
+PHP5DIR=$(shell php-config5 --extension-dir)
+
+# Configure config :
+# Not using non free libpdf
+# Explicit disable direct goetiff support, 
+# it's better to use gdal geotiff support for stability reasons
+
+
+COMMON_CONFIG=	--prefix=/usr \
+		--enable-debug \
+		--without-tiff \
+		--without-pdf \
+		--with-gd=/usr \
+		--with-freetype=/usr \
+		--with-zlib=/usr \
+		--with-png=/usr \
+		--with-xpm=/usr \
+		--with-jpeg=/usr \
+		--with-gdal \
+		--with-ogr \
+		--with-proj \
+		--with-eppl \
+		--with-postgis \
+		--with-wcs \
+		--with-wms \
+		--with-wmsclient \
+		--with-wfs \
+		--with-wfsclient \
+		--with-threads \
+		--with-geos
+
+rstoptions=--stylesheet=mapscript.css --link-stylesheet 
+
+configure-stamp: patch
+	dh_testdir
+	./configure $(COMMON_CONFIG)
+
+	touch configure-stamp
+
+configure-php4-stamp: patch clean-first-build
+	dh_testdir
+	./configure $(COMMON_CONFIG) \
+		--with-php=/usr/include/php4 \
+		--with-php-regex-dir=/usr/include/php4/regex
+
+	touch configure-php4-stamp
+
+configure-php5-stamp: patch clean-first-build
+	dh_testdir
+	./configure $(COMMON_CONFIG) \
+		--with-php=/usr/include/php5 
+
+	touch configure-php5-stamp
+
+# This is the correct, policy-compliant build target
+#build: build-indep build-arch
+
+# This is the incorrect, non-policy compliant build target
+# it is nessecary because the auto-builders use build, but don't install Build-Depends-Indep
+build: build-arch
+
+build-indep: build-indep-stamp
+build-indep-stamp:
+	dh_testdir
+
+	mkdir html
+	rst2html $(rstoptions) mapscript/doc/imagery-HOWTO.txt > html/imagery-HOWTO.html
+	rst2html $(rstoptions) mapscript/doc/mapfile-HOWTO.txt > html/mapfile-HOWTO.html
+	rst2html $(rstoptions) mapscript/doc/mapscript.txt > html/mapscript.html
+	rst2html $(rstoptions) mapscript/doc/python.txt > html/python.html
+	rst2html $(rstoptions) mapscript/doc/querying-HOWTO.txt > html/querying-HOWTO.html
+	rst2html $(rstoptions) rfc/ms-rfc-1.txt > html/ms-rfc-1.html
+	rst2html $(rstoptions) rfc/ms-rfc-2.txt > html/ms-rfc-2.html
+	rst2html $(rstoptions) rfc/ms-rfc-3.txt > html/ms-rfc-3.html
+	rst2html $(rstoptions) rfc/ms-rfc-4.txt > html/ms-rfc-4.html
+	rst2html $(rstoptions) rfc/ms-rfc-5.txt > html/ms-rfc-5.html
+	rst2html $(rstoptions) rfc/ms-rfc-6.txt > html/ms-rfc-6.html
+	rst2html $(rstoptions) rfc/ms-rfc-7.txt > html/ms-rfc-7.html
+	rst2html $(rstoptions) rfc/ms-rfc-8.txt > html/ms-rfc-8.html
+	cp mapscript/doc/default.css html
+	cp mapscript/doc/mapscript.css html
+
+	touch build-indep-stamp
+
+build-arch: build-arch-stamp
+build-arch-stamp: configure-stamp
+	dh_testdir
+
+	# Build binary lib
+	$(MAKE) mapscriptvars || touch mapscriptvars
+	$(MAKE)  
+
+	# Build Perl mapscript
+	cd $(CURDIR)/mapscript/perl && \
+		perl Makefile.PL INSTALLDIRS=vendor \
+		&& $(MAKE) LD_RUN_PATH="" OPTIMIZE="-O2 -g -W -Wall"
+
+	# Build python
+	cd $(CURDIR)/mapscript/python && \
+	  set -e; for python in $(PYVERS); do $$python setup.py build; done
+
+	touch build-arch-stamp
+
+build-php4-stamp: configure-php4-stamp
+	dh_testdir
+
+	# Build php_mapscript
+	$(MAKE)
+
+build-php5-stamp: configure-php5-stamp
+	dh_testdir
+	-cd mapscript/php3 && \
+		$(MAKE) clean
+	# Build php_mapscript
+	$(MAKE)
+
+# This is needed to do 'make clean', but will be removed by the clean
+# targets.  The end result is that 'debuild clean' only can execute
+# once.  Hack around this problem by faking the creation when make fail.
+
+clean-first-build:
+	dh_testdir
+
+	-$(RM) configure-stamp build-arch-stamp build-indep-stamp
+
+	-$(RM) tile4ms
+	-$(MAKE) mapscriptvars || touch mapscriptvars
+	-cd mapscript/perl && $(MAKE) distclean
+	-cd mapscript/python && \
+	  for python in $(PYVERS); do $$python setup.py clean; done
+	-$(RM) -rf mapscript/python/build
+	-$(RM) mapscriptvars
+
+	-$(RM) mapscript/perl/mapscript.i \
+		mapscript/tcl/mapscript.i \
+		mapscript/python/mapscript.i
+
+	-$(MAKE) distclean
+
+	# Remove some generated files until 50_clean.dpatch is applied upstream.
+	-$(RM) Makefile mapscript/java/Makefile
+	-$(RM) mapscript/csharp/Makefile mapscript/php3/Makefile
+	-$(RM) config.log config.status
+
+	-$(RM) -rf html/
+
+	-$(RM) debian/.#* .#*
+
+
+clean: unpatch clean-first-build
+	dh_testdir
+	dh_clean
+	-$(RM) configure-php4-stamp configure-php5-stamp build-php4-stamp build-php5-stamp install-arch-stamp install-indep-stamp install-php4-stamp install-php5-stamp
+	-$(MAKE) distclean
+
+install-indep: install-indep-stamp
+install-indep-stamp: build-indep
+	dh_testdir -i
+	dh_testroot -i
+	dh_installdirs -i
+	dh_install -i
+	touch install-indep-stamp
+
+install-arch: install-arch-stamp install-php4-stamp install-php5-stamp
+install-arch-stamp: build-arch
+	dh_testdir -a
+	dh_testroot -a
+	dh_installdirs -a
+
+	-mkdir -p debian/tmp/usr/lib/  debian/tmp/usr/include/ \
+		debian/tmp/usr/lib/cgi-bin/ \
+		debian/tmp/usr/bin
+
+	# CGI mapserver
+	install -m755 mapserv debian/tmp/usr/lib/cgi-bin/mapserv
+
+	# Perl mapscript
+	cd $(CURDIR)/mapscript/perl && \
+        $(MAKE) install PREFIX=$(CURDIR)/debian/perl-mapscript/usr/ \
+	                SITEPREFIX=$(CURDIR)/debian/perl-mapscript/usr/
+
+	# Python mapscript
+	cd $(CURDIR)/mapscript/python && set -e ; \
+	  for python in $(PYVERS); do \
+	    $$python setup.py install --root=$(CURDIR)/debian/python-mapscript ; \
+	  done
+
+	# Mapserver  Binary
+	install -m755 legend scalebar shp2img shptree \
+		shptreetst shptreevis sortshp tile4ms \
+		debian/tmp/usr/bin
+	install -m755 shp2mysql.pl debian/tmp/usr/bin/shp2mysql
+	touch install-arch-stamp
+
+
+install-php4-stamp: build-php4-stamp
+	dh_testdir
+	dh_testroot
+
+	-mkdir -p debian/tmp$(PHP4DIR)
+
+	# php4-mapscript
+	install -m644 mapscript/php3/php_mapscript.so \
+		debian/tmp$(PHP4DIR)
+
+	echo 'misc:Depends=phpapi-'$(PHP4API) >> debian/php4-mapscript.substvars
+                      
+	touch install-php4-stamp
+
+install-php5-stamp: build-php5-stamp
+	dh_testdir
+	dh_testroot
+
+	-mkdir -p debian/tmp$(PHP5DIR)
+
+	# php5-mapscript
+	install -m644 mapscript/php3/php_mapscript.so \
+		debian/tmp$(PHP5DIR)
+                      
+	echo 'misc:Depends=phpapi-'$(PHP5API) >> debian/php5-mapscript.substvars
+
+	touch install-php5-stamp
+
+binary-indep: install-indep
+	dh_testdir -i
+	dh_testroot -i
+	dh_installchangelogs -i HISTORY.TXT
+	dh_installdocs -i
+	dh_installdebconf -i
+	dh_compress -i
+	dh_link -i
+	dh_fixperms -i
+	dh_installdeb -i
+	dh_gencontrol -i
+	dh_md5sums -i
+	dh_builddeb -i
+
+binary-arch: install-arch
+	dh_testdir -a
+	dh_testroot -a
+	dh_movefiles -a
+	dh_installchangelogs -a HISTORY.TXT
+	dh_installdocs -a
+	dh_installexamples -a
+	chmod a-x debian/php*-mapscript/usr/share/doc/php*-mapscript/examples/*.phtml
+	dh_installdebconf -a
+	dh_pycentral -ppython-mapscript
+	dh_python -ppython-mapscript
+	dh_compress -a
+	dh_link -a
+	dh_strip -a
+	dh_fixperms -a
+	dh_makeshlibs -a 
+	dh_installdeb -a
+	dh_shlibdeps -a
+	dh_perl -pperl-mapscript 
+	dh_perl -pmapserver-bin
+	dh_gencontrol -a
+	dh_md5sums -a
+	dh_builddeb -a
+
+binary: binary-indep binary-arch
+
+.PHONY: build build-arch build-indep clean binary-indep binary-arch binary install install-indep install-arch
+
+include /usr/share/dpatch/dpatch.make

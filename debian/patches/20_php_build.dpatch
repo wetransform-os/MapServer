@@ -1,0 +1,30 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 20_php_build.dpatch by Thomas Sondag <thomas@microdop.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Fix PHP build?
+
+@DPATCH@
+diff -urNad mapserver.orig/mapscript/php3/php_mapscript.c mapserver/mapscript/php3/php_mapscript.c
+--- mapserver.orig/mapscript/php3/php_mapscript.c	2005-07-29 19:28:04.757404710 +0200
++++ mapserver/mapscript/php3/php_mapscript.c	2005-07-29 19:31:00.332457547 +0200
+@@ -1735,7 +1735,18 @@
+     char        szPath[MS_MAXPATHLEN], szFname[MS_MAXPATHLEN];
+     char        szNewPath[MS_MAXPATHLEN];
+ #endif
+-
++	
++    if (sapi_module.name && ((strcmp(sapi_module.name, "cgi") == 0) ||
++        (strcmp(sapi_module.name, "cgi-fcgi") == 0) ||
++      (strcmp(sapi_module.name, "cli") == 0)))
++    {
++         php3_error(E_ERROR,  
++		"This build of mapscript can't be load as a '%s' module for "
++		"stability reason, but only with php as an apache DSO.\n",
++	  sapi_module.name);
++	  RETURN_FALSE;
++    }
++    
+     nArgs = ARG_COUNT(ht);
+     if ((nArgs != 1 && nArgs != 2) ||
+         getParameters(ht, nArgs, &pFname, &pNewPath) != SUCCESS)

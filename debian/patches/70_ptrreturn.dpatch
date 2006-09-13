@@ -1,0 +1,22 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 70_ptrreturn.dpatch by Dann Frazier
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Make sure the strptime() return value have the correct type.
+## DP: Fixes bug #328030.
+
+@DPATCH@
+--- mapserver/maptime.c.orig	2005-09-13 11:12:32.000000000 +0200
++++ mapserver/maptime.c	2005-09-13 11:13:22.000000000 +0200
+@@ -44,9 +44,11 @@
+  *
+  */
+ 
++#define _XOPEN_SOURCE
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <time.h>
++#include <strings.h>
+ 
+ #include "map.h"
+ #include "maptime.h"

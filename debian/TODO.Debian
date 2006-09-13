@@ -1,0 +1,5 @@
+Debian mapserver TODO list
+
+Include some more bindings when someone requests them.
+Rename perl-mapscript to libmapscript-perl.
+When ming enters debian, re-enable flash support (340489).
