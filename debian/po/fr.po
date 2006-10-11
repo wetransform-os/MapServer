@@ -13,15 +13,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: mapserver_4.4.1-2\n"
+"Project-Id-Version: mapserver_4.8.4-1\n"
 "Report-Msgid-Bugs-To: pkg-grass-devel@lists.alioth.debian.org\n"
 "POT-Creation-Date: 2006-08-21 09:44+0800\n"
-"PO-Revision-Date: 2005-04-02 08:37+0100\n"
+"PO-Revision-Date: 2006-09-14 18:26+0100\n"
 "Last-Translator: Steve Petruzzello <dlist@bluewin.ch>\n"
 "Language-Team: French <debian-l10n-french@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-SourceCharset: iso-8859-15\n"
 
 #. Type: boolean
 #. Description
@@ -32,7 +33,6 @@ msgstr "Faut-il ajouter ${extname} à /etc/php4/${sapiconfig}/php.ini ?"
 #. Type: boolean
 #. Description
 #: ../php4-mapscript.templates:1001
-#, fuzzy
 msgid ""
 "You are installing ${extname} support for php4 and it is not yet enabled in "
 "the configuration for the ${sapiconfig} SAPI. Enabling this extension will "
@@ -40,7 +40,8 @@ msgid ""
 msgstr ""
 "Vous êtes en train d'installer la gestion de ${extname} pour PHP4, mais elle "
 "n'est pas encore activée dans la configuration de la SAPI ${sapiconfig}. "
-"Veuillez indiquer si vous souhaitez activer cette extension maintenant."
+"Veuillez indiquer si vous souhaitez activer cette extension maintenant, ce "
+"qui permettra aux scripts PHP4 de l'utiliser."
 
 #. Type: boolean
 #. Description

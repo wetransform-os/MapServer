@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: mapserver\n"
 "Report-Msgid-Bugs-To: pkg-grass-devel@lists.alioth.debian.org\n"
 "POT-Creation-Date: 2006-08-21 09:44+0800\n"
-"PO-Revision-Date: 2005-07-14 15:13+0200\n"
+"PO-Revision-Date: 2006-09-24 18:26+0200\n"
 "Last-Translator: Miroslav Kure <kurem@debian.cz>\n"
 "Language-Team: Czech <debian-l10n-czech@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
@@ -32,14 +32,14 @@ msgstr "Má se ${extname} přidat do /etc/php4/${sapiconfig}/php.ini?"
 #. Type: boolean
 #. Description
 #: ../php4-mapscript.templates:1001
-#, fuzzy
 msgid ""
 "You are installing ${extname} support for php4 and it is not yet enabled in "
 "the configuration for the ${sapiconfig} SAPI. Enabling this extension will "
 "allow php4 scripts to use it."
 msgstr ""
 "Instalujete podporu ${extname} pro php4, která ještě není povolena v "
-"konfiguraci pro ${sapiconfig} SAPI. Chcete povolit tento modul?"
+"konfiguraci pro ${sapiconfig} SAPI. Pokud toto rozšíření povolíte, budete "
+"je moci využívat v php4 skriptech."
 
 #. Type: boolean
 #. Description

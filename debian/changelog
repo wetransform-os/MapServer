@@ -1,3 +1,11 @@
+mapserver (4.10.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * debian/po/fr.po: updated. (Closes: #388573)
+  * debian/po/cz.po: updated. (Closes: #389220)
+
+ -- Fabio Tranchitella <kobold@debian.org>  Tue, 10 Oct 2006 23:19:48 +0200
+
 mapserver (4.8.4-1) unstable; urgency=low
 
   * New upstream release
