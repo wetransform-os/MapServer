@@ -1,3 +1,9 @@
+mapserver (4.10.0-3) unstable; urgency=low
+
+  * debian/control: build-depends on libpq-dev. (Closes: #396565)
+
+ -- Fabio Tranchitella <kobold@debian.org>  Thu,  2 Nov 2006 11:44:17 +0100
+
 mapserver (4.10.0-2) unstable; urgency=low
 
   * Upload to unstable.
