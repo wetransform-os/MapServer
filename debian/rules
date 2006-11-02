@@ -272,7 +272,7 @@ binary-arch: install-arch
 	dh_link -a
 	dh_strip -a
 	dh_fixperms -a
-	dh_makeshlibs -a 
+	dh_makeshlibs -a
 	dh_installdeb -a
 	dh_shlibdeps -a
 	dh_perl -pperl-mapscript 
