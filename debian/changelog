@@ -1,7 +1,7 @@
 mapserver (4.10.0-4) unstable; urgency=medium
 
   * debian/po/pt.po: updated. (Closes: #401386)
-  * debian/po/fr.po: updated. (Closes: #399395)
+  * debian/po/fr.po: added. (Closes: #399395)
 
  -- Fabio Tranchitella <kobold@debian.org>  Mon, 18 Dec 2006 16:38:22 +0100
 
