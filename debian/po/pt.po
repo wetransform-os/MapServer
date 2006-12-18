@@ -1,0 +1,52 @@
+# Portuguese translation for mapserver's debconf messages
+# Rui Branco <ruipb@debianpt.org>, 2006.
+# 2006-12-03 - Rui Branco - Initial translation
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: mapserver 4.10.0-3\n"
+"Report-Msgid-Bugs-To: pkg-grass-devel@lists.alioth.debian.org\n"
+"POT-Creation-Date: 2006-08-21 09:44+0800\n"
+"PO-Revision-Date: 2006-12-03 01:19+0000\n"
+"Last-Translator: Rui Branco <ruipb@debianpt.org>\n"
+"Language-Team: Native Portuguese <traduz@debianpt.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit"
+
+#. Type: boolean
+#. Description
+#: ../php4-mapscript.templates:1001
+msgid "Should ${extname} be added to /etc/php4/${sapiconfig}/php.ini?"
+msgstr "Deverá o ${extname} ser adicionado ao /etc/php4/${sapiconfig}/php.ini?"
+
+#. Type: boolean
+#. Description
+#: ../php4-mapscript.templates:1001
+msgid ""
+"You are installing ${extname} support for php4 and it is not yet enabled in "
+"the configuration for the ${sapiconfig} SAPI. Enabling this extension will "
+"allow php4 scripts to use it."
+msgstr ""
+"Está a instalar o suporte ${extname} para o php4 e não está ainda activo "
+"na configuração para o ${sapiconfig} SAPI. Ao activar esta extensão permitirá "
+"que os scripts php4 o usem."
+
+#. Type: boolean
+#. Description
+#: ../php4-mapscript.templates:2001
+msgid "Should ${extname} be removed from /etc/php4/${sapiconfig}/php.ini?"
+msgstr "Deverá o ${extname} ser removido de /etc/php4/${sapiconfig}/php.ini?"
+
+#. Type: boolean
+#. Description
+#: ../php4-mapscript.templates:2001
+msgid ""
+"You are removing ${extname} support for php4, but it is still enabled in the "
+"configuration for the ${sapiconfig} SAPI.  Leaving this in place will "
+"probably cause problems when trying to use PHP."
+msgstr ""
+"Está a remover o suporte ${extname} para o php4, no entanto está ainda "
+"activo na configuração para o ${sapiconfig}·SAPI.  Ao deixar isto no local irá "
+"provavelmente causar problemas quando tentar utilizar PHP."
+
