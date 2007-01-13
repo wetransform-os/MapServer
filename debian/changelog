@@ -1,3 +1,9 @@
+mapserver (4.10.0-5) unstable; urgency=medium
+
+  * debian/po/de.po: added, thanks to Alwin Meschede. (Closes: #405727)
+
+ -- Fabio Tranchitella <kobold@debian.org>  Sat, 13 Jan 2007 22:54:20 +0100
+
 mapserver (4.10.0-4) unstable; urgency=medium
 
   * debian/po/pt.po: updated. (Closes: #401386)
