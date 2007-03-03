@@ -1,0 +1,51 @@
+# Japanese debconf templates translation for mapserver.
+# Copyright (C) 2007 Noritada Kobayashi
+# This file is distributed under the same license as the mapserver package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: mapserver (debconf) 4.10.0-5\n"
+"Report-Msgid-Bugs-To: pkg-grass-devel@lists.alioth.debian.org\n"
+"POT-Creation-Date: 2006-08-21 09:44+0800\n"
+"PO-Revision-Date: 2007-03-02 23:19+0900\n"
+"Last-Translator: Noritada Kobayashi <nori1@dolphin.c.u-tokyo.ac.jp>\n"
+"Language-Team: Japanese <debian-japanese@lists.debian.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: boolean
+#. Description
+#: ../php4-mapscript.templates:1001
+msgid "Should ${extname} be added to /etc/php4/${sapiconfig}/php.ini?"
+msgstr "${extname} を /etc/php4/${sapiconfig}/php.ini に追加しますか?"
+
+#. Type: boolean
+#. Description
+#: ../php4-mapscript.templates:1001
+msgid ""
+"You are installing ${extname} support for php4 and it is not yet enabled in "
+"the configuration for the ${sapiconfig} SAPI. Enabling this extension will "
+"allow php4 scripts to use it."
+msgstr ""
+"${extname} サポートを php4 にインストールしていますが、この拡張機能は "
+"${sapiconfig} SAPI の設定ではまだ有効になっていません。有効にすると php4 スク"
+"リプトが拡張機能を使用できるようになります。"
+
+#. Type: boolean
+#. Description
+#: ../php4-mapscript.templates:2001
+msgid "Should ${extname} be removed from /etc/php4/${sapiconfig}/php.ini?"
+msgstr "${extname} を /etc/php4/${sapiconfig}/php.ini から削除しますか?"
+
+#. Type: boolean
+#. Description
+#: ../php4-mapscript.templates:2001
+msgid ""
+"You are removing ${extname} support for php4, but it is still enabled in the "
+"configuration for the ${sapiconfig} SAPI.  Leaving this in place will "
+"probably cause problems when trying to use PHP."
+msgstr ""
+"${extname} サポートを php4 から削除していますが、この拡張機能は "
+"${sapiconfig} SAPI の設定でまだ有効になっています。このまま有効にして放ってお"
+"くと、PHP を使用しようとするときにおそらく問題が生じます。"

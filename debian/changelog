@@ -1,3 +1,10 @@
+mapserver (4.10.0-6) unstable; urgency=low
+
+  * debian/po/de.po: added, thanks to Kobayashi Noritada. (Closes: #413119)
+  * Change my email address now that I'm a Debian Developer
+
+ -- Paul Wise <pabs@debian.org>  Sat,  3 Mar 2007 17:59:20 +0900
+
 mapserver (4.10.0-5) unstable; urgency=medium
 
   * debian/po/de.po: added, thanks to Alwin Meschede. (Closes: #405727)
