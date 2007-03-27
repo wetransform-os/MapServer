@@ -12,7 +12,7 @@ msgstr ""
 "Language-Team: Native Portuguese <traduz@debianpt.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit"
+"Content-Transfer-Encoding: 8bit\n"
 
 #. Type: boolean
 #. Description
@@ -28,8 +28,8 @@ msgid ""
 "the configuration for the ${sapiconfig} SAPI. Enabling this extension will "
 "allow php4 scripts to use it."
 msgstr ""
-"Está a instalar o suporte ${extname} para o php4 e não está ainda activo "
-"na configuração para o ${sapiconfig} SAPI. Ao activar esta extensão permitirá "
+"Está a instalar o suporte ${extname} para o php4 e não está ainda activo na "
+"configuração para o ${sapiconfig} SAPI. Ao activar esta extensão permitirá "
 "que os scripts php4 o usem."
 
 #. Type: boolean
@@ -47,6 +47,5 @@ msgid ""
 "probably cause problems when trying to use PHP."
 msgstr ""
 "Está a remover o suporte ${extname} para o php4, no entanto está ainda "
-"activo na configuração para o ${sapiconfig}·SAPI.  Ao deixar isto no local irá "
-"provavelmente causar problemas quando tentar utilizar PHP."
-
+"activo na configuração para o ${sapiconfig}·SAPI.  Ao deixar isto no local "
+"irá provavelmente causar problemas quando tentar utilizar PHP."

@@ -1,3 +1,9 @@
+mapserver (4.10.0-7) unstable; urgency=low
+
+  * debian/po/nl.po added. (Closes: #415504)
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Tue, 27 Mar 2007 23:41:46 +0200
+
 mapserver (4.10.0-6) unstable; urgency=low
 
   * debian/po/ja.po: added, thanks to Kobayashi Noritada. (Closes: #413119)

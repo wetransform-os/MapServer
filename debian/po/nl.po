@@ -1,0 +1,42 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: mapserver\n"
+"Report-Msgid-Bugs-To: pkg-grass-devel@lists.alioth.debian.org\n"
+"POT-Creation-Date: 2006-08-21 09:44+0800\n"
+"PO-Revision-Date: 2007-03-09 19:15+0100\n"
+"Last-Translator: Bart Cornelis <cobaco@skolelinux.no>\n"
+"Language-Team: debian-l10n-dutch <debian-l10n-dutch@lists.debian.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Dutch\n"
+
+#. Type: boolean
+#. Description
+#: ../php4-mapscript.templates:1001
+msgid "Should ${extname} be added to /etc/php4/${sapiconfig}/php.ini?"
+msgstr "Wilt u dat ${extname} toegevoegd wordt in /etc/php4/${sapiconfig}/php.ini ?"
+
+#. Type: boolean
+#. Description
+#: ../php4-mapscript.templates:1001
+msgid "You are installing ${extname} support for php4 and it is not yet enabled in the configuration for the ${sapiconfig} SAPI. Enabling this extension will allow php4 scripts to use it."
+msgstr "U bent bezig ${extname}-ondersteuning te installeren voor php4. Dit is echter nog niet geactiveerd in het configuratiebestand voor de ${sapiconfig} SAPI. Activeren van deze extensie laat php4-scripts toe om deze te gebruiken."
+
+#. Type: boolean
+#. Description
+#: ../php4-mapscript.templates:2001
+msgid "Should ${extname} be removed from /etc/php4/${sapiconfig}/php.ini?"
+msgstr "Wilt u dat ${extname} verwijderd wordt uit /etc/php4/${sapiconfig}/php.ini ?"
+
+#. Type: boolean
+#. Description
+#: ../php4-mapscript.templates:2001
+msgid "You are removing ${extname} support for php4, but it is still enabled in the configuration for the ${sapiconfig} SAPI.  Leaving this in place will probably cause problems when trying to use PHP."
+msgstr "U bent bezig om ${extname}-ondersteuning voor php4 te verwijderen. Dit is echter nog steeds geactiveerd in de configuratie voor ${sapiconfig} SAPI. Als u dit laat staan zal dit waarschijnlijk problemen veroorzaken wanneer u probeert om PHP te gebruiken."
+
