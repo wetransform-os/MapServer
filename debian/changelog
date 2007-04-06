@@ -1,8 +1,9 @@
-mapserver (4.10.0-7) unstable; urgency=low
+mapserver (4.10.0-7) UNRELEASED; urgency=low
 
   * debian/po/nl.po added. (Closes: #415504)
+  * Moved to gdal 1.4.0 dependency.
 
- -- Francesco Paolo Lovergine <frankie@debian.org>  Tue, 27 Mar 2007 23:41:46 +0200
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Fri,  6 Apr 2007 12:39:45 +0200
 
 mapserver (4.10.0-6) unstable; urgency=low
 
