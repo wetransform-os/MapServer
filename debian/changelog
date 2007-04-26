@@ -5,10 +5,13 @@ mapserver (4.10.1-1) unstable; urgency=low
   * Moved to gdal 1.4.0 dependency.
   * Added missing libhdf5-serial-dev and libsql3-dev build-deps.
 
+    Note that now mapserver uses gdal-config --dep-libs, so pre-checking what
+    libraries are required for linking is mandatory to avoid FTBFS.
+
   [ Fabio Tranchitella ]
   * New upstream release.
 
- -- Francesco Paolo Lovergine <frankie@debian.org>  Tue, 24 Apr 2007 23:12:16 +0200
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Thu, 26 Apr 2007 11:16:20 +0200
 
 mapserver (4.10.0-6) unstable; urgency=low
 
