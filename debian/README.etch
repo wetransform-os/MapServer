@@ -1,0 +1,7 @@
+Note for packagers
+------------------
+
+Please, maintain compatibility with Etch to allow easy backporting until possible.
+The control.etch files should be updated for backports and used instead of the
+plain control file. All PHP4 stuff is still present for the same reason.
+

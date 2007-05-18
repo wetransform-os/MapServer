@@ -2,15 +2,28 @@ Source: mapserver
 Section: devel
 Priority: extra
 Maintainer: Debian GIS Project <pkg-grass-devel@lists.alioth.debian.org>
-Uploaders: Schuyler Erle <schuyler@nocat.net>, Petter Reinholdtsen <pere@debian.org>, Paul Wise <pabs@debian.org>, Fabio Tranchitella <kobold@debian.org>, Francesco Paolo Lovergine <frankie@debian.org>
+Uploaders: Thomas Sondag <thomas@microdop.org>, Schuyler Erle <schuyler@nocat.net>, Petter Reinholdtsen <pere@debian.org>, Paul Wise <pabs@debian.org>, Fabio Tranchitella <kobold@debian.org>
 Standards-Version: 3.7.2
-Build-Depends: debhelper (>= 5.0.37.2), dpatch, libcurl4-gnutls-dev | libcurl4-dev, libpng12-dev,
+Build-Depends: debhelper (>= 5.0.37.2), dpatch, libcurl3-gnutls-dev | libcurl3-dev, libpng12-dev,
  zlib1g-dev (>= 1.1.4), libgd2-xpm-dev (>= 2.0.1-10), libfreetype6-dev (>= 2.0.9),
- libjpeg62-dev, libgdal1-dev (>=1.4.0), proj, libwww-dev, libpq-dev, php5-dev, swig,
+ libjpeg62-dev, libgdal1-dev (>=1.4.0), proj, libwww-dev, libpq-dev, php4-dev, php5-dev, swig,
  python-all, python-all-dev, python-central (>= 0.5), libgeos-dev (>= 2.2.3-2)
 Build-Depends-Indep: python-docutils
 Build-Conflicts: libcurl3-openssl-dev
 XS-Python-Version: all
+
+Package: php4-mapscript
+Section: web
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Suggests: mapserver-bin, mapserver-doc
+Replaces: php-mapscript
+Conflicts: php-mapscript
+Description: module for php4-cgi to use mapserver
+ PHP MapScript allows you to use the mapserver functionalities with PHP web
+ scripting language.
+ .
+ Currently work only with PHP as an Apache DSO.
 
 Package: php5-mapscript
 Section: web
@@ -57,7 +70,7 @@ Package: mapserver-bin
 Section: misc
 Architecture: any
 Depends: ${shlibs:Depends}, ${perl:Depends}
-Suggests: libdbi-perl, perl-mapscript, python-mapscript, cgi-mapserver, mapserver-doc, php5-mapscript
+Suggests: libdbi-perl, perl-mapscript, python-mapscript, php4-mapscript, cgi-mapserver, mapserver-doc
 Description: mapserver binary utilities
  Binary utilities for using MapServer with the command line.
  .
@@ -67,7 +80,7 @@ Description: mapserver binary utilities
  The MapServer system includes MapScript that allows popular
  scripting languages such as :
  .
-   * PHP provided by php5-mapscript.
+   * PHP provided by php4-mapscript.
    * Python provided by python-mapscript.
    * Perl provided by perl-mapscript.
    * Java is not supported by any package.
@@ -80,7 +93,7 @@ Package: mapserver-doc
 Section: doc
 Architecture: all
 Depends: ${shlibs:Depends}
-Suggests: perl-mapscript, python-mapscript, php5-mapscript, cgi-mapserver
+Suggests: perl-mapscript, python-mapscript, php4-mapscript, cgi-mapserver
 Description: documentation for mapserver
  Some short documentation and examples for MapServer.
  .
@@ -90,7 +103,7 @@ Description: documentation for mapserver
  The MapServer system includes MapScript that allows using popular
  scripting languages such as :
  .
-   * PHP provided by php5-mapscript.
+   * PHP provided by php4-mapscript.
    * Python provided by python-mapscript.
    * Perl provided by perl-mapscript.
    * Java is not supported by any package.

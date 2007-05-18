@@ -1,13 +1,20 @@
 mapserver (4.10.1-1) unstable; urgency=low
 
   [ Francesco Paolo Lovergine ]
-  * debian/po/nl.po added. (Closes: #415504)
-  * Moved to gdal 1.4.0 dependency.
+  * debian/po/nl.po added. (closes: #415504)
+  * Moved to gdal 1.4.1 dependency. (closes: #424635, #423538)
+  * Removed php4 support (closes: #418313)
+  * Updated long descriptions.
+  * Removed Thomas Sondag among Uploaders (last contribute dated more than 2 years ago).
+  * Moved to libcurl4 build-deps.
+  * Added a debian/README.etch for notes on backporting.
+  * A new debian/control.etch file has been introduced to retain etch compatibility.
+    All php4 related files have been maintained for the same reason. Please, don't remove them!
 
   [ Fabio Tranchitella ]
   * New upstream release.
 
- -- Francesco Paolo Lovergine <frankie@debian.org>  Thu, 26 Apr 2007 11:16:20 +0200
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Fri, 18 May 2007 16:06:27 +0200
 
 mapserver (4.10.0-6) unstable; urgency=low
 
