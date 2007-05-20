@@ -17,8 +17,8 @@ version=$(shell expr `pwd` : '.*-\([0-9.]*\)')
 version_major=$(shell expr `pwd` : '.*-\([0-9]*\).[0-9.]*')
 CURDIR := $(shell pwd)
 PYVERS=$(shell pyversions -r debian/control)
-PHP4API=$(shell php-config4 --phpapi)
-PHP4DIR=$(shell php-config4 --extension-dir)
+#PHP4API=$(shell php-config4 --phpapi)
+#PHP4DIR=$(shell php-config4 --extension-dir)
 PHP5API=$(shell php-config5 --phpapi)
 PHP5DIR=$(shell php-config5 --extension-dir)
 
@@ -59,13 +59,13 @@ configure-stamp: patch
 
 	touch configure-stamp
 
-configure-php4-stamp: patch clean-first-build
-	dh_testdir
-	./configure $(COMMON_CONFIG) \
-		--with-php=/usr/include/php4 \
-		--with-php-regex-dir=/usr/include/php4/regex
-
-	touch configure-php4-stamp
+#configure-php4-stamp: patch clean-first-build
+#	dh_testdir
+#	./configure $(COMMON_CONFIG) \
+#		--with-php=/usr/include/php4 \
+#		--with-php-regex-dir=/usr/include/php4/regex
+#
+#	touch configure-php4-stamp
 
 configure-php5-stamp: patch clean-first-build
 	dh_testdir
@@ -123,11 +123,11 @@ build-arch-stamp: configure-stamp
 
 	touch build-arch-stamp
 
-build-php4-stamp: configure-php4-stamp
-	dh_testdir
-
-	# Build php_mapscript
-	$(MAKE)
+#build-php4-stamp: configure-php4-stamp
+#	dh_testdir
+#
+#	# Build php_mapscript
+#	$(MAKE)
 
 build-php5-stamp: configure-php5-stamp
 	dh_testdir
@@ -172,7 +172,8 @@ clean-first-build:
 clean: unpatch clean-first-build
 	dh_testdir
 	dh_clean
-	-$(RM) configure-php4-stamp configure-php5-stamp build-php4-stamp build-php5-stamp install-arch-stamp install-indep-stamp install-php4-stamp install-php5-stamp
+#	-$(RM) configure-php4-stamp configure-php5-stamp build-php4-stamp build-php5-stamp install-arch-stamp install-indep-stamp install-php4-stamp install-php5-stamp
+	-$(RM) configure-php5-stamp build-php5-stamp install-arch-stamp install-indep-stamp install-php4-stamp install-php5-stamp
 	-$(MAKE) distclean
 
 install-indep: install-indep-stamp
@@ -183,7 +184,8 @@ install-indep-stamp: build-indep
 	dh_install -i
 	touch install-indep-stamp
 
-install-arch: install-arch-stamp install-php4-stamp install-php5-stamp
+#install-arch: install-arch-stamp install-php4-stamp install-php5-stamp
+install-arch: install-arch-stamp install-php5-stamp
 install-arch-stamp: build-arch
 	dh_testdir -a
 	dh_testroot -a
@@ -215,19 +217,19 @@ install-arch-stamp: build-arch
 	touch install-arch-stamp
 
 
-install-php4-stamp: build-php4-stamp
-	dh_testdir
-	dh_testroot
-
-	-mkdir -p debian/tmp$(PHP4DIR)
-
-	# php4-mapscript
-	install -m644 mapscript/php3/php_mapscript.so \
-		debian/tmp$(PHP4DIR)
-
-	echo 'misc:Depends=phpapi-'$(PHP4API) >> debian/php4-mapscript.substvars
-                      
-	touch install-php4-stamp
+#install-php4-stamp: build-php4-stamp
+#	dh_testdir
+#	dh_testroot
+#
+#	-mkdir -p debian/tmp$(PHP4DIR)
+#
+#	# php4-mapscript
+#	install -m644 mapscript/php3/php_mapscript.so \
+#		debian/tmp$(PHP4DIR)
+#
+#	echo 'misc:Depends=phpapi-'$(PHP4API) >> debian/php4-mapscript.substvars
+#                      
+#	touch install-php4-stamp
 
 install-php5-stamp: build-php5-stamp
 	dh_testdir

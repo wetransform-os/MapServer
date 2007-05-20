@@ -1,10 +1,10 @@
 Source: mapserver
 Section: devel
-Priority: extra
+Priority: optional
 Maintainer: Debian GIS Project <pkg-grass-devel@lists.alioth.debian.org>
 Uploaders: Schuyler Erle <schuyler@nocat.net>, Petter Reinholdtsen <pere@debian.org>, Paul Wise <pabs@debian.org>, Fabio Tranchitella <kobold@debian.org>, Francesco Paolo Lovergine <frankie@debian.org>
 Standards-Version: 3.7.2
-Build-Depends: debhelper (>= 5.0.37.2), dpatch, libcurl4-gnutls-dev | libcurl4-dev, libpng12-dev,
+Build-Depends: debhelper (>= 5.0.37.2), dpatch, libcurl4-gnutls-dev, libpng12-dev,
  zlib1g-dev (>= 1.1.4), libgd2-xpm-dev (>= 2.0.1-10), libfreetype6-dev (>= 2.0.9),
  libjpeg62-dev, libgdal1-dev (>=1.4.0), proj, libwww-dev, libpq-dev, php5-dev, swig,
  python-all, python-all-dev, python-central (>= 0.5), libgeos-dev (>= 2.2.3-2)
@@ -21,7 +21,7 @@ Description: module for php5-cgi to use mapserver
  PHP MapScript allows you to use the MapServer functionalities with php web
  scripting language.
  .
- Currently work only with php as an Apache DSO.
+ This module currently works only with php as an Apache DSO.
 
 Package: perl-mapscript
 Section: perl
