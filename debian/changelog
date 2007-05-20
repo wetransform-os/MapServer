@@ -9,17 +9,18 @@ mapserver (4.10.1-1) unstable; urgency=low
   * Moved to libcurl4 build-deps.
   * Added a debian/README.etch for notes on backporting.
   * Moved to debhelper compatibility level 5.
+  * Removed superfluous dh_python in debian/rules.
   * A new debian/control.etch file has been introduced to retain etch compatibility.
     All php4 related files have been maintained for the same reason. Please, don't remove them!
   * Merging other relevant patches from BSP NMU 4.10.0-6.1. Thanks Luk Claes.
   	- Fixed package priority to meet overrides
-  	- Fix language in description (closes: #416449)                                                                                           
-  	- Add Dutch debconf translation (closes: #415504)                                                                                          
+  	- Fix language in description (closes: #416449)
+  	- Add Dutch debconf translation (closes: #415504)
 
   [ Fabio Tranchitella ]
   * New upstream release.
 
- -- Francesco Paolo Lovergine <frankie@debian.org>  Fri, 18 May 2007 16:06:27 +0200
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Mon, 21 May 2007 00:07:28 +0200
 
 mapserver (4.10.0-6) unstable; urgency=low
 
