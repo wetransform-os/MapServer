@@ -1,0 +1,19 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 80_gdal_lib.dpatch by Francesco Paolo Lovergine <frankie@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+diff -urNad mapserver-4.10.1~/configure mapserver-4.10.1/configure
+--- mapserver-4.10.1~/configure	2007-01-10 23:51:58.000000000 +0100
++++ mapserver-4.10.1/configure	2007-04-26 16:22:59.000000000 +0200
+@@ -9029,7 +9029,7 @@
+ 
+ if test -n "$GDAL_ENABLED" -o "$OGR_ENABLED"; then
+ 
+-  GDAL_LIB=`$GDAL_CONFIG --libs`' '`$GDAL_CONFIG --dep-libs`
++  GDAL_LIB=`$GDAL_CONFIG --libs`
+   GDAL_INC=`$GDAL_CONFIG --cflags`
+ 
+ fi
