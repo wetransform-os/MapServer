@@ -18,10 +18,10 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Suggests: mapserver-bin, mapserver-doc
 Description: module for php5-cgi to use mapserver
- PHP MapScript allows you to use the MapServer functionalities with php web
+ PHP MapScript allows you to use the MapServer functionalities with PHP web
  scripting language.
  .
- This module currently works only with php as an Apache DSO.
+ This module currently works only with PHP as an Apache DSO.
 
 Package: perl-mapscript
 Section: perl

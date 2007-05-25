@@ -1,8 +1,11 @@
 mapserver (4.10.2-1) unstable; urgency=low
 
   * New upstream release.
+    (closes: #412836)
+  * Fixed PHP case in long descriptions.
+    (closes: #425987)
 
- -- Francesco Paolo Lovergine <frankie@debian.org>  Thu, 24 May 2007 14:30:20 +0200
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Fri, 25 May 2007 15:04:16 +0200
 
 mapserver (4.10.1-1) unstable; urgency=low
 
