@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mapserver 4.10.0-3\n"
 "Report-Msgid-Bugs-To: pkg-grass-devel@lists.alioth.debian.org\n"
-"POT-Creation-Date: 2006-08-21 09:44+0800\n"
+"POT-Creation-Date: 2007-06-15 15:55+0200\n"
 "PO-Revision-Date: 2006-12-03 01:19+0000\n"
 "Last-Translator: Rui Branco <ruipb@debianpt.org>\n"
 "Language-Team: Native Portuguese <traduz@debianpt.org>\n"
@@ -16,17 +16,19 @@ msgstr ""
 
 #. Type: boolean
 #. Description
-#: ../php4-mapscript.templates:1001
-msgid "Should ${extname} be added to /etc/php4/${sapiconfig}/php.ini?"
+#: ../php5-mapscript.templates:1001
+#, fuzzy
+msgid "Should ${extname} be added to /etc/php5/${sapiconfig}/php.ini?"
 msgstr "Deverá o ${extname} ser adicionado ao /etc/php4/${sapiconfig}/php.ini?"
 
 #. Type: boolean
 #. Description
-#: ../php4-mapscript.templates:1001
+#: ../php5-mapscript.templates:1001
+#, fuzzy
 msgid ""
-"You are installing ${extname} support for php4 and it is not yet enabled in "
+"You are installing ${extname} support for php5 and it is not yet enabled in "
 "the configuration for the ${sapiconfig} SAPI. Enabling this extension will "
-"allow php4 scripts to use it."
+"allow php5 scripts to use it."
 msgstr ""
 "Está a instalar o suporte ${extname} para o php4 e não está ainda activo na "
 "configuração para o ${sapiconfig} SAPI. Ao activar esta extensão permitirá "
@@ -34,15 +36,17 @@ msgstr ""
 
 #. Type: boolean
 #. Description
-#: ../php4-mapscript.templates:2001
-msgid "Should ${extname} be removed from /etc/php4/${sapiconfig}/php.ini?"
+#: ../php5-mapscript.templates:2001
+#, fuzzy
+msgid "Should ${extname} be removed from /etc/php5/${sapiconfig}/php.ini?"
 msgstr "Deverá o ${extname} ser removido de /etc/php4/${sapiconfig}/php.ini?"
 
 #. Type: boolean
 #. Description
-#: ../php4-mapscript.templates:2001
+#: ../php5-mapscript.templates:2001
+#, fuzzy
 msgid ""
-"You are removing ${extname} support for php4, but it is still enabled in the "
+"You are removing ${extname} support for php5, but it is still enabled in the "
 "configuration for the ${sapiconfig} SAPI.  Leaving this in place will "
 "probably cause problems when trying to use PHP."
 msgstr ""

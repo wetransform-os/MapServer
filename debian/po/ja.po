@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mapserver (debconf) 4.10.0-5\n"
 "Report-Msgid-Bugs-To: pkg-grass-devel@lists.alioth.debian.org\n"
-"POT-Creation-Date: 2006-08-21 09:44+0800\n"
+"POT-Creation-Date: 2007-06-15 15:55+0200\n"
 "PO-Revision-Date: 2007-03-02 23:19+0900\n"
 "Last-Translator: Noritada Kobayashi <nori1@dolphin.c.u-tokyo.ac.jp>\n"
 "Language-Team: Japanese <debian-japanese@lists.debian.org>\n"
@@ -16,17 +16,19 @@ msgstr ""
 
 #. Type: boolean
 #. Description
-#: ../php4-mapscript.templates:1001
-msgid "Should ${extname} be added to /etc/php4/${sapiconfig}/php.ini?"
+#: ../php5-mapscript.templates:1001
+#, fuzzy
+msgid "Should ${extname} be added to /etc/php5/${sapiconfig}/php.ini?"
 msgstr "${extname} を /etc/php4/${sapiconfig}/php.ini に追加しますか?"
 
 #. Type: boolean
 #. Description
-#: ../php4-mapscript.templates:1001
+#: ../php5-mapscript.templates:1001
+#, fuzzy
 msgid ""
-"You are installing ${extname} support for php4 and it is not yet enabled in "
+"You are installing ${extname} support for php5 and it is not yet enabled in "
 "the configuration for the ${sapiconfig} SAPI. Enabling this extension will "
-"allow php4 scripts to use it."
+"allow php5 scripts to use it."
 msgstr ""
 "${extname} サポートを php4 にインストールしていますが、この拡張機能は "
 "${sapiconfig} SAPI の設定ではまだ有効になっていません。有効にすると php4 スク"
@@ -34,15 +36,17 @@ msgstr ""
 
 #. Type: boolean
 #. Description
-#: ../php4-mapscript.templates:2001
-msgid "Should ${extname} be removed from /etc/php4/${sapiconfig}/php.ini?"
+#: ../php5-mapscript.templates:2001
+#, fuzzy
+msgid "Should ${extname} be removed from /etc/php5/${sapiconfig}/php.ini?"
 msgstr "${extname} を /etc/php4/${sapiconfig}/php.ini から削除しますか?"
 
 #. Type: boolean
 #. Description
-#: ../php4-mapscript.templates:2001
+#: ../php5-mapscript.templates:2001
+#, fuzzy
 msgid ""
-"You are removing ${extname} support for php4, but it is still enabled in the "
+"You are removing ${extname} support for php5, but it is still enabled in the "
 "configuration for the ${sapiconfig} SAPI.  Leaving this in place will "
 "probably cause problems when trying to use PHP."
 msgstr ""
