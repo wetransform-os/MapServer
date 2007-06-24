@@ -1,11 +1,16 @@
 mapserver (4.10.2-1) unstable; urgency=low
 
+  [ Francesco Paolo Lovergine ]
   * New upstream release.
     (closes: #412836)
   * Fixed PHP case in long descriptions.
     (closes: #425987)
 
- -- Francesco Paolo Lovergine <frankie@debian.org>  Fri, 25 May 2007 15:04:16 +0200
+  [ Fabio Tranchitella ]
+  * debian/README.Debian: added a note about PHP and FCGI support.
+    (Closes: #425571)
+
+ -- Fabio Tranchitella <kobold@debian.org>  Sun, 24 Jun 2007 11:44:44 +0200
 
 mapserver (4.10.1-1) unstable; urgency=low
 
