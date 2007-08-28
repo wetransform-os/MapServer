@@ -1,3 +1,28 @@
+mapserver (4.10.3-1) unstable; urgency=high
+
+  [ Andreas Putzo ]
+  * New upstream release.
+    - Fixed XSS vulnerabilities.
+      [http://trac.osgeo.org/mapserver/ticket/2256]
+    - Fixed possible buffer overflow in template processing.
+      [http://trac.osgeo.org/mapserver/ticket/2252]
+    (Closes: #439346)
+  * Added myself to Uploaders.
+  * Debconf templates and debian/control reviewed by the debian-l10n-
+    english team as part of the Smith review project. Closes: #433710
+  * Debconf translation updates:
+    - Galician. Closes: #434326
+    - Tamil. Closes: #434401
+    - Russian. Closes: #434406
+    - Portuguese. Closes: #434438
+    - German. Closes: #434653
+    - Vietnamese. Closes: #434758
+    - French. Closes: #435933
+    - Czech. Closes: #436280
+    - Dutch. Closes: #436853
+    
+ -- Andreas Putzo <andreas@putzo.net>  Tue, 28 Aug 2007 08:21:59 +0000
+
 mapserver (4.10.2-1) unstable; urgency=low
 
   [ Francesco Paolo Lovergine ]
