@@ -1,15 +1,15 @@
-# Japanese debconf templates translation for mapserver.
-# Copyright (C) 2007 Noritada Kobayashi
+# Galician translation of mapserver's debconf templates
 # This file is distributed under the same license as the mapserver package.
+# Jacobo Tarrio <jtarrio@debian.org>, 2007.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: mapserver (debconf) 4.10.0-5\n"
+"Project-Id-Version: mapserver\n"
 "Report-Msgid-Bugs-To: pkg-grass-devel@lists.alioth.debian.org\n"
 "POT-Creation-Date: 2007-07-23 07:41+0200\n"
-"PO-Revision-Date: 2007-03-02 23:19+0900\n"
-"Last-Translator: Noritada Kobayashi <nori1@dolphin.c.u-tokyo.ac.jp>\n"
-"Language-Team: Japanese <debian-japanese@lists.debian.org>\n"
+"PO-Revision-Date: 2007-07-23 08:52+0100\n"
+"Last-Translator: Jacobo Tarrio <jtarrio@debian.org>\n"
+"Language-Team: Galician <proxecto@trasno.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -17,39 +17,35 @@ msgstr ""
 #. Type: boolean
 #. Description
 #: ../php5-mapscript.templates:2001
-#, fuzzy
 msgid "Should ${extname} support be added for ${sapiconfig}?"
-msgstr "${extname} を /etc/php4/${sapiconfig}/php.ini に追加しますか?"
+msgstr "¿Debe engadirse o soporte de ${extname} a ${sapiconfig}?"
 
 #. Type: boolean
 #. Description
 #: ../php5-mapscript.templates:2001
-#, fuzzy
 msgid ""
 "You are installing ${extname} support for PHP5, but it is not yet enabled "
 "in /etc/php5/${sapiconfig}/php.ini. Enabling this extension will allow PHP5 "
 "scripts to use it."
 msgstr ""
-"${extname} サポートを php4 にインストールしていますが、この拡張機能は "
-"${sapiconfig} SAPI の設定ではまだ有効になっていません。有効にすると php4 スク"
-"リプトが拡張機能を使用できるようになります。"
+"Está a instalar o soporte de ${extname} para PHP5, pero aínda non está "
+"activado en /etc/php5/${sapiconfig}/php.ini. Activar esta extensión ha "
+"permitir que os scripts PHP5 a empreguen."
 
 #. Type: boolean
 #. Description
 #: ../php5-mapscript.templates:3001
-#, fuzzy
 msgid "Should ${extname} support be removed for ${sapiconfig}?"
-msgstr "${extname} を /etc/php4/${sapiconfig}/php.ini から削除しますか?"
+msgstr "¿Debe eliminarse o soporte de ${extname} de ${sapiconfig}?"
 
 #. Type: boolean
 #. Description
 #: ../php5-mapscript.templates:3001
-#, fuzzy
 msgid ""
 "You are removing ${extname} support for PHP5, but it is still enabled in /"
 "etc/php5/${sapiconfig}/php.ini. Leaving this in place will probably cause "
 "problems when trying to use PHP."
 msgstr ""
-"${extname} サポートを php4 から削除していますが、この拡張機能は "
-"${sapiconfig} SAPI の設定でまだ有効になっています。このまま有効にして放ってお"
-"くと、PHP を使用しようとするときにおそらく問題が生じます。"
+"Está a eliminar o soporte de ${extname} para PHP5, pero aínda está activado "
+"en /etc/php5/${sapiconfig}/php.ini. Deixalo activado seguramente vaia causar "
+"problemas se tenta empregar PHP."

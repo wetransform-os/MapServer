@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: pkg-grass-devel@lists.alioth.debian.org\n"
-"POT-Creation-Date: 2007-06-15 15:55+0200\n"
+"POT-Creation-Date: 2007-07-23 07:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,30 +18,30 @@ msgstr ""
 
 #. Type: boolean
 #. Description
-#: ../php5-mapscript.templates:1001
-msgid "Should ${extname} be added to /etc/php5/${sapiconfig}/php.ini?"
-msgstr ""
-
-#. Type: boolean
-#. Description
-#: ../php5-mapscript.templates:1001
-msgid ""
-"You are installing ${extname} support for php5 and it is not yet enabled in "
-"the configuration for the ${sapiconfig} SAPI. Enabling this extension will "
-"allow php5 scripts to use it."
-msgstr ""
-
-#. Type: boolean
-#. Description
 #: ../php5-mapscript.templates:2001
-msgid "Should ${extname} be removed from /etc/php5/${sapiconfig}/php.ini?"
+msgid "Should ${extname} support be added for ${sapiconfig}?"
 msgstr ""
 
 #. Type: boolean
 #. Description
 #: ../php5-mapscript.templates:2001
 msgid ""
-"You are removing ${extname} support for php5, but it is still enabled in the "
-"configuration for the ${sapiconfig} SAPI.  Leaving this in place will "
-"probably cause problems when trying to use PHP."
+"You are installing ${extname} support for PHP5, but it is not yet enabled "
+"in /etc/php5/${sapiconfig}/php.ini. Enabling this extension will allow PHP5 "
+"scripts to use it."
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../php5-mapscript.templates:3001
+msgid "Should ${extname} support be removed for ${sapiconfig}?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../php5-mapscript.templates:3001
+msgid ""
+"You are removing ${extname} support for PHP5, but it is still enabled in /"
+"etc/php5/${sapiconfig}/php.ini. Leaving this in place will probably cause "
+"problems when trying to use PHP."
 msgstr ""

@@ -5,10 +5,10 @@
 # Alwin Meschede <ameschede@gmx.de>, 2007.
 msgid ""
 msgstr ""
-"Project-Id-Version: mapserver 4.10.0-4\n"
+"Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: pkg-grass-devel@lists.alioth.debian.org\n"
-"POT-Creation-Date: 2007-06-15 15:55+0200\n"
-"PO-Revision-Date: 2007-01-05 20:37+0100\n"
+"POT-Creation-Date: 2007-07-23 07:41+0200\n"
+"PO-Revision-Date: 2007-07-25 17:48+0200\n"
 "Last-Translator: Alwin Meschede <ameschede@gmx.de>\n"
 "Language-Team: german <debian-l10n-german@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
@@ -19,42 +19,36 @@ msgstr ""
 
 #. Type: boolean
 #. Description
-#: ../php5-mapscript.templates:1001
-#, fuzzy
-msgid "Should ${extname} be added to /etc/php5/${sapiconfig}/php.ini?"
-msgstr ""
-"Soll ${extname} der /etc/php4/${sapiconfig}/php.ini hinzugefügt werden?"
-
-#. Type: boolean
-#. Description
-#: ../php5-mapscript.templates:1001
-#, fuzzy
-msgid ""
-"You are installing ${extname} support for php5 and it is not yet enabled in "
-"the configuration for the ${sapiconfig} SAPI. Enabling this extension will "
-"allow php5 scripts to use it."
-msgstr ""
-"Sie installieren ${extname}-Unterstützung für php4, die noch nicht in der "
-"Konfiguration für die ${sapiconfig}-SAPI aktiviert ist. Die Aktivierung "
-"dieser Erweiterung macht es php4-Skripten möglich, sie zu benutzen."
+#: ../php5-mapscript.templates:2001
+msgid "Should ${extname} support be added for ${sapiconfig}?"
+msgstr "Soll ${extname}-Unterstützung für ${sapiconfig} hinzugefügt werden?"
 
 #. Type: boolean
 #. Description
 #: ../php5-mapscript.templates:2001
-#, fuzzy
-msgid "Should ${extname} be removed from /etc/php5/${sapiconfig}/php.ini?"
+msgid ""
+"You are installing ${extname} support for PHP5, but it is not yet enabled "
+"in /etc/php5/${sapiconfig}/php.ini. Enabling this extension will allow PHP5 "
+"scripts to use it."
 msgstr ""
-"Soll ${extname} aus der /etc/php4/${sapiconfig}/php.ini entfernt werden?"
+"Sie installieren ${extname}-Unterstützung für PHP5, die noch nicht in der "
+"Datei /etc/php5/${sapiconfig}/php.ini aktiviert ist. Die Aktivierung dieser "
+"Erweiterung macht es PHP5-Skripten möglich, sie zu benutzen."
 
 #. Type: boolean
 #. Description
-#: ../php5-mapscript.templates:2001
-#, fuzzy
+#: ../php5-mapscript.templates:3001
+msgid "Should ${extname} support be removed for ${sapiconfig}?"
+msgstr "Soll die ${extname}-Unterstützung für ${sapiconfig} entfernt werden?"
+
+#. Type: boolean
+#. Description
+#: ../php5-mapscript.templates:3001
 msgid ""
-"You are removing ${extname} support for php5, but it is still enabled in the "
-"configuration for the ${sapiconfig} SAPI.  Leaving this in place will "
-"probably cause problems when trying to use PHP."
+"You are removing ${extname} support for PHP5, but it is still enabled in /"
+"etc/php5/${sapiconfig}/php.ini. Leaving this in place will probably cause "
+"problems when trying to use PHP."
 msgstr ""
-"Sie entfernen die ${extname}-Unterstützung in php4, die aber noch in der "
-"Konfiguration der ${sapiconfig}-SAPI aktiviert ist. Dies so zu belassen wird "
-"wahrscheinlich Probleme verursachen, wenn PHP benutzt werden soll."
+"Sie entfernen die ${extname}-Unterstützung in PHP5, die aber noch in der "
+"Datei /etc/php5/${sapiconfig}/php.ini aktiviert ist. Dies so zu belassen "
+"wird wahrscheinlich Probleme verursachen, wenn PHP benutzt werden soll."
