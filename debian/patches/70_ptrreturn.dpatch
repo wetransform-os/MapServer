@@ -6,17 +6,14 @@
 ## DP: Fixes bug #328030.
 
 @DPATCH@
---- mapserver/maptime.c.orig	2005-09-13 11:12:32.000000000 +0200
-+++ mapserver/maptime.c	2005-09-13 11:13:22.000000000 +0200
-@@ -44,9 +44,11 @@
-  *
-  */
- 
-+#define _XOPEN_SOURCE
+diff -urN mapserver-5.0.0/maptime.c mapserver-5.0.0.debian/maptime.c
+--- mapserver-5.0.0/maptime.c	2007-08-31 00:46:11.000000000 +0200
++++ mapserver-5.0.0.debian/maptime.c	2007-09-18 04:18:39.000000000 +0200
+@@ -30,6 +30,7 @@
  #include <stdlib.h>
  #include <stdio.h>
  #include <time.h>
 +#include <strings.h>
  
- #include "map.h"
+ #include "mapserver.h"
  #include "maptime.h"
