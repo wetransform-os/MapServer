@@ -1,8 +1,15 @@
 mapserver (5.0.0-1) unstable; urgency=low
 
+  [ Fabio Tranchitella ]
   * New upstream release.
 
- -- Fabio Tranchitella <kobold@debian.org>  Tue, 18 Sep 2007 04:39:44 +0200
+  [ Francesco Paolo Lovergine ]
+  * Updated debconf templates:
+  	debian/po/pt.po
+        debian/po/sv.po
+    (closes: #439697,#436414)
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Wed, 26 Sep 2007 13:59:17 +0200
 
 mapserver (4.10.3-1) unstable; urgency=high
 
