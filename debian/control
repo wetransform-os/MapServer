@@ -11,6 +11,7 @@ Build-Depends: debhelper (>= 5.0.37.2), dpatch, libcurl4-gnutls-dev, libpng12-de
 Build-Depends-Indep: python-docutils
 Build-Conflicts: libcurl3-openssl-dev
 XS-Python-Version: all
+Homepage: http://mapserver.gis.umn.edu
 
 Package: php5-mapscript
 Section: web
@@ -42,8 +43,6 @@ Description: CGI executable for MapServer
  supports Open Geospatial Consortium (OGC) standards. Scripting
  functionality in MapScript is provided by the suggested mapscript
  library packages.
- .
-  Homepage: http://mapserver.gis.umn.edu
 
 Package: python-mapscript
 Section: python
@@ -67,8 +66,6 @@ Description: MapServer utilities
  supports Open Geospatial Consortium (OGC) standards. Scripting
  functionality in MapScript is provided by the suggested mapscript
  library packages.
- .
-  Homepage: http://mapserver.gis.umn.edu
 
 Package: mapserver-doc
 Section: doc
@@ -82,5 +79,3 @@ Description: documentation for MapServer
  supports Open Geospatial Consortium (OGC) standards. Scripting
  functionality in MapScript is provided by the suggested mapscript
  library packages.
- .
-  Homepage: http://mapserver.gis.umn.edu

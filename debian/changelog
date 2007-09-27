@@ -1,4 +1,4 @@
-mapserver (5.0.0-1) unstable; urgency=low
+mapserver (5.0.0-1) UNRELEASED; urgency=low
 
   [ Fabio Tranchitella ]
   * New upstream release.
@@ -9,7 +9,10 @@ mapserver (5.0.0-1) unstable; urgency=low
         debian/po/sv.po
     (closes: #439697,#436414)
 
- -- Francesco Paolo Lovergine <frankie@debian.org>  Wed, 26 Sep 2007 13:59:17 +0200
+  [ Paul Wise ]
+  * Switch to the new Homepage field
+
+ -- Paul Wise <pabs@debian.org>  Thu, 27 Sep 2007 10:56:13 +1000
 
 mapserver (4.10.3-1) unstable; urgency=high
 
