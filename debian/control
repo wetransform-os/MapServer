@@ -77,20 +77,28 @@ Description: documentation for MapServer
  functionality in MapScript is provided by the suggested mapscript
  library packages.
 
-Package: ruby1.8-mapscript
+Package: libmapscript-ruby
+Section: devel
+Architecture: all
+Depends: libmapscript-ruby1.8
+Description: Ruby MapServer library
+ Ruby MapScript provides MapServer functions for Ruby scripts.
+ .
+ This package conains exapmles and depends on package for Debian
+ default version of Ruby.
+
+Package: libmapscript-ruby1.8
 Section: devel
 Architecture: any
 Depends: ${shlibs:Depends}
 Suggests: mapserver-bin, mapserver-doc
-Provides: ruby-mapscript
 Description: Ruby MapServer library
  Ruby MapScript provides MapServer functions for Ruby scripts.
 
-Package: ruby1.9-mapscript
+Package: libmapscript-ruby1.9
 Section: devel
 Architecture: any
 Depends: ${shlibs:Depends}
 Suggests: mapserver-bin, mapserver-doc
-Provides: ruby-mapscript
 Description: Ruby MapServer library
  Ruby MapScript provides MapServer functions for Ruby scripts.

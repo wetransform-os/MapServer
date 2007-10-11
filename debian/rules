@@ -136,8 +136,8 @@ clean-first-build:
 	-cd mapscript/python && \
 	  for python in $(PYVERS); do $$python setup.py clean; done
 	-$(RM) -rf mapscript/python/build
-	-cd mapscript/ruby && $(MAKE) distclean
-	-$(RM) -rf mapscript/ruby/mapscript_wrap.c
+	-$(MAKE) distclean -C $(CURDIR)/mapscript/ruby
+	-$(RM) -rf $(CURDIR)/mapscript/ruby/mapscript_wrap.c
 	-$(RM) mapscriptvars
 
 	-$(RM) mapscript/perl/mapscript.i \
@@ -195,10 +195,12 @@ install-arch-stamp: build-arch
 	  done
 
 	# Ruby mapscript
-	for v in $(RUBYVERS) ; do \
-	  install -m 644 $(CURDIR)/mapscript/ruby/ruby$$v-mapscript.so \
-	    $(CURDIR)/debian/ruby$$v-mapscript/usr/lib/ruby/$$v/mapscript.so ; \
-	done
+	cd $(CURDIR)/mapscript/ruby && set -e ; \
+	  for v in $(RUBYVERS) ; do \
+	    ruby$$v extconf.rb ; \
+	      $(MAKE) install sitedir=$(CURDIR)/debian/libmapscript-ruby$$v/usr/lib/ruby ; \
+	      $(MAKE) distclean ; \
+	  done
 
 	# Mapserver  Binary
 	install -m755 legend scalebar shp2img shptree \
@@ -226,6 +228,7 @@ binary-indep: install-indep
 	dh_testroot -i
 	dh_installchangelogs -i HISTORY.TXT
 	dh_installdocs -i
+	dh_installexamples -i
 	dh_installdebconf -i
 	dh_compress -i
 	dh_link -i

@@ -1,3 +1,10 @@
+mapserver (5.0.0-2) unstable; urgency=low
+
+  * debian/rules, debian/controls: new patch for the ruby bindings, which
+    follows the ruby policy draft.
+
+ -- Fabio Tranchitella <kobold@debian.org>  Thu, 11 Oct 2007 13:46:22 +0200
+
 mapserver (5.0.0-1) unstable; urgency=low
 
   [ Fabio Tranchitella ]
