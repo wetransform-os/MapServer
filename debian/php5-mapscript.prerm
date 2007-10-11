@@ -8,8 +8,6 @@ if [ "$1" != "remove" ] && [ "$1" != "purge" ]; then
 	exit 0
 fi
 
-EXTENSIONRE="^[[:space:]]*extension[[:space:]]*=[[:space:]]*php_mapscript.so"
-
 . /usr/share/debconf/confmodule
 
 phpver=php5
@@ -18,8 +16,7 @@ for SAPI in `find /etc/$phpver/ -type d -maxdepth 1 -mindepth 1 | sed -e's#.*/##
 do
 	# Use the same question for all extensions, because it's only
 	# used once per package: right here.
-	if [ -f "/etc/$phpver/$SAPI/php.ini" ] \
-	   && grep -q "$EXTENSIONRE" /etc/$phpver/$SAPI/php.ini
+	if [ -f "/etc/$phpver/$SAPI/php.ini" ] && -f /etc/$phpver/$SAPI/conf.d/mapscript.ini
 	then
 		db_set $phpver-mapscript/remove_extension true
 		db_title "PHP"
@@ -30,12 +27,7 @@ do
 
 		db_get $phpver-mapscript/remove_extension
 		if [ "$RET" = "true" ]; then
-			grep -v "$EXTENSIONRE" < /etc/$phpver/$SAPI/php.ini \
-				> /etc/$phpver/$SAPI/php.ini.mapscriptremove
-			chmod --reference=/etc/$phpver/$SAPI/php.ini \
-				/etc/$phpver/$SAPI/php.ini.mapscriptremove
-			mv /etc/$phpver/$SAPI/php.ini.mapscriptremove \
-				/etc/$phpver/$SAPI/php.ini
+	        rm -f /etc/$phpver/$SAPI/conf.d/mapscript.ini
 		fi
 		db_fset $phpver-mapscript/remove_extension seen false
 	fi

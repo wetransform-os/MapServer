@@ -14,6 +14,7 @@ version=$(shell expr `pwd` : '.*-\([0-9.]*\)')
 version_major=$(shell expr `pwd` : '.*-\([0-9]*\).[0-9.]*')
 CURDIR := $(shell pwd)
 PYVERS=$(shell pyversions -r debian/control)
+RUBYVERS=1.8 1.9
 PHP5API=$(shell php-config5 --phpapi)
 PHP5DIR=$(shell php-config5 --extension-dir)
 
@@ -78,14 +79,10 @@ build-indep-stamp:
 	rst2html $(rstoptions) mapscript/doc/mapscript.txt > html/mapscript.html
 	rst2html $(rstoptions) mapscript/doc/python.txt > html/python.html
 	rst2html $(rstoptions) mapscript/doc/querying-HOWTO.txt > html/querying-HOWTO.html
-	rst2html $(rstoptions) rfc/ms-rfc-1.txt > html/ms-rfc-1.html
-	rst2html $(rstoptions) rfc/ms-rfc-2.txt > html/ms-rfc-2.html
-	rst2html $(rstoptions) rfc/ms-rfc-3.txt > html/ms-rfc-3.html
-	rst2html $(rstoptions) rfc/ms-rfc-4.txt > html/ms-rfc-4.html
-	rst2html $(rstoptions) rfc/ms-rfc-5.txt > html/ms-rfc-5.html
-	rst2html $(rstoptions) rfc/ms-rfc-6.txt > html/ms-rfc-6.html
-	rst2html $(rstoptions) rfc/ms-rfc-7.txt > html/ms-rfc-7.html
-	rst2html $(rstoptions) rfc/ms-rfc-8.txt > html/ms-rfc-8.html
+	for i in rfc/ms-rfc*.txt; do \
+		html=`echo $$i | sed -e 's/rfc/html/g'`; \
+		rst2html $(rstoptions) $$i > $$html; \
+	done
 	cp mapscript/doc/default.css html
 	cp mapscript/doc/mapscript.css html
 
@@ -107,6 +104,13 @@ build-arch-stamp: configure-stamp
 	# Build python
 	cd $(CURDIR)/mapscript/python && \
 	  set -e; for python in $(PYVERS); do $$python setup.py build; done
+
+	# Build ruby
+	cd $(CURDIR)/mapscript/ruby && set -e ; \
+	  for v in $(RUBYVERS) ; do \
+	    ruby$$v extconf.rb && $(MAKE) && \
+	      mv mapscript.so ruby$$v-mapscript.so ; \
+	  done
 
 	touch build-arch-stamp
 
@@ -132,6 +136,8 @@ clean-first-build:
 	-cd mapscript/python && \
 	  for python in $(PYVERS); do $$python setup.py clean; done
 	-$(RM) -rf mapscript/python/build
+	-cd mapscript/ruby && $(MAKE) distclean
+	-$(RM) -rf mapscript/ruby/mapscript_wrap.c
 	-$(RM) mapscriptvars
 
 	-$(RM) mapscript/perl/mapscript.i \
@@ -187,6 +193,12 @@ install-arch-stamp: build-arch
 	  for python in $(PYVERS); do \
 	    $$python setup.py install --root=$(CURDIR)/debian/python-mapscript ; \
 	  done
+
+	# Ruby mapscript
+	for v in $(RUBYVERS) ; do \
+	  install -m 644 $(CURDIR)/mapscript/ruby/ruby$$v-mapscript.so \
+	    $(CURDIR)/debian/ruby$$v-mapscript/usr/lib/ruby/$$v/mapscript.so ; \
+	done
 
 	# Mapserver  Binary
 	install -m755 legend scalebar shp2img shptree \

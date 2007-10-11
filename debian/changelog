@@ -1,18 +1,21 @@
-mapserver (5.0.0-1) UNRELEASED; urgency=low
+mapserver (5.0.0-1) unstable; urgency=low
 
   [ Fabio Tranchitella ]
   * New upstream release.
+  * Add ruby mapscript support; thanks to Dmitry Kurochkin for the patch.
+    (Closes: #428247)
+  * Do not mangle php.ini, use the conf.d directory instead.
+    (Closes: #443253)
 
   [ Francesco Paolo Lovergine ]
   * Updated debconf templates:
-  	debian/po/pt.po
-        debian/po/sv.po
-    (closes: #439697,#436414)
+  	 + debian/po/pt.po (Closes: #439697)
+     + debian/po/sv.po (Closes: #436414)
 
   [ Paul Wise ]
-  * Switch to the new Homepage field
+  * Switch to the new Homepage field.
 
- -- Paul Wise <pabs@debian.org>  Thu, 27 Sep 2007 10:56:13 +1000
+ -- Fabio Tranchitella <kobold@debian.org>  Thu, 11 Oct 2007 12:54:31 +0200
 
 mapserver (4.10.3-1) unstable; urgency=high
 
