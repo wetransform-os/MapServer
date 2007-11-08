@@ -1,3 +1,12 @@
+mapserver (5.0.0-3) unstable; urgency=low
+
+  * debian/php5-mapscript.postinst: fixed a typo. (Closes: #446985)
+  * debian/patches/20_php_build.dpatch: removed. (Closes: #447814)
+  * debian/po/gl.po: added. (Closes: #447939)
+  * debian/po/fr.po: added. (Closes: #448821)
+
+ -- Fabio Tranchitella <kobold@debian.org>  Thu, 08 Nov 2007 15:13:37 +0100
+
 mapserver (5.0.0-2) unstable; urgency=low
 
   * debian/rules, debian/controls: new patch for the ruby bindings, which
