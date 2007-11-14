@@ -1,3 +1,9 @@
+mapserver (5.0.0-4) unstable; urgency=low
+
+  * debian/rules: build mapserver with antigrain support. (Closes: #448198)
+
+ -- Fabio Tranchitella <kobold@debian.org>  Wed, 14 Nov 2007 16:37:09 +0100
+
 mapserver (5.0.0-3) unstable; urgency=low
 
   * debian/php5-mapscript.postinst: fixed a typo. (Closes: #446985)

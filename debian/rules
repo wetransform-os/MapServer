@@ -45,7 +45,8 @@ COMMON_CONFIG=	--prefix=/usr \
 		--with-wfs \
 		--with-wfsclient \
 		--with-threads \
-		--with-geos
+		--with-geos \
+		--with-agg
 
 rstoptions=--stylesheet=mapscript.css --link-stylesheet 
 
