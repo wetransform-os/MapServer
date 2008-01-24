@@ -1,8 +1,11 @@
-mapserver (5.0.0-4) unstable; urgency=low
+mapserver (5.0.1-1) unstable; urgency=low
 
-  * debian/rules: build mapserver with antigrain support. (Closes: #448198)
+  * New upstream release.
+  * debian/po/fi.po: added, thanks Esko Arajärvi. (Closes: #457227)
+  * debian/po/de.po: updated, thanks Alwin Meschede. (Closes: #462275)
+  * debian/control: removed build-dep on libwww-dev. (Closes: #457202)
 
- -- Fabio Tranchitella <kobold@debian.org>  Wed, 14 Nov 2007 16:37:09 +0100
+ -- Fabio Tranchitella <kobold@debian.org>  Thu, 24 Jan 2008 10:55:18 +0100
 
 mapserver (5.0.0-3) unstable; urgency=low
 
