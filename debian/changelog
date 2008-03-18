@@ -1,3 +1,16 @@
+mapserver (5.0.2-2) UNRELEASED; urgency=low
+
+  * Added embedded AGG 2.4 for use with mapserver. This is a BSD-licensed
+    version mainly functionally identical with current 2.5. See debian/AGG
+    for additional maintainer information about the AGG integration. 
+    (closes: #448198)
+  * Added build-deps for AGG: libsdl1.2-dev, libfreetype6-dev, libx11-dev.
+  * Added build-dep on sharutils for AGG uuencoded distfile.
+  * Fixed maintainer scripts for erroneous if expressions
+    (closes: #463888)
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Tue, 18 Mar 2008 14:53:00 +0100
+
 mapserver (5.0.2-1) unstable; urgency=low
 
   * New upstream release.

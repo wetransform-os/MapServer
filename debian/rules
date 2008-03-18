@@ -18,6 +18,8 @@ RUBYVERS=1.8 1.9
 PHP5API=$(shell php-config5 --phpapi)
 PHP5DIR=$(shell php-config5 --extension-dir)
 
+AGG=agg-2.4
+
 # Configure config :
 # Not using non free libpdf
 # Explicit disable direct goetiff support, 
@@ -45,11 +47,28 @@ COMMON_CONFIG=	--prefix=/usr \
 		--with-wfs \
 		--with-wfsclient \
 		--with-threads \
-		--with-geos
+		--with-geos \
+		--with-agg=$(CURDIR)/.$(AGG)
 
 rstoptions=--stylesheet=mapscript.css --link-stylesheet 
 
-configure-stamp: patch
+configure-agg: configure-agg-stamp
+configure-agg-stamp:
+	uudecode -o /dev/stdout $(CURDIR)/debian/$(AGG).uu | tar xzf - 
+	( cd $(AGG) && \
+	  ./configure --prefix=$(CURDIR)/.$(AGG)  \
+	            --disable-shared --disable-gpc --enable-freetype --disable-examples --with-pic )
+
+	touch configure-agg-stamp
+
+build-agg: build-agg-stamp
+build-agg-stamp: configure-agg-stamp
+	$(MAKE) -C $(AGG) 
+	$(MAKE) -C $(AGG) install
+
+	touch build-agg-stamp
+
+configure-stamp: patch build-agg-stamp
 	dh_testdir
 	./configure $(COMMON_CONFIG)
 
@@ -89,7 +108,7 @@ build-indep-stamp:
 	touch build-indep-stamp
 
 build-arch: build-arch-stamp
-build-arch-stamp: configure-stamp
+build-arch-stamp: configure-stamp build-agg-stamp
 	dh_testdir
 
 	# Build binary lib
@@ -155,8 +174,12 @@ clean-first-build:
 
 	-$(RM) debian/.#* .#*
 
+clean-agg:
+	 -$(RM) -rf $(CURDIR)/$(AGG)
+	 -$(RM) -rf $(CURDIR)/.$(AGG)
+	 -$(RM) -f build-agg-stamp configure-agg-stamp
 
-clean: unpatch clean-first-build
+clean: unpatch clean-first-build clean-agg
 	dh_testdir
 	dh_clean
 	-$(RM) configure-php5-stamp build-php5-stamp install-arch-stamp install-indep-stamp install-php5-stamp
