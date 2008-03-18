@@ -10,8 +10,10 @@ mapserver (5.0.2-2) UNRELEASED; urgency=low
     (closes: #463888)
   * Policy bumped to 3.7.3 (no changes).
   * Added Vcs-* fields to debian/control.
+  * Added FastCGI support.
+    (closes: #468172)
 
- -- Francesco Paolo Lovergine <frankie@debian.org>  Tue, 18 Mar 2008 15:03:05 +0100
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Tue, 18 Mar 2008 16:57:36 +0100
 
 mapserver (5.0.2-1) unstable; urgency=low
 

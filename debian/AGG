@@ -3,13 +3,15 @@ mapserver (5.0.2-2) unstable; urgency=low
   Starting from this version Mapserver integrates the AGG 2.4 library. This functionally
   identical to the 2.5 already integrated in Debian but it has a BSD license which
   is compatible with the Mapserver one. 
+
   The library package is included as a uuencoded archive starting from the 2.4 official
-  tarball with the following changes applied before creating the archive:
-   * Non DFSG-compliant code in GPC has been removed.
+  tarball with the following changes applied before creating the uue archive:
+   * Non DFSG-compliant code in GPC has been removed and its use disabled.
    * The autogen.sh script has been changed and launched in order to generate 
-     building scripts in maintainer mode for autotools once. You need to have
+     building scripts in maintainer mode for autotools just once. You need to have
      libsdl1.2-dev and all other build-deps installed before running it.
      This will avoid the whole autotools chain build-dep requirement
-     for mapserver.
+     for mapserver. It _could_ require a rebuild for new archs from time to time
+     whenever needed.
 
  -- Francesco Paolo Lovergine <frankie@debian.org>  Tue, 18 Mar 2008 12:33:39 +0100

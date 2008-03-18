@@ -48,6 +48,7 @@ COMMON_CONFIG=	--prefix=/usr \
 		--with-wfsclient \
 		--with-threads \
 		--with-geos \
+		--with-fastcgi \
 		--with-agg=$(CURDIR)/.$(AGG)
 
 rstoptions=--stylesheet=mapscript.css --link-stylesheet 
