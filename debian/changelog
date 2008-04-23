@@ -1,4 +1,4 @@
-mapserver (5.0.2-2) UNRELEASED; urgency=low
+mapserver (5.0.2-2) unstable; urgency=low
 
   * Added embedded AGG 2.4 for use with mapserver. This is a BSD-licensed
     version mainly functionally identical with current 2.5. See debian/AGG
