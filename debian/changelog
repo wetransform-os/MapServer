@@ -1,8 +1,9 @@
-mapserver (5.0.2-3) unstable; urgency=low
+mapserver (5.0.2-3) unstable; urgency=high
 
   * The setup.py script is not able to manage properly static libraries flavor 
     for AGG now used embedded in mapserver. The trick is explicitly linking by 
-    manipulating the mapscriptvars file before running setup.py.
+    manipulating the mapscriptvars file before running setup.py. That rendered
+    python-mapscript unusable.
     (closes: #483400)
 
  -- Francesco Paolo Lovergine <frankie@debian.org>  Fri, 06 Jun 2008 10:34:21 +0200
