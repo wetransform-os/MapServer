@@ -122,8 +122,16 @@ build-arch-stamp: configure-stamp build-agg-stamp
 		&& $(MAKE) LD_RUN_PATH="" OPTIMIZE="-O2 -g -W -Wall"
 
 	# Build python
+	# This is a dirty hack to properly link agg static libraries using setup.py
+	# It fixes 
+	# 1. changes a bit mapscriptvars
+	sed -e 's/ -lagg/\/libagg.a/' -e 's/-L\([^ ]*\.agg-2\.4\/lib\)\/libagg\.a\ -laggfontfreetype/\1\/libagg.a \1\/libaggfontfreetype.a/' \
+	        $(CURDIR)/mapscriptvars  >$(CURDIR)/mapscript/python/mapscriptvars
+	# 2. now changes setup.py to use the changed copy
+	sed -e 's/\("\)\.\.\/\.\.\/\(mapscriptvars"\)/\1\2/' \
+		$(CURDIR)/mapscript/python/setup.py >$(CURDIR)/mapscript/python/setup-hack.py
 	cd $(CURDIR)/mapscript/python && \
-	  set -e; for python in $(PYVERS); do $$python setup.py build; done
+	  set -e; for python in $(PYVERS); do $$python setup-hack.py build; done
 
 	# Build ruby
 	cd $(CURDIR)/mapscript/ruby && set -e ; \
@@ -154,11 +162,14 @@ clean-first-build:
 	-$(MAKE) mapscriptvars || touch mapscriptvars
 	-cd mapscript/perl && $(MAKE) distclean
 	-cd mapscript/python && \
-	  for python in $(PYVERS); do $$python setup.py clean; done
+	  for python in $(PYVERS); do $$python setup-hack.py clean; done
 	-$(RM) -rf mapscript/python/build
 	-$(MAKE) distclean -C $(CURDIR)/mapscript/ruby
 	-$(RM) -rf $(CURDIR)/mapscript/ruby/mapscript_wrap.c
 	-$(RM) mapscriptvars
+	# Clean private python-mapscript hacks 
+	-$(RM) mapscript/python/mapscriptvars
+	-$(RM) mapscript/python/setup-hack.py
 
 	-$(RM) mapscript/perl/mapscript.i \
 		mapscript/tcl/mapscript.i \
@@ -215,7 +226,7 @@ install-arch-stamp: build-arch
 	# Python mapscript
 	cd $(CURDIR)/mapscript/python && set -e ; \
 	  for python in $(PYVERS); do \
-	    $$python setup.py install --root=$(CURDIR)/debian/python-mapscript ; \
+	    $$python setup-hack.py install --root=$(CURDIR)/debian/python-mapscript ; \
 	  done
 
 	# Ruby mapscript
