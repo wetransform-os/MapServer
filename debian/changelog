@@ -1,3 +1,9 @@
+mapserver (5.0.3-1) unstable; urgency=low
+
+  * New upstream release, with a good deal of fixes.
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Sat, 07 Jun 2008 00:22:55 +0200
+
 mapserver (5.0.2-3) unstable; urgency=high
 
   * The setup.py script is not able to manage properly static libraries flavor 
