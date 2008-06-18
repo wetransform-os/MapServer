@@ -159,23 +159,24 @@ clean-first-build:
 	-$(RM) configure-stamp build-arch-stamp build-indep-stamp
 
 	-$(RM) tile4ms
-	-$(MAKE) mapscriptvars || touch mapscriptvars
-	-cd mapscript/perl && $(MAKE) distclean
+	[ ! -f $(CURDIR)/Makefile ] || $(MAKE) mapscriptvars 
+	touch mapscriptvars
+	[ ! -f $(CURDIR)/mapscript/perl/Makefile ] || $(MAKE) distclean -C $(CURDIR)/mapscript/perl
 	-cd mapscript/python && \
 	  for python in $(PYVERS); do $$python setup-hack.py clean; done
 	-$(RM) -rf mapscript/python/build
-	-$(MAKE) distclean -C $(CURDIR)/mapscript/ruby
+	[ ! -f $(CURDIR)/mapscript/ruby/Makefile ] || $(MAKE) distclean -C $(CURDIR)/mapscript/ruby
 	-$(RM) -rf $(CURDIR)/mapscript/ruby/mapscript_wrap.c
 	-$(RM) mapscriptvars
 	# Clean private python-mapscript hacks 
 	-$(RM) mapscript/python/mapscriptvars
 	-$(RM) mapscript/python/setup-hack.py
 
-	-$(RM) mapscript/perl/mapscript.i \
+	-$(RM)  mapscript/perl/mapscript.i \
 		mapscript/tcl/mapscript.i \
 		mapscript/python/mapscript.i
 
-	-$(MAKE) distclean
+	[ ! -f $(CURDIR)/Makefile ] || $(MAKE) distclean
 
 	# Remove some generated files until 50_clean.dpatch is applied upstream.
 	-$(RM) Makefile mapscript/java/Makefile

@@ -1,8 +1,10 @@
 mapserver (5.0.3-1) unstable; urgency=low
 
   * New upstream release, with a good deal of fixes.
+  * Changed a bit clean-first-build to make lintian happy about 
+    debian-rules-ignores-make-clean-error warning.
 
- -- Francesco Paolo Lovergine <frankie@debian.org>  Sat, 07 Jun 2008 00:22:55 +0200
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Sun, 08 Jun 2008 11:50:22 +0200
 
 mapserver (5.0.2-3) unstable; urgency=high
 
