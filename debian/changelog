@@ -1,3 +1,10 @@
+mapserver (5.0.3-2) unstable; urgency=high
+
+  * Turning off optimization in debian/rules due to serious breakage of mapserver
+    with GCC 4.3. (closes: #487679)
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Mon, 23 Jun 2008 16:59:43 +0200
+
 mapserver (5.0.3-1) unstable; urgency=low
 
   * New upstream release, with a good deal of fixes.

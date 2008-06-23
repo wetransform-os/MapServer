@@ -20,6 +20,10 @@ PHP5DIR=$(shell php-config5 --extension-dir)
 
 AGG=agg-2.4
 
+# Turning off optimization due to issue with gcc 4.3 (see #487679)
+CFLAGS="-g -O0"
+CXXFLAGS="$(CFLAGS)"
+
 # Configure config :
 # Not using non free libpdf
 # Explicit disable direct goetiff support, 
@@ -71,14 +75,15 @@ build-agg-stamp: configure-agg-stamp
 
 configure-stamp: patch build-agg-stamp
 	dh_testdir
-	./configure $(COMMON_CONFIG)
+	./configure $(COMMON_CONFIG) CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)"
+
 
 	touch configure-stamp
 
 configure-php5-stamp: patch clean-first-build
 	dh_testdir
 	./configure $(COMMON_CONFIG) \
-		--with-php=/usr/include/php5 
+		--with-php=/usr/include/php5  CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)"
 
 	touch configure-php5-stamp
 
