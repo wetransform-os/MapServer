@@ -70,8 +70,7 @@ build-agg-stamp: configure-agg-stamp
 
 	touch build-agg-stamp
 
-# Turning off optimization due to issue with gcc 4.3 (see #487679)
-MS_CFLAGS=-g -O0
+MS_CFLAGS=-g -O2
 MS_CXXFLAGS=$(MS_CFLAGS)
 
 configure-stamp: patch build-agg-stamp

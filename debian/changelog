@@ -2,8 +2,9 @@ mapserver (5.0.3-3) unstable; urgency=low
 
   * Updated sv.po template.
     (closes: #488704)
+  * Turning on again optimization, #487679 was due to GDAL oddity solved in 1.5.2-3.
 
- -- Francesco Paolo Lovergine <frankie@debian.org>  Mon, 14 Jul 2008 15:56:37 +0200
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Tue, 15 Jul 2008 16:30:56 +0200
 
 mapserver (5.0.3-2) unstable; urgency=high
 
