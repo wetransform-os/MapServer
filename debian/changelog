@@ -5,8 +5,10 @@ mapserver (5.2.0-1) experimental; urgency=low
   * Added libxml2-dev build-dependency.
   * Deapplied all current patches (merged upstream).
   * Added Alan as Uploader in debian/control.
+  * Policy bumped to 3.8.0, withour changes.
+  * debian-rules-ignores-make-clean-error lintian warning fixed in debian/rules.
 
- -- Francesco Paolo Lovergine <frankie@debian.org>  Mon, 29 Sep 2008 15:51:35 +0200
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Mon, 29 Sep 2008 16:55:04 +0200
 
 mapserver (5.0.3-3) unstable; urgency=low
 

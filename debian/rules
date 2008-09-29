@@ -201,7 +201,7 @@ clean: unpatch clean-first-build clean-agg
 	dh_testdir
 	dh_clean
 	-$(RM) configure-php5-stamp build-php5-stamp install-arch-stamp install-indep-stamp install-php5-stamp
-	-$(MAKE) distclean
+	[ ! -f Makefile ] || $(MAKE) distclean
 
 install-indep: install-indep-stamp
 install-indep-stamp: build-indep
