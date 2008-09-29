@@ -1,3 +1,13 @@
+mapserver (5.2.0-1) experimental; urgency=low
+
+  * New upstream release. Thanks Alan Boudreault.
+    (closes: #498547)
+  * Added libxml2-dev build-dependency.
+  * Deapplied all current patches (merged upstream).
+  * Added Alan as Uploader in debian/control.
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Mon, 29 Sep 2008 15:51:35 +0200
+
 mapserver (5.0.3-3) unstable; urgency=low
 
   * Updated sv.po template.
