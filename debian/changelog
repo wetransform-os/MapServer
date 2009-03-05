@@ -1,3 +1,10 @@
+mapserver (5.2.1-2) unstable; urgency=low
+
+  * debian/watch: fixed. (Closes: #515732)
+  * debian/po/ja.po: updated. (Closes: #510897)
+
+ -- Fabio Tranchitella <kobold@debian.org>  Thu, 05 Mar 2009 22:55:48 +0100
+
 mapserver (5.2.1-1) experimental; urgency=low
 
   * New upstream release.
