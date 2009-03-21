@@ -1,6 +1,8 @@
 mapserver (5.2.1-3) unstable; urgency=low
 
+  * NOT RELEASED.
   * Added libproj-dev build-dep for new proj package style.
+  * Removed Paul Wise among Uploaders after his request.
 
  -- Francesco Paolo Lovergine <frankie@debian.org>  Wed, 11 Mar 2009 18:09:56 +0100
 
