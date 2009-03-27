@@ -1,3 +1,10 @@
+mapserver (5.2.2-2) unstable; urgency=low
+
+  * NOT YET RELEASED.
+  * Updated sections due to ftmpasters changes.
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Fri, 27 Mar 2009 17:28:10 +0100
+
 mapserver (5.2.2-1) unstable; urgency=high
 
   * New upstream release, with security fixes.

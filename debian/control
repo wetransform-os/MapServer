@@ -18,7 +18,7 @@ Vcs-Browser: http://svn.debian.org/viewsvn/pkg-grass/packages/mapserver/trunk
 Vcs-Svn: svn://svn.debian.org/svn/pkg-grass/packages/mapserver/trunk
 
 Package: php5-mapscript
-Section: web
+Section: php
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Suggests: mapserver-bin, mapserver-doc
@@ -85,7 +85,7 @@ Description: documentation for MapServer
  library packages.
 
 Package: libmapscript-ruby
-Section: devel
+Section: ruby
 Architecture: all
 Depends: libmapscript-ruby1.8
 Description: Ruby MapServer library
@@ -95,7 +95,7 @@ Description: Ruby MapServer library
  default version of Ruby.
 
 Package: libmapscript-ruby1.8
-Section: devel
+Section: ruby
 Architecture: any
 Depends: ${shlibs:Depends}
 Suggests: mapserver-bin, mapserver-doc
@@ -103,7 +103,7 @@ Description: Ruby MapServer library
  Ruby MapScript provides MapServer functions for Ruby scripts.
 
 Package: libmapscript-ruby1.9
-Section: devel
+Section: ruby
 Architecture: any
 Depends: ${shlibs:Depends}
 Suggests: mapserver-bin, mapserver-doc
