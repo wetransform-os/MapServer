@@ -2,8 +2,9 @@ mapserver (5.2.2-2) unstable; urgency=low
 
   * NOT YET RELEASED.
   * Updated sections due to ftmpasters changes.
+  * Removed obsolete proj alternative build-dep.
 
- -- Francesco Paolo Lovergine <frankie@debian.org>  Fri, 27 Mar 2009 17:28:10 +0100
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Mon, 30 Mar 2009 11:57:39 +0200
 
 mapserver (5.2.2-1) unstable; urgency=high
 
