@@ -98,19 +98,6 @@ build-indep: build-indep-stamp
 build-indep-stamp:
 	dh_testdir
 
-	mkdir html
-	rst2html $(rstoptions) mapscript/doc/imagery-HOWTO.txt > html/imagery-HOWTO.html
-	rst2html $(rstoptions) mapscript/doc/mapfile-HOWTO.txt > html/mapfile-HOWTO.html
-	rst2html $(rstoptions) mapscript/doc/mapscript.txt > html/mapscript.html
-	rst2html $(rstoptions) mapscript/doc/python.txt > html/python.html
-	rst2html $(rstoptions) mapscript/doc/querying-HOWTO.txt > html/querying-HOWTO.html
-	for i in rfc/ms-rfc*.txt; do \
-		html=`echo $$i | sed -e 's/rfc/html/g'`; \
-		rst2html $(rstoptions) $$i > $$html; \
-	done
-	cp mapscript/doc/default.css html
-	cp mapscript/doc/mapscript.css html
-
 	touch build-indep-stamp
 
 build-arch: build-arch-stamp
@@ -187,8 +174,6 @@ clean-first-build:
 	-$(RM) Makefile mapscript/java/Makefile
 	-$(RM) mapscript/csharp/Makefile mapscript/php3/Makefile
 	-$(RM) config.log config.status
-
-	-$(RM) -rf html/
 
 	-$(RM) debian/.#* .#*
 
