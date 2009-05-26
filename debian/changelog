@@ -1,19 +1,18 @@
 mapserver (5.4.0-1) experimental; urgency=low
 
   * NOT YET RELEASED.
+
+  [ Alan Boudreault ]
   * New upstream release.
   * Added Alan as Uploader in debian/control.
   * Removed obsolete html doc generation in debian/rules and 
     from mapserver-doc package.  
 
- -- Alan Boudreault <aboudreault@mapgears.com>  Wed, 29 Apr 2009 07:54:54 -0400
-
-mapserver (5.2.2-2) unstable; urgency=low
-
+  [ Francesco Paolo Lovergine ]
   * Updated sections due to ftmpasters changes.
   * Removed obsolete proj alternative build-dep.
 
- -- Francesco Paolo Lovergine <frankie@debian.org>  Mon, 30 Mar 2009 11:57:39 +0200
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Tue, 26 May 2009 21:45:45 +0200
 
 mapserver (5.2.2-1) unstable; urgency=high
 
