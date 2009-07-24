@@ -1,6 +1,11 @@
+mapserver (5.4.2-1) unstable; urgency=low
+
+  * New upstream release, with a few fixes.
+
+ -- Alan Boudreault <aboudreault@mapgears.com>  Fri, 24 Jul 2009 09:16:45 -0400
+
 mapserver (5.4.1-1) experimental; urgency=low
 
-  * NOT YET RELEASED.
   * New upstream release, with a few fixes. 
 
  -- Alan Boudreault <aboudreault@mapgears.com>  Thu, 04 Jun 2009 14:51:13 -0400
