@@ -1,6 +1,8 @@
-mapserver (5.4.2-1) unstable; urgency=low
+mapserver (5.4.2-1) unstable; urgency=high
 
-  * New upstream release, with a few fixes.
+  * New upstream release, with a few fixes. 
+    Proper fix for CVE-2009-0840.
+    (closes: #535340, #532446)
 
  -- Alan Boudreault <aboudreault@mapgears.com>  Fri, 24 Jul 2009 09:16:45 -0400
 
