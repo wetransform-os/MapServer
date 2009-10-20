@@ -18,8 +18,6 @@ RUBYVERS=1.8 1.9
 PHP5API=$(shell php-config5 --phpapi)
 PHP5DIR=$(shell php-config5 --extension-dir)
 
-AGG=agg-2.4
-
 
 # Configure config :
 # Not using non free libpdf
@@ -33,6 +31,8 @@ COMMON_CONFIG=	--prefix=/usr \
 		--without-pdf \
 		--with-gd=/usr \
 		--with-freetype=/usr \
+		--with-fribidi-config \
+		--with-ming \
 		--with-zlib=/usr \
 		--with-png=/usr \
 		--with-xpm=/usr \
@@ -50,30 +50,14 @@ COMMON_CONFIG=	--prefix=/usr \
 		--with-threads \
 		--with-geos \
 		--with-fastcgi \
-		--with-agg=$(CURDIR)/.$(AGG)
+		--with-agg
 
 rstoptions=--stylesheet=mapscript.css --link-stylesheet 
-
-configure-agg: configure-agg-stamp
-configure-agg-stamp:
-	uudecode -o /dev/stdout $(CURDIR)/debian/$(AGG).uu | tar xzf - 
-	( cd $(AGG) && \
-	  ./configure --prefix=$(CURDIR)/.$(AGG)  \
-	            --disable-shared --disable-gpc --enable-freetype --disable-examples --with-pic )
-
-	touch configure-agg-stamp
-
-build-agg: build-agg-stamp
-build-agg-stamp: configure-agg-stamp
-	$(MAKE) -C $(AGG) 
-	$(MAKE) -C $(AGG) install
-
-	touch build-agg-stamp
 
 MS_CFLAGS=-g -O2
 MS_CXXFLAGS=$(MS_CFLAGS)
 
-configure-stamp: patch build-agg-stamp
+configure-stamp: patch
 	dh_testdir
 	./configure $(COMMON_CONFIG) CFLAGS="$(MS_CFLAGS)" CXXFLAGS="$(MS_CXXFLAGS)"
 
@@ -101,7 +85,7 @@ build-indep-stamp:
 	touch build-indep-stamp
 
 build-arch: build-arch-stamp
-build-arch-stamp: configure-stamp build-agg-stamp
+build-arch-stamp: configure-stamp
 	dh_testdir
 
 	# Build binary lib
@@ -114,16 +98,8 @@ build-arch-stamp: configure-stamp build-agg-stamp
 		&& $(MAKE) LD_RUN_PATH="" OPTIMIZE="-O2 -g -W -Wall"
 
 	# Build python
-	# This is a dirty hack to properly link agg static libraries using setup.py
-	# It fixes 
-	# 1. changes a bit mapscriptvars
-	sed -e 's/ -lagg/\/libagg.a/' -e 's/-L\([^ ]*\.agg-2\.4\/lib\)\/libagg\.a\ -laggfontfreetype/\1\/libagg.a \1\/libaggfontfreetype.a/' \
-	        $(CURDIR)/mapscriptvars  >$(CURDIR)/mapscript/python/mapscriptvars
-	# 2. now changes setup.py to use the changed copy
-	sed -e 's/\("\)\.\.\/\.\.\/\(mapscriptvars"\)/\1\2/' \
-		$(CURDIR)/mapscript/python/setup.py >$(CURDIR)/mapscript/python/setup-hack.py
 	cd $(CURDIR)/mapscript/python && \
-	  set -e; for python in $(PYVERS); do $$python setup-hack.py build; done
+	  set -e; for python in $(PYVERS); do $$python setup.py build; done
 
 	# Build ruby
 	cd $(CURDIR)/mapscript/ruby && set -e ; \
@@ -155,14 +131,11 @@ clean-first-build:
 	touch mapscriptvars
 	[ ! -f $(CURDIR)/mapscript/perl/Makefile ] || $(MAKE) distclean -C $(CURDIR)/mapscript/perl
 	-cd mapscript/python && \
-	  for python in $(PYVERS); do $$python setup-hack.py clean; done
+	  for python in $(PYVERS); do $$python setup.py clean; done
 	-$(RM) -rf mapscript/python/build
 	[ ! -f $(CURDIR)/mapscript/ruby/Makefile ] || $(MAKE) distclean -C $(CURDIR)/mapscript/ruby
 	-$(RM) -rf $(CURDIR)/mapscript/ruby/mapscript_wrap.c
 	-$(RM) mapscriptvars
-	# Clean private python-mapscript hacks 
-	-$(RM) mapscript/python/mapscriptvars
-	-$(RM) mapscript/python/setup-hack.py
 
 	-$(RM)  mapscript/perl/mapscript.i \
 		mapscript/tcl/mapscript.i \
@@ -177,14 +150,9 @@ clean-first-build:
 
 	-$(RM) debian/.#* .#*
 
-clean-agg:
-	 -$(RM) -rf $(CURDIR)/$(AGG)
-	 -$(RM) -rf $(CURDIR)/.$(AGG)
-	 -$(RM) -f build-agg-stamp configure-agg-stamp
-
-clean: unpatch clean-first-build clean-agg
+clean: unpatch clean-first-build
 	dh_testdir
-	dh_clean
+	dh_prep
 	-$(RM) configure-php5-stamp build-php5-stamp install-arch-stamp install-indep-stamp install-php5-stamp
 	[ ! -f Makefile ] || $(MAKE) distclean
 
@@ -217,7 +185,7 @@ install-arch-stamp: build-arch
 	# Python mapscript
 	cd $(CURDIR)/mapscript/python && set -e ; \
 	  for python in $(PYVERS); do \
-	    $$python setup-hack.py install --root=$(CURDIR)/debian/python-mapscript ; \
+	    $$python setup.py install --root=$(CURDIR)/debian/python-mapscript ; \
 	  done
 
 	# Ruby mapscript
@@ -230,7 +198,7 @@ install-arch-stamp: build-arch
 
 	# Mapserver  Binary
 	install -m755 legend scalebar shp2img shptree \
-		shptreetst shptreevis sortshp tile4ms \
+		shptreetst shptreevis sortshp tile4ms msencrypt \
 		debian/tmp/usr/bin
 	install -m755 shp2mysql.pl debian/tmp/usr/bin/shp2mysql
 	touch install-arch-stamp
@@ -267,7 +235,7 @@ binary-indep: install-indep
 binary-arch: install-arch
 	dh_testdir -a
 	dh_testroot -a
-	dh_movefiles -a
+	dh_install --autodest --list-missing --sourcedir=debian/tmp
 	dh_installchangelogs -a HISTORY.TXT
 	dh_installdocs -a
 	dh_installexamples -a

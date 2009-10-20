@@ -1,3 +1,19 @@
+mapserver (5.6.0-1) unstable; urgency=low
+
+  * NOT YET RELEASED.
+  * Debhelper compatibility level moved to 7.
+  * Now uses dh_prep instead of deprecated dh_clean -k.
+  * Deprecated dh_movefiles changed in dh_install.
+  * Removed debian/AGG and debian/agg-2.4.uu: use AGG included with Mapserver source.
+  * Clean up of debian/copyright and debian/rules: removed all agg related stuff.
+  * Added libxslt1-dev, libpam0g-dev and libreadline-dev build-dependencies. 
+  * Added msencrypt binary.
+  * Added SWF support. (flash)
+  * Added fribidi support.
+  * Added libfribidi-dev, libming-dev build-dependencies.
+
+ -- Alan Boudreault <aboudreault@mapgears.com>  Mon, 19 Oct 2009 13:51:23 -0400
+
 mapserver (5.4.2-1) unstable; urgency=high
 
   * New upstream release, with a few fixes. 
