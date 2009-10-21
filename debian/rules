@@ -224,7 +224,7 @@ binary-indep: install-indep
 	dh_installdocs -i
 	dh_installexamples -i
 	dh_installdebconf -i
-	dh_compress -i
+	dh_compress -i -X.xml -X.xsd -X.xsl
 	dh_link -i
 	dh_fixperms -i
 	dh_installdeb -i
