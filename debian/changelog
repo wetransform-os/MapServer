@@ -1,6 +1,5 @@
 mapserver (5.6.0-1) unstable; urgency=low
 
-  * NOT YET RELEASED.
   * Debhelper compatibility level moved to 7.
   * Now uses dh_prep instead of deprecated dh_clean -k.
   * Deprecated dh_movefiles changed in dh_install.
