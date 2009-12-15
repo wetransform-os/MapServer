@@ -220,3 +220,22 @@ mapscript/python/pygdioctx:
  * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+renders/agg:
+
+The Anti-Grain Geometry Project
+A high quality rendering engine for C++
+http://antigrain.com
+
+Anti-Grain Geometry - Version 2.4
+Copyright (C) 2002-2005 Maxim Shemanarev (McSeem)
+
+Permission to copy, use, modify, sell and distribute this software
+is granted provided this copyright notice appears in all copies.
+This software is provided "as is" without express or implied
+warranty, and with no claim as to its suitability for any purpose.
+
+[ 
+  Note that current AGG changed license in GPL, but the embedded
+  copy is an older one with the license above.
+]
