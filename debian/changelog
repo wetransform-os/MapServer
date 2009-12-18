@@ -1,3 +1,10 @@
+mapserver (5.6.0-2) unstable; urgency=low
+
+  * Added security patch 9623.dpatch, as last minute fix.
+    See http://trac.osgeo.org/mapserver/ticket/2941 for details. 
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Fri, 18 Dec 2009 23:06:00 +0100
+
 mapserver (5.6.0-1) unstable; urgency=low
 
   [ Alan Boudreault ]
