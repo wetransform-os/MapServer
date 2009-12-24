@@ -3,9 +3,11 @@ mapserver (5.6.0+final-1) unstable; urgency=low
   * New upstream release, reissued after some last minute changes. This is
     the current 5.6.0 upstream version. 
   * Added a lintian override-file for mismatched 
-    possible-gpl-code-linked-with-openssl error.
+    possible-gpl-code-linked-with-openssl error. 
+  * Policy bumped to 3.8.3 (no changes).
+  * Added missing ${misc:Depends} item in each control stanza.
 
- -- Francesco Paolo Lovergine <frankie@debian.org>  Thu, 24 Dec 2009 16:17:35 +0100
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Thu, 24 Dec 2009 19:22:16 +0100
 
 mapserver (5.6.0-1) unstable; urgency=low
 
