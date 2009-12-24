@@ -1,9 +1,9 @@
-mapserver (5.6.0-2) unstable; urgency=low
+mapserver (5.6.0+final-1) unstable; urgency=low
 
-  * Added security patch 9623.dpatch, as last minute fix.
-    See http://trac.osgeo.org/mapserver/ticket/2941 for details. 
+  * New upstream release, reissued after some last minute changes. This is
+    the current 5.6.0 upstream version. 
 
- -- Francesco Paolo Lovergine <frankie@debian.org>  Fri, 18 Dec 2009 23:06:00 +0100
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Thu, 24 Dec 2009 16:17:35 +0100
 
 mapserver (5.6.0-1) unstable; urgency=low
 
