@@ -6,6 +6,7 @@ mapserver (5.6.0+final-1) unstable; urgency=low
     possible-gpl-code-linked-with-openssl error. 
   * Policy bumped to 3.8.3 (no changes).
   * Added missing ${misc:Depends} item in each control stanza.
+  * Added a README.source for documenting dpatch use.
 
  -- Francesco Paolo Lovergine <frankie@debian.org>  Thu, 24 Dec 2009 19:22:16 +0100
 
