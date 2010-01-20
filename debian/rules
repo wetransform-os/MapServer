@@ -14,7 +14,7 @@ version=$(shell expr `pwd` : '.*-\([0-9.]*\)')
 version_major=$(shell expr `pwd` : '.*-\([0-9]*\).[0-9.]*')
 CURDIR := $(shell pwd)
 PYVERS=$(shell pyversions -r debian/control)
-RUBYVERS=1.8 1.9
+RUBYVERS=1.8 1.9.1
 PHP5API=$(shell php-config5 --phpapi)
 PHP5DIR=$(shell php-config5 --extension-dir)
 

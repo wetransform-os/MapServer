@@ -1,3 +1,10 @@
+mapserver (5.6.1-2) unstable; urgency=low
+
+  * Modified ruby mapscript package to use ruby 1.9.1 instead of 1.9.0.
+    (closes: #565831)
+	
+ -- Alan Boudreault <aboudreault@mapgears.com>  Wed, 20 Jan 2010 08:59:29 -0500
+
 mapserver (5.6.1-1) unstable; urgency=low
 
   * New upstream release, with a few important bug fixes.
