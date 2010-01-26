@@ -1,9 +1,13 @@
 mapserver (5.6.1-2) unstable; urgency=low
 
+  [ Alan Boudreault ]
   * Modified ruby mapscript package to use ruby 1.9.1 instead of 1.9.0.
     (closes: #565831)
 	
- -- Alan Boudreault <aboudreault@mapgears.com>  Wed, 20 Jan 2010 08:59:29 -0500
+  [ Francesco Paolo Lovergine ]
+  * Removed Fabio Tranchitella from Uploaders.
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Tue, 26 Jan 2010 23:03:26 +0100
 
 mapserver (5.6.1-1) unstable; urgency=low
 
