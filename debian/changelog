@@ -1,6 +1,7 @@
-mapserver (5.6.1-2) unstable; urgency=low
+mapserver (5.6.1-1) unstable; urgency=low
 
   [ Alan Boudreault ]
+  * New upstream release, with a few important bug fixes.
   * Modified ruby mapscript package to use ruby 1.9.1 instead of 1.9.0.
     (closes: #565831)
 	
@@ -8,12 +9,6 @@ mapserver (5.6.1-2) unstable; urgency=low
   * Removed Fabio Tranchitella from Uploaders.
 
  -- Francesco Paolo Lovergine <frankie@debian.org>  Tue, 26 Jan 2010 23:03:26 +0100
-
-mapserver (5.6.1-1) unstable; urgency=low
-
-  * New upstream release, with a few important bug fixes.
-
- -- Alan Boudreault <aboudreault@mapgears.com>  Mon, 11 Jan 2010 12:46:21 -0500
 
 mapserver (5.6.0+final-1) unstable; urgency=low
 
