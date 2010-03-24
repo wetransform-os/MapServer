@@ -93,7 +93,7 @@ Depends: libmapscript-ruby1.8
 Description: Ruby MapServer library
  Ruby MapScript provides MapServer functions for Ruby scripts.
  .
- This package conains exapmles and depends on package for Debian
+ This package contains examples and depends on package for Debian
  default version of Ruby.
 
 Package: libmapscript-ruby1.8

@@ -1,3 +1,10 @@
+mapserver (5.6.3-1) unstable; urgency=low
+
+  * New upstream release, with important bug fixes.
+  * Fixed some typo in debian/control.
+
+ -- Alan Boudreault <aboudreault@mapgears.com>  Wed, 24 Mar 2010 12:17:36 -0400
+
 mapserver (5.6.1-1) unstable; urgency=low
 
   [ Alan Boudreault ]
