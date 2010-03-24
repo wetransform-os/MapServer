@@ -1,9 +1,16 @@
 mapserver (5.6.3-1) unstable; urgency=low
 
+  [ Alan Boudreault ]
   * New upstream release, with important bug fixes.
   * Fixed some typo in debian/control.
 
- -- Alan Boudreault <aboudreault@mapgears.com>  Wed, 24 Mar 2010 12:17:36 -0400
+  [ Francesco Paolo Lovergine ]
+  * Policy bumped to 3.8.4 without changes.
+  * Removed Andreas Putzo among Uploaders: last contribution dated more than
+    two years ago.
+  * Added shapelib to Suggests in mapserver-bin. 
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Wed, 24 Mar 2010 22:13:25 +0100
 
 mapserver (5.6.1-1) unstable; urgency=low
 
