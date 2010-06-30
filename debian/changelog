@@ -1,3 +1,9 @@
+mapserver (5.6.3-2) unstable; urgency=low
+
+  * Added palette support for rgba png.
+
+ -- Alan Boudreault <aboudreault@mapgears.com>  Wed, 30 Jun 2010 09:19:51 -0400
+
 mapserver (5.6.3-1) unstable; urgency=low
 
   [ Alan Boudreault ]
