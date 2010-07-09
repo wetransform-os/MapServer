@@ -1,3 +1,9 @@
+mapserver (5.6.4-1) unstable; urgency=low
+
+  * New upstream release, with important security bug fixes.
+
+ -- Alan Boudreault <aboudreault@mapgears.com>  Fri, 09 Jul 2010 08:06:36 -0400
+
 mapserver (5.6.3-2) unstable; urgency=low
 
   * Added palette support for rgba png.
