@@ -1,12 +1,19 @@
-mapserver (5.6.4-1) unstable; urgency=low
+mapserver (5.6.4-1) unstable; urgency=high
 
+  [ Alan Boudreault ]
   * New upstream release, with important security bug fixes.
   * Fix Buffer overflow in msTmpFile function.
     [http://trac.osgeo.org/mapserver/ticket/3484]
   * Fix insecure mapserv CGI command-line debug args.
     [http://trac.osgeo.org/mapserver/ticket/3485]
 
- -- Alan Boudreault <aboudreault@mapgears.com>  Fri, 09 Jul 2010 08:06:36 -0400
+  [ Francesco Paolo Lovergine ]
+  * Policy bumped to 3.9.4, no changes required.
+  * Note that in practice bashisms are avoided due to current options selection.
+    (closes: #582098)
+  * Urgency set to high due to security fixes included.
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Mon, 12 Jul 2010 22:28:39 +0200
 
 mapserver (5.6.3-2) unstable; urgency=low
 
