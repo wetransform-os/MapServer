@@ -43,6 +43,7 @@ COMMON_CONFIG=	--prefix=/usr \
 		--with-eppl \
 		--with-postgis \
 		--with-wcs \
+		--with-sos \
 		--with-wms \
 		--with-wmsclient \
 		--with-wfs \
