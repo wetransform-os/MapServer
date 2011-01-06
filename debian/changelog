@@ -1,3 +1,23 @@
+mapserver (5.6.5-2) unstable; urgency=low
+
+  * Fix Validation of symbol index values (CVE-2010-1678)
+    [http://trac.osgeo.org/mapserver/ticket/3641]
+	
+ -- Alan Boudreault <aboudreault@mapgears.com>  Thu, 06 Jan 2011 11:18:29 -0500
+
+mapserver (5.6.5-1.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Build-Depends on libedit-dev as the package FTBFS without it
+    Closes: #606247
+  * Fix pending l10n issues. Debconf translations:
+    - Czech (Miroslav Kure).  Closes: #599847
+    - Vietnamese (Clytie Siddall).  Closes: #601922
+    - Danish (Joe Hansen).  Closes: #605618
+    - Italian (Vincenzo Campanella).  Closes: #605858
+
+ -- Christian Perrier <bubulle@debian.org>  Mon, 06 Dec 2010 07:09:55 +0100
+
 mapserver (5.6.5-1) unstable; urgency=low
 
   * New upstream release with an important bug fix about scale calculation.

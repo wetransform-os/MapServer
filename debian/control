@@ -10,7 +10,7 @@ Build-Depends: debhelper (>= 7), dpatch, libcurl4-gnutls-dev, libpng12-dev, zlib
  ruby1.8, ruby1.8-dev, ruby1.9.1, ruby1.9.1-dev,
  sharutils, libsdl1.2-dev, libfreetype6-dev, libx11-dev,
  libfcgi-dev, libxml2-dev, libogdi3.2-dev, libxslt1-dev, libpam0g-dev, libreadline-dev, 
- libfribidi-dev, libming-dev
+ libfribidi-dev, libming-dev, libedit-dev
 Build-Depends-Indep: python-docutils
 Build-Conflicts: libcurl3-openssl-dev
 XS-Python-Version: all

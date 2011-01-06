@@ -1,0 +1,66 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## symbol_index_overflow.dpatch by Alan Boudreault <aboudreault@mapgears.com>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+diff -urNad mapserver-5.6.5~/mapdraw.c mapserver-5.6.5/mapdraw.c
+--- mapserver-5.6.5~/mapdraw.c	2010-07-14 05:36:48.000000000 -0400
++++ mapserver-5.6.5/mapdraw.c	2011-01-06 11:54:27.000000000 -0500
+@@ -1408,6 +1408,10 @@
+ 			nStatus = MS_FAILURE;
+ 		}
+ */
++      if (style->symbol >= map->symbolset.numsymbols) {
++          msSetError(MS_SYMERR, "Invalid symbol index: %d", "msDrawShape()", style->symbol);
++          return MS_FAILURE;
++      }
+ #endif
+         else
+         {
+diff -urNad mapserver-5.6.5~/mapfile.c mapserver-5.6.5/mapfile.c
+--- mapserver-5.6.5~/mapfile.c	2010-06-23 13:41:14.000000000 -0400
++++ mapserver-5.6.5/mapfile.c	2011-01-06 11:55:26.000000000 -0500
+@@ -4911,6 +4911,10 @@
+                 return MS_FAILURE;
+               }
+             }
++	    if(!MS_IS_VALID_ARRAY_INDEX(GET_LAYER(map, i)->class[j]->styles[k]->symbol, map->symbolset.numsymbols)) {
++	      msSetError(MS_MISCERR, "Invalid symbol index in class %d, style %d of layer %s.", "msUpdateMapFromURL()", j, k, GET_LAYER(map, i)->name);
++	      return MS_FAILURE;
++	    }
+           }
+         }
+       }
+@@ -5381,13 +5385,17 @@
+ 
+       /* make sure any symbol names for this layer have been resolved (bug #2700) */
+       for(j=0; j<GET_LAYER(map, i)->numclasses; j++) {
+-	for(k=0; k<GET_LAYER(map, i)->class[j]->numstyles; k++) {
++        for(k=0; k<GET_LAYER(map, i)->class[j]->numstyles; k++) {
+           if(GET_LAYER(map, i)->class[j]->styles[k]->symbolname && GET_LAYER(map, i)->class[j]->styles[k]->symbol == 0) {
+             if((GET_LAYER(map, i)->class[j]->styles[k]->symbol =  msGetSymbolIndex(&(map->symbolset), GET_LAYER(map, i)->class[j]->styles[k]->symbolname, MS_TRUE)) == -1) {
+               msSetError(MS_MISCERR, "Undefined symbol \"%s\" in class %d, style %d of layer %s.", "msUpdateMapFromURL()", GET_LAYER(map, i)->class[j]->styles[k]->symbolname, j, k, GET_LAYER(map, i)->name);
+               return MS_FAILURE;
+             }
+           }
++          if(!MS_IS_VALID_ARRAY_INDEX(GET_LAYER(map, i)->class[j]->styles[k]->symbol, map->symbolset.numsymbols)) {
++            msSetError(MS_MISCERR, "Invalid symbol index in class %d, style %d of layer %s.", "msUpdateMapFromURL()", j, k, GET_LAYER(map, i)->name);
++            return MS_FAILURE;
++          }
+         }
+       }
+ 
+diff -urNad mapserver-5.6.5~/mapserver.h mapserver-5.6.5/mapserver.h
+--- mapserver-5.6.5~/mapserver.h	2010-07-14 05:45:57.000000000 -0400
++++ mapserver-5.6.5/mapserver.h	2011-01-06 11:54:27.000000000 -0500
+@@ -373,6 +373,8 @@
+ #define MS_REFCNT_DECR_IS_NOT_ZERO(obj) (MS_REFCNT_DECR(obj))>0
+ #define MS_REFCNT_DECR_IS_ZERO(obj) (MS_REFCNT_DECR(obj))<=0
+ 
++#define MS_IS_VALID_ARRAY_INDEX(index, size) ((index<0 || index>=size)?MS_FALSE:MS_TRUE)
++
+ #endif
+ 
+ /* General enumerated types - needed by scripts */

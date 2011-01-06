@@ -18,8 +18,8 @@
 # - La guía de traducción de po's de debconf:
 # /usr/share/doc/po-debconf/README-trans
 # o http://www.debian.org/intl/l10n/po-debconf/README-trans
-# 
-# 
+#
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: 5.0.3-3\n"
@@ -28,9 +28,10 @@ msgstr ""
 "PO-Revision-Date: 2008-11-03 18:42-0200\n"
 "Last-Translator: Ignacio Mondino <ignacio.mondino@gmail.com>>\n"
 "Language-Team: Debian Spanish team <debian-l10n-spanish@lists.debian.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit"
+"Content-Transfer-Encoding: 8bit\n"
 
 #. Type: boolean
 #. Description
@@ -46,9 +47,9 @@ msgid ""
 "the configuration for the ${sapiconfig} SAPI. Enabling this extension will "
 "allow php5 scripts to use it."
 msgstr ""
-"Está instalando el soporte de ${extname} para php5 y este aún no está activado "
-"en la configuración de la SAPI de ${sapiconfig}. Activando esta extensión "
-"permitirá que los scripts de php5 la utilicen."
+"Está instalando el soporte de ${extname} para php5 y este aún no está "
+"activado en la configuración de la SAPI de ${sapiconfig}. Activando esta "
+"extensión permitirá que los scripts de php5 la utilicen."
 
 #. Type: boolean
 #. Description
@@ -67,4 +68,3 @@ msgstr ""
 "Está eliminando el soporte ${extname} de php5, pero todavía está activado en "
 "la configuración de la SAPI de ${sapiconfig}. Esta situación podría causar "
 "problemas al intentar utilizar PHP."
-
