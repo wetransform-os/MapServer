@@ -1,4 +1,4 @@
-mapserver (5.6.5-2) unstable; urgency=low
+mapserver (5.6.5-2) unstable; urgency=high
 
   * Fix Validation of symbol index values (CVE-2010-1678)
     [http://trac.osgeo.org/mapserver/ticket/3641]
