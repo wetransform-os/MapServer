@@ -1,3 +1,9 @@
+mapserver (5.6.6-1) unstable; urgency=low
+
+  * New upstream release some bug fixes.
+
+ -- Alan Boudreault <aboudreault@mapgears.com>  Tue, 18 Jan 2011 14:39:57 -0500
+
 mapserver (5.6.5-2) unstable; urgency=high
 
   * Fix Validation of symbol index values (CVE-2010-1678)
