@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: maplayer.c 10106 2010-04-20 04:19:06Z sdlime $
+ * $Id: maplayer.c 10533 2010-09-29 16:30:43Z aboudreault $
  *
  * Project:  MapServer
  * Purpose:  Implementation of most layerObj functions.
@@ -32,7 +32,7 @@
 #include "mapogcfilter.h"
 
 #include <assert.h>
-MS_CVSID("$Id: maplayer.c 10106 2010-04-20 04:19:06Z sdlime $")
+MS_CVSID("$Id: maplayer.c 10533 2010-09-29 16:30:43Z aboudreault $")
 
 
 static int populateVirtualTable(layerVTableObj *vtable);
@@ -366,6 +366,11 @@ int msLayerWhichItems(layerObj *layer, int get_all, char *metadata)
     rv =  msInitializeVirtualTable(layer);
     if (rv != MS_SUCCESS) return rv;
   }
+
+   /* force get_all=MS_TRUE in some cases */
+  if(layer->connectiontype == MS_INLINE || layer->connectiontype == MS_SDE ||
+     (layer->connectiontype == MS_ORACLESPATIAL && layer->data && msCaseFindSubstring(layer->data, "UNIQUE")))
+      get_all=MS_TRUE;
 
   /* cleanup any previous item selection */
   msLayerFreeItemInfo(layer);

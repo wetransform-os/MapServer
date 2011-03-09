@@ -45245,11 +45245,11 @@ SWIGEXPORT void SWIG_init(void) {
   PyDict_SetItemString(d, "MapServerChildError", MSExc_MapServerChildError);
   
   
-  SWIG_Python_SetConstant(d, "MS_VERSION",SWIG_FromCharPtr("5.6.5"));
+  SWIG_Python_SetConstant(d, "MS_VERSION",SWIG_FromCharPtr("5.6.6"));
   SWIG_Python_SetConstant(d, "MS_VERSION_MAJOR",SWIG_From_int((int)(5)));
   SWIG_Python_SetConstant(d, "MS_VERSION_MINOR",SWIG_From_int((int)(6)));
-  SWIG_Python_SetConstant(d, "MS_VERSION_REV",SWIG_From_int((int)(5)));
-  SWIG_Python_SetConstant(d, "MS_VERSION_NUM",SWIG_From_int((int)((5*10000+6*100+5))));
+  SWIG_Python_SetConstant(d, "MS_VERSION_REV",SWIG_From_int((int)(6)));
+  SWIG_Python_SetConstant(d, "MS_VERSION_NUM",SWIG_From_int((int)((5*10000+6*100+6))));
   SWIG_Python_SetConstant(d, "MS_TRUE",SWIG_From_int((int)(1)));
   SWIG_Python_SetConstant(d, "MS_FALSE",SWIG_From_int((int)(0)));
   SWIG_Python_SetConstant(d, "MS_UNKNOWN",SWIG_From_int((int)(-1)));

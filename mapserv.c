@@ -39,7 +39,7 @@
 #include <signal.h>
 #endif
 
-MS_CVSID("$Id: mapserv.c 10306 2010-07-08 20:07:15Z dmorissette $")
+MS_CVSID("$Id: mapserv.c 10482 2010-08-27 04:08:04Z sdlime $")
 
 mapservObj* mapserv;
 
@@ -750,7 +750,7 @@ void loadForm(void)
 
       msFreeCharArray(tokens, 2);
       
-      if(mapserv->ImgCols > mapserv->map->maxsize || mapserv->ImgRows > mapserv->map->maxsize || mapserv->ImgCols < 0 || mapserv->ImgRows < 0) {
+      if(mapserv->ImgCols > mapserv->map->maxsize || mapserv->ImgRows > mapserv->map->maxsize || mapserv->ImgCols <= 0 || mapserv->ImgRows <= 0) {
         msSetError(MS_WEBERR, "Image size out of range.", "loadForm()");
         writeError();
       }
@@ -776,7 +776,7 @@ void loadForm(void)
 
       msFreeCharArray(tokens, 2);
       
-      if(mapserv->map->width > mapserv->map->maxsize || mapserv->map->height > mapserv->map->maxsize || mapserv->map->width < 0 || mapserv->map->height < 0) {
+      if(mapserv->map->width > mapserv->map->maxsize || mapserv->map->height > mapserv->map->maxsize || mapserv->map->width <= 0 || mapserv->map->height <= 0) {
         msSetError(MS_WEBERR, "Image size out of range.", "loadForm()");
         writeError();
       }
@@ -1794,7 +1794,7 @@ int main(int argc, char *argv[]) {
           break;
         case INDEXQUERY:
         case INDEXQUERYMAP:
-          mapserv->map->query.type = MS_QUERY_BY_POINT;
+          mapserv->map->query.type = MS_QUERY_BY_INDEX;
           mapserv->map->query.mode = MS_QUERY_SINGLE;
           mapserv->map->query.layer = QueryLayerIndex;
           mapserv->map->query.shapeindex = ShapeIndex;

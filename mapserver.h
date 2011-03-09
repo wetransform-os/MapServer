@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapserver.h 10352 2010-07-14 09:45:57Z dmorissette $
+ * $Id: mapserver.h 10867 2011-01-14 14:56:21Z dmorissette $
  *
  * Project:  MapServer
  * Purpose:  Primary MapServer include file.
@@ -33,11 +33,11 @@
 /*
 ** MapServer version - to be updated for every release 
 */
-#define MS_VERSION "5.6.5"
+#define MS_VERSION "5.6.6"
 
 #define MS_VERSION_MAJOR    5
 #define MS_VERSION_MINOR    6
-#define MS_VERSION_REV      5
+#define MS_VERSION_REV      6
 
 #define MS_VERSION_NUM (MS_VERSION_MAJOR*10000+MS_VERSION_MINOR*100+MS_VERSION_REV)
 

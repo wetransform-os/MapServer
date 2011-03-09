@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapows.c 9513 2009-10-26 17:18:18Z warmerdam $
+ * $Id: mapows.c 10642 2010-10-22 13:09:07Z assefa $
  *
  * Project:  MapServer
  * Purpose:  OGC Web Services (WMS, WFS) support functions
@@ -34,7 +34,7 @@
 #include <stdarg.h> 
 #include <assert.h>
 
-MS_CVSID("$Id: mapows.c 9513 2009-10-26 17:18:18Z warmerdam $")
+MS_CVSID("$Id: mapows.c 10642 2010-10-22 13:09:07Z assefa $")
 
 /*
 ** msOWSDispatch() is the entry point for any OWS request (WMS, WFS, ...)
@@ -1180,7 +1180,11 @@ void msOWSPrintEX_GeographicBoundingBox(FILE *stream, const char *tabspace,
 
   /* always project to lat long */
   if (srcproj->numargs > 0 && !pj_is_latlong(srcproj->proj)) {
-      msProjectRect(srcproj, NULL, &ext);
+    projectionObj wgs84;
+    msInitProjection(&wgs84);
+    msLoadProjectionString(&wgs84, "+proj=longlat +datum=WGS84");
+    msProjectRect(srcproj, &wgs84, &ext);
+    msFreeProjection(&wgs84);
   }
   
 

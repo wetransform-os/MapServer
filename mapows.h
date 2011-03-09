@@ -1,5 +1,5 @@
 /*****************************************************************************
- * $Id: mapows.h 9887 2010-02-23 19:30:57Z assefa $
+ * $Id: mapows.h 10868 2011-01-14 15:08:26Z assefa $
  *
  * Project:  MapServer
  * Purpose:  OGC Web Services (WMS, WFS, WCS) support function definitions
@@ -408,8 +408,8 @@ MS_DLL_EXPORT int msGMLWriteWFSQuery(mapObj *map, FILE *stream, int maxfeatures,
  *   mapwms.c
  *====================================================================*/
 int msWMSDispatch(mapObj *map, cgiRequestObj *req); 
-MS_DLL_EXPORT int msWMSLoadGetMapParams(mapObj *map, int nVersion,
-                          char **names, char **values, int numentries);
+MS_DLL_EXPORT int msWMSLoadGetMapParams(mapObj *map, int nVersion, char **names, 
+                                        char **values, int numentries, char *wms_exception_format);
 
 
 /*====================================================================

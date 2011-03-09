@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: rbmodule.i 5197 2006-02-15 17:47:33Z sdlime $
+ * $Id: rbmodule.i 10779 2010-12-06 04:06:29Z jimk $
  *
  * Project:  MapServer
  * Purpose:  Ruby-specific enhancements to MapScript
@@ -22,3 +22,15 @@
     $result = rb_str_new($1.data, $1.size);
     gdFree($1.data);
 }
+
+/* Module initialization: call msSetup() and register msCleanup() */
+%init %{
+
+/* Copied from pymodule.i to fix #3619 */
+    if (msSetup() != MS_SUCCESS)
+    {
+        msSetError(MS_MISCERR, "Failed to set up threads and font cache",
+                   "msSetup()");
+    }
+%}
+

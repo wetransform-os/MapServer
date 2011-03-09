@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapmssql2008.c 9924 2010-03-06 22:35:16Z tamas $
+ * $Id: mapmssql2008.c 10395 2010-07-24 19:20:29Z tamas $
  *
  * Project:  MapServer
  * Purpose:  MS SQL 2008 (Katmai) Layer Connector
@@ -34,7 +34,7 @@
 
 #define _CRT_SECURE_NO_WARNINGS 1
 
-/* $Id: mapmssql2008.c 9924 2010-03-06 22:35:16Z tamas $ */
+/* $Id: mapmssql2008.c 10395 2010-07-24 19:20:29Z tamas $ */
 #include <assert.h>
 #include "mapserver.h"
 #include "maptime.h"
@@ -49,7 +49,7 @@
 #include <string.h>
 #include <ctype.h> /* tolower() */
 
-MS_CVSID("$Id: mapmssql2008.c 9924 2010-03-06 22:35:16Z tamas $")
+MS_CVSID("$Id: mapmssql2008.c 10395 2010-07-24 19:20:29Z tamas $")
 
 /* Structure for connection to an ODBC database (Microsoft preferred way to connect to SQL Server 2005 from c/c++) */
 typedef struct msODBCconn_t
@@ -1608,16 +1608,27 @@ int msMSSQL2008LayerGetItems(layerObj *layer)
     return msMSSQL2008LayerInitItemInfo(layer);
 }
 
-/* Dont know if this function actually called */
-/* So just return some large area for now*/
+/* Get the layer extent as specified in the mapfile or a largest area */
+/* covering all features */
 int msMSSQL2008LayerGetExtent(layerObj *layer, rectObj *extent)
 {
     if(layer->debug) {
         msDebug("msMSSQL2008LayerGetExtent called\n");
     }
 
-    extent->minx = extent->miny = -1000000;
-    extent->maxx = extent->maxy = 1000000;
+    if (layer->extent.minx == -1.0 && layer->extent.miny == -1.0 &&
+        layer->extent.maxx == -1.0 && layer->extent.maxy == -1.0)
+    {
+        extent->minx = extent->miny = -1.0 * FLT_MAX;
+        extent->maxx = extent->maxy = FLT_MAX;
+    }
+    else
+    {
+        extent->minx = layer->extent.minx;
+        extent->miny = layer->extent.miny;
+        extent->maxx = layer->extent.maxx;
+        extent->maxy = layer->extent.maxy;
+    }
 
     return MS_SUCCESS;
 }

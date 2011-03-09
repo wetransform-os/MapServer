@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapobject.c 9323 2009-09-21 06:26:37Z sdlime $
+ * $Id: mapobject.c 10868 2011-01-14 15:08:26Z assefa $
  *
  * Project:  MapServer
  * Purpose:  Functions for operating on a mapObj that don't belong in a
@@ -35,7 +35,7 @@
 #  include "cpl_conv.h"
 #endif
 
-MS_CVSID("$Id: mapobject.c 9323 2009-09-21 06:26:37Z sdlime $")
+MS_CVSID("$Id: mapobject.c 10868 2011-01-14 15:08:26Z assefa $")
 
 void freeWeb(webObj *web);
 void freeScalebar(scalebarObj *scalebar);
@@ -774,10 +774,17 @@ int msMapLoadOWSParameters(mapObj *map, cgiRequestObj *request,
 {
 #ifdef USE_WMS_SVR
     int version;
+    char *wms_exception_format = NULL;
+    int i =0;
 
     version = msOWSParseVersionString(wmtver);
+    for(i=0; i<request->NumParams; i++) 
+    {
+         if (strcasecmp(request->ParamNames[i], "EXCEPTIONS") == 0)
+           wms_exception_format = request->ParamValues[i];
+    }
     return msWMSLoadGetMapParams(map, version, request->ParamNames,
-                                 request->ParamValues, request->NumParams);
+                                 request->ParamValues, request->NumParams,  wms_exception_format);
 #else
     msSetError(MS_WMSERR, "WMS server support is not available.",
                "msMapLoadOWSParameters()");

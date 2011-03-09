@@ -1,6 +1,6 @@
 
 /******************************************************************************
- * $Id: swig_csharp_extensions.i 7418 2008-02-29 00:02:49Z nsavard $
+ * $Id: swig_csharp_extensions.i 10808 2010-12-20 16:03:35Z tamas $
  *
  * Project:  MapServer
  * Purpose:  Fix for the SWIG Interface problems (early GC)
@@ -28,6 +28,12 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
+
+// Ensure the class is not marked BeforeFieldInit causing memory corruption with CLR4 
+%pragma(csharp) imclasscode=%{
+  static $imclassname() {
+  }
+%}
 
 %typemap(csout, excode=SWIGEXCODE) SWIGTYPE {
     $&csclassname ret = new $&csclassname($imcall, true, null);$excode
@@ -202,5 +208,22 @@
   internal static $moduleObject the$moduleObject = new $moduleObject();
   protected static object ThisOwn_true() { return null; }
   protected static object ThisOwn_false() { return the$moduleObject; }
+  
+  [DllImport("$dllimport", EntryPoint="SetEnvironmentVariable")]
+  public static extern int SetEnvironmentVariable(string envstring);
 %}
 
+%insert(runtime) %{
+#ifdef __cplusplus
+extern "C" 
+#endif
+#ifdef SWIGEXPORT
+SWIGEXPORT int SWIGSTDCALL SetEnvironmentVariable(const char *envstring) {
+  return putenv(envstring);
+}
+#else
+DllExport int SWIGSTDCALL SetEnvironmentVariable(const char *envstring) {
+  return putenv(envstring);
+}
+#endif
+%}

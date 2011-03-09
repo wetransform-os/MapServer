@@ -8,7 +8,7 @@
 #  - Run the VCVARS32.BAT script to initialize the VC++ environment variables
 #  - Start the build with:  nmake /f makefile.vc
 #
-# $Id: Makefile.vc 10131 2010-05-02 12:34:21Z tamas $
+# $Id: Makefile.vc 10441 2010-08-05 11:43:30Z tamas $
 #
 
 
@@ -48,7 +48,7 @@ CSC = csc $(CSDEBUG)
 !ENDIF
 
 !IF $(MSVC_VER) >= 1600
-CSC = $(CSC) /define:CLR4 /debug:full
+CSC = $(CSC) /define:CLR4
 !ENDIF
 
 #SWIG = swig

@@ -20,6 +20,9 @@ public class mapscript {
   internal static mapscriptObject themapscriptObject = new mapscriptObject();
   protected static object ThisOwn_true() { return null; }
   protected static object ThisOwn_false() { return themapscriptObject; }
+  
+  [DllImport("mapscript", EntryPoint="SetEnvironmentVariable")]
+  public static extern int SetEnvironmentVariable(string envstring);
 
   public static int msSaveImage(mapObj map, imageObj img, string filename) {
     int ret = mapscriptPINVOKE.msSaveImage(mapObj.getCPtr(map), imageObj.getCPtr(img), filename);

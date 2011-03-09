@@ -184,6 +184,10 @@ class mapscriptPINVOKE {
   static protected SWIGStringHelper swigStringHelper = new SWIGStringHelper();
 
 
+  static mapscriptPINVOKE() {
+  }
+
+
   [DllImport("mapscript", EntryPoint="CSharp_new_intarray")]
   public static extern IntPtr new_intarray(int jarg1);
 
