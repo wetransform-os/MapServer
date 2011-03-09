@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: maperror.c 9453 2009-10-13 20:06:23Z aboudreault $
+ * $Id: maperror.c 10483 2010-08-27 04:15:34Z sdlime $
  *
  * Project:  MapServer
  * Purpose:  Implementation of msSetError(), msDebug() and related functions.
@@ -41,7 +41,7 @@
 #endif
 #include <stdarg.h>
 
-MS_CVSID("$Id: maperror.c 9453 2009-10-13 20:06:23Z aboudreault $")
+MS_CVSID("$Id: maperror.c 10483 2010-08-27 04:15:34Z sdlime $")
 
 static char *ms_errorCodes[MS_NUMERRORCODES] = {"",
 						"Unable to access file.",
@@ -396,7 +396,7 @@ void msWriteErrorImage(mapObj *map, char *filename, int blank) {
   char *pFormatBuffer;
   char cGDFormat[128];
   if (map) {
-      if( map->width != -1 && map->height != -1 )
+      if( map->width > 0 && map->height > 0 )
       {
           width = map->width;
           height = map->height;

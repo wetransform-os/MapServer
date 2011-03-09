@@ -253,6 +253,20 @@ SWIGEXPORT void SWIGSTDCALL SWIGRegisterStringCallback_mapscript(SWIG_CSharpStri
 
 #define SWIG_contract_assert(nullreturn, expr, msg) if (!(expr)) {SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentOutOfRangeException, msg, ""); return nullreturn; } else
 
+
+#ifdef __cplusplus
+extern "C" 
+#endif
+#ifdef SWIGEXPORT
+SWIGEXPORT int SWIGSTDCALL SetEnvironmentVariable(const char *envstring) {
+  return putenv(envstring);
+}
+#else
+DllExport int SWIGSTDCALL SetEnvironmentVariable(const char *envstring) {
+  return putenv(envstring);
+}
+#endif
+
 /*  Errors in SWIG */
 #define  SWIG_UnknownError    	   -1 
 #define  SWIG_IOError        	   -2 
@@ -3084,7 +3098,7 @@ SWIGEXPORT char * SWIGSTDCALL CSharp_MS_VERSION_get() {
   char * jresult ;
   char *result = 0 ;
   
-  result = (char *) "5.6.5";
+  result = (char *) "5.6.6";
   jresult = SWIG_csharp_string_callback((const char *)result); 
   return jresult;
 }
@@ -3114,7 +3128,7 @@ SWIGEXPORT int SWIGSTDCALL CSharp_MS_VERSION_REV_get() {
   int jresult ;
   int result;
   
-  result = (int) 5;
+  result = (int) 6;
   jresult = result; 
   return jresult;
 }
@@ -3124,7 +3138,7 @@ SWIGEXPORT int SWIGSTDCALL CSharp_MS_VERSION_NUM_get() {
   int jresult ;
   int result;
   
-  result = (int) (5*10000+6*100+5);
+  result = (int) (5*10000+6*100+6);
   jresult = result; 
   return jresult;
 }

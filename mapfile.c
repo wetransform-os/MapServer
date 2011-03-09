@@ -42,7 +42,7 @@
 #  include "gdal.h"
 #endif
 
-MS_CVSID("$Id: mapfile.c 10243 2010-06-23 17:41:14Z aboudreault $")
+MS_CVSID("$Id: mapfile.c 10731 2010-11-15 18:49:36Z aboudreault $")
 
 extern int msyylex(void);
 extern void msyyrestart(FILE *);
@@ -5485,7 +5485,7 @@ void msApplyDefaultSubstitutions(mapObj *map) {
     const char *defaultkey = msFirstKeyFromHashTable(&(layer->metadata));
     while(defaultkey) {
       if(!strncmp(defaultkey,"default_",8)){
-        char *tmpstr = (char *)malloc(sizeof(char)*(strlen(defaultkey)-8));
+        char *tmpstr = (char *)malloc(sizeof(char)*(strlen(defaultkey)-5));
         sprintf(tmpstr,"%%%s%%", &(defaultkey[8]));
 
         msLayerSubstituteString(layer,tmpstr,msLookupHashTable(&(layer->metadata),defaultkey));

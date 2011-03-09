@@ -1,5 +1,5 @@
 /**********************************************************************
- * $Id: mapogcsld.c 9912 2010-03-03 17:36:54Z assefa $
+ * $Id: mapogcsld.c 10870 2011-01-14 16:18:51Z assefa $
  *
  * Project:  MapServer
  * Purpose:  OGC SLD implementation
@@ -34,7 +34,7 @@
 #include "cpl_string.h"
 #endif
 
-MS_CVSID("$Id: mapogcsld.c 9912 2010-03-03 17:36:54Z assefa $")
+MS_CVSID("$Id: mapogcsld.c 10870 2011-01-14 16:18:51Z assefa $")
 
 #define SLD_LINE_SYMBOL_NAME "sld_line_symbol"
 #define SLD_LINE_SYMBOL_DASH_NAME "sld_line_symbol_dash"
@@ -1648,22 +1648,22 @@ void msSLDParseGraphicFillOrStroke(CPLXMLNode *psRoot,
                             psCssParam = psCssParam->psNext;
                         }
                     }
-                    
+                }
 
                      /* set the default color if color is not not already set */
-                    if ((psStyle->color.red < 0 || 
-                        psStyle->color.green == -1 ||
-                         psStyle->color.blue == -1) &&
-                        (psStyle->outlinecolor.red == -1 ||
-                         psStyle->outlinecolor.green == -1 ||
-                         psStyle->outlinecolor.blue == -1))
-                    {
-                        psStyle->color.red = 128;
-                        psStyle->color.green = 128;
-                        psStyle->color.blue = 128;
-                    }
+                if ((psStyle->color.red < 0 || 
+                     psStyle->color.green == -1 ||
+                     psStyle->color.blue == -1) &&
+                    (psStyle->outlinecolor.red == -1 ||
+                     psStyle->outlinecolor.green == -1 ||
+                     psStyle->outlinecolor.blue == -1))
+                  {
+                    psStyle->color.red = 128;
+                    psStyle->color.green = 128;
+                    psStyle->color.blue = 128;
+                  }
                     
-                }
+                
                 /* Get the corresponding symbol id  */
                 psStyle->symbol = msSLDGetMarkSymbol(map, pszSymbolName, 
                                                      bFilled, pszDashValue);

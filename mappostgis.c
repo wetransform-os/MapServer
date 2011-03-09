@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mappostgis.c 9967 2010-03-22 13:18:57Z dmorissette $
+ * $Id: mappostgis.c 10760 2010-11-24 17:29:47Z pramsey $
  *
  * Project:  MapServer
  * Purpose:  PostGIS CONNECTIONTYPE support.
@@ -68,7 +68,7 @@
 
 #ifdef USE_POSTGIS
 
-MS_CVSID("$Id: mappostgis.c 9967 2010-03-22 13:18:57Z dmorissette $")
+MS_CVSID("$Id: mappostgis.c 10760 2010-11-24 17:29:47Z pramsey $")
 
 /*
 ** msPostGISCloseConnection()
@@ -1383,7 +1383,7 @@ int msPostGISReadShape(layerObj *layer, shapeObj *shape) {
     wkbstrlen = PQgetlength(layerinfo->pgresult, layerinfo->rownum, layer->numitems);
     
     if ( ! wkbstr ) {
-        msSetError(MS_QUERYERR, "Base64 WKB returned is null!", "msPostGISReadShape()");
+        msSetError(MS_QUERYERR, "String encoded WKB returned is null!", "msPostGISReadShape()");
         return MS_FAILURE;
     }
 

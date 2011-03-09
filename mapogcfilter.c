@@ -1,5 +1,5 @@
 /**********************************************************************
- * $Id: mapogcfilter.c 10102 2010-04-13 14:08:11Z assefa $
+ * $Id: mapogcfilter.c 10549 2010-09-30 13:55:47Z assefa $
  *
  * Project:  MapServer
  * Purpose:  OGC Filter Encoding implementation
@@ -35,7 +35,7 @@
 #include "mapserver.h"
 #include "mapowscommon.h"
 
-MS_CVSID("$Id: mapogcfilter.c 10102 2010-04-13 14:08:11Z assefa $")
+MS_CVSID("$Id: mapogcfilter.c 10549 2010-09-30 13:55:47Z assefa $")
 
 #ifdef USE_OGR
 
@@ -2368,11 +2368,11 @@ int FLTValidForPropertyIsLikeFilter(FilterEncodingNode *psFilterNode)
     if (nCount > 1)
       return 0;
 
-    /*make sure that if there is properyisequal, it is the only one*/
-    if (psFilterNode->psLeftNode == NULL && psFilterNode->psRightNode == NULL)
+    /*make sure that it is the main and only node*/
+    if (strcasecmp(psFilterNode->pszValue, "PropertyIsLike") == 0)
       return 1;
-
-    return 0;
+    
+    return  0;
 }
 
 int FLTIsPropertyIsLikeFilter(FilterEncodingNode *psFilterNode)

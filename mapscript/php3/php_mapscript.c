@@ -57,7 +57,7 @@
 #undef gdImageCopy
 #endif
 
-#define PHPMS_VERSION "($Revision: 10204 $ $Date: 2010-06-02 09:57:48 -0400 (Wed, 02 Jun 2010) $)"
+#define PHPMS_VERSION "($Revision: 10204 $ $Date: 2010-06-02 06:57:48 -0700 (Wed, 02 Jun 2010) $)"
 
 #ifndef DLEXPORT 
 #define DLEXPORT ZEND_DLEXPORT

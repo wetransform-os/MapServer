@@ -1,7 +1,7 @@
 MapServer Revision History
 ==========================
 
-$Id: HISTORY.TXT 10353 2010-07-14 09:55:52Z dmorissette $
+$Id: HISTORY.TXT 10874 2011-01-17 22:31:59Z dmorissette $
 
 This is a human-readable revision history which will attempt to document
 required changes for users to migrate from one version of MapServer to the
@@ -11,6 +11,48 @@ the top of the list.)
 
 For a complete change history, please see the Subversion log comments.
 
+Version 5.6.6 (2011-01-17):
+---------------------------
+
+- SLD: Fix point symbolizer issue when color is not set (#3658)
+
+- Fix WMS EXCEPTIONS parameter issue with fastcgi (#3525)
+
+- Fixed missing time in msDrawMap logging (#3651)
+
+- Fixed Internal error with Oracle Spatial multi point geometries (#3627)
+
+- Fixed double free in shp2img.c (#3497)
+
+- Fixed free(): invalid next size in mapfile.c (#3604)
+
+- Fix for the memory corruption when mapping the string data type in the 
+  Java bindings (3491)
+
+- Correct wms 1.3.0 latlong bbox error (#2578)
+
+- Fix ProperyIsLike not used efficiently with Oracle (#3557) 
+
+- Fixed msOGRGetSymbolId according to the changes in gdal 1.8 (#3556)
+
+- Fixed crash when drawing a map using UNIQUE fid in the layer data (#3271)
+
+- Fixed Oracle Spatial Data gets corrupt (#3541)
+
+- Fixed issue with multiple styles and binding (#3538)
+
+- Fixed multiple include tags not supported in xml mapfiles (#3530)
+
+- Ensure the class is not marked BeforeFieldInit causing memory corruption 
+  with C#/CLR4 (#3438)
+
+- Fixed MSSQL2008 driver returning invalid extent (#3498)
+
+- Fix computation of shape bounds when the first line contains no points
+  (#3119)(fixes #3383)
+
+- Fixed error message tiles on zero-sized map cause memory allocation errors 
+  in maperror.c. (#3524)
 
 Version 5.6.5 (2010-07-14):
 ---------------------------

@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapprimitive.c 9512 2009-10-26 15:49:03Z aboudreault $
+ * $Id: mapprimitive.c 10379 2010-07-22 08:23:12Z tbonfort $
  *
  * Project:  MapServer
  * Purpose:  Implementations for rectObj, pointObj, lineObj, shapeObj, etc.
@@ -32,7 +32,7 @@
 #include <assert.h>
 #include <locale.h>
 
-MS_CVSID("$Id: mapprimitive.c 9512 2009-10-26 15:49:03Z aboudreault $")
+MS_CVSID("$Id: mapprimitive.c 10379 2010-07-22 08:23:12Z tbonfort $")
 
 typedef enum {CLIP_LEFT, CLIP_MIDDLE, CLIP_RIGHT} CLIP_STATE;
 
@@ -187,12 +187,16 @@ void msShapeDeleteLine( shapeObj *shape, int line )
 void msComputeBounds(shapeObj *shape)
 {
   int i, j;
-
   if(shape->numlines <= 0) return;
-  if(shape->line[0].numpoints <= 0) return;
-
-  shape->bounds.minx = shape->bounds.maxx = shape->line[0].point[0].x;
-  shape->bounds.miny = shape->bounds.maxy = shape->line[0].point[0].y;
+  for(i=0;i<shape->numlines;i++) {
+     if(shape->line[i].numpoints > 0) {
+        shape->bounds.minx = shape->bounds.maxx = shape->line[i].point[0].x;
+        shape->bounds.miny = shape->bounds.maxy = shape->line[i].point[0].y;
+        break;
+     }
+  }
+  if(i == shape->numlines)
+     return; //no lines inside the shape contain any points 
     
   for( i=0; i<shape->numlines; i++ ) {
     for( j=0; j<shape->line[i].numpoints; j++ ) {
