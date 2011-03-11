@@ -157,6 +157,7 @@ clean: clean-first-build
 	dh_prep
 	-$(RM) configure-php5-stamp build-php5-stamp install-arch-stamp install-indep-stamp install-php5-stamp
 	[ ! -f Makefile ] || $(MAKE) distclean
+	rm -f debian/*.debhelper.log
 
 install-indep: install-indep-stamp
 install-indep-stamp: build-indep
