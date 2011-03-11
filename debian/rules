@@ -59,14 +59,14 @@ rstoptions=--stylesheet=mapscript.css --link-stylesheet
 MS_CFLAGS=-g -O2
 MS_CXXFLAGS=$(MS_CFLAGS)
 
-configure-stamp: patch
+configure-stamp: 
 	dh_testdir
 	./configure $(COMMON_CONFIG) CFLAGS="$(MS_CFLAGS)" CXXFLAGS="$(MS_CXXFLAGS)"
 
 
 	touch configure-stamp
 
-configure-php5-stamp: patch clean-first-build
+configure-php5-stamp: clean-first-build
 	dh_testdir
 	./configure $(COMMON_CONFIG) \
 		--with-php=/usr/include/php5  CFLAGS="$(MS_CFLAGS)" CXXFLAGS="$(MS_CXXFLAGS)"
@@ -145,14 +145,14 @@ clean-first-build:
 
 	[ ! -f $(CURDIR)/Makefile ] || $(MAKE) distclean
 
-	# Remove some generated files until 50_clean.dpatch is applied upstream.
+	# Remove some generated files 
 	-$(RM) Makefile mapscript/java/Makefile
 	-$(RM) mapscript/csharp/Makefile mapscript/php3/Makefile
 	-$(RM) config.log config.status
 
 	-$(RM) debian/.#* .#*
 
-clean: unpatch clean-first-build
+clean: clean-first-build
 	dh_testdir
 	dh_prep
 	-$(RM) configure-php5-stamp build-php5-stamp install-arch-stamp install-indep-stamp install-php5-stamp
@@ -268,4 +268,3 @@ binary: binary-indep binary-arch
 
 .PHONY: build build-arch build-indep clean binary-indep binary-arch binary install install-indep install-arch
 
-include /usr/share/dpatch/dpatch.make

@@ -1,8 +1,14 @@
 mapserver (5.6.6-1) unstable; urgency=low
 
+  [ Alan Boudreault ]
   * New upstream release some bug fixes.
 
- -- Alan Boudreault <aboudreault@mapgears.com>  Tue, 18 Jan 2011 14:39:57 -0500
+  [ Francesco Paolo Lovergine ]
+  * Moved to debian source 3.0 and quilt support.
+  * Policy bumped to 3.9.1 withous changes.
+  * Fixed Vcs-* fields in debian/control.
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Fri, 11 Mar 2011 22:50:39 +0100
 
 mapserver (5.6.5-2) unstable; urgency=high
 
