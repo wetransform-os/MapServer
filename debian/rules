@@ -182,8 +182,7 @@ install-arch-stamp: build-arch
 
 	# Perl mapscript
 	cd $(CURDIR)/mapscript/perl && \
-        $(MAKE) install PREFIX=$(CURDIR)/debian/perl-mapscript/usr/ \
-	                SITEPREFIX=$(CURDIR)/debian/perl-mapscript/usr/
+        $(MAKE) install DESTDIR=$(CURDIR)/debian/perl-mapscript
 
 	# Python mapscript
 	cd $(CURDIR)/mapscript/python && set -e ; \
