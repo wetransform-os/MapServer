@@ -9,8 +9,9 @@ mapserver (5.6.6-1) unstable; urgency=low
   * Fixed Vcs-* fields in debian/control.
   * Fixed debian-rules-makemaker-prefix-is-deprecated in debian/rules.
   * Fixed debhelper-but-no-misc-depends in libmapscript-ruby.
+  * lintian-overrides updated.
 
- -- Francesco Paolo Lovergine <frankie@debian.org>  Sat, 12 Mar 2011 10:45:47 +0100
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Sat, 12 Mar 2011 11:23:08 +0100
 
 mapserver (5.6.5-2) unstable; urgency=high
 
