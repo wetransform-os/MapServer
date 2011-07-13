@@ -244,7 +244,7 @@ binary-arch: install-arch
 	dh_installexamples -a
 	chmod a-x debian/php*-mapscript/usr/share/doc/php*-mapscript/examples/*.phtml
 	dh_installdebconf -a
-	dh_pycentral -ppython-mapscript
+	dh_python2 -ppython-mapscript
 	dh_compress -a
 	dh_link -a
 	# Overrides a mismatched error from lintian

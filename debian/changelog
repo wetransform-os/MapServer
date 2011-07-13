@@ -1,3 +1,14 @@
+mapserver (5.6.6-2) unstable; urgency=low
+
+  * Ack previous NMU: added libepsilon-dev as build-dep.
+    (closes: #624811)
+  * Policy bumped to 3.9.2, no changes required.
+  * Moved to libjpeg-dev as build-dep.
+  * Migrated to dh_python2.
+    (closes: #616883)
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Wed, 13 Jul 2011 18:05:19 +0200
+
 mapserver (5.6.6-1) unstable; urgency=low
 
   [ Alan Boudreault ]
