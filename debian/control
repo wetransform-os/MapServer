@@ -11,7 +11,6 @@ Build-Depends: debhelper (>= 7), libcurl4-gnutls-dev, libpng12-dev, zlib1g-dev (
  sharutils, libsdl1.2-dev, libfreetype6-dev, libx11-dev,
  libfcgi-dev, libxml2-dev, libogdi3.2-dev, libxslt1-dev, libpam0g-dev, libreadline-dev, 
  libfribidi-dev, libming-dev, libedit-dev, libepsilon-dev
-Build-Depends-Indep: python-docutils
 Build-Conflicts: libcurl3-openssl-dev
 Homepage: http://www.mapserver.org
 Vcs-Browser: http://git.debian.org/?p=pkg-grass/mapserver.git
@@ -25,13 +24,16 @@ Suggests: mapserver-bin, mapserver-doc
 Description: php5-cgi module for MapServer
  PHP MapScript provides MapServer functions for PHP scripts.
 
-Package: perl-mapscript
+Package: libmapscript-perl
 Section: perl
 Architecture: any
 Depends: ${perl:Depends}, ${shlibs:Depends}, ${misc:Depends}
 Suggests: mapserver-bin, mapserver-doc
-Description: Perl MapServer library
- Perl MapScript provides MapServer functions for Perl scripts.
+Provides: perl-mapscript
+Replaces: perl-mapscript
+Conflicts: perl-mapscript
+Description: Perl MapServer module
+ Perl MapScript module provides MapServer functions for Perl scripts.
 
 Package: cgi-mapserver
 Section: web

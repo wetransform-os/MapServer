@@ -1,3 +1,14 @@
+mapserver (5.6.6-3) unstable; urgency=low
+
+  * Removed obsolete python-docutils build-dep. Thanks Jakub Wilk.
+    (closes: #635256)
+  * Renamed perl-mapscript to libmapscript-perl to adhere the Perl naming
+    policy.
+    (closes: #575934)
+  * Revised description of Perl mapscript.
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Tue, 27 Sep 2011 15:43:19 +0200
+
 mapserver (5.6.6-2) unstable; urgency=low
 
   * Ack previous NMU: added libepsilon-dev as build-dep.
