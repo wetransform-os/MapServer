@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: maprasterquery.c 10001 2010-03-24 16:30:22Z warmerdam $
+ * $Id: maprasterquery.c 11881 2011-07-07 19:55:43Z sdlime $
  *
  * Project:  MapServer
  * Purpose:  Implementation of query operations on rasters. 
@@ -32,9 +32,9 @@
 #include "mapresample.h"
 #include "mapthread.h"
 
-MS_CVSID("$Id: maprasterquery.c 10001 2010-03-24 16:30:22Z warmerdam $")
+MS_CVSID("$Id: maprasterquery.c 11881 2011-07-07 19:55:43Z sdlime $");
 
-int msRASTERLayerGetShape(layerObj *layer, shapeObj *shape, int tile, long record);
+int msRASTERLayerGetShape(layerObj *layer, shapeObj *shape, resultObj *record);
 int msRASTERLayerGetItems(layerObj *layer);
 
 #ifdef USE_GDAL
@@ -72,13 +72,13 @@ typedef struct {
     shapeObj *searchshape;
 
     /* Only nearest result to this point. */
-    int      range_mode; /* MS_SINGLE, MS_MULTI or -1 (skip test) */
+    int      range_mode; /* MS_QUERY_SINGLE, MS_QUERY_MULTIPLE or -1 (skip test) */
     double   range_dist;
     pointObj target_point;
 
     GDALColorTableH hCT;
 
-    int      current_tile;
+    double   shape_tolerance;
 
 } rasterLayerInfo;
 
@@ -103,9 +103,9 @@ static int addResult(resultCacheObj *cache, int classindex, int shapeindex, int 
 
   if(cache->numresults == cache->cachesize) { /* just add it to the end */
     if(cache->cachesize == 0)
-      cache->results = (resultCacheMemberObj *) malloc(sizeof(resultCacheMemberObj)*MS_RESULTCACHEINCREMENT);
+      cache->results = (resultObj *) malloc(sizeof(resultObj)*MS_RESULTCACHEINCREMENT);
     else
-      cache->results = (resultCacheMemberObj *) realloc(cache->results, sizeof(resultCacheMemberObj)*(cache->cachesize+MS_RESULTCACHEINCREMENT));
+      cache->results = (resultObj *) realloc(cache->results, sizeof(resultObj)*(cache->cachesize+MS_RESULTCACHEINCREMENT));
     if(!cache->results) {
       msSetError(MS_MEMERR, "Realloc() error.", "addResult()");
       return(MS_FAILURE);
@@ -118,6 +118,7 @@ static int addResult(resultCacheObj *cache, int classindex, int shapeindex, int 
   cache->results[i].classindex = classindex;
   cache->results[i].tileindex = tileindex;
   cache->results[i].shapeindex = shapeindex;
+  cache->results[i].resultindex = -1; /* unused */
   cache->numresults++;
 
   return(MS_SUCCESS);
@@ -179,13 +180,14 @@ static void msRasterLayerInfoInitialize( layerObj *layer )
     if( rlinfo != NULL )
         return;
 
-    rlinfo = (rasterLayerInfo *) calloc(1,sizeof(rasterLayerInfo));
+    rlinfo = (rasterLayerInfo *) msSmallCalloc(1,sizeof(rasterLayerInfo));
     layer->layerinfo = rlinfo;
     
     rlinfo->band_count = -1;
     rlinfo->raster_query_mode = RQM_ENTRY_PER_PIXEL;
     rlinfo->range_mode = -1; /* inactive */
     rlinfo->refcount = 0;
+    rlinfo->shape_tolerance = 0.0;
     
     /* We need to do this or the layer->layerinfo will be interpreted */
     /* as shapefile access info because the default connectiontype is */
@@ -230,21 +232,21 @@ static void msRasterQueryAddPixel( layerObj *layer, pointObj *location,
         {
           case RQM_ENTRY_PER_PIXEL:
             rlinfo->qc_x = (double *) 
-                calloc(sizeof(double),rlinfo->query_alloc_max);
+                msSmallCalloc(sizeof(double),rlinfo->query_alloc_max);
             rlinfo->qc_y = (double *) 
-                calloc(sizeof(double),rlinfo->query_alloc_max);
+                msSmallCalloc(sizeof(double),rlinfo->query_alloc_max);
             rlinfo->qc_values = (float *) 
-                calloc(sizeof(float),
+                msSmallCalloc(sizeof(float),
                        rlinfo->query_alloc_max*rlinfo->band_count);
             rlinfo->qc_red = (int *) 
-                calloc(sizeof(int),rlinfo->query_alloc_max);
+                msSmallCalloc(sizeof(int),rlinfo->query_alloc_max);
             rlinfo->qc_green = (int *) 
-                calloc(sizeof(int),rlinfo->query_alloc_max);
+                msSmallCalloc(sizeof(int),rlinfo->query_alloc_max);
             rlinfo->qc_blue = (int *) 
-                calloc(sizeof(int),rlinfo->query_alloc_max);
+                msSmallCalloc(sizeof(int),rlinfo->query_alloc_max);
             if( layer->numclasses > 0 )
                 rlinfo->qc_class = (int *) 
-                    calloc(sizeof(int),rlinfo->query_alloc_max);
+                    msSmallCalloc(sizeof(int),rlinfo->query_alloc_max);
             break;
            
           case RQM_HIST_ON_CLASS:
@@ -267,70 +269,40 @@ static void msRasterQueryAddPixel( layerObj *layer, pointObj *location,
         rlinfo->query_alloc_max = rlinfo->query_alloc_max * 2 + 100;
 
         if( rlinfo->qc_x != NULL )
-            rlinfo->qc_x = realloc(rlinfo->qc_x,
+            rlinfo->qc_x = msSmallRealloc(rlinfo->qc_x,
                                    sizeof(double) * rlinfo->query_alloc_max);
         if( rlinfo->qc_y != NULL )
-            rlinfo->qc_y = realloc(rlinfo->qc_y,
+            rlinfo->qc_y = msSmallRealloc(rlinfo->qc_y,
                                    sizeof(double) * rlinfo->query_alloc_max);
         if( rlinfo->qc_values != NULL )
             rlinfo->qc_values = 
-                realloc(rlinfo->qc_values,
+                msSmallRealloc(rlinfo->qc_values,
                         sizeof(float) * rlinfo->query_alloc_max 
                         * rlinfo->band_count );
         if( rlinfo->qc_class != NULL )
-            rlinfo->qc_class = realloc(rlinfo->qc_class,
+            rlinfo->qc_class = msSmallRealloc(rlinfo->qc_class,
                                        sizeof(int) * rlinfo->query_alloc_max);
         if( rlinfo->qc_red != NULL )
-            rlinfo->qc_red = realloc(rlinfo->qc_red,
+            rlinfo->qc_red = msSmallRealloc(rlinfo->qc_red,
                                        sizeof(int) * rlinfo->query_alloc_max);
         if( rlinfo->qc_green != NULL )
-            rlinfo->qc_green = realloc(rlinfo->qc_green,
+            rlinfo->qc_green = msSmallRealloc(rlinfo->qc_green,
                                        sizeof(int) * rlinfo->query_alloc_max);
         if( rlinfo->qc_blue != NULL )
-            rlinfo->qc_blue = realloc(rlinfo->qc_blue,
+            rlinfo->qc_blue = msSmallRealloc(rlinfo->qc_blue,
                                        sizeof(int) * rlinfo->query_alloc_max);
         if( rlinfo->qc_count != NULL )
-            rlinfo->qc_count = realloc(rlinfo->qc_count,
+            rlinfo->qc_count = msSmallRealloc(rlinfo->qc_count,
                                        sizeof(int) * rlinfo->query_alloc_max);
-        if( rlinfo->qc_count != NULL )
-            rlinfo->qc_tileindex = realloc(rlinfo->qc_tileindex,
+        if( rlinfo->qc_tileindex != NULL )
+            rlinfo->qc_tileindex = msSmallRealloc(rlinfo->qc_tileindex,
                                        sizeof(int) * rlinfo->query_alloc_max);
-    }
-
-/* -------------------------------------------------------------------- */
-/*      Handle classification.                                          */
-/*                                                                      */
-/*      NOTE: The following is really quite inadequate to deal with     */
-/*      classifications based on [red], [green] and [blue] as           */
-/*      described in:                                                   */
-/*       http://mapserver.gis.umn.edu/bugs/show_bug.cgi?id=1021         */
-/* -------------------------------------------------------------------- */
-    if( rlinfo->qc_class != NULL )
-    {
-        p_class = msGetClass_Float(layer, values[0] );
-
-        if( p_class == -1 )
-            nodata = TRUE;
-        else
-        {
-            rlinfo->qc_class[rlinfo->query_results] = p_class;
-            if( layer->class[p_class]->numstyles > 0 )
-            {
-                red   = layer->class[p_class]->styles[0]->color.red;
-                green = layer->class[p_class]->styles[0]->color.green;
-                blue  = layer->class[p_class]->styles[0]->color.blue;
-            }
-            else
-            {
-                red = green = blue = 0;
-            }
-        }
     }
 
 /* -------------------------------------------------------------------- */
 /*      Handle colormap                                                 */
 /* -------------------------------------------------------------------- */
-    else if( rlinfo->hCT != NULL )
+    if( rlinfo->hCT != NULL )
     {
         int pct_index = (int) floor(values[0]);
         GDALColorEntry sEntry;
@@ -362,6 +334,38 @@ static void msRasterQueryAddPixel( layerObj *layer, pointObj *location,
         else
         {
             red = green = blue = (int) MAX(0,MIN(255,values[0]));
+        }
+    }
+
+/* -------------------------------------------------------------------- */
+/*      Handle classification.                                          */
+/*                                                                      */
+/*      NOTE: The following is really quite inadequate to deal with     */
+/*      classifications based on [red], [green] and [blue] as           */
+/*      described in:                                                   */
+/*       http://mapserver.gis.umn.edu/bugs/show_bug.cgi?id=1021         */
+/* -------------------------------------------------------------------- */
+    if( rlinfo->qc_class != NULL )
+    {
+        p_class = msGetClass_FloatRGB(layer, values[0],
+                                      red, green, blue );
+
+        if( p_class == -1 )
+            nodata = TRUE;
+        else
+        {
+            nodata = FALSE;
+            rlinfo->qc_class[rlinfo->query_results] = p_class;
+            if( layer->class[p_class]->numstyles > 0 )
+            {
+                red   = layer->class[p_class]->styles[0]->color.red;
+                green = layer->class[p_class]->styles[0]->color.green;
+                blue  = layer->class[p_class]->styles[0]->color.blue;
+            }
+            else
+            {
+                red = green = blue = 0;
+            }
         }
     }
 
@@ -519,6 +523,7 @@ msRasterQueryByRectLow(mapObj *map, layerObj *layer, GDALDatasetH hDS,
 /* -------------------------------------------------------------------- */
     pafRaster = (float *) 
         calloc(sizeof(float),nWinXSize*nWinYSize*nBandCount);
+    MS_CHECK_ALLOC(pafRaster, sizeof(float)*nWinXSize*nWinYSize*nBandCount, -1);
 
 #if defined(GDAL_VERSION_NUM) && GDAL_VERSION_NUM >= 1199
     eErr = GDALDatasetRasterIO( hDS, GF_Read, 
@@ -545,8 +550,7 @@ msRasterQueryByRectLow(mapObj *map, layerObj *layer, GDALDatasetH hDS,
     if( eErr != CE_None )
     {
         msSetError( MS_IOERR, "GDALDatasetRasterIO() failed: %s", 
-                    CPLGetLastErrorMsg(), 
-                    "msRasterQueryByRectLow()" );
+                    "msRasterQueryByRectLow()", CPLGetLastErrorMsg() );
 
         free( pafRaster );
         return -1;
@@ -603,10 +607,33 @@ msRasterQueryByRectLow(mapObj *map, layerObj *layer, GDALDatasetH hDS,
                 msProjectPoint( &(layer->projection), &(map->projection), 
                                 &sPixelLocation );
 
-            if( rlinfo->searchshape != NULL
-                && msIntersectPointPolygon( &sPixelLocation, 
-                                            rlinfo->searchshape ) == MS_FALSE )
-                continue;
+            /* If we are doing QueryByShape, check against the shape now */
+            if( rlinfo->searchshape != NULL )
+            {
+                if( rlinfo->shape_tolerance == 0.0 
+                    && rlinfo->searchshape->type == MS_SHAPE_POLYGON )
+                {
+                    if( msIntersectPointPolygon( 
+                            &sPixelLocation, rlinfo->searchshape ) == MS_FALSE )
+                        continue;
+                }
+                else
+                {
+                    shapeObj  tempShape;
+                    lineObj   tempLine;
+                    
+                    memset( &tempShape, 0, sizeof(shapeObj) );
+                    tempShape.type = MS_SHAPE_POINT;
+                    tempShape.numlines = 1;
+                    tempShape.line = &tempLine;
+                    tempLine.numpoints = 1;
+                    tempLine.point = &sPixelLocation;
+                    
+                    if( msDistanceShapeToShape(rlinfo->searchshape, &tempShape)
+                        > rlinfo->shape_tolerance )
+                        continue;
+                }
+            }
 
             if( rlinfo->range_mode >= 0 )
             {
@@ -622,7 +649,7 @@ msRasterQueryByRectLow(mapObj *map, layerObj *layer, GDALDatasetH hDS,
 
                 /* If we can only have one feature, trim range and clear */
                 /* previous result.  */
-                if( rlinfo->range_mode == MS_SINGLE )
+                if( rlinfo->range_mode == MS_QUERY_SINGLE )
                 {
                     rlinfo->range_dist = dist;
                     rlinfo->query_results = 0;
@@ -660,11 +687,12 @@ int msRasterQueryByRect(mapObj *map, layerObj *layer, rectObj queryRect)
     int status = MS_SUCCESS;
     char *filename=NULL;
 
-    int t;
-    int tileitemindex=-1;
-    shapefileObj tilefile;
+    layerObj *tlp=NULL; /* pointer to the tile layer either real or temporary */
+    int tileitemindex=-1, tilelayerindex=-1;
+    shapeObj tshp;
     char tilename[MS_PATH_LENGTH];
-    int numtiles=1; /* always at least one tile */
+    int  done;
+
     char szPath[MS_MAXPATHLEN];
     rectObj searchrect;
     rasterLayerInfo *rlinfo = NULL;
@@ -689,7 +717,7 @@ int msRasterQueryByRect(mapObj *map, layerObj *layer, rectObj queryRect)
 /* -------------------------------------------------------------------- */
 /*      Initialize the results cache.                                   */
 /* -------------------------------------------------------------------- */
-    layer->resultcache = (resultCacheObj *)malloc(sizeof(resultCacheObj)); 
+    layer->resultcache = (resultCacheObj *)msSmallMalloc(sizeof(resultCacheObj));
     layer->resultcache->results = NULL;
     layer->resultcache->numresults = layer->resultcache->cachesize = 0;
     layer->resultcache->bounds.minx =
@@ -716,55 +744,130 @@ int msRasterQueryByRect(mapObj *map, layerObj *layer, rectObj queryRect)
         return MS_SUCCESS;
     }
 
-/* -------------------------------------------------------------------- */
-/*      Open tile index if we have one.                                 */
-/* -------------------------------------------------------------------- */
-    if(layer->tileindex) { /* we have in index file */
-        if(msShapefileOpen(&tilefile, "rb", 
-                         msBuildPath3(szPath, map->mappath, map->shapepath, 
-                                      layer->tileindex), MS_TRUE) == -1) 
-            if(msShapefileOpen(&tilefile, "rb", msBuildPath(szPath, map->mappath, layer->tileindex), MS_TRUE) == -1) 
-                return(MS_FAILURE);    
+/* ==================================================================== */
+/*      Handle setting up tileindex layer.                              */
+/* ==================================================================== */
+    if(layer->tileindex) { /* we have an index file */
+        int i;
 
-        tileitemindex = msDBFGetItemIndex(tilefile.hDBF, layer->tileitem);
-        if(tileitemindex == -1) 
-            return(MS_FAILURE);
+        msInitShape(&tshp);
+    
+        tilelayerindex = msGetLayerIndex(layer->map, layer->tileindex);
+        if(tilelayerindex == -1) { /* the tileindex references a file, not a layer */
+            
+            /* so we create a temporary layer */
+            tlp = (layerObj *) malloc(sizeof(layerObj));
+            MS_CHECK_ALLOC(tlp, sizeof(layerObj), MS_FAILURE);
 
+            initLayer(tlp, map);
+            
+            /* set a few parameters for a very basic shapefile-based layer */
+            tlp->name = msStrdup("TILE");
+            tlp->type = MS_LAYER_TILEINDEX;
+            tlp->data = msStrdup(layer->tileindex);
+            if (layer->filteritem)
+                tlp->filteritem = msStrdup(layer->filteritem);
+            if (layer->filter.string)
+            {
+                char *pszTmp;
+                if (layer->filter.type == MS_EXPRESSION)
+                {
+                    pszTmp = 
+                        (char *)msSmallMalloc(sizeof(char)*(strlen(layer->filter.string)+3));
+                    sprintf(pszTmp,"(%s)",layer->filter.string);
+                    msLoadExpressionString(&tlp->filter, pszTmp);
+                    free(pszTmp);
+                }
+                else if (layer->filter.type == MS_REGEX || 
+                         layer->filter.type == MS_IREGEX)
+                {
+                    pszTmp = 
+                        (char *)msSmallMalloc(sizeof(char)*(strlen(layer->filter.string)+3));
+                    sprintf(pszTmp,"/%s/",layer->filter.string);
+                    msLoadExpressionString(&tlp->filter, pszTmp);
+                    free(pszTmp);
+                }
+                else
+                    msLoadExpressionString(&tlp->filter, layer->filter.string);
+                
+                tlp->filter.type = layer->filter.type;
+            }
+
+        } else {
+            if ( msCheckParentPointer(layer->map,"map")==MS_FAILURE )
+                return MS_FAILURE;
+            tlp = (GET_LAYER(layer->map, tilelayerindex));
+        }
+        status = msLayerOpen(tlp);
+        if(status != MS_SUCCESS)
+        {
+            goto cleanup;
+        }
+
+        status = msLayerWhichItems(tlp, MS_FALSE, layer->tileitem);
+        if(status != MS_SUCCESS)
+        {
+            goto cleanup;
+        }
+ 
+        /* get the tileitem index */
+        for(i=0; i<tlp->numitems; i++) {
+            if(strcasecmp(tlp->items[i], layer->tileitem) == 0) {
+                tileitemindex = i;
+                break;
+            }
+        }
+        if(i == tlp->numitems) { /* didn't find it */
+            msSetError(MS_MEMERR, 
+                       "Could not find attribute %s in tileindex.", 
+                       "msDrawRasterLayerLow()", 
+                       layer->tileitem);
+            status = MS_FAILURE;
+            goto cleanup;
+        }
+ 
         searchrect = queryRect;
-
 #ifdef USE_PROJ
-        if((map->projection.numargs > 0) && (layer->projection.numargs > 0))
-            msProjectRect(&map->projection, &layer->projection, &searchrect); /* project the searchrect to source coords */
+        /* if necessary, project the searchrect to source coords */
+        if((map->projection.numargs > 0) && (layer->projection.numargs > 0)) msProjectRect(&map->projection, &layer->projection, &searchrect);
 #endif
-        status = msShapefileWhichShapes(&tilefile, searchrect, layer->debug);
-        if(status != MS_SUCCESS) 
-            numtiles = 0; /* could be MS_DONE or MS_FAILURE */
-        else
-            numtiles = tilefile.numshapes;
+        status = msLayerWhichShapes(tlp, searchrect, MS_TRUE);
+        if (status != MS_SUCCESS) {
+            goto cleanup;
+        }
     }
 
 /* -------------------------------------------------------------------- */
 /*      Iterate over all tiles (just one in untiled case).              */
 /* -------------------------------------------------------------------- */
-    for(t=0; t<numtiles && status == MS_SUCCESS; t++) { 
+    done = MS_FALSE;
+    while( done == MS_FALSE && status == MS_SUCCESS ) { 
 
         GDALDatasetH  hDS;
-
-        rlinfo->current_tile = t;
+        char *decrypted_path = NULL;
 
 /* -------------------------------------------------------------------- */
 /*      Get filename.                                                   */
 /* -------------------------------------------------------------------- */
         if(layer->tileindex) {
-            if(!msGetBit(tilefile.status,t)) continue; /* on to next tile */
-            if(layer->data == NULL) /* assume whole filename is in attribute field */
-                filename = (char*)msDBFReadStringAttribute(tilefile.hDBF, t, tileitemindex);
-            else {  
-                sprintf(tilename,"%s/%s", msDBFReadStringAttribute(tilefile.hDBF, t, tileitemindex) , layer->data);
-                filename = tilename;
+            status = msLayerNextShape(tlp, &tshp);
+            if( status == MS_FAILURE)
+                break;
+            
+            if(status == MS_DONE) break; /* no more tiles/images */
+            
+            if(layer->data == NULL || strlen(layer->data) == 0 ) /* assume whole filename is in attribute field */
+            {
+                strlcpy( tilename, tshp.values[tileitemindex], sizeof(tilename));
             }
+            else
+                snprintf(tilename, sizeof(tilename), "%s/%s", tshp.values[tileitemindex], layer->data);
+            filename = tilename;
+            
+            msFreeShape(&tshp); /* done with the shape */
         } else {
             filename = layer->data;
+            done = MS_TRUE; /* only one image so we're done after this */
         }
 
         if(strlen(filename) == 0) continue;
@@ -786,29 +889,49 @@ int msRasterQueryByRect(mapObj *map, layerObj *layer, rectObj queryRect)
             msTryBuildPath3(szPath, map->mappath, map->shapepath, filename);
         }
 
+        decrypted_path = msDecryptStringTokens( map, szPath );
+        if( !decrypted_path )
+            return MS_FAILURE;
+
         msAcquireLock( TLOCK_GDAL );
-        hDS = GDALOpen(szPath, GA_ReadOnly );
+        hDS = GDALOpen(decrypted_path, GA_ReadOnly );
         
         if( hDS == NULL )
         {
             int ignore_missing = msMapIgnoreMissingData( map );
+            const char *cpl_error_msg = CPLGetLastErrorMsg();
+        
+            /* we wish to avoid reporting decrypted paths */
+            if( cpl_error_msg != NULL 
+                && strstr(cpl_error_msg,decrypted_path) != NULL
+                && strcmp(decrypted_path,szPath) != 0 )
+                cpl_error_msg = NULL;
+            if( cpl_error_msg == NULL )
+                cpl_error_msg = "";
+
+            msFree( decrypted_path );
+            decrypted_path = NULL;
+            
             msReleaseLock( TLOCK_GDAL );
 
             if ( ignore_missing == MS_MISSING_DATA_FAIL ) {
               if( layer->debug || map->debug )
                 msSetError( MS_IMGERR, 
                             "Unable to open file %s for layer %s ... fatal error.\n%s", 
-                            szPath, layer->name, CPLGetLastErrorMsg(),
-                            "msRasterQueryByRect()" );
+                            "msRasterQueryByRect()",
+                            szPath, layer->name, cpl_error_msg);
               return(MS_FAILURE);
             }
             if( ignore_missing == MS_MISSING_DATA_LOG ) {
               if( layer->debug || map->debug )
                 msDebug( "Unable to open file %s for layer %s ... ignoring this missing data.\n%s", 
-                         filename, layer->name, CPLGetLastErrorMsg() );
+                         filename, layer->name, cpl_error_msg );
             }
             continue;
         }
+
+        msFree( decrypted_path );
+        decrypted_path = NULL;
 
 /* -------------------------------------------------------------------- */
 /*      Update projectionObj if AUTO.                                   */
@@ -828,7 +951,7 @@ int msRasterQueryByRect(mapObj *map, layerObj *layer, rectObj queryRect)
                     char	szLongMsg[MESSAGELENGTH*2];
                     errorObj *ms_error = msGetErrorObj();
 
-                    sprintf( szLongMsg, 
+                    snprintf( szLongMsg, sizeof(szLongMsg),
                              "%s\n"
                              "PROJECTION AUTO cannot be used for this "
                              "GDAL raster (`%s').",
@@ -855,8 +978,17 @@ int msRasterQueryByRect(mapObj *map, layerObj *layer, rectObj queryRect)
 
     } /* next tile */
 
-    if(layer->tileindex) /* tiling clean-up */
-        msShapefileClose(&tilefile);    
+/* -------------------------------------------------------------------- */
+/*      Cleanup tileindex if it is open.                                */
+/* -------------------------------------------------------------------- */
+  cleanup:
+    if(layer->tileindex) { /* tiling clean-up */
+        msLayerClose(tlp);
+        if(tilelayerindex == -1) {
+            freeLayer(tlp);
+            free(tlp);
+        }
+    }
 
 /* -------------------------------------------------------------------- */
 /*      On failure, or empty result set, cleanup the rlinfo since we    */
@@ -888,14 +1020,46 @@ int msRasterQueryByShape(mapObj *map, layerObj *layer, shapeObj *selectshape)
 #else
     rasterLayerInfo *rlinfo = NULL;
     int status;
+    double tolerance;
+    rectObj searchrect;
 
     msRasterLayerInfoInitialize( layer );
 
     rlinfo = (rasterLayerInfo *) layer->layerinfo;
-    rlinfo->searchshape = selectshape;
 
+    /* If the selection shape is point or line we use the default tolerance of 
+       3, but for polygons we require an exact hit. */
+    if(layer->tolerance == -1)
+    {
+        if(selectshape->type == MS_SHAPE_POINT || 
+           selectshape->type == MS_SHAPE_LINE)
+            tolerance = 3;
+        else
+            tolerance = 0;
+    }
+    else
+        tolerance = layer->tolerance;
+    
+    if(layer->toleranceunits == MS_PIXELS)
+        tolerance = tolerance 
+            * msAdjustExtent(&(map->extent), map->width, map->height);
+    else
+        tolerance = tolerance
+            * (msInchesPerUnit(layer->toleranceunits,0)
+               / msInchesPerUnit(map->units,0));
+    
+    rlinfo->searchshape = selectshape;
+    rlinfo->shape_tolerance = tolerance;
+    
     msComputeBounds( selectshape );
-    status = msRasterQueryByRect( map, layer, selectshape->bounds );
+    searchrect = selectshape->bounds;
+
+    searchrect.minx -= tolerance; /* expand the search box to account for layer tolerances (e.g. buffered searches) */
+    searchrect.maxx += tolerance;
+    searchrect.miny -= tolerance;
+    searchrect.maxy += tolerance;
+    
+    status = msRasterQueryByRect( map, layer, searchrect );
 
     rlinfo = (rasterLayerInfo *) layer->layerinfo;
     if( rlinfo )
@@ -937,15 +1101,8 @@ int msRasterQueryByPoint(mapObj *map, layerObj *layer, int mode, pointObj p,
 /*      underlying pixels.                                              */
 /* -------------------------------------------------------------------- */
     if(buffer <= 0) { /* use layer tolerance */
-
-        /* Get the layer tolerance
-           default is 3 for point and line layers, 0 for others */
         if(layer->tolerance == -1)
-            if(layer->status == MS_LAYER_POINT || 
-               layer->status == MS_LAYER_LINE)
-                layer_tolerance = 3;
-            else
-                layer_tolerance = 0;
+            layer_tolerance = 3;
         else
             layer_tolerance = layer->tolerance;
 
@@ -966,13 +1123,13 @@ int msRasterQueryByPoint(mapObj *map, layerObj *layer, int mode, pointObj p,
     rlinfo->target_point = p;
 
 /* -------------------------------------------------------------------- */
-/*      if we are in the MS_SINGLE mode, first try a query with zero    */
-/*      tolerance.  If this gets a raster pixel then we can be          */
+/*      if we are in the MS_QUERY_SINGLE mode, first try a query with   */
+/*      zero tolerance.  If this gets a raster pixel then we can be     */
 /*      reasonably assured that it is the closest to the query          */
 /*      point.  This will potentially be must more efficient than       */
 /*      processing all pixels within the tolerance.                     */
 /* -------------------------------------------------------------------- */
-    if( mode == MS_SINGLE )
+    if( mode == MS_QUERY_SINGLE )
     {
         rectObj pointRect;
 
@@ -981,7 +1138,7 @@ int msRasterQueryByPoint(mapObj *map, layerObj *layer, int mode, pointObj p,
         pointRect.miny = p.y;
         pointRect.maxy = p.y;
 
-        rlinfo->range_mode = MS_SINGLE;
+        rlinfo->range_mode = MS_QUERY_SINGLE;
         result = msRasterQueryByRect( map, layer, pointRect );
         if( rlinfo->query_results > 0 )
             return result;
@@ -1085,7 +1242,7 @@ int msRASTERLayerInitItemInfo(layerObj *layer)
 /************************************************************************/
 /*                      msRASTERLayerWhichShapes()                      */
 /************************************************************************/
-int msRASTERLayerWhichShapes(layerObj *layer, rectObj rect) 
+int msRASTERLayerWhichShapes(layerObj *layer, rectObj rect, int isQuery) 
 
 {
 #ifndef USE_GDAL
@@ -1140,8 +1297,15 @@ int msRASTERLayerNextShape(layerObj *layer, shapeObj *shape)
         shape->type = MS_SHAPE_NULL;
         return MS_DONE;
     }
-    else 
-        return msRASTERLayerGetShape( layer, shape, 0, rlinfo->next_shape++ );
+    else {
+      resultObj record;
+
+      record.shapeindex = rlinfo->next_shape++;
+      record.tileindex = 0;
+      record.classindex = record.resultindex = -1;
+
+      return msRASTERLayerGetShape( layer, shape, &record);
+    }
 #endif /* def USE_GDAL */
 }
 
@@ -1149,9 +1313,7 @@ int msRASTERLayerNextShape(layerObj *layer, shapeObj *shape)
 /*                       msRASTERLayerGetShape()                        */
 /************************************************************************/
 
-int msRASTERLayerGetShape(layerObj *layer, shapeObj *shape, int tile, 
-                          long record)
-
+int msRASTERLayerGetShape(layerObj *layer, shapeObj *shape, resultObj *record)
 {
 #ifndef USE_GDAL
     return MS_FAILURE;
@@ -1159,19 +1321,21 @@ int msRASTERLayerGetShape(layerObj *layer, shapeObj *shape, int tile,
     rasterLayerInfo *rlinfo = (rasterLayerInfo *) layer->layerinfo;
     int i;
 
+    long shapeindex = record->shapeindex;
+
     msFreeShape(shape);
     shape->type = MS_SHAPE_NULL;
 
 /* -------------------------------------------------------------------- */
 /*      Validate requested record id.                                   */
 /* -------------------------------------------------------------------- */
-    if( record < 0 || record >= rlinfo->query_results )
+    if( shapeindex < 0 || shapeindex >= rlinfo->query_results )
     {
         msSetError(MS_MISCERR, 
                    "Out of range shape index requested.  Requested %d\n"
                    "but only %d shapes available.",
                    "msRASTERLayerGetShape()",
-                   record, rlinfo->query_results );
+                   shapeindex, rlinfo->query_results );
         return MS_FAILURE;
     }
 
@@ -1188,8 +1352,8 @@ int msRASTERLayerGetShape(layerObj *layer, shapeObj *shape, int tile,
         line.numpoints = 1;
         line.point = &point;
         
-        point.x = rlinfo->qc_x[record];
-        point.y = rlinfo->qc_y[record];
+        point.x = rlinfo->qc_x[shapeindex];
+        point.y = rlinfo->qc_y[shapeindex];
 #ifdef USE_POINT_Z_M
         point.m = 0.0;
 #endif
@@ -1203,18 +1367,19 @@ int msRASTERLayerGetShape(layerObj *layer, shapeObj *shape, int tile,
 /* -------------------------------------------------------------------- */
     if( layer->numitems > 0 )
     {
-        shape->values = (char **) malloc(sizeof(char *) * layer->numitems);
+        shape->values = (char **) msSmallMalloc(sizeof(char *) * layer->numitems);
         shape->numvalues = layer->numitems;
         
         for( i = 0; i < layer->numitems; i++ )
         {
+            const size_t bufferSize = 1000;
             char szWork[1000];
 
             szWork[0] = '\0';
             if( EQUAL(layer->items[i],"x") && rlinfo->qc_x )
-                sprintf( szWork, "%.8g", rlinfo->qc_x[record] );
+                snprintf( szWork, bufferSize, "%.8g", rlinfo->qc_x[shapeindex] );
             else if( EQUAL(layer->items[i],"y") && rlinfo->qc_y )
-                sprintf( szWork, "%.8g", rlinfo->qc_y[record] );
+                snprintf( szWork, bufferSize, "%.8g", rlinfo->qc_y[shapeindex] );
 
             else if( EQUAL(layer->items[i],"value_list") && rlinfo->qc_values )
             {
@@ -1223,37 +1388,37 @@ int msRASTERLayerGetShape(layerObj *layer, shapeObj *shape, int tile,
                 for( iValue = 0; iValue < rlinfo->band_count; iValue++ )
                 {
                     if( iValue != 0 )
-                        strcat( szWork, "," );
+                        strlcat( szWork, ",", bufferSize);
 
-                    sprintf( szWork+strlen(szWork), "%.8g", 
-                             rlinfo->qc_values[record * rlinfo->band_count
-                                               + iValue] );
+                    snprintf( szWork+strlen(szWork), bufferSize-strlen(szWork), "%.8g", 
+                              rlinfo->qc_values[shapeindex * rlinfo->band_count
+                                                + iValue] );
                 }
             }
             else if( EQUALN(layer->items[i],"value_",6) && rlinfo->qc_values )
             {
                 int iValue = atoi(layer->items[i]+6);
-                sprintf( szWork, "%.8g", 
-                         rlinfo->qc_values[record*rlinfo->band_count+iValue] );
+                snprintf( szWork, bufferSize, "%.8g", 
+                          rlinfo->qc_values[shapeindex*rlinfo->band_count+iValue] );
             }
             else if( EQUAL(layer->items[i],"class") && rlinfo->qc_class ) 
             {
-                int p_class = rlinfo->qc_class[record];
+                int p_class = rlinfo->qc_class[shapeindex];
                 if( layer->class[p_class]->name != NULL )
-                    sprintf( szWork, "%.999s", layer->class[p_class]->name );
+                    snprintf( szWork, bufferSize, "%.999s", layer->class[p_class]->name );
                 else
-                    sprintf( szWork, "%d", p_class );
+                    snprintf( szWork, bufferSize, "%d", p_class );
             }
             else if( EQUAL(layer->items[i],"red") && rlinfo->qc_red )
-                sprintf( szWork, "%d", rlinfo->qc_red[record] );
+                snprintf( szWork, bufferSize, "%d", rlinfo->qc_red[shapeindex] );
             else if( EQUAL(layer->items[i],"green") && rlinfo->qc_green )
-                sprintf( szWork, "%d", rlinfo->qc_green[record] );
+                snprintf( szWork, bufferSize, "%d", rlinfo->qc_green[shapeindex] );
             else if( EQUAL(layer->items[i],"blue") && rlinfo->qc_blue )
-                sprintf( szWork, "%d", rlinfo->qc_blue[record] );
+                snprintf( szWork, bufferSize, "%d", rlinfo->qc_blue[shapeindex] );
             else if( EQUAL(layer->items[i],"count") && rlinfo->qc_count )
-                sprintf( szWork, "%d", rlinfo->qc_count[record] );
+                snprintf( szWork, bufferSize, "%d", rlinfo->qc_count[shapeindex] );
 
-            shape->values[i] = strdup(szWork);
+            shape->values[i] = msStrdup(szWork);
         }
     }
 
@@ -1280,34 +1445,34 @@ int msRASTERLayerGetItems(layerObj *layer)
     if( rlinfo == NULL )
         return MS_FAILURE;
 
-    layer->items = (char **) calloc(sizeof(char *),10);
+    layer->items = (char **) msSmallCalloc(sizeof(char *),10);
 
     layer->numitems = 0;
     if( rlinfo->qc_x )
-        layer->items[layer->numitems++] = strdup("x");
+        layer->items[layer->numitems++] = msStrdup("x");
     if( rlinfo->qc_y )
-        layer->items[layer->numitems++] = strdup("y");
+        layer->items[layer->numitems++] = msStrdup("y");
     if( rlinfo->qc_values )
     {
         int i;
         for( i = 0; i < rlinfo->band_count; i++ )
         {
             char szName[100];
-            sprintf( szName, "value_%d", i );
-            layer->items[layer->numitems++] = strdup(szName);
+            snprintf( szName, sizeof(szName), "value_%d", i );
+            layer->items[layer->numitems++] = msStrdup(szName);
         }
-        layer->items[layer->numitems++] = strdup("value_list");
+        layer->items[layer->numitems++] = msStrdup("value_list");
     }
     if( rlinfo->qc_class )
-        layer->items[layer->numitems++] = strdup("class");
+        layer->items[layer->numitems++] = msStrdup("class");
     if( rlinfo->qc_red )
-        layer->items[layer->numitems++] = strdup("red");
+        layer->items[layer->numitems++] = msStrdup("red");
     if( rlinfo->qc_green )
-        layer->items[layer->numitems++] = strdup("green");
+        layer->items[layer->numitems++] = msStrdup("green");
     if( rlinfo->qc_blue )
-        layer->items[layer->numitems++] = strdup("blue");
+        layer->items[layer->numitems++] = msStrdup("blue");
     if( rlinfo->qc_count )
-        layer->items[layer->numitems++] = strdup("count");
+        layer->items[layer->numitems++] = msStrdup("count");
 
     return msRASTERLayerInitItemInfo(layer);
 #endif /* def USE_GDAL */
@@ -1328,19 +1493,13 @@ int msRASTERLayerGetExtent(layerObj *layer, rectObj *extent)
   double adfGeoTransform[6];
   int nXSize, nYSize;
   GDALDatasetH hDS;
+  shapefileObj *tileshpfile;
+  int tilelayerindex = -1; 
   CPLErr eErr = CE_Failure;
+  char *decrypted_path;
 
-  /*
-  ** For the time being we only automatically derive extents from
-  ** single raster files.  Opening many raster files from a tile index
-  ** in order to get the extent would be potentially very expensive.  We
-  ** could - in theory - scan the tile index and build up an extent from
-  ** the polygons but that is quite complicated code wise, so I am leaving
-  ** that till someone cares more about the issue.  (#79)
-  */
-  if( !layer->data 
-      || strlen(layer->data) == 0 
-      || layer->tileindex != NULL )
+  if( (!layer->data || strlen(layer->data) == 0) 
+      && layer->tileindex == NULL)
   {
     /* should we be issuing a specific error about not supporting 
        extents for tileindexed raster layers? */
@@ -1350,10 +1509,39 @@ int msRASTERLayerGetExtent(layerObj *layer, rectObj *extent)
   if( map == NULL )
     return MS_FAILURE;
 
+  /* If the layer use a tileindex, return the extent of the tileindex shapefile/referenced layer */
+  if (layer->tileindex)
+  {
+    tilelayerindex = msGetLayerIndex(map, layer->tileindex);
+    if(tilelayerindex != -1) /* does the tileindex reference another layer */
+      return msLayerGetExtent(GET_LAYER(map, tilelayerindex), extent);
+    else 
+    {
+      tileshpfile = (shapefileObj *) malloc(sizeof(shapefileObj));
+      MS_CHECK_ALLOC(tileshpfile, sizeof(shapefileObj), MS_FAILURE);
+
+      if(msShapefileOpen(tileshpfile, "rb", msBuildPath3(szPath, map->mappath, map->shapepath, layer->tileindex), MS_TRUE) == -1)
+        if(msShapefileOpen(tileshpfile, "rb", msBuildPath(szPath, map->mappath, layer->tileindex), MS_TRUE) == -1)
+          return MS_FAILURE;
+      
+      *extent = tileshpfile->bounds;
+      msShapefileClose(tileshpfile);
+      free(tileshpfile);
+      return MS_SUCCESS;
+    }
+  }
+
   msTryBuildPath3(szPath, map->mappath, map->shapepath, layer->data);
+  decrypted_path = msDecryptStringTokens( map, szPath );
 
   msAcquireLock( TLOCK_GDAL );
-  hDS = GDALOpen(szPath, GA_ReadOnly );
+  if( decrypted_path )
+  {
+      hDS = GDALOpen(decrypted_path, GA_ReadOnly );
+      msFree( decrypted_path );
+  }
+  else
+      hDS = NULL;
   
   if( hDS != NULL )
   {
@@ -1457,7 +1645,6 @@ msRASTERLayerInitializeVirtualTable(layerObj *layer)
     layer->vtable->LayerIsOpen = msRASTERLayerIsOpen;
     layer->vtable->LayerWhichShapes = msRASTERLayerWhichShapes;
     layer->vtable->LayerNextShape = msRASTERLayerNextShape;
-    layer->vtable->LayerResultsGetShape = msRASTERLayerGetShape; /* no special version, use ...GetShape() */
     layer->vtable->LayerGetShape = msRASTERLayerGetShape;
     layer->vtable->LayerClose = msRASTERLayerClose;
     layer->vtable->LayerGetItems = msRASTERLayerGetItems;

@@ -1,5 +1,5 @@
 /* ===========================================================================   
-   $Id: resultcache.i 7799 2008-07-09 04:31:58Z sdlime $
+   $Id: resultcache.i 10933 2011-02-03 14:31:33Z sdlime $
 
    Project:  MapServer
    Purpose:  SWIG interface file for mapscript resultCacheObj extensions
@@ -32,7 +32,7 @@
 %extend resultCacheObj
 {
 
-    resultCacheMemberObj *getResult(int i)
+    resultObj *getResult(int i)
     {
         if (i >= 0 && i < self->numresults) {
             return &self->results[i];

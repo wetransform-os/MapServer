@@ -1,5 +1,5 @@
 /* ===========================================================================
-   $Id: symbol.i 6375 2007-07-24 03:32:43Z sdlime $
+   $Id: symbol.i 11472 2011-04-06 02:48:18Z dmorissette $
  
    Project:  MapServer
    Purpose:  SWIG interface file for mapscript symbolObj extensions
@@ -88,26 +88,77 @@
         line->numpoints = self->numpoints;
         return line;
     }
-
-    int setPattern(int index, int value) 
-    {
-        if (index < 0 || index > MS_MAXPATTERNLENGTH) {
-            msSetError(MS_SYMERR, "Can't set pattern at index %d.", "setPattern()", index);
-            return MS_FAILURE;
-        }
-        self->pattern[index] = value;
-        return MS_SUCCESS;
-    }
+    
 
     %newobject getImage;
-    imageObj *getImage(outputFormatObj *format)
+    imageObj *getImage(outputFormatObj *input_format)
     {
-        return msSymbolGetImageGD(self, format);
+        imageObj *image;
+        outputFormatObj *format = NULL;
+        rendererVTableObj *renderer = NULL;
+
+        if (self->type != MS_SYMBOL_PIXMAP)
+        {
+            msSetError(MS_SYMERR, "Can't return image from non-pixmap symbol",
+                       "getImage()");
+            return NULL;
+        }
+    
+        if (input_format)
+        {
+            format = input_format;
+        }
+        else 
+        {
+            format = msCreateDefaultOutputFormat(NULL, "GD/GIF", "gdgif");
+            if (format == NULL)
+                format = msCreateDefaultOutputFormat(NULL, "GD/PNG", "gdpng");
+
+            if (format)
+                msInitializeRendererVTable(format);
+        }
+        
+        if (format == NULL) 
+        {
+            msSetError(MS_IMGERR, "Could not create output format",
+                       "getImage()");
+            return NULL;
+        }
+
+        renderer = format->vtable;
+        msPreloadImageSymbol(renderer, self);
+        if (self->pixmap_buffer) 
+        {
+            image = msImageCreate(self->pixmap_buffer->width, self->pixmap_buffer->height, format, NULL, NULL,
+                                  MS_DEFAULT_RESOLUTION, MS_DEFAULT_RESOLUTION, NULL);
+            renderer->mergeRasterBuffer(image, self->pixmap_buffer, 1.0, 0, 0, 0, 0, 
+                                        self->pixmap_buffer->width, self->pixmap_buffer->height);
+        }
+
+        return image;
     }
 
     int setImage(imageObj *image)
     {
-        return msSymbolSetImageGD(self, image);
+        rendererVTableObj *renderer = NULL;
+        
+        renderer = image->format->vtable;
+        
+        if (self->pixmap_buffer) {
+            msFreeRasterBuffer(self->pixmap_buffer);
+            free(self->pixmap_buffer);
+        }
+        
+        self->pixmap_buffer = (rasterBufferObj*)malloc(sizeof(rasterBufferObj));
+        if (!self->pixmap_buffer) {
+            msSetError(MS_MEMERR, NULL, "setImage()");
+            return MS_FAILURE;
+        }
+        renderer->initializeRasterBuffer(self->pixmap_buffer, image->width, image->height, image->format->imagemode);
+        self->type = MS_SYMBOL_PIXMAP;
+        renderer->getRasterBufferCopy(image, self->pixmap_buffer);
+
+        return MS_SUCCESS;
     }
 
 }

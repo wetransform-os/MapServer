@@ -187,6 +187,14 @@ public class labelCacheMemberObj : IDisposable {
     } 
   }
 
+  public int markerid {
+    get {
+      int ret = mapscriptPINVOKE.labelCacheMemberObj_markerid_get(swigCPtr);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
   public labelCacheMemberObj() : this(mapscriptPINVOKE.new_labelCacheMemberObj(), true, null) {
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
   }

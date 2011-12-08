@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: HTMLtemplate.cs 7418 2008-02-29 00:02:49Z nsavard $
+ * $Id: HTMLtemplate.cs 11081 2011-03-05 17:44:17Z tamas $
  *
  * Project:  MapServer
  * Purpose:  A C# based mapscript example to show the usage of HTML templates.
@@ -53,7 +53,7 @@ class HTMLTemplate
 		string[] names = null, values = null;
 		names = new string[] {"map"};
 		values = new string[] { args[0] };
-		str = map.processLegendTemplate(names, values, names.Length);
+		str = map.processLegendTemplate(names, values);
 		Console.Write(str);
     }
 }

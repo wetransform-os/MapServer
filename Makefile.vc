@@ -9,7 +9,7 @@
 #  - Run the VCVARS32.BAT script to initialize the VC++ environment variables
 #  - Start the build with:  nmake /f makefile.vc
 #
-# $Id: Makefile.vc 9284 2009-09-01 10:12:05Z tamas $
+# $Id: Makefile.vc 11154 2011-03-11 19:59:30Z aboudreault $
 #
 MAPSERVER_ROOT = .
 
@@ -26,7 +26,7 @@ LINK=   link
 #
 MS_DLL = libmap.dll
 
-MS_OBJS = maprgbapng.obj mapbits.obj maphash.obj mapshape.obj mapxbase.obj \
+MS_OBJS = mapbits.obj maphash.obj mapshape.obj mapxbase.obj \
 		mapparser.obj maplexer.obj maptree.obj \
 		mapsearch.obj mapstring.obj mapsymbol.obj mapfile.obj \
 		maplegend.obj maputil.obj mapscale.obj mapquery.obj \
@@ -34,19 +34,21 @@ MS_OBJS = maprgbapng.obj mapbits.obj maphash.obj mapshape.obj mapxbase.obj \
 		mapraster.obj cgiutil.obj mapsde.obj mapogr.obj maptime.obj \
 		maptemplate.obj mappostgis.obj maplayer.obj mapresample.obj \
 		mapwms.obj mapwmslayer.obj mapgml.obj maporaclespatial.obj \
-		mapprojhack.obj mapdraw.obj mapgd.obj mapoutput.obj mapswf.obj \
+		mapprojhack.obj mapdraw.obj mapgd.obj mapoutput.obj \
 		mapgdal.obj mapwfs.obj mapwfs11.obj mapwfslayer.obj mapows.obj maphttp.obj \
-		mappdf.obj mapcontext.obj mapdrawgdal.obj mapjoin.obj mapgraticule.obj \
-		mapmygis.obj mapimagemap.obj mapcopy.obj maprasterquery.obj \
+		mapcontext.obj mapdrawgdal.obj mapjoin.obj mapgraticule.obj \
+		mapimagemap.obj mapcopy.obj maprasterquery.obj \
 		mapogcfilter.obj mapogcsld.obj mapthread.obj mapobject.obj \
-		classobject.obj layerobject.obj mapwcs.obj mapwcs11.obj \
-		mapgeos.obj strptime.obj \
-		mapcpl.obj mapio.obj mappool.obj mapsvg.obj mapregex.obj mappluginlayer.obj \
+		classobject.obj layerobject.obj mapwcs.obj mapwcs11.obj mapwcs20.obj \
+		mapgeos.obj strptime.obj mapogroutput.obj \
+		mapcpl.obj mapio.obj mappool.obj mapregex.obj mappluginlayer.obj \
 		mapogcsos.obj mappostgresql.obj mapcrypto.obj mapowscommon.obj \
 		maplibxml2.obj mapdebug.obj mapchart.obj mapagg.obj maptclutf.obj \
 		maprendering.obj mapimageio.obj mapcairo.obj \
 		mapoglrenderer.obj mapoglcontext.obj mapogl.obj \
-		maptile.obj $(EPPL_OBJ) $(REGEX_OBJ) mapgeomtransform.obj $(AGG_OBJ)
+		maptile.obj $(EPPL_OBJ) $(REGEX_OBJ) mapgeomtransform.obj mapunion.obj \
+                mapkmlrenderer.obj mapkml.obj mapdummyrenderer.obj mapgeomutil.obj mapquantization.obj \
+                mapogcfiltercommon.obj mapcluster.obj $(AGG_OBJ)
 
 MS_HDRS = 	mapserver.h mapfile.h
 
@@ -111,6 +113,7 @@ clean:
 	del *.exp
 	del *.ilk
 	del *.manifest
+	del renderers\agg\*.obj
 !IFDEF DOT_NET
 	cd mapscript\csharp
 	nmake /f makefile.vc clean
@@ -122,7 +125,7 @@ clean:
 	cd ..\..
 !ENDIF
 !IFDEF PHP_HOME
-	cd mapscript\php3
+	cd mapscript\php
 	nmake /f makefile.vc clean
 	cd ..\..
 !ENDIF
@@ -147,7 +150,8 @@ mapscriptvars: makefile.vc nmake.opt
 	echo $(LIBS) >> mapscriptvars
 	findstr MS_VERSION mapserver.h | findstr define >> mapscriptvars
 
-install: $(MS_DLL) $(MS_EXE) python csharp java php
+#install: $(MS_DLL) $(MS_EXE) python csharp java php
+install: $(MS_DLL) $(MS_EXE)
 	-mkdir $(BINDIR)
 	xcopy /y /r /d /f $(MS_DLL) $(BINDIR)
 	copy *.exe $(BINDIR)
@@ -169,7 +173,7 @@ install: $(MS_DLL) $(MS_EXE) python csharp java php
 !ENDIF
 !IFDEF PHP_HOME
     -mkdir $(BINDIR)\mapscript\php
-	xcopy /y /r /d /f .\mapscript\php3\*.dll $(BINDIR)\mapscript\php
+	xcopy /y /r /d /f .\mapscript\php\*.dll $(BINDIR)\mapscript\php
 !ENDIF
 
 !IFDEF PYTHON_HOME
@@ -202,7 +206,7 @@ java:
 
 !IFDEF PHP_HOME
 php: mapscriptvars $(MS_DLL) $(MS_LIB_DLL)
-    cd mapscript\php3
+    cd mapscript\php
     nmake /f makefile.vc
     cd ..\..
 !ELSE

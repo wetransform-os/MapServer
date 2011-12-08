@@ -1440,11 +1440,11 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_cgiRequestObj swig_types[3]
 #define SWIGTYPE_p_char swig_types[4]
 #define SWIGTYPE_p_class_obj swig_types[5]
-#define SWIGTYPE_p_colorObj swig_types[6]
-#define SWIGTYPE_p_debugLevel swig_types[7]
-#define SWIGTYPE_p_double swig_types[8]
-#define SWIGTYPE_p_error_obj swig_types[9]
-#define SWIGTYPE_p_fillStyleObj swig_types[10]
+#define SWIGTYPE_p_clusterObj swig_types[6]
+#define SWIGTYPE_p_colorObj swig_types[7]
+#define SWIGTYPE_p_debugLevel swig_types[8]
+#define SWIGTYPE_p_double swig_types[9]
+#define SWIGTYPE_p_error_obj swig_types[10]
 #define SWIGTYPE_p_fontSetObj swig_types[11]
 #define SWIGTYPE_p_hashTableObj swig_types[12]
 #define SWIGTYPE_p_imageObj swig_types[13]
@@ -1469,9 +1469,9 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_queryMapObj swig_types[32]
 #define SWIGTYPE_p_rectObj swig_types[33]
 #define SWIGTYPE_p_referenceMapObj swig_types[34]
-#define SWIGTYPE_p_rendererVTable swig_types[35]
-#define SWIGTYPE_p_resultCacheMemberObj swig_types[36]
-#define SWIGTYPE_p_resultCacheObj swig_types[37]
+#define SWIGTYPE_p_rendererVTableObj swig_types[35]
+#define SWIGTYPE_p_resultCacheObj swig_types[36]
+#define SWIGTYPE_p_resultObj swig_types[37]
 #define SWIGTYPE_p_scalebarObj swig_types[38]
 #define SWIGTYPE_p_shapeObj swig_types[39]
 #define SWIGTYPE_p_shapefileObj swig_types[40]
@@ -1480,12 +1480,11 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_symbolObj swig_types[43]
 #define SWIGTYPE_p_symbolSetObj swig_types[44]
 #define SWIGTYPE_p_symbolStyleObj swig_types[45]
-#define SWIGTYPE_p_tilecache swig_types[46]
+#define SWIGTYPE_p_tileCacheObj swig_types[46]
 #define SWIGTYPE_p_uint32_t swig_types[47]
-#define SWIGTYPE_p_void swig_types[48]
-#define SWIGTYPE_p_webObj swig_types[49]
-static swig_type_info *swig_types[51];
-static swig_module_info swig_module = {swig_types, 50, 0, 0, 0, 0};
+#define SWIGTYPE_p_webObj swig_types[48]
+static swig_type_info *swig_types[50];
+static swig_module_info swig_module = {swig_types, 49, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1789,6 +1788,15 @@ SWIG_FromCharPtr(const char *cptr)
 }
 
 
+SWIGINTERNINLINE SV *
+SWIG_From_double  SWIG_PERL_DECL_ARGS_1(double value)
+{    
+  SV *obj = sv_newmortal();
+  sv_setnv(obj, value);
+  return obj;
+}
+
+
 SWIGINTERN swig_type_info*
 SWIG_pchar_descriptor(void)
 {
@@ -1839,10 +1847,33 @@ SWIG_AsCharPtrAndSize(SV *obj, char** cptr, size_t* psize, int *alloc)
 
 
 
+SWIGINTERN int clusterObj_updateFromString(clusterObj *self,char *snippet){
+    return msUpdateClusterFromString(self, snippet);
+  }
+SWIGINTERN int clusterObj_setGroup(clusterObj *self,char *group){
+    if (!group || strlen(group) == 0) {
+       freeExpression(&self->group);
+       return MS_SUCCESS;
+    }
+    else return msLoadExpressionString(&self->group, group);
+  }
+SWIGINTERN char *clusterObj_getGroupString(clusterObj *self){
+    return msGetExpressionString(&(self->group));
+  }
+SWIGINTERN int clusterObj_setFilter(clusterObj *self,char *filter){
+    if (!filter || strlen(filter) == 0) {
+      freeExpression(&self->filter);
+      return MS_SUCCESS;
+    }	
+    else return msLoadExpressionString(&self->filter, filter);
+  }
+SWIGINTERN char *clusterObj_getFilterString(clusterObj *self){
+    return msGetExpressionString(&(self->filter));
+  }
 SWIGINTERN outputFormatObj *new_outputFormatObj(char const *driver,char *name){
         outputFormatObj *format;
 
-        format = msCreateDefaultOutputFormat(NULL, driver);
+        format = msCreateDefaultOutputFormat(NULL, driver, name);
 
         /* in the case of unsupported formats, msCreateDefaultOutputFormat
            should return NULL */
@@ -1853,15 +1884,12 @@ SWIGINTERN outputFormatObj *new_outputFormatObj(char const *driver,char *name){
             return NULL;
         }
         
+        msInitializeRendererVTable(format);
+
         /* Else, continue */
         format->refcount++;
 	format->inmapfile = 1;
 
-        if (name != NULL)
-        {
-            free(format->name);
-            format->name = strdup(name);
-        }
         return format;
     }
 SWIGINTERN void delete_outputFormatObj(outputFormatObj *self){
@@ -1880,110 +1908,18 @@ SWIGINTERN void outputFormatObj_setOption(outputFormatObj *self,char const *key,
         msSetOutputFormatOption( self, key, value );
     }
 SWIGINTERN int outputFormatObj_validate(outputFormatObj *self){
-       	return msOutputFormatValidate( self );
+       	return msOutputFormatValidate( self, 0 );
     }
 SWIGINTERN char *outputFormatObj_getOption(outputFormatObj *self,char const *key,char const *value){
         const char *retval;
         retval = msGetOutputFormatOption(self, key, value);
         return strdup(retval);
     }
+SWIGINTERN void outputFormatObj_attachDevice(outputFormatObj *self,void *device){
+        self->device = device;
+    }
 SWIGINTERN int queryMapObj_updateFromString(queryMapObj *self,char *snippet){
     return msUpdateQueryMapFromString(self, snippet, 0);
-  }
-
-SWIGINTERNINLINE SV *
-SWIG_From_double  SWIG_PERL_DECL_ARGS_1(double value)
-{    
-  SV *obj = sv_newmortal();
-  sv_setnv(obj, value);
-  return obj;
-}
-
-
-SWIGINTERN int
-SWIG_AsCharArray(SV * obj, char *val, size_t size)
-{ 
-  char* cptr = 0; size_t csize = 0; int alloc = SWIG_OLDOBJ;
-  int res = SWIG_AsCharPtrAndSize(obj, &cptr, &csize, &alloc);
-  if (SWIG_IsOK(res)) {
-    if ((csize == size + 1) && cptr && !(cptr[csize-1])) --csize;
-    if (csize <= size) {
-      if (val) {
-	if (csize) memcpy(val, cptr, csize*sizeof(char));
-	if (csize < size) memset(val + csize, 0, (size - csize)*sizeof(char));
-      }
-      if (alloc == SWIG_NEWOBJ) {
-	free((char*)cptr);
-	res = SWIG_DelNewMask(res);
-      }      
-      return res;
-    }
-    if (alloc == SWIG_NEWOBJ) free((char*)cptr);
-  }
-  return SWIG_TypeError;
-}
-
-
-SWIGINTERN int
-SWIG_AsVal_char SWIG_PERL_DECL_ARGS_2(SV * obj, char *val)
-{    
-  int res = SWIG_AsCharArray(obj, val, 1);
-  if (!SWIG_IsOK(res)) {
-    long v;
-    res = SWIG_AddCast(SWIG_AsVal_long SWIG_PERL_CALL_ARGS_2(obj, &v));
-    if (SWIG_IsOK(res)) {
-      if ((CHAR_MIN <= v) && (v <= CHAR_MAX)) {
-	if (val) *val = (char)(v);
-      } else {
-	res = SWIG_OverflowError;
-      }
-    }
-  }
-  return res;
-}
-
-
-SWIGINTERNINLINE SV *
-SWIG_From_char  SWIG_PERL_DECL_ARGS_1(char c) 
-{ 
-  return SWIG_FromCharPtrAndSize(&c,1);
-}
-
-SWIGINTERN int labelObj_updateFromString(labelObj *self,char *snippet){
-    return msUpdateLabelFromString(self, snippet);
-  }
-SWIGINTERN int labelObj_removeBinding(labelObj *self,int binding){
-    if(binding < 0 || binding >= 6) return MS_FAILURE;
-
-    if(self->bindings[binding].item) {
-      free(self->bindings[binding].item);
-      self->bindings[binding].item = NULL;
-      self->bindings[binding].index = -1; 
-      self->numbindings--;
-    }
-
-    return MS_SUCCESS;
-  }
-SWIGINTERN char *labelObj_getBinding(labelObj *self,int binding){
-    if(binding < 0 || binding >= 6) return NULL;
-
-    return self->bindings[binding].item;
-  }
-SWIGINTERN int labelObj_setBinding(labelObj *self,int binding,char *item){
-    if(!item) return MS_FAILURE;
-    if(binding < 0 || binding >= 6) return MS_FAILURE;
-
-    if(self->bindings[binding].item) {
-      free(self->bindings[binding].item);
-      self->bindings[binding].item = NULL; 
-      self->bindings[binding].index = -1;
-      self->numbindings--;
-    }
-
-    self->bindings[binding].item = strdup(item); 
-    self->numbindings++;
-
-    return MS_SUCCESS;
   }
 SWIGINTERN webObj *new_webObj(){
         webObj *web;
@@ -2108,10 +2044,96 @@ SWIGINTERN char *styleObj_getBinding(styleObj *self,int binding){
     return self->bindings[binding].item;
   }
 SWIGINTERN char *styleObj_getGeomTransform(styleObj *self){
-    return self->_geomtransformexpression;
+    return self->_geomtransform.string;
   }
 SWIGINTERN void styleObj_setGeomTransform(styleObj *self,char *transform){
     msStyleSetGeomTransform(self, transform);
+  }
+
+SWIGINTERN int
+SWIG_AsCharArray(SV * obj, char *val, size_t size)
+{ 
+  char* cptr = 0; size_t csize = 0; int alloc = SWIG_OLDOBJ;
+  int res = SWIG_AsCharPtrAndSize(obj, &cptr, &csize, &alloc);
+  if (SWIG_IsOK(res)) {
+    if ((csize == size + 1) && cptr && !(cptr[csize-1])) --csize;
+    if (csize <= size) {
+      if (val) {
+	if (csize) memcpy(val, cptr, csize*sizeof(char));
+	if (csize < size) memset(val + csize, 0, (size - csize)*sizeof(char));
+      }
+      if (alloc == SWIG_NEWOBJ) {
+	free((char*)cptr);
+	res = SWIG_DelNewMask(res);
+      }      
+      return res;
+    }
+    if (alloc == SWIG_NEWOBJ) free((char*)cptr);
+  }
+  return SWIG_TypeError;
+}
+
+
+SWIGINTERN int
+SWIG_AsVal_char SWIG_PERL_DECL_ARGS_2(SV * obj, char *val)
+{    
+  int res = SWIG_AsCharArray(obj, val, 1);
+  if (!SWIG_IsOK(res)) {
+    long v;
+    res = SWIG_AddCast(SWIG_AsVal_long SWIG_PERL_CALL_ARGS_2(obj, &v));
+    if (SWIG_IsOK(res)) {
+      if ((CHAR_MIN <= v) && (v <= CHAR_MAX)) {
+	if (val) *val = (char)(v);
+      } else {
+	res = SWIG_OverflowError;
+      }
+    }
+  }
+  return res;
+}
+
+
+SWIGINTERNINLINE SV *
+SWIG_From_char  SWIG_PERL_DECL_ARGS_1(char c) 
+{ 
+  return SWIG_FromCharPtrAndSize(&c,1);
+}
+
+SWIGINTERN int labelObj_updateFromString(labelObj *self,char *snippet){
+    return msUpdateLabelFromString(self, snippet);
+  }
+SWIGINTERN int labelObj_removeBinding(labelObj *self,int binding){
+    if(binding < 0 || binding >= 9) return MS_FAILURE;
+
+    if(self->bindings[binding].item) {
+      free(self->bindings[binding].item);
+      self->bindings[binding].item = NULL;
+      self->bindings[binding].index = -1; 
+      self->numbindings--;
+    }
+
+    return MS_SUCCESS;
+  }
+SWIGINTERN char *labelObj_getBinding(labelObj *self,int binding){
+    if(binding < 0 || binding >= 9) return NULL;
+
+    return self->bindings[binding].item;
+  }
+SWIGINTERN int labelObj_setBinding(labelObj *self,int binding,char *item){
+    if(!item) return MS_FAILURE;
+    if(binding < 0 || binding >= 9) return MS_FAILURE;
+
+    if(self->bindings[binding].item) {
+      free(self->bindings[binding].item);
+      self->bindings[binding].item = NULL; 
+      self->bindings[binding].index = -1;
+      self->numbindings--;
+    }
+
+    self->bindings[binding].item = strdup(item); 
+    self->numbindings++;
+
+    return MS_SUCCESS;
   }
 SWIGINTERN classObj *new_classObj(layerObj *layer){
         classObj *new_class=NULL;
@@ -2261,7 +2283,19 @@ SWIGINTERN int classObj_moveStyleDown(classObj *self,int index){
 SWIGINTERN void labelCacheObj_freeCache(labelCacheObj *self){
         msFreeLabelCache(self);    
     }
-SWIGINTERN resultCacheMemberObj *resultCacheObj_getResult(resultCacheObj *self,int i){
+SWIGINTERN resultObj *new_resultObj(long shapeindex){
+        resultObj *result = (resultObj *) msSmallMalloc(sizeof(resultObj));
+
+        result->tileindex = -1;
+        result->resultindex = -1; 
+        result->shapeindex = shapeindex;
+        
+        return result;
+    }
+SWIGINTERN void delete_resultObj(resultObj *self){
+        free(self);		
+    }
+SWIGINTERN resultObj *resultCacheObj_getResult(resultCacheObj *self,int i){
         if (i >= 0 && i < self->numresults) {
             return &self->results[i];
         }
@@ -2435,7 +2469,7 @@ SWIGINTERN int layerObj_whichShapes(layerObj *self,rectObj rect){
         }
         self->connectiontype = oldconnectiontype;
 
-        return msLayerWhichShapes(self, rect);
+        return msLayerWhichShapes(self, rect, 0);
     }
 SWIGINTERN shapeObj *layerObj_nextShape(layerObj *self){
        int status;
@@ -2456,33 +2490,33 @@ SWIGINTERN shapeObj *layerObj_nextShape(layerObj *self){
 SWIGINTERN void layerObj_close(layerObj *self){
         msLayerClose(self);
     }
-SWIGINTERN shapeObj *layerObj_getFeature(layerObj *self,int shapeindex,int tileindex){
-    /* This version properly returns shapeObj and also has its
-     * arguments properly ordered so that users can ignore the
-     * tileindex if they are not accessing a tileindexed layer.
-     * See bug 586:
-     * http://mapserver.gis.umn.edu/bugs/show_bug.cgi?id=586 */
+SWIGINTERN shapeObj *layerObj_getShape(layerObj *self,resultObj *record){
         int retval;
         shapeObj *shape;
+
+        if (!record) return NULL;
+    
         shape = (shapeObj *)malloc(sizeof(shapeObj));
-        if (!shape)
-            return NULL;
+        if (!shape) return NULL;
+
         msInitShape(shape);
-        shape->type = self->type;
-        retval = msLayerGetShape(self, shape, tileindex, shapeindex);
+        shape->type = self->type; /* is this right? */
+
+        retval = msLayerGetShape(self, shape, record);
         return shape;
-    }
-SWIGINTERN int layerObj_getShape(layerObj *self,shapeObj *shape,int tileindex,int shapeindex){
-        return msLayerGetShape(self, shape, tileindex, shapeindex);
-    }
-SWIGINTERN int layerObj_resultsGetShape(layerObj *self,shapeObj *shape,int shapeindex,int tileindex){
-        return msLayerResultsGetShape(self, shape, tileindex, shapeindex);
     }
 SWIGINTERN int layerObj_getNumResults(layerObj *self){
         if (!self->resultcache) return 0;
         return self->resultcache->numresults;
     }
-SWIGINTERN resultCacheMemberObj *layerObj_getResult(layerObj *self,int i){
+SWIGINTERN rectObj *layerObj_getResultsBounds(layerObj *self){
+        rectObj *bounds;
+        if (!self->resultcache) return NULL;
+        bounds = (rectObj *) malloc(sizeof(rectObj));
+        MS_COPYRECT(bounds, &self->resultcache->bounds);
+        return bounds;
+    }
+SWIGINTERN resultObj *layerObj_getResult(layerObj *self,int i){
         if (!self->resultcache) return NULL;
         if (i >= 0 && i < self->resultcache->numresults)
             return &self->resultcache->results[i]; 
@@ -2509,6 +2543,27 @@ SWIGINTERN int layerObj_draw(layerObj *self,mapObj *map,imageObj *image){
     }
 SWIGINTERN int layerObj_drawQuery(layerObj *self,mapObj *map,imageObj *image){
         return msDrawQueryLayer(map, self, image);    
+    }
+SWIGINTERN int layerObj_queryByFilter(layerObj *self,mapObj *map,char *string){
+        int status;
+        int retval;
+
+        msInitQuery(&(map->query));
+
+        map->query.type = MS_QUERY_BY_FILTER;
+
+        map->query.filter = (expressionObj *) malloc(sizeof(expressionObj));
+        map->query.filter->string = strdup(string);
+	map->query.filter->type = 2000; /* MS_EXPRESSION: lot's of conflicts in mapfile.h */
+
+        map->query.layer = self->index;
+     	map->query.rect = map->extent;
+
+	status = self->status;
+	self->status = 1;
+        retval = msQueryByFilter(map);
+        self->status = status;
+	return retval;
     }
 SWIGINTERN int layerObj_queryByAttributes(layerObj *self,mapObj *map,char *qitem,char *qstring,int mode){
         int status;
@@ -2761,6 +2816,9 @@ SWIGINTERN int layerObj_setConnectionType(layerObj *self,int connectiontype,char
           msLayerClose(self);
         return msConnectLayer(self, connectiontype, library_str);
     }
+SWIGINTERN int layerObj_getClassIndex(layerObj *self,mapObj *map,shapeObj *shape,int *classgroup,int numclasses){
+        return msShapeGetClass(self, map, shape, classgroup, numclasses);
+    }
 SWIGINTERN mapObj *new_mapObj(char *filename){
         if (filename && strlen(filename))
             return msLoadMap(filename, NULL);
@@ -2907,6 +2965,19 @@ SWIGINTERN labelCacheMemberObj *mapObj_nextLabel(mapObj *self){
     else
       return NULL;	
   }
+SWIGINTERN int mapObj_queryByFilter(mapObj *self,char *string){
+    msInitQuery(&(self->query));
+
+    self->query.type = MS_QUERY_BY_FILTER;
+
+    self->query.filter = (expressionObj *) malloc(sizeof(expressionObj));
+    self->query.filter->string = strdup(string);
+    self->query.filter->type = 2000; /* MS_EXPRESSION: lot's of conflicts in mapfile.h */
+
+    self->query.rect = self->extent;
+
+    return msQueryByFilter(self);
+  }
 SWIGINTERN int mapObj_queryByPoint(mapObj *self,pointObj *point,int mode,double buffer){
     msInitQuery(&(self->query));
 
@@ -2953,15 +3024,15 @@ SWIGINTERN int mapObj_setProjection(mapObj *self,char *proj4){
 SWIGINTERN int mapObj_save(mapObj *self,char *filename){
     return msSaveMap(self, filename);
   }
-SWIGINTERN int mapObj_saveQuery(mapObj *self,char *filename){
-        return msSaveQuery(self, filename);
-    }
+SWIGINTERN int mapObj_saveQuery(mapObj *self,char *filename,int results){
+    return msSaveQuery(self, filename, results);
+  }
 SWIGINTERN int mapObj_loadQuery(mapObj *self,char *filename){
-        return msLoadQuery(self, filename);
-    }
+    return msLoadQuery(self, filename);
+  }
 SWIGINTERN void mapObj_freeQuery(mapObj *self,int qlayer){
-        msQueryFree(self, qlayer);
-    }
+    msQueryFree(self, qlayer);
+  }
 SWIGINTERN int mapObj_saveQueryAsGML(mapObj *self,char *filename,char const *ns){
     return msGMLWriteQuery(self, filename, ns);
   }
@@ -3610,31 +3681,52 @@ SWIGINTERN int mapObj_zoomScale(mapObj *self,double scale,pointObj *poPixPos,int
 
         return MS_SUCCESS;
     }
-SWIGINTERN imageObj *new_imageObj(int width,int height,outputFormatObj *input_format,char const *file){
+SWIGINTERN imageObj *new_imageObj(int width,int height,outputFormatObj *input_format,char const *file,double resolution,double defresolution){
         imageObj *image=NULL;
         outputFormatObj *format;
+        rendererVTableObj *renderer = NULL;
+        rasterBufferObj *rb = NULL;
 
-        if (file) {
-            return (imageObj *) msImageLoadGD(file);
-        }
         if (input_format) {
             format = input_format;
         }
         else {
-            format = msCreateDefaultOutputFormat(NULL, "GD/GIF");
+            format = msCreateDefaultOutputFormat(NULL, "GD/GIF", "gdgif");
             if (format == NULL)
-                format = msCreateDefaultOutputFormat(NULL, "GD/PNG");
+                format = msCreateDefaultOutputFormat(NULL, "GD/PNG", "gdpng");
             if (format == NULL)
-                format = msCreateDefaultOutputFormat(NULL, "GD/JPEG");
-            if (format == NULL)
-                format = msCreateDefaultOutputFormat(NULL, "GD/WBMP");
+
+            if (format)
+                msInitializeRendererVTable(format);
         }
         if (format == NULL) {
             msSetError(15, "Could not create output format",
                        "imageObj()");
             return NULL;
         }
-        image = msImageCreate(width, height, format, NULL, NULL, NULL);
+
+        if (file) {
+            
+            renderer = format->vtable;
+            rb = (rasterBufferObj*) malloc(sizeof(rasterBufferObj));
+            if (!rb) {
+                msSetError(2, NULL, "imageObj()");
+                return NULL;
+            }
+            if ( (renderer->loadImageFromFile(file, rb)) == MS_FAILURE)
+                return NULL;
+
+            image = msImageCreate(rb->width, rb->height, format, NULL, NULL, 
+                                  resolution, defresolution, NULL);
+            renderer->mergeRasterBuffer(image, rb, 1.0, 0, 0, 0, 0, rb->width, rb->height);
+
+            msFreeRasterBuffer(rb);
+            free(rb);
+
+            return image;
+        }
+
+        image = msImageCreate(width, height, format, NULL, NULL, resolution, defresolution, NULL);
         return image;
     }
 SWIGINTERN void delete_imageObj(imageObj *self){
@@ -3644,26 +3736,20 @@ SWIGINTERN void imageObj_save(imageObj *self,char *filename,mapObj *map){
         msSaveImage(map, self, filename );
     }
 SWIGINTERN int imageObj_write(imageObj *self,FILE *file){
-        gdIOCtx *ctx=NULL;
         int retval=MS_FAILURE;
-        
-        if ( MS_DRIVER_GD(self->format) )
+        rendererVTableObj *renderer = NULL;
+
+        if (MS_RENDERER_PLUGIN(self->format))
         {
             if (file)
             {
-                /* gdNewFileCtx is a semi-documented function from 
-                   gd_io_file.c */
-                ctx = msNewGDFileCtx(file);
+                renderer = self->format->vtable;
+                retval = renderer->saveImage(self, file, self->format);
             }
-            else /* create a gdIOCtx interface to stdout */
+            else
             {
-                ctx = msNewGDFileCtx(stdout);
+                retval = msSaveImage(NULL, self, NULL);
             }
-            
-            /* we wrap msSaveImageGDCtx in the same way that 
-               gdImageJpeg() wraps gdImageJpegCtx()  (bug 1047). */
-            retval = msSaveImageGDCtx(self, ctx, self->format);
-            ctx->gd_free(ctx);
         }
         else
         {
@@ -4108,6 +4194,22 @@ SWIGINTERN void shapeObj_initValues(shapeObj *self,int numvalues){
             self->numvalues = numvalues;
         }
     }
+
+SWIGINTERNINLINE SV *
+SWIG_From_unsigned_SS_long  SWIG_PERL_DECL_ARGS_1(unsigned long value)
+{    
+  SV *obj = sv_newmortal();
+  sv_setuv(obj, (UV) value);
+  return obj;
+}
+
+
+SWIGINTERNINLINE SV *
+SWIG_From_unsigned_SS_int  SWIG_PERL_DECL_ARGS_1(unsigned int value)
+{    
+  return SWIG_From_unsigned_SS_long  SWIG_PERL_CALL_ARGS_1(value);
+}
+
 SWIGINTERN char *DBFInfo_getFieldName(DBFInfo *self,int iField){
         static char pszFieldName[1000];
 	    int pnWidth;
@@ -4195,7 +4297,7 @@ SWIGINTERN int shapefileObj_getTransformed(shapefileObj *self,mapObj *map,int i,
 
         msFreeShape(shape); /* frees all lines and points before re-filling */
         msSHPReadShape(self->hSHP, i, shape);
-        msTransformShapeToPixel(shape, map->extent, map->cellsize);
+        msTransformShapeSimplify(shape, map->extent, map->cellsize);
 
         return MS_SUCCESS;
     }
@@ -4264,7 +4366,7 @@ SWIGINTERN colorObj *new_colorObj(int red,int green,int blue,int pen){
         if (!color)
             return(NULL);
     
-        MS_INIT_COLOR(*color, red, green, blue);
+        MS_INIT_COLOR(*color, red, green, blue, 255);
 
         return(color);    	
     }
@@ -4278,7 +4380,7 @@ SWIGINTERN int colorObj_setRGB(colorObj *self,int red,int green,int blue){
             return MS_FAILURE;
         }
     
-        MS_INIT_COLOR(*self, red, green, blue);
+        MS_INIT_COLOR(*self, red, green, blue, 255);
         return MS_SUCCESS;
     }
 SWIGINTERN int colorObj_setHex(colorObj *self,char *psHexColor){
@@ -4292,7 +4394,7 @@ SWIGINTERN int colorObj_setHex(colorObj *self,char *psHexColor){
                 return MS_FAILURE;
             }
 
-            MS_INIT_COLOR(*self, red, green, blue);
+            MS_INIT_COLOR(*self, red, green, blue, 255);
             return MS_SUCCESS;
         }
         else {
@@ -4360,19 +4462,71 @@ SWIGINTERN lineObj *symbolObj_getPoints(symbolObj *self){
         line->numpoints = self->numpoints;
         return line;
     }
-SWIGINTERN int symbolObj_setPattern(symbolObj *self,int index,int value){
-        if (index < 0 || index > 10) {
-            msSetError(4, "Can't set pattern at index %d.", "setPattern()", index);
-            return MS_FAILURE;
+SWIGINTERN imageObj *symbolObj_getImage(symbolObj *self,outputFormatObj *input_format){
+        imageObj *image;
+        outputFormatObj *format = NULL;
+        rendererVTableObj *renderer = NULL;
+
+        if (self->type != MS_SYMBOL_PIXMAP)
+        {
+            msSetError(4, "Can't return image from non-pixmap symbol",
+                       "getImage()");
+            return NULL;
         }
-        self->pattern[index] = value;
-        return MS_SUCCESS;
-    }
-SWIGINTERN imageObj *symbolObj_getImage(symbolObj *self,outputFormatObj *format){
-        return msSymbolGetImageGD(self, format);
+    
+        if (input_format)
+        {
+            format = input_format;
+        }
+        else 
+        {
+            format = msCreateDefaultOutputFormat(NULL, "GD/GIF", "gdgif");
+            if (format == NULL)
+                format = msCreateDefaultOutputFormat(NULL, "GD/PNG", "gdpng");
+
+            if (format)
+                msInitializeRendererVTable(format);
+        }
+        
+        if (format == NULL) 
+        {
+            msSetError(15, "Could not create output format",
+                       "getImage()");
+            return NULL;
+        }
+
+        renderer = format->vtable;
+        msPreloadImageSymbol(renderer, self);
+        if (self->pixmap_buffer) 
+        {
+            image = msImageCreate(self->pixmap_buffer->width, self->pixmap_buffer->height, format, NULL, NULL,
+                                  MS_DEFAULT_RESOLUTION, MS_DEFAULT_RESOLUTION, NULL);
+            renderer->mergeRasterBuffer(image, self->pixmap_buffer, 1.0, 0, 0, 0, 0, 
+                                        self->pixmap_buffer->width, self->pixmap_buffer->height);
+        }
+
+        return image;
     }
 SWIGINTERN int symbolObj_setImage(symbolObj *self,imageObj *image){
-        return msSymbolSetImageGD(self, image);
+        rendererVTableObj *renderer = NULL;
+        
+        renderer = image->format->vtable;
+        
+        if (self->pixmap_buffer) {
+            msFreeRasterBuffer(self->pixmap_buffer);
+            free(self->pixmap_buffer);
+        }
+        
+        self->pixmap_buffer = (rasterBufferObj*)malloc(sizeof(rasterBufferObj));
+        if (!self->pixmap_buffer) {
+            msSetError(2, NULL, "setImage()");
+            return MS_FAILURE;
+        }
+        renderer->initializeRasterBuffer(self->pixmap_buffer, image->width, image->height, image->format->imagemode);
+        self->type = MS_SYMBOL_PIXMAP;
+        renderer->getRasterBufferCopy(image, self->pixmap_buffer);
+
+        return MS_SUCCESS;
     }
 SWIGINTERN errorObj *new_errorObj(){    
         return msGetErrorObj();
@@ -4434,6 +4588,18 @@ SWIGINTERN void hashTableObj_clear(hashTableObj *self){
 SWIGINTERN char const *hashTableObj_nextKey(hashTableObj *self,char *prevkey){
         return msNextKeyFromHashTable(self, (const char *) prevkey);
     }
+
+static char *msGetEnvURL( const char *key, void *thread_context )
+{
+    if( strcmp(key,"REQUEST_METHOD") == 0 )
+        return "GET";
+
+    if( strcmp(key,"QUERY_STRING") == 0 )
+        return (char *) thread_context;
+
+    return NULL;
+}
+
 SWIGINTERN cgiRequestObj *new_cgiRequestObj(){
         cgiRequestObj *request;
         
@@ -4443,16 +4609,14 @@ SWIGINTERN cgiRequestObj *new_cgiRequestObj(){
             return NULL;
         }
         
-        request->ParamNames = (char **) malloc(100*sizeof(char*));
-        request->ParamValues = (char **) malloc(100*sizeof(char*));
-        if (request->ParamNames==NULL || request->ParamValues==NULL) {
-	        msSetError(2, NULL, "OWSRequest()");
-            return NULL;
-        }
         return request;
     }
 SWIGINTERN int cgiRequestObj_loadParams(cgiRequestObj *self){
-	self->NumParams = loadParams( self );
+	self->NumParams = loadParams( self, NULL, NULL, 0, NULL);
+	return self->NumParams;
+    }
+SWIGINTERN int cgiRequestObj_loadParamsFromURL(cgiRequestObj *self,char const *url){
+	self->NumParams = loadParams( self, msGetEnvURL, NULL, 0, (void*)url );
 	return self->NumParams;
     }
 SWIGINTERN void cgiRequestObj_setParameter(cgiRequestObj *self,char *name,char *value){
@@ -4897,6 +5061,430 @@ XS(_wrap_delete_fontSetObj) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_fontSetObj" "', argument " "1"" of type '" "fontSetObj *""'"); 
     }
     arg1 = (fontSetObj *)(argp1);
+    free((char *) arg1);
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_clusterObj_maxdistance_set) {
+  {
+    clusterObj *arg1 = (clusterObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: clusterObj_maxdistance_set(self,maxdistance);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_clusterObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "clusterObj_maxdistance_set" "', argument " "1"" of type '" "clusterObj *""'"); 
+    }
+    arg1 = (clusterObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "clusterObj_maxdistance_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->maxdistance = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_clusterObj_maxdistance_get) {
+  {
+    clusterObj *arg1 = (clusterObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: clusterObj_maxdistance_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_clusterObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "clusterObj_maxdistance_get" "', argument " "1"" of type '" "clusterObj *""'"); 
+    }
+    arg1 = (clusterObj *)(argp1);
+    result = (double) ((arg1)->maxdistance);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_clusterObj_buffer_set) {
+  {
+    clusterObj *arg1 = (clusterObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: clusterObj_buffer_set(self,buffer);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_clusterObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "clusterObj_buffer_set" "', argument " "1"" of type '" "clusterObj *""'"); 
+    }
+    arg1 = (clusterObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "clusterObj_buffer_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->buffer = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_clusterObj_buffer_get) {
+  {
+    clusterObj *arg1 = (clusterObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: clusterObj_buffer_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_clusterObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "clusterObj_buffer_get" "', argument " "1"" of type '" "clusterObj *""'"); 
+    }
+    arg1 = (clusterObj *)(argp1);
+    result = (double) ((arg1)->buffer);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_clusterObj_region_set) {
+  {
+    clusterObj *arg1 = (clusterObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: clusterObj_region_set(self,region);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_clusterObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "clusterObj_region_set" "', argument " "1"" of type '" "clusterObj *""'"); 
+    }
+    arg1 = (clusterObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "clusterObj_region_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->region) free((char*)arg1->region);
+      if (arg2) {
+        arg1->region = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->region,arg2);
+      } else {
+        arg1->region = 0;
+      }
+    }
+    
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_clusterObj_region_get) {
+  {
+    clusterObj *arg1 = (clusterObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: clusterObj_region_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_clusterObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "clusterObj_region_get" "', argument " "1"" of type '" "clusterObj *""'"); 
+    }
+    arg1 = (clusterObj *)(argp1);
+    result = (char *) ((arg1)->region);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_clusterObj_updateFromString) {
+  {
+    clusterObj *arg1 = (clusterObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: clusterObj_updateFromString(self,snippet);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_clusterObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "clusterObj_updateFromString" "', argument " "1"" of type '" "clusterObj *""'"); 
+    }
+    arg1 = (clusterObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "clusterObj_updateFromString" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (int)clusterObj_updateFromString(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_clusterObj_setGroup) {
+  {
+    clusterObj *arg1 = (clusterObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: clusterObj_setGroup(self,group);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_clusterObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "clusterObj_setGroup" "', argument " "1"" of type '" "clusterObj *""'"); 
+    }
+    arg1 = (clusterObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "clusterObj_setGroup" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (int)clusterObj_setGroup(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_clusterObj_getGroupString) {
+  {
+    clusterObj *arg1 = (clusterObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: clusterObj_getGroupString(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_clusterObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "clusterObj_getGroupString" "', argument " "1"" of type '" "clusterObj *""'"); 
+    }
+    arg1 = (clusterObj *)(argp1);
+    result = (char *)clusterObj_getGroupString(arg1);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    free((char*)result);
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_clusterObj_setFilter) {
+  {
+    clusterObj *arg1 = (clusterObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: clusterObj_setFilter(self,filter);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_clusterObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "clusterObj_setFilter" "', argument " "1"" of type '" "clusterObj *""'"); 
+    }
+    arg1 = (clusterObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "clusterObj_setFilter" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (int)clusterObj_setFilter(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_clusterObj_getFilterString) {
+  {
+    clusterObj *arg1 = (clusterObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: clusterObj_getFilterString(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_clusterObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "clusterObj_getFilterString" "', argument " "1"" of type '" "clusterObj *""'"); 
+    }
+    arg1 = (clusterObj *)(argp1);
+    result = (char *)clusterObj_getFilterString(arg1);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    free((char*)result);
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_clusterObj) {
+  {
+    int argvi = 0;
+    clusterObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 0) || (items > 0)) {
+      SWIG_croak("Usage: new_clusterObj();");
+    }
+    result = (clusterObj *)calloc(1, sizeof(clusterObj));
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_clusterObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_delete_clusterObj) {
+  {
+    clusterObj *arg1 = (clusterObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: delete_clusterObj(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_clusterObj, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_clusterObj" "', argument " "1"" of type '" "clusterObj *""'"); 
+    }
+    arg1 = (clusterObj *)(argp1);
     free((char *) arg1);
     
     
@@ -5724,71 +6312,6 @@ XS(_wrap_outputFormatObj_inmapfile_get) {
 }
 
 
-XS(_wrap_outputFormatObj_vtable_set) {
-  {
-    outputFormatObj *arg1 = (outputFormatObj *) 0 ;
-    rendererVTableObj *arg2 = (rendererVTableObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: outputFormatObj_vtable_set(self,vtable);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_outputFormatObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "outputFormatObj_vtable_set" "', argument " "1"" of type '" "outputFormatObj *""'"); 
-    }
-    arg1 = (outputFormatObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_rendererVTable, SWIG_POINTER_DISOWN |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "outputFormatObj_vtable_set" "', argument " "2"" of type '" "rendererVTableObj *""'"); 
-    }
-    arg2 = (rendererVTableObj *)(argp2);
-    if (arg1) (arg1)->vtable = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_outputFormatObj_vtable_get) {
-  {
-    outputFormatObj *arg1 = (outputFormatObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    rendererVTableObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: outputFormatObj_vtable_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_outputFormatObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "outputFormatObj_vtable_get" "', argument " "1"" of type '" "outputFormatObj *""'"); 
-    }
-    arg1 = (outputFormatObj *)(argp1);
-    result = (rendererVTableObj *) ((arg1)->vtable);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_rendererVTable, 0 | 0); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
 XS(_wrap_new_outputFormatObj) {
   {
     char *arg1 = (char *) 0 ;
@@ -6059,6 +6582,41 @@ XS(_wrap_outputFormatObj_getOption) {
     
     if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
     if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_outputFormatObj_attachDevice) {
+  {
+    outputFormatObj *arg1 = (outputFormatObj *) 0 ;
+    void *arg2 = (void *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: outputFormatObj_attachDevice(self,device);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_outputFormatObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "outputFormatObj_attachDevice" "', argument " "1"" of type '" "outputFormatObj *""'"); 
+    }
+    arg1 = (outputFormatObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2), 0, 0);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "outputFormatObj_attachDevice" "', argument " "2"" of type '" "void *""'"); 
+    }
+    outputFormatObj_attachDevice(arg1,arg2);
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
     SWIG_croak_null();
   }
 }
@@ -6473,2703 +7031,6 @@ XS(_wrap_delete_queryMapObj) {
 }
 
 
-XS(_wrap_labelObj_font_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_font_set(self,font);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_font_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "labelObj_font_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    {
-      if (arg1->font) free((char*)arg1->font);
-      if (arg2) {
-        arg1->font = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->font,arg2);
-      } else {
-        arg1->font = 0;
-      }
-    }
-    
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_font_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_font_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_font_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (char *) ((arg1)->font);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_type_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    enum MS_FONT_TYPE arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_type_set(self,type);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_type_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_type_set" "', argument " "2"" of type '" "enum MS_FONT_TYPE""'");
-    } 
-    arg2 = (enum MS_FONT_TYPE)(val2);
-    if (arg1) (arg1)->type = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_type_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    enum MS_FONT_TYPE result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_type_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_type_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (enum MS_FONT_TYPE) ((arg1)->type);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_color_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    colorObj *arg2 = (colorObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_color_set(self,color);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_color_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "labelObj_color_set" "', argument " "2"" of type '" "colorObj *""'"); 
-    }
-    arg2 = (colorObj *)(argp2);
-    if (arg1) (arg1)->color = *arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_color_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    colorObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_color_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_color_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (colorObj *)& ((arg1)->color);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_colorObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_outlinecolor_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    colorObj *arg2 = (colorObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_outlinecolor_set(self,outlinecolor);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_outlinecolor_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "labelObj_outlinecolor_set" "', argument " "2"" of type '" "colorObj *""'"); 
-    }
-    arg2 = (colorObj *)(argp2);
-    if (arg1) (arg1)->outlinecolor = *arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_outlinecolor_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    colorObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_outlinecolor_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_outlinecolor_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (colorObj *)& ((arg1)->outlinecolor);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_colorObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_outlinewidth_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_outlinewidth_set(self,outlinewidth);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_outlinewidth_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_outlinewidth_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->outlinewidth = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_outlinewidth_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_outlinewidth_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_outlinewidth_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (int) ((arg1)->outlinewidth);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_shadowcolor_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    colorObj *arg2 = (colorObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_shadowcolor_set(self,shadowcolor);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_shadowcolor_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "labelObj_shadowcolor_set" "', argument " "2"" of type '" "colorObj *""'"); 
-    }
-    arg2 = (colorObj *)(argp2);
-    if (arg1) (arg1)->shadowcolor = *arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_shadowcolor_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    colorObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_shadowcolor_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_shadowcolor_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (colorObj *)& ((arg1)->shadowcolor);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_colorObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_shadowsizex_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_shadowsizex_set(self,shadowsizex);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_shadowsizex_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_shadowsizex_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->shadowsizex = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_shadowsizex_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_shadowsizex_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_shadowsizex_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (int) ((arg1)->shadowsizex);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_shadowsizey_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_shadowsizey_set(self,shadowsizey);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_shadowsizey_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_shadowsizey_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->shadowsizey = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_shadowsizey_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_shadowsizey_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_shadowsizey_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (int) ((arg1)->shadowsizey);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_backgroundcolor_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    colorObj *arg2 = (colorObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_backgroundcolor_set(self,backgroundcolor);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_backgroundcolor_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "labelObj_backgroundcolor_set" "', argument " "2"" of type '" "colorObj *""'"); 
-    }
-    arg2 = (colorObj *)(argp2);
-    if (arg1) (arg1)->backgroundcolor = *arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_backgroundcolor_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    colorObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_backgroundcolor_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_backgroundcolor_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (colorObj *)& ((arg1)->backgroundcolor);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_colorObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_backgroundshadowcolor_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    colorObj *arg2 = (colorObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_backgroundshadowcolor_set(self,backgroundshadowcolor);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_backgroundshadowcolor_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "labelObj_backgroundshadowcolor_set" "', argument " "2"" of type '" "colorObj *""'"); 
-    }
-    arg2 = (colorObj *)(argp2);
-    if (arg1) (arg1)->backgroundshadowcolor = *arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_backgroundshadowcolor_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    colorObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_backgroundshadowcolor_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_backgroundshadowcolor_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (colorObj *)& ((arg1)->backgroundshadowcolor);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_colorObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_backgroundshadowsizex_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_backgroundshadowsizex_set(self,backgroundshadowsizex);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_backgroundshadowsizex_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_backgroundshadowsizex_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->backgroundshadowsizex = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_backgroundshadowsizex_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_backgroundshadowsizex_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_backgroundshadowsizex_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (int) ((arg1)->backgroundshadowsizex);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_backgroundshadowsizey_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_backgroundshadowsizey_set(self,backgroundshadowsizey);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_backgroundshadowsizey_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_backgroundshadowsizey_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->backgroundshadowsizey = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_backgroundshadowsizey_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_backgroundshadowsizey_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_backgroundshadowsizey_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (int) ((arg1)->backgroundshadowsizey);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_size_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    double arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_size_set(self,size);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_size_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_size_set" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    if (arg1) (arg1)->size = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_size_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_size_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_size_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (double) ((arg1)->size);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_minsize_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    double arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_minsize_set(self,minsize);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_minsize_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_minsize_set" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    if (arg1) (arg1)->minsize = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_minsize_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_minsize_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_minsize_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (double) ((arg1)->minsize);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_maxsize_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    double arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_maxsize_set(self,maxsize);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_maxsize_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_maxsize_set" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    if (arg1) (arg1)->maxsize = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_maxsize_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_maxsize_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_maxsize_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (double) ((arg1)->maxsize);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_position_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_position_set(self,position);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_position_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_position_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->position = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_position_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_position_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_position_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (int) ((arg1)->position);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_offsetx_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_offsetx_set(self,offsetx);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_offsetx_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_offsetx_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->offsetx = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_offsetx_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_offsetx_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_offsetx_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (int) ((arg1)->offsetx);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_offsety_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_offsety_set(self,offsety);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_offsety_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_offsety_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->offsety = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_offsety_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_offsety_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_offsety_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (int) ((arg1)->offsety);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_angle_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    double arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_angle_set(self,angle);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_angle_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_angle_set" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    if (arg1) (arg1)->angle = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_angle_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_angle_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_angle_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (double) ((arg1)->angle);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_autoangle_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_autoangle_set(self,autoangle);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_autoangle_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_autoangle_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->autoangle = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_autoangle_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_autoangle_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_autoangle_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (int) ((arg1)->autoangle);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_autofollow_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_autofollow_set(self,autofollow);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_autofollow_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_autofollow_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->autofollow = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_autofollow_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_autofollow_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_autofollow_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (int) ((arg1)->autofollow);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_buffer_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_buffer_set(self,buffer);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_buffer_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_buffer_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->buffer = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_buffer_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_buffer_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_buffer_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (int) ((arg1)->buffer);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_antialias_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_antialias_set(self,antialias);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_antialias_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_antialias_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->antialias = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_antialias_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_antialias_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_antialias_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (int) ((arg1)->antialias);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_align_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_align_set(self,align);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_align_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_align_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->align = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_align_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_align_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_align_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (int) ((arg1)->align);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_wrap_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    char arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    char val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_wrap_set(self,wrap);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_wrap_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_char SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_wrap_set" "', argument " "2"" of type '" "char""'");
-    } 
-    arg2 = (char)(val2);
-    if (arg1) (arg1)->wrap = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_wrap_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_wrap_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_wrap_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (char) ((arg1)->wrap);
-    ST(argvi) = SWIG_From_char  SWIG_PERL_CALL_ARGS_1((char)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_maxlength_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_maxlength_set(self,maxlength);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_maxlength_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_maxlength_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->maxlength = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_maxlength_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_maxlength_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_maxlength_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (int) ((arg1)->maxlength);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_minlength_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_minlength_set(self,minlength);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_minlength_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_minlength_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->minlength = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_minlength_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_minlength_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_minlength_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (int) ((arg1)->minlength);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_space_size_10_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    double arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_space_size_10_set(self,space_size_10);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_space_size_10_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_space_size_10_set" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    if (arg1) (arg1)->space_size_10 = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_space_size_10_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_space_size_10_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_space_size_10_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (double) ((arg1)->space_size_10);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_minfeaturesize_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_minfeaturesize_set(self,minfeaturesize);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_minfeaturesize_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_minfeaturesize_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->minfeaturesize = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_minfeaturesize_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_minfeaturesize_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_minfeaturesize_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (int) ((arg1)->minfeaturesize);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_autominfeaturesize_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_autominfeaturesize_set(self,autominfeaturesize);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_autominfeaturesize_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_autominfeaturesize_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->autominfeaturesize = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_autominfeaturesize_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_autominfeaturesize_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_autominfeaturesize_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (int) ((arg1)->autominfeaturesize);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_minscaledenom_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    double arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_minscaledenom_set(self,minscaledenom);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_minscaledenom_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_minscaledenom_set" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    if (arg1) (arg1)->minscaledenom = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_minscaledenom_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_minscaledenom_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_minscaledenom_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (double) ((arg1)->minscaledenom);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_maxscaledenom_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    double arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_maxscaledenom_set(self,maxscaledenom);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_maxscaledenom_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_maxscaledenom_set" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    if (arg1) (arg1)->maxscaledenom = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_maxscaledenom_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_maxscaledenom_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_maxscaledenom_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (double) ((arg1)->maxscaledenom);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_mindistance_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_mindistance_set(self,mindistance);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_mindistance_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_mindistance_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->mindistance = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_mindistance_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_mindistance_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_mindistance_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (int) ((arg1)->mindistance);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_repeatdistance_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_repeatdistance_set(self,repeatdistance);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_repeatdistance_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_repeatdistance_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->repeatdistance = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_repeatdistance_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_repeatdistance_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_repeatdistance_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (int) ((arg1)->repeatdistance);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_partials_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_partials_set(self,partials);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_partials_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_partials_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->partials = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_partials_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_partials_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_partials_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (int) ((arg1)->partials);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_force_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_force_set(self,force);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_force_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_force_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->force = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_force_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_force_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_force_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (int) ((arg1)->force);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_encoding_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_encoding_set(self,encoding);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_encoding_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "labelObj_encoding_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    {
-      if (arg1->encoding) free((char*)arg1->encoding);
-      if (arg2) {
-        arg1->encoding = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->encoding,arg2);
-      } else {
-        arg1->encoding = 0;
-      }
-    }
-    
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_encoding_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_encoding_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_encoding_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (char *) ((arg1)->encoding);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_priority_set) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_priority_set(self,priority);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_priority_set" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_priority_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->priority = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_priority_get) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelObj_priority_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_priority_get" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    result = (int) ((arg1)->priority);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_updateFromString) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_updateFromString(self,snippet);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_updateFromString" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "labelObj_updateFromString" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (int)labelObj_updateFromString(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_removeBinding) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_removeBinding(self,binding);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_removeBinding" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_removeBinding" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    result = (int)labelObj_removeBinding(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_getBinding) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelObj_getBinding(self,binding);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_getBinding" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_getBinding" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    result = (char *)labelObj_getBinding(arg1,arg2);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelObj_setBinding) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    int arg2 ;
-    char *arg3 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int res3 ;
-    char *buf3 = 0 ;
-    int alloc3 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: labelObj_setBinding(self,binding,item);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_setBinding" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_setBinding" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "labelObj_setBinding" "', argument " "3"" of type '" "char *""'");
-    }
-    arg3 = (char *)(buf3);
-    result = (int)labelObj_setBinding(arg1,arg2,arg3);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
-    XSRETURN(argvi);
-  fail:
-    
-    
-    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_new_labelObj) {
-  {
-    int argvi = 0;
-    labelObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 0) || (items > 0)) {
-      SWIG_croak("Usage: new_labelObj();");
-    }
-    result = (labelObj *)calloc(1, sizeof(labelObj));
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_labelObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    XSRETURN(argvi);
-  fail:
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_delete_labelObj) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: delete_labelObj(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, SWIG_POINTER_DISOWN |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_labelObj" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    free((char *) arg1);
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
 XS(_wrap_webObj_log_set) {
   {
     webObj *arg1 = (webObj *) 0 ;
@@ -9382,6 +7243,80 @@ XS(_wrap_webObj_imageurl_get) {
     }
     arg1 = (webObj *)(argp1);
     result = (char *) ((arg1)->imageurl);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_webObj_temppath_set) {
+  {
+    webObj *arg1 = (webObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: webObj_temppath_set(self,temppath);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_webObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "webObj_temppath_set" "', argument " "1"" of type '" "webObj *""'"); 
+    }
+    arg1 = (webObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "webObj_temppath_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->temppath) free((char*)arg1->temppath);
+      if (arg2) {
+        arg1->temppath = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->temppath,arg2);
+      } else {
+        arg1->temppath = 0;
+      }
+    }
+    
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_webObj_temppath_get) {
+  {
+    webObj *arg1 = (webObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: webObj_temppath_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_webObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "webObj_temppath_get" "', argument " "1"" of type '" "webObj *""'"); 
+    }
+    arg1 = (webObj *)(argp1);
+    result = (char *) ((arg1)->temppath);
     ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
     
     XSRETURN(argvi);
@@ -13061,6 +10996,2508 @@ XS(_wrap_styleObj_setGeomTransform) {
 }
 
 
+XS(_wrap_labelObj_font_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_font_set(self,font);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_font_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "labelObj_font_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->font) free((char*)arg1->font);
+      if (arg2) {
+        arg1->font = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->font,arg2);
+      } else {
+        arg1->font = 0;
+      }
+    }
+    
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_font_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_font_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_font_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (char *) ((arg1)->font);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_type_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    enum MS_FONT_TYPE arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_type_set(self,type);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_type_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_type_set" "', argument " "2"" of type '" "enum MS_FONT_TYPE""'");
+    } 
+    arg2 = (enum MS_FONT_TYPE)(val2);
+    if (arg1) (arg1)->type = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_type_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    enum MS_FONT_TYPE result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_type_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_type_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (enum MS_FONT_TYPE) ((arg1)->type);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_color_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    colorObj *arg2 = (colorObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_color_set(self,color);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_color_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "labelObj_color_set" "', argument " "2"" of type '" "colorObj *""'"); 
+    }
+    arg2 = (colorObj *)(argp2);
+    if (arg1) (arg1)->color = *arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_color_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    colorObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_color_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_color_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (colorObj *)& ((arg1)->color);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_colorObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_outlinecolor_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    colorObj *arg2 = (colorObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_outlinecolor_set(self,outlinecolor);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_outlinecolor_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "labelObj_outlinecolor_set" "', argument " "2"" of type '" "colorObj *""'"); 
+    }
+    arg2 = (colorObj *)(argp2);
+    if (arg1) (arg1)->outlinecolor = *arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_outlinecolor_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    colorObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_outlinecolor_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_outlinecolor_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (colorObj *)& ((arg1)->outlinecolor);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_colorObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_outlinewidth_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_outlinewidth_set(self,outlinewidth);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_outlinewidth_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_outlinewidth_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->outlinewidth = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_outlinewidth_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_outlinewidth_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_outlinewidth_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (int) ((arg1)->outlinewidth);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_shadowcolor_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    colorObj *arg2 = (colorObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_shadowcolor_set(self,shadowcolor);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_shadowcolor_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "labelObj_shadowcolor_set" "', argument " "2"" of type '" "colorObj *""'"); 
+    }
+    arg2 = (colorObj *)(argp2);
+    if (arg1) (arg1)->shadowcolor = *arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_shadowcolor_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    colorObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_shadowcolor_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_shadowcolor_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (colorObj *)& ((arg1)->shadowcolor);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_colorObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_shadowsizex_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_shadowsizex_set(self,shadowsizex);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_shadowsizex_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_shadowsizex_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->shadowsizex = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_shadowsizex_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_shadowsizex_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_shadowsizex_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (int) ((arg1)->shadowsizex);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_shadowsizey_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_shadowsizey_set(self,shadowsizey);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_shadowsizey_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_shadowsizey_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->shadowsizey = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_shadowsizey_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_shadowsizey_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_shadowsizey_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (int) ((arg1)->shadowsizey);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_size_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_size_set(self,size);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_size_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_size_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->size = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_size_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_size_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_size_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (double) ((arg1)->size);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_minsize_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_minsize_set(self,minsize);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_minsize_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_minsize_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->minsize = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_minsize_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_minsize_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_minsize_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (double) ((arg1)->minsize);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_maxsize_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_maxsize_set(self,maxsize);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_maxsize_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_maxsize_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->maxsize = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_maxsize_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_maxsize_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_maxsize_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (double) ((arg1)->maxsize);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_position_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_position_set(self,position);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_position_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_position_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->position = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_position_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_position_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_position_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (int) ((arg1)->position);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_offsetx_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_offsetx_set(self,offsetx);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_offsetx_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_offsetx_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->offsetx = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_offsetx_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_offsetx_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_offsetx_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (int) ((arg1)->offsetx);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_offsety_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_offsety_set(self,offsety);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_offsety_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_offsety_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->offsety = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_offsety_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_offsety_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_offsety_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (int) ((arg1)->offsety);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_angle_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_angle_set(self,angle);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_angle_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_angle_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->angle = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_angle_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_angle_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_angle_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (double) ((arg1)->angle);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_anglemode_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_anglemode_set(self,anglemode);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_anglemode_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_anglemode_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->anglemode = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_anglemode_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_anglemode_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_anglemode_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (int) ((arg1)->anglemode);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_buffer_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_buffer_set(self,buffer);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_buffer_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_buffer_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->buffer = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_buffer_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_buffer_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_buffer_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (int) ((arg1)->buffer);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_antialias_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_antialias_set(self,antialias);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_antialias_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_antialias_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->antialias = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_antialias_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_antialias_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_antialias_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (int) ((arg1)->antialias);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_align_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_align_set(self,align);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_align_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_align_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->align = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_align_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_align_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_align_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (int) ((arg1)->align);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_wrap_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    char arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    char val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_wrap_set(self,wrap);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_wrap_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_char SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_wrap_set" "', argument " "2"" of type '" "char""'");
+    } 
+    arg2 = (char)(val2);
+    if (arg1) (arg1)->wrap = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_wrap_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_wrap_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_wrap_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (char) ((arg1)->wrap);
+    ST(argvi) = SWIG_From_char  SWIG_PERL_CALL_ARGS_1((char)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_maxlength_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_maxlength_set(self,maxlength);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_maxlength_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_maxlength_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->maxlength = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_maxlength_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_maxlength_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_maxlength_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (int) ((arg1)->maxlength);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_minlength_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_minlength_set(self,minlength);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_minlength_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_minlength_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->minlength = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_minlength_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_minlength_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_minlength_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (int) ((arg1)->minlength);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_space_size_10_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_space_size_10_set(self,space_size_10);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_space_size_10_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_space_size_10_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->space_size_10 = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_space_size_10_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_space_size_10_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_space_size_10_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (double) ((arg1)->space_size_10);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_minfeaturesize_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_minfeaturesize_set(self,minfeaturesize);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_minfeaturesize_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_minfeaturesize_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->minfeaturesize = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_minfeaturesize_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_minfeaturesize_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_minfeaturesize_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (int) ((arg1)->minfeaturesize);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_autominfeaturesize_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_autominfeaturesize_set(self,autominfeaturesize);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_autominfeaturesize_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_autominfeaturesize_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->autominfeaturesize = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_autominfeaturesize_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_autominfeaturesize_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_autominfeaturesize_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (int) ((arg1)->autominfeaturesize);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_minscaledenom_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_minscaledenom_set(self,minscaledenom);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_minscaledenom_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_minscaledenom_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->minscaledenom = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_minscaledenom_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_minscaledenom_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_minscaledenom_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (double) ((arg1)->minscaledenom);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_maxscaledenom_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_maxscaledenom_set(self,maxscaledenom);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_maxscaledenom_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_maxscaledenom_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->maxscaledenom = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_maxscaledenom_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_maxscaledenom_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_maxscaledenom_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (double) ((arg1)->maxscaledenom);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_mindistance_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_mindistance_set(self,mindistance);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_mindistance_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_mindistance_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->mindistance = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_mindistance_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_mindistance_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_mindistance_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (int) ((arg1)->mindistance);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_repeatdistance_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_repeatdistance_set(self,repeatdistance);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_repeatdistance_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_repeatdistance_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->repeatdistance = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_repeatdistance_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_repeatdistance_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_repeatdistance_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (int) ((arg1)->repeatdistance);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_maxoverlapangle_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_maxoverlapangle_set(self,maxoverlapangle);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_maxoverlapangle_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_maxoverlapangle_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->maxoverlapangle = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_maxoverlapangle_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_maxoverlapangle_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_maxoverlapangle_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (double) ((arg1)->maxoverlapangle);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_partials_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_partials_set(self,partials);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_partials_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_partials_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->partials = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_partials_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_partials_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_partials_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (int) ((arg1)->partials);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_force_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_force_set(self,force);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_force_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_force_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->force = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_force_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_force_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_force_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (int) ((arg1)->force);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_encoding_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_encoding_set(self,encoding);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_encoding_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "labelObj_encoding_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->encoding) free((char*)arg1->encoding);
+      if (arg2) {
+        arg1->encoding = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->encoding,arg2);
+      } else {
+        arg1->encoding = 0;
+      }
+    }
+    
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_encoding_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_encoding_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_encoding_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (char *) ((arg1)->encoding);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_priority_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_priority_set(self,priority);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_priority_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_priority_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->priority = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_priority_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_priority_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_priority_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (int) ((arg1)->priority);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_numstyles_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_numstyles_set(self,numstyles);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_numstyles_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_numstyles_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->numstyles = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_numstyles_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_numstyles_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_numstyles_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (int) ((arg1)->numstyles);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_updateFromString) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_updateFromString(self,snippet);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_updateFromString" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "labelObj_updateFromString" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (int)labelObj_updateFromString(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_removeBinding) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_removeBinding(self,binding);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_removeBinding" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_removeBinding" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    result = (int)labelObj_removeBinding(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_getBinding) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_getBinding(self,binding);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_getBinding" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_getBinding" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    result = (char *)labelObj_getBinding(arg1,arg2);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_setBinding) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    int arg2 ;
+    char *arg3 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int res3 ;
+    char *buf3 = 0 ;
+    int alloc3 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: labelObj_setBinding(self,binding,item);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_setBinding" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_setBinding" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "labelObj_setBinding" "', argument " "3"" of type '" "char *""'");
+    }
+    arg3 = (char *)(buf3);
+    result = (int)labelObj_setBinding(arg1,arg2,arg3);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    XSRETURN(argvi);
+  fail:
+    
+    
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_labelObj) {
+  {
+    int argvi = 0;
+    labelObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 0) || (items > 0)) {
+      SWIG_croak("Usage: new_labelObj();");
+    }
+    result = (labelObj *)calloc(1, sizeof(labelObj));
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_labelObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_delete_labelObj) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: delete_labelObj(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_labelObj" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    free((char *) arg1);
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_classObj_status_set) {
   {
     classObj *arg1 = (classObj *) 0 ;
@@ -13683,6 +14120,71 @@ XS(_wrap_classObj_maxscaledenom_get) {
     arg1 = (classObj *)(argp1);
     result = (double) ((arg1)->maxscaledenom);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_classObj_minfeaturesize_set) {
+  {
+    classObj *arg1 = (classObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: classObj_minfeaturesize_set(self,minfeaturesize);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_minfeaturesize_set" "', argument " "1"" of type '" "classObj *""'"); 
+    }
+    arg1 = (classObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "classObj_minfeaturesize_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->minfeaturesize = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_classObj_minfeaturesize_get) {
+  {
+    classObj *arg1 = (classObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: classObj_minfeaturesize_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_minfeaturesize_get" "', argument " "1"" of type '" "classObj *""'"); 
+    }
+    arg1 = (classObj *)(argp1);
+    result = (int) ((arg1)->minfeaturesize);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -15113,6 +15615,34 @@ XS(_wrap_labelCacheMemberObj_status_get) {
 }
 
 
+XS(_wrap_labelCacheMemberObj_markerid_get) {
+  {
+    labelCacheMemberObj *arg1 = (labelCacheMemberObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelCacheMemberObj_markerid_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelCacheMemberObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelCacheMemberObj_markerid_get" "', argument " "1"" of type '" "labelCacheMemberObj *""'"); 
+    }
+    arg1 = (labelCacheMemberObj *)(argp1);
+    result = (int) ((arg1)->markerid);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_new_labelCacheMemberObj) {
   {
     int argvi = 0;
@@ -15600,9 +16130,9 @@ XS(_wrap_delete_labelCacheObj) {
 }
 
 
-XS(_wrap_resultCacheMemberObj_shapeindex_get) {
+XS(_wrap_resultObj_shapeindex_get) {
   {
-    resultCacheMemberObj *arg1 = (resultCacheMemberObj *) 0 ;
+    resultObj *arg1 = (resultObj *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
@@ -15610,13 +16140,13 @@ XS(_wrap_resultCacheMemberObj_shapeindex_get) {
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: resultCacheMemberObj_shapeindex_get(self);");
+      SWIG_croak("Usage: resultObj_shapeindex_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_resultCacheMemberObj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_resultObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "resultCacheMemberObj_shapeindex_get" "', argument " "1"" of type '" "resultCacheMemberObj *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "resultObj_shapeindex_get" "', argument " "1"" of type '" "resultObj *""'"); 
     }
-    arg1 = (resultCacheMemberObj *)(argp1);
+    arg1 = (resultObj *)(argp1);
     result = (long) ((arg1)->shapeindex);
     ST(argvi) = SWIG_From_long  SWIG_PERL_CALL_ARGS_1((long)(result)); argvi++ ;
     
@@ -15628,9 +16158,9 @@ XS(_wrap_resultCacheMemberObj_shapeindex_get) {
 }
 
 
-XS(_wrap_resultCacheMemberObj_tileindex_get) {
+XS(_wrap_resultObj_tileindex_get) {
   {
-    resultCacheMemberObj *arg1 = (resultCacheMemberObj *) 0 ;
+    resultObj *arg1 = (resultObj *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
@@ -15638,13 +16168,13 @@ XS(_wrap_resultCacheMemberObj_tileindex_get) {
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: resultCacheMemberObj_tileindex_get(self);");
+      SWIG_croak("Usage: resultObj_tileindex_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_resultCacheMemberObj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_resultObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "resultCacheMemberObj_tileindex_get" "', argument " "1"" of type '" "resultCacheMemberObj *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "resultObj_tileindex_get" "', argument " "1"" of type '" "resultObj *""'"); 
     }
-    arg1 = (resultCacheMemberObj *)(argp1);
+    arg1 = (resultObj *)(argp1);
     result = (int) ((arg1)->tileindex);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
@@ -15656,9 +16186,9 @@ XS(_wrap_resultCacheMemberObj_tileindex_get) {
 }
 
 
-XS(_wrap_resultCacheMemberObj_classindex_get) {
+XS(_wrap_resultObj_resultindex_get) {
   {
-    resultCacheMemberObj *arg1 = (resultCacheMemberObj *) 0 ;
+    resultObj *arg1 = (resultObj *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
@@ -15666,13 +16196,41 @@ XS(_wrap_resultCacheMemberObj_classindex_get) {
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: resultCacheMemberObj_classindex_get(self);");
+      SWIG_croak("Usage: resultObj_resultindex_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_resultCacheMemberObj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_resultObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "resultCacheMemberObj_classindex_get" "', argument " "1"" of type '" "resultCacheMemberObj *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "resultObj_resultindex_get" "', argument " "1"" of type '" "resultObj *""'"); 
     }
-    arg1 = (resultCacheMemberObj *)(argp1);
+    arg1 = (resultObj *)(argp1);
+    result = (int) ((arg1)->resultindex);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_resultObj_classindex_get) {
+  {
+    resultObj *arg1 = (resultObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: resultObj_classindex_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_resultObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "resultObj_classindex_get" "', argument " "1"" of type '" "resultObj *""'"); 
+    }
+    arg1 = (resultObj *)(argp1);
     result = (int) ((arg1)->classindex);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
@@ -15684,41 +16242,51 @@ XS(_wrap_resultCacheMemberObj_classindex_get) {
 }
 
 
-XS(_wrap_new_resultCacheMemberObj) {
+XS(_wrap_new_resultObj) {
   {
+    long arg1 ;
+    long val1 ;
+    int ecode1 = 0 ;
     int argvi = 0;
-    resultCacheMemberObj *result = 0 ;
+    resultObj *result = 0 ;
     dXSARGS;
     
-    if ((items < 0) || (items > 0)) {
-      SWIG_croak("Usage: new_resultCacheMemberObj();");
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: new_resultObj(shapeindex);");
     }
-    result = (resultCacheMemberObj *)calloc(1, sizeof(resultCacheMemberObj));
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_resultCacheMemberObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    ecode1 = SWIG_AsVal_long SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_resultObj" "', argument " "1"" of type '" "long""'");
+    } 
+    arg1 = (long)(val1);
+    result = (resultObj *)new_resultObj(arg1);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_resultObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
     XSRETURN(argvi);
   fail:
+    
     SWIG_croak_null();
   }
 }
 
 
-XS(_wrap_delete_resultCacheMemberObj) {
+XS(_wrap_delete_resultObj) {
   {
-    resultCacheMemberObj *arg1 = (resultCacheMemberObj *) 0 ;
+    resultObj *arg1 = (resultObj *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: delete_resultCacheMemberObj(self);");
+      SWIG_croak("Usage: delete_resultObj(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_resultCacheMemberObj, SWIG_POINTER_DISOWN |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_resultObj, SWIG_POINTER_DISOWN |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_resultCacheMemberObj" "', argument " "1"" of type '" "resultCacheMemberObj *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_resultObj" "', argument " "1"" of type '" "resultObj *""'"); 
     }
-    arg1 = (resultCacheMemberObj *)(argp1);
-    free((char *) arg1);
+    arg1 = (resultObj *)(argp1);
+    delete_resultObj(arg1);
     
     
     XSRETURN(argvi);
@@ -15859,7 +16427,7 @@ XS(_wrap_resultCacheObj_getResult) {
     int val2 ;
     int ecode2 = 0 ;
     int argvi = 0;
-    resultCacheMemberObj *result = 0 ;
+    resultObj *result = 0 ;
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
@@ -15875,8 +16443,8 @@ XS(_wrap_resultCacheObj_getResult) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "resultCacheObj_getResult" "', argument " "2"" of type '" "int""'");
     } 
     arg2 = (int)(val2);
-    result = (resultCacheMemberObj *)resultCacheObj_getResult(arg1,arg2);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_resultCacheMemberObj, 0 | SWIG_SHADOW); argvi++ ;
+    result = (resultObj *)resultCacheObj_getResult(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_resultObj, 0 | SWIG_SHADOW); argvi++ ;
     
     
     XSRETURN(argvi);
@@ -20375,6 +20943,71 @@ XS(_wrap_layerObj_maxscaledenom_get) {
 }
 
 
+XS(_wrap_layerObj_minfeaturesize_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_minfeaturesize_set(self,minfeaturesize);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_minfeaturesize_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_minfeaturesize_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->minfeaturesize = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_minfeaturesize_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_minfeaturesize_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_minfeaturesize_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int) ((arg1)->minfeaturesize);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_layerObj_labelminscaledenom_set) {
   {
     layerObj *arg1 = (layerObj *) 0 ;
@@ -20755,6 +21388,71 @@ XS(_wrap_layerObj_maxfeatures_get) {
     }
     arg1 = (layerObj *)(argp1);
     result = (int) ((arg1)->maxfeatures);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_startindex_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_startindex_set(self,startindex);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_startindex_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_startindex_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->startindex = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_startindex_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_startindex_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_startindex_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int) ((arg1)->startindex);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -22053,6 +22751,62 @@ XS(_wrap_layerObj_validation_get) {
 }
 
 
+XS(_wrap_layerObj_bindvals_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    hashTableObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_bindvals_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_bindvals_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (hashTableObj *)& ((arg1)->bindvals);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_hashTableObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_cluster_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    clusterObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_cluster_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_cluster_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (clusterObj *)& ((arg1)->cluster);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_clusterObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_layerObj_opacity_set) {
   {
     layerObj *arg1 = (layerObj *) 0 ;
@@ -22743,167 +23497,37 @@ XS(_wrap_layerObj_close) {
 }
 
 
-XS(_wrap_layerObj_getFeature) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    int arg2 ;
-    int arg3 = (int) -1 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int val3 ;
-    int ecode3 = 0 ;
-    int argvi = 0;
-    shapeObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 3)) {
-      SWIG_croak("Usage: layerObj_getFeature(self,shapeindex,tileindex);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getFeature" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_getFeature" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (items > 2) {
-      ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
-      if (!SWIG_IsOK(ecode3)) {
-        SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "layerObj_getFeature" "', argument " "3"" of type '" "int""'");
-      } 
-      arg3 = (int)(val3);
-    }
-    result = (shapeObj *)layerObj_getFeature(arg1,arg2,arg3);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_shapeObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
 XS(_wrap_layerObj_getShape) {
   {
     layerObj *arg1 = (layerObj *) 0 ;
-    shapeObj *arg2 = (shapeObj *) 0 ;
-    int arg3 ;
-    int arg4 ;
+    resultObj *arg2 = (resultObj *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     void *argp2 = 0 ;
     int res2 = 0 ;
-    int val3 ;
-    int ecode3 = 0 ;
-    int val4 ;
-    int ecode4 = 0 ;
     int argvi = 0;
-    int result;
+    shapeObj *result = 0 ;
     dXSARGS;
     
-    if ((items < 4) || (items > 4)) {
-      SWIG_croak("Usage: layerObj_getShape(self,shape,tileindex,shapeindex);");
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_getShape(self,record);");
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getShape" "', argument " "1"" of type '" "layerObj *""'"); 
     }
     arg1 = (layerObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_shapeObj, 0 |  0 );
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_resultObj, 0 |  0 );
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_getShape" "', argument " "2"" of type '" "shapeObj *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_getShape" "', argument " "2"" of type '" "resultObj *""'"); 
     }
-    arg2 = (shapeObj *)(argp2);
-    ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
-    if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "layerObj_getShape" "', argument " "3"" of type '" "int""'");
-    } 
-    arg3 = (int)(val3);
-    ecode4 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
-    if (!SWIG_IsOK(ecode4)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "layerObj_getShape" "', argument " "4"" of type '" "int""'");
-    } 
-    arg4 = (int)(val4);
-    result = (int)layerObj_getShape(arg1,arg2,arg3,arg4);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
+    arg2 = (resultObj *)(argp2);
+    result = (shapeObj *)layerObj_getShape(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_shapeObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
     
     
     XSRETURN(argvi);
   fail:
-    
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_resultsGetShape) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    shapeObj *arg2 = (shapeObj *) 0 ;
-    int arg3 ;
-    int arg4 = (int) -1 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int val3 ;
-    int ecode3 = 0 ;
-    int val4 ;
-    int ecode4 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 3) || (items > 4)) {
-      SWIG_croak("Usage: layerObj_resultsGetShape(self,shape,shapeindex,tileindex);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_resultsGetShape" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_shapeObj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_resultsGetShape" "', argument " "2"" of type '" "shapeObj *""'"); 
-    }
-    arg2 = (shapeObj *)(argp2);
-    ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
-    if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "layerObj_resultsGetShape" "', argument " "3"" of type '" "int""'");
-    } 
-    arg3 = (int)(val3);
-    if (items > 3) {
-      ecode4 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
-      if (!SWIG_IsOK(ecode4)) {
-        SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "layerObj_resultsGetShape" "', argument " "4"" of type '" "int""'");
-      } 
-      arg4 = (int)(val4);
-    }
-    result = (int)layerObj_resultsGetShape(arg1,arg2,arg3,arg4);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
     
     
     SWIG_croak_null();
@@ -22939,6 +23563,34 @@ XS(_wrap_layerObj_getNumResults) {
 }
 
 
+XS(_wrap_layerObj_getResultsBounds) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    rectObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_getResultsBounds(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getResultsBounds" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (rectObj *)layerObj_getResultsBounds(arg1);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_rectObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_layerObj_getResult) {
   {
     layerObj *arg1 = (layerObj *) 0 ;
@@ -22948,7 +23600,7 @@ XS(_wrap_layerObj_getResult) {
     int val2 ;
     int ecode2 = 0 ;
     int argvi = 0;
-    resultCacheMemberObj *result = 0 ;
+    resultObj *result = 0 ;
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
@@ -22964,8 +23616,8 @@ XS(_wrap_layerObj_getResult) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_getResult" "', argument " "2"" of type '" "int""'");
     } 
     arg2 = (int)(val2);
-    result = (resultCacheMemberObj *)layerObj_getResult(arg1,arg2);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_resultCacheMemberObj, 0 | SWIG_SHADOW); argvi++ ;
+    result = (resultObj *)layerObj_getResult(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_resultObj, 0 | SWIG_SHADOW); argvi++ ;
     
     
     XSRETURN(argvi);
@@ -23144,6 +23796,55 @@ XS(_wrap_layerObj_drawQuery) {
     
     
     
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_queryByFilter) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    mapObj *arg2 = (mapObj *) 0 ;
+    char *arg3 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int res3 ;
+    char *buf3 = 0 ;
+    int alloc3 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: layerObj_queryByFilter(self,map,string);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_queryByFilter" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_map_obj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_queryByFilter" "', argument " "2"" of type '" "mapObj *""'"); 
+    }
+    arg2 = (mapObj *)(argp2);
+    res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_queryByFilter" "', argument " "3"" of type '" "char *""'");
+    }
+    arg3 = (char *)(buf3);
+    result = (int)layerObj_queryByFilter(arg1,arg2,arg3);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    XSRETURN(argvi);
+  fail:
+    
+    
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
     SWIG_croak_null();
   }
 }
@@ -24699,6 +25400,78 @@ XS(_wrap_layerObj_setConnectionType) {
     
     
     if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_getClassIndex) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    mapObj *arg2 = (mapObj *) 0 ;
+    shapeObj *arg3 = (shapeObj *) 0 ;
+    int *arg4 = (int *) NULL ;
+    int arg5 = (int) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    void *argp3 = 0 ;
+    int res3 = 0 ;
+    void *argp4 = 0 ;
+    int res4 = 0 ;
+    int val5 ;
+    int ecode5 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 5)) {
+      SWIG_croak("Usage: layerObj_getClassIndex(self,map,shape,classgroup,numclasses);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getClassIndex" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_map_obj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_getClassIndex" "', argument " "2"" of type '" "mapObj *""'"); 
+    }
+    arg2 = (mapObj *)(argp2);
+    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_shapeObj, 0 |  0 );
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_getClassIndex" "', argument " "3"" of type '" "shapeObj *""'"); 
+    }
+    arg3 = (shapeObj *)(argp3);
+    if (items > 3) {
+      res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_int, 0 |  0 );
+      if (!SWIG_IsOK(res4)) {
+        SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "layerObj_getClassIndex" "', argument " "4"" of type '" "int *""'"); 
+      }
+      arg4 = (int *)(argp4);
+    }
+    if (items > 4) {
+      ecode5 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
+      if (!SWIG_IsOK(ecode5)) {
+        SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "layerObj_getClassIndex" "', argument " "5"" of type '" "int""'");
+      } 
+      arg5 = (int)(val5);
+    }
+    result = (int)layerObj_getClassIndex(arg1,arg2,arg3,arg4,arg5);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    
     SWIG_croak_null();
   }
 }
@@ -27638,6 +28411,45 @@ XS(_wrap_mapObj_nextLabel) {
 }
 
 
+XS(_wrap_mapObj_queryByFilter) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_queryByFilter(self,string);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_queryByFilter" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_queryByFilter" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (int)mapObj_queryByFilter(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_mapObj_queryByPoint) {
   {
     mapObj *arg1 = (mapObj *) 0 ;
@@ -27964,17 +28776,20 @@ XS(_wrap_mapObj_saveQuery) {
   {
     mapObj *arg1 = (mapObj *) 0 ;
     char *arg2 = (char *) 0 ;
+    int arg3 = (int) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     int res2 ;
     char *buf2 = 0 ;
     int alloc2 = 0 ;
+    int val3 ;
+    int ecode3 = 0 ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_saveQuery(self,filename);");
+    if ((items < 2) || (items > 3)) {
+      SWIG_croak("Usage: mapObj_saveQuery(self,filename,results);");
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
@@ -27986,14 +28801,23 @@ XS(_wrap_mapObj_saveQuery) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_saveQuery" "', argument " "2"" of type '" "char *""'");
     }
     arg2 = (char *)(buf2);
-    result = (int)mapObj_saveQuery(arg1,arg2);
+    if (items > 2) {
+      ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+      if (!SWIG_IsOK(ecode3)) {
+        SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "mapObj_saveQuery" "', argument " "3"" of type '" "int""'");
+      } 
+      arg3 = (int)(val3);
+    }
+    result = (int)mapObj_saveQuery(arg1,arg2,arg3);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
     if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    
     XSRETURN(argvi);
   fail:
     
     if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    
     SWIG_croak_null();
   }
 }
@@ -29726,105 +30550,14 @@ XS(_wrap_imageObj_format_get) {
 }
 
 
-XS(_wrap_imageObj_buffer_format_get) {
-  {
-    imageObj *arg1 = (imageObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: imageObj_buffer_format_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_imageObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "imageObj_buffer_format_get" "', argument " "1"" of type '" "imageObj *""'"); 
-    }
-    arg1 = (imageObj *)(argp1);
-    result = (int) ((arg1)->buffer_format);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_imageObj_renderer_set) {
-  {
-    imageObj *arg1 = (imageObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: imageObj_renderer_set(self,renderer);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_imageObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "imageObj_renderer_set" "', argument " "1"" of type '" "imageObj *""'"); 
-    }
-    arg1 = (imageObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "imageObj_renderer_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->renderer = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_imageObj_renderer_get) {
-  {
-    imageObj *arg1 = (imageObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: imageObj_renderer_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_imageObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "imageObj_renderer_get" "', argument " "1"" of type '" "imageObj *""'"); 
-    }
-    arg1 = (imageObj *)(argp1);
-    result = (int) ((arg1)->renderer);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
 XS(_wrap_new_imageObj) {
   {
     int arg1 ;
     int arg2 ;
     outputFormatObj *arg3 = (outputFormatObj *) NULL ;
     char *arg4 = (char *) NULL ;
+    double arg5 = (double) MS_DEFAULT_RESOLUTION ;
+    double arg6 = (double) MS_DEFAULT_RESOLUTION ;
     int val1 ;
     int ecode1 = 0 ;
     int val2 ;
@@ -29834,12 +30567,16 @@ XS(_wrap_new_imageObj) {
     int res4 ;
     char *buf4 = 0 ;
     int alloc4 = 0 ;
+    double val5 ;
+    int ecode5 = 0 ;
+    double val6 ;
+    int ecode6 = 0 ;
     int argvi = 0;
     imageObj *result = 0 ;
     dXSARGS;
     
-    if ((items < 2) || (items > 4)) {
-      SWIG_croak("Usage: new_imageObj(width,height,input_format,file);");
+    if ((items < 2) || (items > 6)) {
+      SWIG_croak("Usage: new_imageObj(width,height,input_format,file,resolution,defresolution);");
     }
     ecode1 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
     if (!SWIG_IsOK(ecode1)) {
@@ -29865,18 +30602,36 @@ XS(_wrap_new_imageObj) {
       }
       arg4 = (char *)(buf4);
     }
-    result = (imageObj *)new_imageObj(arg1,arg2,arg3,(char const *)arg4);
+    if (items > 4) {
+      ecode5 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
+      if (!SWIG_IsOK(ecode5)) {
+        SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "new_imageObj" "', argument " "5"" of type '" "double""'");
+      } 
+      arg5 = (double)(val5);
+    }
+    if (items > 5) {
+      ecode6 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(5), &val6);
+      if (!SWIG_IsOK(ecode6)) {
+        SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "new_imageObj" "', argument " "6"" of type '" "double""'");
+      } 
+      arg6 = (double)(val6);
+    }
+    result = (imageObj *)new_imageObj(arg1,arg2,arg3,(char const *)arg4,arg5,arg6);
     ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_imageObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
     
     
     
     if (alloc4 == SWIG_NEWOBJ) free((char*)buf4);
+    
+    
     XSRETURN(argvi);
   fail:
     
     
     
     if (alloc4 == SWIG_NEWOBJ) free((char*)buf4);
+    
+    
     SWIG_croak_null();
   }
 }
@@ -30435,12 +31190,12 @@ XS(_wrap_strokeStyleObj_color_set) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "strokeStyleObj_color_set" "', argument " "1"" of type '" "strokeStyleObj *""'"); 
     }
     arg1 = (strokeStyleObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, 0 |  0 );
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, SWIG_POINTER_DISOWN |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "strokeStyleObj_color_set" "', argument " "2"" of type '" "colorObj *""'"); 
     }
     arg2 = (colorObj *)(argp2);
-    if (arg1) (arg1)->color = *arg2;
+    if (arg1) (arg1)->color = arg2;
     
     
     
@@ -30470,7 +31225,7 @@ XS(_wrap_strokeStyleObj_color_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "strokeStyleObj_color_get" "', argument " "1"" of type '" "strokeStyleObj *""'"); 
     }
     arg1 = (strokeStyleObj *)(argp1);
-    result = (colorObj *)& ((arg1)->color);
+    result = (colorObj *) ((arg1)->color);
     ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_colorObj, 0 | SWIG_SHADOW); argvi++ ;
     
     XSRETURN(argvi);
@@ -30721,179 +31476,6 @@ XS(_wrap_delete_strokeStyleObj) {
 }
 
 
-XS(_wrap_fillStyleObj_color_set) {
-  {
-    fillStyleObj *arg1 = (fillStyleObj *) 0 ;
-    colorObj *arg2 = (colorObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: fillStyleObj_color_set(self,color);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_fillStyleObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "fillStyleObj_color_set" "', argument " "1"" of type '" "fillStyleObj *""'"); 
-    }
-    arg1 = (fillStyleObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "fillStyleObj_color_set" "', argument " "2"" of type '" "colorObj *""'"); 
-    }
-    arg2 = (colorObj *)(argp2);
-    if (arg1) (arg1)->color = *arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_fillStyleObj_color_get) {
-  {
-    fillStyleObj *arg1 = (fillStyleObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    colorObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: fillStyleObj_color_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_fillStyleObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "fillStyleObj_color_get" "', argument " "1"" of type '" "fillStyleObj *""'"); 
-    }
-    arg1 = (fillStyleObj *)(argp1);
-    result = (colorObj *)& ((arg1)->color);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_colorObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_fillStyleObj_tile_set) {
-  {
-    fillStyleObj *arg1 = (fillStyleObj *) 0 ;
-    void *arg2 = (void *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: fillStyleObj_tile_set(self,tile);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_fillStyleObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "fillStyleObj_tile_set" "', argument " "1"" of type '" "fillStyleObj *""'"); 
-    }
-    arg1 = (fillStyleObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2), 0, SWIG_POINTER_DISOWN);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "fillStyleObj_tile_set" "', argument " "2"" of type '" "void *""'"); 
-    }
-    if (arg1) (arg1)->tile = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_fillStyleObj_tile_get) {
-  {
-    fillStyleObj *arg1 = (fillStyleObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    void *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: fillStyleObj_tile_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_fillStyleObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "fillStyleObj_tile_get" "', argument " "1"" of type '" "fillStyleObj *""'"); 
-    }
-    arg1 = (fillStyleObj *)(argp1);
-    result = (void *) ((arg1)->tile);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_void, 0 | 0); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_new_fillStyleObj) {
-  {
-    int argvi = 0;
-    fillStyleObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 0) || (items > 0)) {
-      SWIG_croak("Usage: new_fillStyleObj();");
-    }
-    result = (fillStyleObj *)calloc(1, sizeof(fillStyleObj));
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_fillStyleObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    XSRETURN(argvi);
-  fail:
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_delete_fillStyleObj) {
-  {
-    fillStyleObj *arg1 = (fillStyleObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: delete_fillStyleObj(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_fillStyleObj, SWIG_POINTER_DISOWN |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_fillStyleObj" "', argument " "1"" of type '" "fillStyleObj *""'"); 
-    }
-    arg1 = (fillStyleObj *)(argp1);
-    free((char *) arg1);
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
 XS(_wrap_symbolStyleObj_color_set) {
   {
     symbolStyleObj *arg1 = (symbolStyleObj *) 0 ;
@@ -30913,12 +31495,12 @@ XS(_wrap_symbolStyleObj_color_set) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolStyleObj_color_set" "', argument " "1"" of type '" "symbolStyleObj *""'"); 
     }
     arg1 = (symbolStyleObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, 0 |  0 );
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, SWIG_POINTER_DISOWN |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "symbolStyleObj_color_set" "', argument " "2"" of type '" "colorObj *""'"); 
     }
     arg2 = (colorObj *)(argp2);
-    if (arg1) (arg1)->color = *arg2;
+    if (arg1) (arg1)->color = arg2;
     
     
     
@@ -30948,7 +31530,7 @@ XS(_wrap_symbolStyleObj_color_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolStyleObj_color_get" "', argument " "1"" of type '" "symbolStyleObj *""'"); 
     }
     arg1 = (symbolStyleObj *)(argp1);
-    result = (colorObj *)& ((arg1)->color);
+    result = (colorObj *) ((arg1)->color);
     ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_colorObj, 0 | SWIG_SHADOW); argvi++ ;
     
     XSRETURN(argvi);
@@ -30978,12 +31560,12 @@ XS(_wrap_symbolStyleObj_backgroundcolor_set) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolStyleObj_backgroundcolor_set" "', argument " "1"" of type '" "symbolStyleObj *""'"); 
     }
     arg1 = (symbolStyleObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, 0 |  0 );
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, SWIG_POINTER_DISOWN |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "symbolStyleObj_backgroundcolor_set" "', argument " "2"" of type '" "colorObj *""'"); 
     }
     arg2 = (colorObj *)(argp2);
-    if (arg1) (arg1)->backgroundcolor = *arg2;
+    if (arg1) (arg1)->backgroundcolor = arg2;
     
     
     
@@ -31013,7 +31595,7 @@ XS(_wrap_symbolStyleObj_backgroundcolor_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolStyleObj_backgroundcolor_get" "', argument " "1"" of type '" "symbolStyleObj *""'"); 
     }
     arg1 = (symbolStyleObj *)(argp1);
-    result = (colorObj *)& ((arg1)->backgroundcolor);
+    result = (colorObj *) ((arg1)->backgroundcolor);
     ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_colorObj, 0 | SWIG_SHADOW); argvi++ ;
     
     XSRETURN(argvi);
@@ -31108,12 +31690,12 @@ XS(_wrap_symbolStyleObj_outlinecolor_set) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolStyleObj_outlinecolor_set" "', argument " "1"" of type '" "symbolStyleObj *""'"); 
     }
     arg1 = (symbolStyleObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, 0 |  0 );
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, SWIG_POINTER_DISOWN |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "symbolStyleObj_outlinecolor_set" "', argument " "2"" of type '" "colorObj *""'"); 
     }
     arg2 = (colorObj *)(argp2);
-    if (arg1) (arg1)->outlinecolor = *arg2;
+    if (arg1) (arg1)->outlinecolor = arg2;
     
     
     
@@ -31143,7 +31725,7 @@ XS(_wrap_symbolStyleObj_outlinecolor_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolStyleObj_outlinecolor_get" "', argument " "1"" of type '" "symbolStyleObj *""'"); 
     }
     arg1 = (symbolStyleObj *)(argp1);
-    result = (colorObj *)& ((arg1)->outlinecolor);
+    result = (colorObj *) ((arg1)->outlinecolor);
     ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_colorObj, 0 | SWIG_SHADOW); argvi++ ;
     
     XSRETURN(argvi);
@@ -31284,6 +31866,136 @@ XS(_wrap_symbolStyleObj_rotation_get) {
 }
 
 
+XS(_wrap_symbolStyleObj_gap_set) {
+  {
+    symbolStyleObj *arg1 = (symbolStyleObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: symbolStyleObj_gap_set(self,gap);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_symbolStyleObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolStyleObj_gap_set" "', argument " "1"" of type '" "symbolStyleObj *""'"); 
+    }
+    arg1 = (symbolStyleObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "symbolStyleObj_gap_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->gap = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_symbolStyleObj_gap_get) {
+  {
+    symbolStyleObj *arg1 = (symbolStyleObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: symbolStyleObj_gap_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_symbolStyleObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolStyleObj_gap_get" "', argument " "1"" of type '" "symbolStyleObj *""'"); 
+    }
+    arg1 = (symbolStyleObj *)(argp1);
+    result = (double) ((arg1)->gap);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_symbolStyleObj_style_set) {
+  {
+    symbolStyleObj *arg1 = (symbolStyleObj *) 0 ;
+    styleObj *arg2 = (styleObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: symbolStyleObj_style_set(self,style);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_symbolStyleObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolStyleObj_style_set" "', argument " "1"" of type '" "symbolStyleObj *""'"); 
+    }
+    arg1 = (symbolStyleObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_styleObj, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "symbolStyleObj_style_set" "', argument " "2"" of type '" "styleObj *""'"); 
+    }
+    arg2 = (styleObj *)(argp2);
+    if (arg1) (arg1)->style = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_symbolStyleObj_style_get) {
+  {
+    symbolStyleObj *arg1 = (symbolStyleObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    styleObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: symbolStyleObj_style_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_symbolStyleObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolStyleObj_style_get" "', argument " "1"" of type '" "symbolStyleObj *""'"); 
+    }
+    arg1 = (symbolStyleObj *)(argp1);
+    result = (styleObj *) ((arg1)->style);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_styleObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_new_symbolStyleObj) {
   {
     int argvi = 0;
@@ -31329,9 +32041,9 @@ XS(_wrap_delete_symbolStyleObj) {
 }
 
 
-XS(_wrap_tilecache_symbol_set) {
+XS(_wrap_tileCacheObj_symbol_set) {
   {
-    struct tilecache *arg1 = (struct tilecache *) 0 ;
+    struct tileCacheObj *arg1 = (struct tileCacheObj *) 0 ;
     symbolObj *arg2 = (symbolObj *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
@@ -31341,16 +32053,16 @@ XS(_wrap_tilecache_symbol_set) {
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: tilecache_symbol_set(self,symbol);");
+      SWIG_croak("Usage: tileCacheObj_symbol_set(self,symbol);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tilecache, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tileCacheObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tilecache_symbol_set" "', argument " "1"" of type '" "struct tilecache *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tileCacheObj_symbol_set" "', argument " "1"" of type '" "struct tileCacheObj *""'"); 
     }
-    arg1 = (struct tilecache *)(argp1);
+    arg1 = (struct tileCacheObj *)(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_symbolObj, SWIG_POINTER_DISOWN |  0 );
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "tilecache_symbol_set" "', argument " "2"" of type '" "symbolObj *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "tileCacheObj_symbol_set" "', argument " "2"" of type '" "symbolObj *""'"); 
     }
     arg2 = (symbolObj *)(argp2);
     if (arg1) (arg1)->symbol = arg2;
@@ -31366,9 +32078,9 @@ XS(_wrap_tilecache_symbol_set) {
 }
 
 
-XS(_wrap_tilecache_symbol_get) {
+XS(_wrap_tileCacheObj_symbol_get) {
   {
-    struct tilecache *arg1 = (struct tilecache *) 0 ;
+    struct tileCacheObj *arg1 = (struct tileCacheObj *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
@@ -31376,13 +32088,13 @@ XS(_wrap_tilecache_symbol_get) {
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: tilecache_symbol_get(self);");
+      SWIG_croak("Usage: tileCacheObj_symbol_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tilecache, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tileCacheObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tilecache_symbol_get" "', argument " "1"" of type '" "struct tilecache *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tileCacheObj_symbol_get" "', argument " "1"" of type '" "struct tileCacheObj *""'"); 
     }
-    arg1 = (struct tilecache *)(argp1);
+    arg1 = (struct tileCacheObj *)(argp1);
     result = (symbolObj *) ((arg1)->symbol);
     ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_symbolObj, 0 | SWIG_SHADOW); argvi++ ;
     
@@ -31394,74 +32106,9 @@ XS(_wrap_tilecache_symbol_get) {
 }
 
 
-XS(_wrap_tilecache_style_set) {
+XS(_wrap_tileCacheObj_width_set) {
   {
-    struct tilecache *arg1 = (struct tilecache *) 0 ;
-    symbolStyleObj *arg2 = (symbolStyleObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: tilecache_style_set(self,style);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tilecache, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tilecache_style_set" "', argument " "1"" of type '" "struct tilecache *""'"); 
-    }
-    arg1 = (struct tilecache *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_symbolStyleObj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "tilecache_style_set" "', argument " "2"" of type '" "symbolStyleObj *""'"); 
-    }
-    arg2 = (symbolStyleObj *)(argp2);
-    if (arg1) (arg1)->style = *arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_tilecache_style_get) {
-  {
-    struct tilecache *arg1 = (struct tilecache *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    symbolStyleObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: tilecache_style_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tilecache, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tilecache_style_get" "', argument " "1"" of type '" "struct tilecache *""'"); 
-    }
-    arg1 = (struct tilecache *)(argp1);
-    result = (symbolStyleObj *)& ((arg1)->style);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_symbolStyleObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_tilecache_width_set) {
-  {
-    struct tilecache *arg1 = (struct tilecache *) 0 ;
+    struct tileCacheObj *arg1 = (struct tileCacheObj *) 0 ;
     int arg2 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
@@ -31471,16 +32118,16 @@ XS(_wrap_tilecache_width_set) {
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: tilecache_width_set(self,width);");
+      SWIG_croak("Usage: tileCacheObj_width_set(self,width);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tilecache, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tileCacheObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tilecache_width_set" "', argument " "1"" of type '" "struct tilecache *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tileCacheObj_width_set" "', argument " "1"" of type '" "struct tileCacheObj *""'"); 
     }
-    arg1 = (struct tilecache *)(argp1);
+    arg1 = (struct tileCacheObj *)(argp1);
     ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "tilecache_width_set" "', argument " "2"" of type '" "int""'");
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "tileCacheObj_width_set" "', argument " "2"" of type '" "int""'");
     } 
     arg2 = (int)(val2);
     if (arg1) (arg1)->width = arg2;
@@ -31496,9 +32143,9 @@ XS(_wrap_tilecache_width_set) {
 }
 
 
-XS(_wrap_tilecache_width_get) {
+XS(_wrap_tileCacheObj_width_get) {
   {
-    struct tilecache *arg1 = (struct tilecache *) 0 ;
+    struct tileCacheObj *arg1 = (struct tileCacheObj *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
@@ -31506,13 +32153,13 @@ XS(_wrap_tilecache_width_get) {
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: tilecache_width_get(self);");
+      SWIG_croak("Usage: tileCacheObj_width_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tilecache, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tileCacheObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tilecache_width_get" "', argument " "1"" of type '" "struct tilecache *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tileCacheObj_width_get" "', argument " "1"" of type '" "struct tileCacheObj *""'"); 
     }
-    arg1 = (struct tilecache *)(argp1);
+    arg1 = (struct tileCacheObj *)(argp1);
     result = (int) ((arg1)->width);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
@@ -31524,9 +32171,9 @@ XS(_wrap_tilecache_width_get) {
 }
 
 
-XS(_wrap_tilecache_height_set) {
+XS(_wrap_tileCacheObj_height_set) {
   {
-    struct tilecache *arg1 = (struct tilecache *) 0 ;
+    struct tileCacheObj *arg1 = (struct tileCacheObj *) 0 ;
     int arg2 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
@@ -31536,16 +32183,16 @@ XS(_wrap_tilecache_height_set) {
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: tilecache_height_set(self,height);");
+      SWIG_croak("Usage: tileCacheObj_height_set(self,height);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tilecache, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tileCacheObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tilecache_height_set" "', argument " "1"" of type '" "struct tilecache *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tileCacheObj_height_set" "', argument " "1"" of type '" "struct tileCacheObj *""'"); 
     }
-    arg1 = (struct tilecache *)(argp1);
+    arg1 = (struct tileCacheObj *)(argp1);
     ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "tilecache_height_set" "', argument " "2"" of type '" "int""'");
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "tileCacheObj_height_set" "', argument " "2"" of type '" "int""'");
     } 
     arg2 = (int)(val2);
     if (arg1) (arg1)->height = arg2;
@@ -31561,9 +32208,9 @@ XS(_wrap_tilecache_height_set) {
 }
 
 
-XS(_wrap_tilecache_height_get) {
+XS(_wrap_tileCacheObj_height_get) {
   {
-    struct tilecache *arg1 = (struct tilecache *) 0 ;
+    struct tileCacheObj *arg1 = (struct tileCacheObj *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
@@ -31571,13 +32218,13 @@ XS(_wrap_tilecache_height_get) {
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: tilecache_height_get(self);");
+      SWIG_croak("Usage: tileCacheObj_height_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tilecache, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tileCacheObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tilecache_height_get" "', argument " "1"" of type '" "struct tilecache *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tileCacheObj_height_get" "', argument " "1"" of type '" "struct tileCacheObj *""'"); 
     }
-    arg1 = (struct tilecache *)(argp1);
+    arg1 = (struct tileCacheObj *)(argp1);
     result = (int) ((arg1)->height);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
@@ -31589,29 +32236,31 @@ XS(_wrap_tilecache_height_get) {
 }
 
 
-XS(_wrap_tilecache_data_set) {
+XS(_wrap_tileCacheObj_color_set) {
   {
-    struct tilecache *arg1 = (struct tilecache *) 0 ;
-    void *arg2 = (void *) 0 ;
+    struct tileCacheObj *arg1 = (struct tileCacheObj *) 0 ;
+    colorObj *arg2 = (colorObj *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
-    int res2 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
     int argvi = 0;
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: tilecache_data_set(self,data);");
+      SWIG_croak("Usage: tileCacheObj_color_set(self,color);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tilecache, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tileCacheObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tilecache_data_set" "', argument " "1"" of type '" "struct tilecache *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tileCacheObj_color_set" "', argument " "1"" of type '" "struct tileCacheObj *""'"); 
     }
-    arg1 = (struct tilecache *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2), 0, SWIG_POINTER_DISOWN);
+    arg1 = (struct tileCacheObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, 0 |  0 );
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "tilecache_data_set" "', argument " "2"" of type '" "void *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "tileCacheObj_color_set" "', argument " "2"" of type '" "colorObj *""'"); 
     }
-    if (arg1) (arg1)->data = arg2;
+    arg2 = (colorObj *)(argp2);
+    if (arg1) (arg1)->color = *arg2;
     
     
     
@@ -31624,25 +32273,25 @@ XS(_wrap_tilecache_data_set) {
 }
 
 
-XS(_wrap_tilecache_data_get) {
+XS(_wrap_tileCacheObj_color_get) {
   {
-    struct tilecache *arg1 = (struct tilecache *) 0 ;
+    struct tileCacheObj *arg1 = (struct tileCacheObj *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
-    void *result = 0 ;
+    colorObj *result = 0 ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: tilecache_data_get(self);");
+      SWIG_croak("Usage: tileCacheObj_color_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tilecache, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tileCacheObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tilecache_data_get" "', argument " "1"" of type '" "struct tilecache *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tileCacheObj_color_get" "', argument " "1"" of type '" "struct tileCacheObj *""'"); 
     }
-    arg1 = (struct tilecache *)(argp1);
-    result = (void *) ((arg1)->data);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_void, 0 | 0); argvi++ ;
+    arg1 = (struct tileCacheObj *)(argp1);
+    result = (colorObj *)& ((arg1)->color);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_colorObj, 0 | SWIG_SHADOW); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -31652,9 +32301,399 @@ XS(_wrap_tilecache_data_get) {
 }
 
 
-XS(_wrap_tilecache_next_set) {
+XS(_wrap_tileCacheObj_outlinecolor_set) {
   {
-    struct tilecache *arg1 = (struct tilecache *) 0 ;
+    struct tileCacheObj *arg1 = (struct tileCacheObj *) 0 ;
+    colorObj *arg2 = (colorObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: tileCacheObj_outlinecolor_set(self,outlinecolor);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tileCacheObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tileCacheObj_outlinecolor_set" "', argument " "1"" of type '" "struct tileCacheObj *""'"); 
+    }
+    arg1 = (struct tileCacheObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "tileCacheObj_outlinecolor_set" "', argument " "2"" of type '" "colorObj *""'"); 
+    }
+    arg2 = (colorObj *)(argp2);
+    if (arg1) (arg1)->outlinecolor = *arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_tileCacheObj_outlinecolor_get) {
+  {
+    struct tileCacheObj *arg1 = (struct tileCacheObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    colorObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: tileCacheObj_outlinecolor_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tileCacheObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tileCacheObj_outlinecolor_get" "', argument " "1"" of type '" "struct tileCacheObj *""'"); 
+    }
+    arg1 = (struct tileCacheObj *)(argp1);
+    result = (colorObj *)& ((arg1)->outlinecolor);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_colorObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_tileCacheObj_backgroundcolor_set) {
+  {
+    struct tileCacheObj *arg1 = (struct tileCacheObj *) 0 ;
+    colorObj *arg2 = (colorObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: tileCacheObj_backgroundcolor_set(self,backgroundcolor);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tileCacheObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tileCacheObj_backgroundcolor_set" "', argument " "1"" of type '" "struct tileCacheObj *""'"); 
+    }
+    arg1 = (struct tileCacheObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "tileCacheObj_backgroundcolor_set" "', argument " "2"" of type '" "colorObj *""'"); 
+    }
+    arg2 = (colorObj *)(argp2);
+    if (arg1) (arg1)->backgroundcolor = *arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_tileCacheObj_backgroundcolor_get) {
+  {
+    struct tileCacheObj *arg1 = (struct tileCacheObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    colorObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: tileCacheObj_backgroundcolor_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tileCacheObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tileCacheObj_backgroundcolor_get" "', argument " "1"" of type '" "struct tileCacheObj *""'"); 
+    }
+    arg1 = (struct tileCacheObj *)(argp1);
+    result = (colorObj *)& ((arg1)->backgroundcolor);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_colorObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_tileCacheObj_outlinewidth_set) {
+  {
+    struct tileCacheObj *arg1 = (struct tileCacheObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: tileCacheObj_outlinewidth_set(self,outlinewidth);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tileCacheObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tileCacheObj_outlinewidth_set" "', argument " "1"" of type '" "struct tileCacheObj *""'"); 
+    }
+    arg1 = (struct tileCacheObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "tileCacheObj_outlinewidth_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->outlinewidth = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_tileCacheObj_outlinewidth_get) {
+  {
+    struct tileCacheObj *arg1 = (struct tileCacheObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: tileCacheObj_outlinewidth_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tileCacheObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tileCacheObj_outlinewidth_get" "', argument " "1"" of type '" "struct tileCacheObj *""'"); 
+    }
+    arg1 = (struct tileCacheObj *)(argp1);
+    result = (double) ((arg1)->outlinewidth);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_tileCacheObj_rotation_set) {
+  {
+    struct tileCacheObj *arg1 = (struct tileCacheObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: tileCacheObj_rotation_set(self,rotation);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tileCacheObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tileCacheObj_rotation_set" "', argument " "1"" of type '" "struct tileCacheObj *""'"); 
+    }
+    arg1 = (struct tileCacheObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "tileCacheObj_rotation_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->rotation = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_tileCacheObj_rotation_get) {
+  {
+    struct tileCacheObj *arg1 = (struct tileCacheObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: tileCacheObj_rotation_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tileCacheObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tileCacheObj_rotation_get" "', argument " "1"" of type '" "struct tileCacheObj *""'"); 
+    }
+    arg1 = (struct tileCacheObj *)(argp1);
+    result = (double) ((arg1)->rotation);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_tileCacheObj_scale_set) {
+  {
+    struct tileCacheObj *arg1 = (struct tileCacheObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: tileCacheObj_scale_set(self,scale);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tileCacheObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tileCacheObj_scale_set" "', argument " "1"" of type '" "struct tileCacheObj *""'"); 
+    }
+    arg1 = (struct tileCacheObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "tileCacheObj_scale_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->scale = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_tileCacheObj_scale_get) {
+  {
+    struct tileCacheObj *arg1 = (struct tileCacheObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: tileCacheObj_scale_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tileCacheObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tileCacheObj_scale_get" "', argument " "1"" of type '" "struct tileCacheObj *""'"); 
+    }
+    arg1 = (struct tileCacheObj *)(argp1);
+    result = (double) ((arg1)->scale);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_tileCacheObj_image_set) {
+  {
+    struct tileCacheObj *arg1 = (struct tileCacheObj *) 0 ;
+    imageObj *arg2 = (imageObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: tileCacheObj_image_set(self,image);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tileCacheObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tileCacheObj_image_set" "', argument " "1"" of type '" "struct tileCacheObj *""'"); 
+    }
+    arg1 = (struct tileCacheObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_imageObj, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "tileCacheObj_image_set" "', argument " "2"" of type '" "imageObj *""'"); 
+    }
+    arg2 = (imageObj *)(argp2);
+    if (arg1) (arg1)->image = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_tileCacheObj_image_get) {
+  {
+    struct tileCacheObj *arg1 = (struct tileCacheObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    imageObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: tileCacheObj_image_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tileCacheObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tileCacheObj_image_get" "', argument " "1"" of type '" "struct tileCacheObj *""'"); 
+    }
+    arg1 = (struct tileCacheObj *)(argp1);
+    result = (imageObj *) ((arg1)->image);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_imageObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_tileCacheObj_next_set) {
+  {
+    struct tileCacheObj *arg1 = (struct tileCacheObj *) 0 ;
     tileCacheObj *arg2 = (tileCacheObj *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
@@ -31664,16 +32703,16 @@ XS(_wrap_tilecache_next_set) {
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: tilecache_next_set(self,next);");
+      SWIG_croak("Usage: tileCacheObj_next_set(self,next);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tilecache, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tileCacheObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tilecache_next_set" "', argument " "1"" of type '" "struct tilecache *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tileCacheObj_next_set" "', argument " "1"" of type '" "struct tileCacheObj *""'"); 
     }
-    arg1 = (struct tilecache *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_tilecache, SWIG_POINTER_DISOWN |  0 );
+    arg1 = (struct tileCacheObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_tileCacheObj, SWIG_POINTER_DISOWN |  0 );
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "tilecache_next_set" "', argument " "2"" of type '" "tileCacheObj *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "tileCacheObj_next_set" "', argument " "2"" of type '" "tileCacheObj *""'"); 
     }
     arg2 = (tileCacheObj *)(argp2);
     if (arg1) (arg1)->next = arg2;
@@ -31689,9 +32728,9 @@ XS(_wrap_tilecache_next_set) {
 }
 
 
-XS(_wrap_tilecache_next_get) {
+XS(_wrap_tileCacheObj_next_get) {
   {
-    struct tilecache *arg1 = (struct tilecache *) 0 ;
+    struct tileCacheObj *arg1 = (struct tileCacheObj *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
@@ -31699,15 +32738,15 @@ XS(_wrap_tilecache_next_get) {
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: tilecache_next_get(self);");
+      SWIG_croak("Usage: tileCacheObj_next_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tilecache, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tileCacheObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tilecache_next_get" "', argument " "1"" of type '" "struct tilecache *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "tileCacheObj_next_get" "', argument " "1"" of type '" "struct tileCacheObj *""'"); 
     }
-    arg1 = (struct tilecache *)(argp1);
+    arg1 = (struct tileCacheObj *)(argp1);
     result = (tileCacheObj *) ((arg1)->next);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_tilecache, 0 | SWIG_SHADOW); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_tileCacheObj, 0 | 0); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -31717,17 +32756,17 @@ XS(_wrap_tilecache_next_get) {
 }
 
 
-XS(_wrap_new_tilecache) {
+XS(_wrap_new_tileCacheObj) {
   {
     int argvi = 0;
-    struct tilecache *result = 0 ;
+    struct tileCacheObj *result = 0 ;
     dXSARGS;
     
     if ((items < 0) || (items > 0)) {
-      SWIG_croak("Usage: new_tilecache();");
+      SWIG_croak("Usage: new_tileCacheObj();");
     }
-    result = (struct tilecache *)calloc(1, sizeof(struct tilecache));
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_tilecache, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    result = (struct tileCacheObj *)calloc(1, sizeof(struct tileCacheObj));
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_tileCacheObj, SWIG_OWNER | 0); argvi++ ;
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -31735,22 +32774,22 @@ XS(_wrap_new_tilecache) {
 }
 
 
-XS(_wrap_delete_tilecache) {
+XS(_wrap_delete_tileCacheObj) {
   {
-    struct tilecache *arg1 = (struct tilecache *) 0 ;
+    struct tileCacheObj *arg1 = (struct tileCacheObj *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: delete_tilecache(self);");
+      SWIG_croak("Usage: delete_tileCacheObj(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tilecache, SWIG_POINTER_DISOWN |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_tileCacheObj, SWIG_POINTER_DISOWN |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_tilecache" "', argument " "1"" of type '" "struct tilecache *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_tileCacheObj" "', argument " "1"" of type '" "struct tileCacheObj *""'"); 
     }
-    arg1 = (struct tilecache *)(argp1);
+    arg1 = (struct tileCacheObj *)(argp1);
     free((char *) arg1);
     
     
@@ -31985,12 +33024,12 @@ XS(_wrap_labelStyleObj_color_set) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelStyleObj_color_set" "', argument " "1"" of type '" "labelStyleObj *""'"); 
     }
     arg1 = (labelStyleObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, 0 |  0 );
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, SWIG_POINTER_DISOWN |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "labelStyleObj_color_set" "', argument " "2"" of type '" "colorObj *""'"); 
     }
     arg2 = (colorObj *)(argp2);
-    if (arg1) (arg1)->color = *arg2;
+    if (arg1) (arg1)->color = arg2;
     
     
     
@@ -32020,7 +33059,7 @@ XS(_wrap_labelStyleObj_color_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelStyleObj_color_get" "', argument " "1"" of type '" "labelStyleObj *""'"); 
     }
     arg1 = (labelStyleObj *)(argp1);
-    result = (colorObj *)& ((arg1)->color);
+    result = (colorObj *) ((arg1)->color);
     ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_colorObj, 0 | SWIG_SHADOW); argvi++ ;
     
     XSRETURN(argvi);
@@ -32115,12 +33154,12 @@ XS(_wrap_labelStyleObj_outlinecolor_set) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelStyleObj_outlinecolor_set" "', argument " "1"" of type '" "labelStyleObj *""'"); 
     }
     arg1 = (labelStyleObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, 0 |  0 );
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, SWIG_POINTER_DISOWN |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "labelStyleObj_outlinecolor_set" "', argument " "2"" of type '" "colorObj *""'"); 
     }
     arg2 = (colorObj *)(argp2);
-    if (arg1) (arg1)->outlinecolor = *arg2;
+    if (arg1) (arg1)->outlinecolor = arg2;
     
     
     
@@ -32150,202 +33189,7 @@ XS(_wrap_labelStyleObj_outlinecolor_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelStyleObj_outlinecolor_get" "', argument " "1"" of type '" "labelStyleObj *""'"); 
     }
     arg1 = (labelStyleObj *)(argp1);
-    result = (colorObj *)& ((arg1)->outlinecolor);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_colorObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelStyleObj_shadowsizex_set) {
-  {
-    labelStyleObj *arg1 = (labelStyleObj *) 0 ;
-    double arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelStyleObj_shadowsizex_set(self,shadowsizex);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelStyleObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelStyleObj_shadowsizex_set" "', argument " "1"" of type '" "labelStyleObj *""'"); 
-    }
-    arg1 = (labelStyleObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelStyleObj_shadowsizex_set" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    if (arg1) (arg1)->shadowsizex = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelStyleObj_shadowsizex_get) {
-  {
-    labelStyleObj *arg1 = (labelStyleObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelStyleObj_shadowsizex_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelStyleObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelStyleObj_shadowsizex_get" "', argument " "1"" of type '" "labelStyleObj *""'"); 
-    }
-    arg1 = (labelStyleObj *)(argp1);
-    result = (double) ((arg1)->shadowsizex);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelStyleObj_shadowsizey_set) {
-  {
-    labelStyleObj *arg1 = (labelStyleObj *) 0 ;
-    double arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelStyleObj_shadowsizey_set(self,shadowsizey);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelStyleObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelStyleObj_shadowsizey_set" "', argument " "1"" of type '" "labelStyleObj *""'"); 
-    }
-    arg1 = (labelStyleObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelStyleObj_shadowsizey_set" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    if (arg1) (arg1)->shadowsizey = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelStyleObj_shadowsizey_get) {
-  {
-    labelStyleObj *arg1 = (labelStyleObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelStyleObj_shadowsizey_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelStyleObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelStyleObj_shadowsizey_get" "', argument " "1"" of type '" "labelStyleObj *""'"); 
-    }
-    arg1 = (labelStyleObj *)(argp1);
-    result = (double) ((arg1)->shadowsizey);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelStyleObj_shadowcolor_set) {
-  {
-    labelStyleObj *arg1 = (labelStyleObj *) 0 ;
-    colorObj *arg2 = (colorObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelStyleObj_shadowcolor_set(self,shadowcolor);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelStyleObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelStyleObj_shadowcolor_set" "', argument " "1"" of type '" "labelStyleObj *""'"); 
-    }
-    arg1 = (labelStyleObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "labelStyleObj_shadowcolor_set" "', argument " "2"" of type '" "colorObj *""'"); 
-    }
-    arg2 = (colorObj *)(argp2);
-    if (arg1) (arg1)->shadowcolor = *arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelStyleObj_shadowcolor_get) {
-  {
-    labelStyleObj *arg1 = (labelStyleObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    colorObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelStyleObj_shadowcolor_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelStyleObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelStyleObj_shadowcolor_get" "', argument " "1"" of type '" "labelStyleObj *""'"); 
-    }
-    arg1 = (labelStyleObj *)(argp1);
-    result = (colorObj *)& ((arg1)->shadowcolor);
+    result = (colorObj *) ((arg1)->outlinecolor);
     ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_colorObj, 0 | SWIG_SHADOW); argvi++ ;
     
     XSRETURN(argvi);
@@ -33783,34 +34627,6 @@ XS(_wrap_lineObj_numpoints_get) {
 }
 
 
-XS(_wrap_lineObj_point_get) {
-  {
-    lineObj *arg1 = (lineObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    pointObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: lineObj_point_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_lineObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "lineObj_point_get" "', argument " "1"" of type '" "lineObj *""'"); 
-    }
-    arg1 = (lineObj *)(argp1);
-    result = (pointObj *) ((arg1)->point);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_pointObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
 XS(_wrap_new_lineObj) {
   {
     int argvi = 0;
@@ -34075,62 +34891,6 @@ XS(_wrap_shapeObj_numvalues_get) {
     arg1 = (shapeObj *)(argp1);
     result = (int) ((arg1)->numvalues);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_shapeObj_line_get) {
-  {
-    shapeObj *arg1 = (shapeObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    lineObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: shapeObj_line_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_shapeObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "shapeObj_line_get" "', argument " "1"" of type '" "shapeObj *""'"); 
-    }
-    arg1 = (shapeObj *)(argp1);
-    result = (lineObj *) ((arg1)->line);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_lineObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_shapeObj_values_get) {
-  {
-    shapeObj *arg1 = (shapeObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char **result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: shapeObj_values_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_shapeObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "shapeObj_values_get" "', argument " "1"" of type '" "shapeObj *""'"); 
-    }
-    arg1 = (shapeObj *)(argp1);
-    result = (char **) ((arg1)->values);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_p_char, 0 | 0); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -34530,6 +35290,136 @@ XS(_wrap_shapeObj_text_get) {
     arg1 = (shapeObj *)(argp1);
     result = (char *) ((arg1)->text);
     ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_shapeObj_scratch_set) {
+  {
+    shapeObj *arg1 = (shapeObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: shapeObj_scratch_set(self,scratch);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_shapeObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "shapeObj_scratch_set" "', argument " "1"" of type '" "shapeObj *""'"); 
+    }
+    arg1 = (shapeObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "shapeObj_scratch_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->scratch = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_shapeObj_scratch_get) {
+  {
+    shapeObj *arg1 = (shapeObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: shapeObj_scratch_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_shapeObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "shapeObj_scratch_get" "', argument " "1"" of type '" "shapeObj *""'"); 
+    }
+    arg1 = (shapeObj *)(argp1);
+    result = (int) ((arg1)->scratch);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_shapeObj_resultindex_set) {
+  {
+    shapeObj *arg1 = (shapeObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: shapeObj_resultindex_set(self,resultindex);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_shapeObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "shapeObj_resultindex_set" "', argument " "1"" of type '" "shapeObj *""'"); 
+    }
+    arg1 = (shapeObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "shapeObj_resultindex_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->resultindex = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_shapeObj_resultindex_get) {
+  {
+    shapeObj *arg1 = (shapeObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: shapeObj_resultindex_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_shapeObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "shapeObj_resultindex_get" "', argument " "1"" of type '" "shapeObj *""'"); 
+    }
+    arg1 = (shapeObj *)(argp1);
+    result = (int) ((arg1)->resultindex);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -36047,7 +36937,7 @@ XS(_wrap_DBFInfo_nRecordLength_get) {
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
-    int result;
+    unsigned int result;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -36058,8 +36948,8 @@ XS(_wrap_DBFInfo_nRecordLength_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DBFInfo_nRecordLength_get" "', argument " "1"" of type '" "DBFInfo *""'"); 
     }
     arg1 = (DBFInfo *)(argp1);
-    result = (int) ((arg1)->nRecordLength);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    result = (unsigned int) ((arg1)->nRecordLength);
+    ST(argvi) = SWIG_From_unsigned_SS_int  SWIG_PERL_CALL_ARGS_1((unsigned int)(result)); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -37317,6 +38207,34 @@ XS(_wrap_projectionObj_numargs_get) {
     }
     arg1 = (projectionObj *)(argp1);
     result = (int) ((arg1)->numargs);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_projectionObj_automatic_get) {
+  {
+    projectionObj *arg1 = (projectionObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: projectionObj_automatic_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_projectionObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "projectionObj_automatic_get" "', argument " "1"" of type '" "projectionObj *""'"); 
+    }
+    arg1 = (projectionObj *)(argp1);
+    result = (int) ((arg1)->automatic);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -38709,143 +39627,6 @@ XS(_wrap_symbolObj_filled_get) {
 }
 
 
-XS(_wrap_symbolObj_patternlength_set) {
-  {
-    symbolObj *arg1 = (symbolObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: symbolObj_patternlength_set(self,patternlength);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_symbolObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolObj_patternlength_set" "', argument " "1"" of type '" "symbolObj *""'"); 
-    }
-    arg1 = (symbolObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "symbolObj_patternlength_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->patternlength = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_symbolObj_patternlength_get) {
-  {
-    symbolObj *arg1 = (symbolObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: symbolObj_patternlength_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_symbolObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolObj_patternlength_get" "', argument " "1"" of type '" "symbolObj *""'"); 
-    }
-    arg1 = (symbolObj *)(argp1);
-    result = (int) ((arg1)->patternlength);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_symbolObj_pattern_set) {
-  {
-    symbolObj *arg1 = (symbolObj *) 0 ;
-    int *arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: symbolObj_pattern_set(self,pattern);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_symbolObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolObj_pattern_set" "', argument " "1"" of type '" "symbolObj *""'"); 
-    }
-    arg1 = (symbolObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "symbolObj_pattern_set" "', argument " "2"" of type '" "int [10]""'"); 
-    } 
-    arg2 = (int *)(argp2);
-    {
-      if (arg2) {
-        size_t ii = 0;
-        for (; ii < (size_t)10; ++ii) arg1->pattern[ii] = arg2[ii];
-      } else {
-        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in variable '""pattern""' of type '""int [10]""'");
-      }
-    }
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_symbolObj_pattern_get) {
-  {
-    symbolObj *arg1 = (symbolObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: symbolObj_pattern_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_symbolObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolObj_pattern_get" "', argument " "1"" of type '" "symbolObj *""'"); 
-    }
-    arg1 = (symbolObj *)(argp1);
-    result = (int *)(int *) ((arg1)->pattern);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_int, 0 | 0); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
 XS(_wrap_symbolObj_imagepath_get) {
   {
     symbolObj *arg1 = (symbolObj *) 0 ;
@@ -39217,322 +39998,71 @@ XS(_wrap_symbolObj_font_get) {
 }
 
 
-XS(_wrap_symbolObj_gap_set) {
+XS(_wrap_symbolObj_svg_text_set) {
   {
     symbolObj *arg1 = (symbolObj *) 0 ;
-    int arg2 ;
+    char *arg2 = (char *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
     int argvi = 0;
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: symbolObj_gap_set(self,gap);");
+      SWIG_croak("Usage: symbolObj_svg_text_set(self,svg_text);");
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_symbolObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolObj_gap_set" "', argument " "1"" of type '" "symbolObj *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolObj_svg_text_set" "', argument " "1"" of type '" "symbolObj *""'"); 
     }
     arg1 = (symbolObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "symbolObj_gap_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->gap = arg2;
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "symbolObj_svg_text_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->svg_text) free((char*)arg1->svg_text);
+      if (arg2) {
+        arg1->svg_text = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->svg_text,arg2);
+      } else {
+        arg1->svg_text = 0;
+      }
+    }
     
     
-    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
     XSRETURN(argvi);
   fail:
     
-    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
     SWIG_croak_null();
   }
 }
 
 
-XS(_wrap_symbolObj_gap_get) {
+XS(_wrap_symbolObj_svg_text_get) {
   {
     symbolObj *arg1 = (symbolObj *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
-    int result;
+    char *result = 0 ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: symbolObj_gap_get(self);");
+      SWIG_croak("Usage: symbolObj_svg_text_get(self);");
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_symbolObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolObj_gap_get" "', argument " "1"" of type '" "symbolObj *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolObj_svg_text_get" "', argument " "1"" of type '" "symbolObj *""'"); 
     }
     arg1 = (symbolObj *)(argp1);
-    result = (int) ((arg1)->gap);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_symbolObj_position_set) {
-  {
-    symbolObj *arg1 = (symbolObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: symbolObj_position_set(self,position);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_symbolObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolObj_position_set" "', argument " "1"" of type '" "symbolObj *""'"); 
-    }
-    arg1 = (symbolObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "symbolObj_position_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->position = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_symbolObj_position_get) {
-  {
-    symbolObj *arg1 = (symbolObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: symbolObj_position_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_symbolObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolObj_position_get" "', argument " "1"" of type '" "symbolObj *""'"); 
-    }
-    arg1 = (symbolObj *)(argp1);
-    result = (int) ((arg1)->position);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_symbolObj_linecap_set) {
-  {
-    symbolObj *arg1 = (symbolObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: symbolObj_linecap_set(self,linecap);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_symbolObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolObj_linecap_set" "', argument " "1"" of type '" "symbolObj *""'"); 
-    }
-    arg1 = (symbolObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "symbolObj_linecap_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->linecap = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_symbolObj_linecap_get) {
-  {
-    symbolObj *arg1 = (symbolObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: symbolObj_linecap_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_symbolObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolObj_linecap_get" "', argument " "1"" of type '" "symbolObj *""'"); 
-    }
-    arg1 = (symbolObj *)(argp1);
-    result = (int) ((arg1)->linecap);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_symbolObj_linejoin_set) {
-  {
-    symbolObj *arg1 = (symbolObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: symbolObj_linejoin_set(self,linejoin);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_symbolObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolObj_linejoin_set" "', argument " "1"" of type '" "symbolObj *""'"); 
-    }
-    arg1 = (symbolObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "symbolObj_linejoin_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->linejoin = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_symbolObj_linejoin_get) {
-  {
-    symbolObj *arg1 = (symbolObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: symbolObj_linejoin_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_symbolObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolObj_linejoin_get" "', argument " "1"" of type '" "symbolObj *""'"); 
-    }
-    arg1 = (symbolObj *)(argp1);
-    result = (int) ((arg1)->linejoin);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_symbolObj_linejoinmaxsize_set) {
-  {
-    symbolObj *arg1 = (symbolObj *) 0 ;
-    double arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: symbolObj_linejoinmaxsize_set(self,linejoinmaxsize);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_symbolObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolObj_linejoinmaxsize_set" "', argument " "1"" of type '" "symbolObj *""'"); 
-    }
-    arg1 = (symbolObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "symbolObj_linejoinmaxsize_set" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    if (arg1) (arg1)->linejoinmaxsize = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_symbolObj_linejoinmaxsize_get) {
-  {
-    symbolObj *arg1 = (symbolObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: symbolObj_linejoinmaxsize_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_symbolObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolObj_linejoinmaxsize_get" "', argument " "1"" of type '" "symbolObj *""'"); 
-    }
-    arg1 = (symbolObj *)(argp1);
-    result = (double) ((arg1)->linejoinmaxsize);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    result = (char *) ((arg1)->svg_text);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -39716,54 +40246,6 @@ XS(_wrap_symbolObj_getPoints) {
 }
 
 
-XS(_wrap_symbolObj_setPattern) {
-  {
-    symbolObj *arg1 = (symbolObj *) 0 ;
-    int arg2 ;
-    int arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int val3 ;
-    int ecode3 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: symbolObj_setPattern(self,index,value);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_symbolObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolObj_setPattern" "', argument " "1"" of type '" "symbolObj *""'"); 
-    }
-    arg1 = (symbolObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "symbolObj_setPattern" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
-    if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "symbolObj_setPattern" "', argument " "3"" of type '" "int""'");
-    } 
-    arg3 = (int)(val3);
-    result = (int)symbolObj_setPattern(arg1,arg2,arg3);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
 XS(_wrap_symbolObj_getImage) {
   {
     symbolObj *arg1 = (symbolObj *) 0 ;
@@ -39777,7 +40259,7 @@ XS(_wrap_symbolObj_getImage) {
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: symbolObj_getImage(self,format);");
+      SWIG_croak("Usage: symbolObj_getImage(self,input_format);");
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_symbolObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
@@ -40040,6 +40522,71 @@ XS(_wrap_errorObj_message_get) {
       
       ST(argvi) = SWIG_FromCharPtrAndSize(result, size); argvi++ ;
     }
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_errorObj_isreported_set) {
+  {
+    errorObj *arg1 = (errorObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: errorObj_isreported_set(self,isreported);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_error_obj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "errorObj_isreported_set" "', argument " "1"" of type '" "errorObj *""'"); 
+    }
+    arg1 = (errorObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "errorObj_isreported_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->isreported = arg2;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_errorObj_isreported_get) {
+  {
+    errorObj *arg1 = (errorObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: errorObj_isreported_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_error_obj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "errorObj_isreported_get" "', argument " "1"" of type '" "errorObj *""'"); 
+    }
+    arg1 = (errorObj *)(argp1);
+    result = (int) ((arg1)->isreported);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -40865,6 +41412,45 @@ XS(_wrap_OWSRequest_loadParams) {
 }
 
 
+XS(_wrap_OWSRequest_loadParamsFromURL) {
+  {
+    cgiRequestObj *arg1 = (cgiRequestObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: OWSRequest_loadParamsFromURL(self,url);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_cgiRequestObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "OWSRequest_loadParamsFromURL" "', argument " "1"" of type '" "cgiRequestObj *""'"); 
+    }
+    arg1 = (cgiRequestObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "OWSRequest_loadParamsFromURL" "', argument " "2"" of type '" "char const *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (int)cgiRequestObj_loadParamsFromURL(arg1,(char const *)arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_OWSRequest_setParameter) {
   {
     cgiRequestObj *arg1 = (cgiRequestObj *) 0 ;
@@ -41181,6 +41767,23 @@ XS(_wrap_msIO_stripStdoutBufferContentType) {
 }
 
 
+XS(_wrap_msIO_stripStdoutBufferContentHeaders) {
+  {
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 0) || (items > 0)) {
+      SWIG_croak("Usage: msIO_stripStdoutBufferContentHeaders();");
+    }
+    msIO_stripStdoutBufferContentHeaders();
+    
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_msIO_getStdoutBufferString) {
   {
     int argvi = 0;
@@ -41241,11 +41844,11 @@ static swig_type_info _swigt__p_FILE = {"_p_FILE", "FILE *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_cgiRequestObj = {"_p_cgiRequestObj", "cgiRequestObj *", 0, 0, (void*)"mapscript::OWSRequest", 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_class_obj = {"_p_class_obj", "classObj *|struct class_obj *", 0, 0, (void*)"mapscript::classObj", 0};
+static swig_type_info _swigt__p_clusterObj = {"_p_clusterObj", "clusterObj *", 0, 0, (void*)"mapscript::clusterObj", 0};
 static swig_type_info _swigt__p_colorObj = {"_p_colorObj", "colorObj *", 0, 0, (void*)"mapscript::colorObj", 0};
 static swig_type_info _swigt__p_debugLevel = {"_p_debugLevel", "enum debugLevel *|debugLevel *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_double = {"_p_double", "double *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_error_obj = {"_p_error_obj", "struct error_obj *|errorObj *", 0, 0, (void*)"mapscript::errorObj", 0};
-static swig_type_info _swigt__p_fillStyleObj = {"_p_fillStyleObj", "fillStyleObj *", 0, 0, (void*)"mapscript::fillStyleObj", 0};
 static swig_type_info _swigt__p_fontSetObj = {"_p_fontSetObj", "fontSetObj *", 0, 0, (void*)"mapscript::fontSetObj", 0};
 static swig_type_info _swigt__p_hashTableObj = {"_p_hashTableObj", "hashTableObj *", 0, 0, (void*)"mapscript::hashTableObj", 0};
 static swig_type_info _swigt__p_imageObj = {"_p_imageObj", "imageObj *", 0, 0, (void*)"mapscript::imageObj", 0};
@@ -41270,9 +41873,9 @@ static swig_type_info _swigt__p_projectionObj = {"_p_projectionObj", "projection
 static swig_type_info _swigt__p_queryMapObj = {"_p_queryMapObj", "queryMapObj *", 0, 0, (void*)"mapscript::queryMapObj", 0};
 static swig_type_info _swigt__p_rectObj = {"_p_rectObj", "rectObj *", 0, 0, (void*)"mapscript::rectObj", 0};
 static swig_type_info _swigt__p_referenceMapObj = {"_p_referenceMapObj", "referenceMapObj *", 0, 0, (void*)"mapscript::referenceMapObj", 0};
-static swig_type_info _swigt__p_rendererVTable = {"_p_rendererVTable", "struct rendererVTable *|rendererVTableObj *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_resultCacheMemberObj = {"_p_resultCacheMemberObj", "resultCacheMemberObj *", 0, 0, (void*)"mapscript::resultCacheMemberObj", 0};
+static swig_type_info _swigt__p_rendererVTableObj = {"_p_rendererVTableObj", "struct rendererVTableObj *|rendererVTableObj *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_resultCacheObj = {"_p_resultCacheObj", "resultCacheObj *", 0, 0, (void*)"mapscript::resultCacheObj", 0};
+static swig_type_info _swigt__p_resultObj = {"_p_resultObj", "resultObj *", 0, 0, (void*)"mapscript::resultObj", 0};
 static swig_type_info _swigt__p_scalebarObj = {"_p_scalebarObj", "scalebarObj *", 0, 0, (void*)"mapscript::scalebarObj", 0};
 static swig_type_info _swigt__p_shapeObj = {"_p_shapeObj", "shapeObj *", 0, 0, (void*)"mapscript::shapeObj", 0};
 static swig_type_info _swigt__p_shapefileObj = {"_p_shapefileObj", "shapefileObj *", 0, 0, (void*)"mapscript::shapefileObj", 0};
@@ -41281,9 +41884,8 @@ static swig_type_info _swigt__p_styleObj = {"_p_styleObj", "styleObj *", 0, 0, (
 static swig_type_info _swigt__p_symbolObj = {"_p_symbolObj", "symbolObj *", 0, 0, (void*)"mapscript::symbolObj", 0};
 static swig_type_info _swigt__p_symbolSetObj = {"_p_symbolSetObj", "symbolSetObj *", 0, 0, (void*)"mapscript::symbolSetObj", 0};
 static swig_type_info _swigt__p_symbolStyleObj = {"_p_symbolStyleObj", "symbolStyleObj *", 0, 0, (void*)"mapscript::symbolStyleObj", 0};
-static swig_type_info _swigt__p_tilecache = {"_p_tilecache", "tileCacheObj *|struct tilecache *|tilecache *", 0, 0, (void*)"mapscript::tilecache", 0};
+static swig_type_info _swigt__p_tileCacheObj = {"_p_tileCacheObj", "struct tileCacheObj *|tileCacheObj *", 0, 0, (void*)"mapscript::tileCacheObj", 0};
 static swig_type_info _swigt__p_uint32_t = {"_p_uint32_t", "uint32_t *|ms_uint32 *|ms_bitarray", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_void = {"_p_void", "void *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_webObj = {"_p_webObj", "webObj *", 0, 0, (void*)"mapscript::webObj", 0};
 
 static swig_type_info *swig_type_initial[] = {
@@ -41293,11 +41895,11 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_cgiRequestObj,
   &_swigt__p_char,
   &_swigt__p_class_obj,
+  &_swigt__p_clusterObj,
   &_swigt__p_colorObj,
   &_swigt__p_debugLevel,
   &_swigt__p_double,
   &_swigt__p_error_obj,
-  &_swigt__p_fillStyleObj,
   &_swigt__p_fontSetObj,
   &_swigt__p_hashTableObj,
   &_swigt__p_imageObj,
@@ -41322,9 +41924,9 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_queryMapObj,
   &_swigt__p_rectObj,
   &_swigt__p_referenceMapObj,
-  &_swigt__p_rendererVTable,
-  &_swigt__p_resultCacheMemberObj,
+  &_swigt__p_rendererVTableObj,
   &_swigt__p_resultCacheObj,
+  &_swigt__p_resultObj,
   &_swigt__p_scalebarObj,
   &_swigt__p_shapeObj,
   &_swigt__p_shapefileObj,
@@ -41333,9 +41935,8 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_symbolObj,
   &_swigt__p_symbolSetObj,
   &_swigt__p_symbolStyleObj,
-  &_swigt__p_tilecache,
+  &_swigt__p_tileCacheObj,
   &_swigt__p_uint32_t,
-  &_swigt__p_void,
   &_swigt__p_webObj,
 };
 
@@ -41345,11 +41946,11 @@ static swig_cast_info _swigc__p_FILE[] = {  {&_swigt__p_FILE, 0, 0, 0},{0, 0, 0,
 static swig_cast_info _swigc__p_cgiRequestObj[] = {  {&_swigt__p_cgiRequestObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_class_obj[] = {  {&_swigt__p_class_obj, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_clusterObj[] = {  {&_swigt__p_clusterObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_colorObj[] = {  {&_swigt__p_colorObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_debugLevel[] = {  {&_swigt__p_debugLevel, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_error_obj[] = {  {&_swigt__p_error_obj, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_fillStyleObj[] = {  {&_swigt__p_fillStyleObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_fontSetObj[] = {  {&_swigt__p_fontSetObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_hashTableObj[] = {  {&_swigt__p_hashTableObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_imageObj[] = {  {&_swigt__p_imageObj, 0, 0, 0},{0, 0, 0, 0}};
@@ -41374,9 +41975,9 @@ static swig_cast_info _swigc__p_projectionObj[] = {  {&_swigt__p_projectionObj, 
 static swig_cast_info _swigc__p_queryMapObj[] = {  {&_swigt__p_queryMapObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_rectObj[] = {  {&_swigt__p_rectObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_referenceMapObj[] = {  {&_swigt__p_referenceMapObj, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_rendererVTable[] = {  {&_swigt__p_rendererVTable, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_resultCacheMemberObj[] = {  {&_swigt__p_resultCacheMemberObj, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_rendererVTableObj[] = {  {&_swigt__p_rendererVTableObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_resultCacheObj[] = {  {&_swigt__p_resultCacheObj, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_resultObj[] = {  {&_swigt__p_resultObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_scalebarObj[] = {  {&_swigt__p_scalebarObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_shapeObj[] = {  {&_swigt__p_shapeObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_shapefileObj[] = {  {&_swigt__p_shapefileObj, 0, 0, 0},{0, 0, 0, 0}};
@@ -41385,9 +41986,8 @@ static swig_cast_info _swigc__p_styleObj[] = {  {&_swigt__p_styleObj, 0, 0, 0},{
 static swig_cast_info _swigc__p_symbolObj[] = {  {&_swigt__p_symbolObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_symbolSetObj[] = {  {&_swigt__p_symbolSetObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_symbolStyleObj[] = {  {&_swigt__p_symbolStyleObj, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_tilecache[] = {  {&_swigt__p_tilecache, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_tileCacheObj[] = {  {&_swigt__p_tileCacheObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_uint32_t[] = {  {&_swigt__p_uint32_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_void[] = {  {&_swigt__p_void, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_webObj[] = {  {&_swigt__p_webObj, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
@@ -41397,11 +41997,11 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_cgiRequestObj,
   _swigc__p_char,
   _swigc__p_class_obj,
+  _swigc__p_clusterObj,
   _swigc__p_colorObj,
   _swigc__p_debugLevel,
   _swigc__p_double,
   _swigc__p_error_obj,
-  _swigc__p_fillStyleObj,
   _swigc__p_fontSetObj,
   _swigc__p_hashTableObj,
   _swigc__p_imageObj,
@@ -41426,9 +42026,9 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_queryMapObj,
   _swigc__p_rectObj,
   _swigc__p_referenceMapObj,
-  _swigc__p_rendererVTable,
-  _swigc__p_resultCacheMemberObj,
+  _swigc__p_rendererVTableObj,
   _swigc__p_resultCacheObj,
+  _swigc__p_resultObj,
   _swigc__p_scalebarObj,
   _swigc__p_shapeObj,
   _swigc__p_shapefileObj,
@@ -41437,9 +42037,8 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_symbolObj,
   _swigc__p_symbolSetObj,
   _swigc__p_symbolStyleObj,
-  _swigc__p_tilecache,
+  _swigc__p_tileCacheObj,
   _swigc__p_uint32_t,
-  _swigc__p_void,
   _swigc__p_webObj,
 };
 
@@ -41467,6 +42066,19 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::fontSetObj_fonts_get", _wrap_fontSetObj_fonts_get},
 {"mapscriptc::new_fontSetObj", _wrap_new_fontSetObj},
 {"mapscriptc::delete_fontSetObj", _wrap_delete_fontSetObj},
+{"mapscriptc::clusterObj_maxdistance_set", _wrap_clusterObj_maxdistance_set},
+{"mapscriptc::clusterObj_maxdistance_get", _wrap_clusterObj_maxdistance_get},
+{"mapscriptc::clusterObj_buffer_set", _wrap_clusterObj_buffer_set},
+{"mapscriptc::clusterObj_buffer_get", _wrap_clusterObj_buffer_get},
+{"mapscriptc::clusterObj_region_set", _wrap_clusterObj_region_set},
+{"mapscriptc::clusterObj_region_get", _wrap_clusterObj_region_get},
+{"mapscriptc::clusterObj_updateFromString", _wrap_clusterObj_updateFromString},
+{"mapscriptc::clusterObj_setGroup", _wrap_clusterObj_setGroup},
+{"mapscriptc::clusterObj_getGroupString", _wrap_clusterObj_getGroupString},
+{"mapscriptc::clusterObj_setFilter", _wrap_clusterObj_setFilter},
+{"mapscriptc::clusterObj_getFilterString", _wrap_clusterObj_getFilterString},
+{"mapscriptc::new_clusterObj", _wrap_new_clusterObj},
+{"mapscriptc::delete_clusterObj", _wrap_delete_clusterObj},
 {"mapscriptc::outputFormatObj_name_set", _wrap_outputFormatObj_name_set},
 {"mapscriptc::outputFormatObj_name_get", _wrap_outputFormatObj_name_get},
 {"mapscriptc::outputFormatObj_mimetype_set", _wrap_outputFormatObj_mimetype_set},
@@ -41491,8 +42103,6 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::outputFormatObj_refcount_get", _wrap_outputFormatObj_refcount_get},
 {"mapscriptc::outputFormatObj_inmapfile_set", _wrap_outputFormatObj_inmapfile_set},
 {"mapscriptc::outputFormatObj_inmapfile_get", _wrap_outputFormatObj_inmapfile_get},
-{"mapscriptc::outputFormatObj_vtable_set", _wrap_outputFormatObj_vtable_set},
-{"mapscriptc::outputFormatObj_vtable_get", _wrap_outputFormatObj_vtable_get},
 {"mapscriptc::new_outputFormatObj", _wrap_new_outputFormatObj},
 {"mapscriptc::delete_outputFormatObj", _wrap_delete_outputFormatObj},
 {"mapscriptc::outputFormatObj_setExtension", _wrap_outputFormatObj_setExtension},
@@ -41500,6 +42110,7 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::outputFormatObj_setOption", _wrap_outputFormatObj_setOption},
 {"mapscriptc::outputFormatObj_validate", _wrap_outputFormatObj_validate},
 {"mapscriptc::outputFormatObj_getOption", _wrap_outputFormatObj_getOption},
+{"mapscriptc::outputFormatObj_attachDevice", _wrap_outputFormatObj_attachDevice},
 {"mapscriptc::queryMapObj_height_set", _wrap_queryMapObj_height_set},
 {"mapscriptc::queryMapObj_height_get", _wrap_queryMapObj_height_get},
 {"mapscriptc::queryMapObj_width_set", _wrap_queryMapObj_width_set},
@@ -41513,94 +42124,14 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::queryMapObj_updateFromString", _wrap_queryMapObj_updateFromString},
 {"mapscriptc::new_queryMapObj", _wrap_new_queryMapObj},
 {"mapscriptc::delete_queryMapObj", _wrap_delete_queryMapObj},
-{"mapscriptc::labelObj_font_set", _wrap_labelObj_font_set},
-{"mapscriptc::labelObj_font_get", _wrap_labelObj_font_get},
-{"mapscriptc::labelObj_type_set", _wrap_labelObj_type_set},
-{"mapscriptc::labelObj_type_get", _wrap_labelObj_type_get},
-{"mapscriptc::labelObj_color_set", _wrap_labelObj_color_set},
-{"mapscriptc::labelObj_color_get", _wrap_labelObj_color_get},
-{"mapscriptc::labelObj_outlinecolor_set", _wrap_labelObj_outlinecolor_set},
-{"mapscriptc::labelObj_outlinecolor_get", _wrap_labelObj_outlinecolor_get},
-{"mapscriptc::labelObj_outlinewidth_set", _wrap_labelObj_outlinewidth_set},
-{"mapscriptc::labelObj_outlinewidth_get", _wrap_labelObj_outlinewidth_get},
-{"mapscriptc::labelObj_shadowcolor_set", _wrap_labelObj_shadowcolor_set},
-{"mapscriptc::labelObj_shadowcolor_get", _wrap_labelObj_shadowcolor_get},
-{"mapscriptc::labelObj_shadowsizex_set", _wrap_labelObj_shadowsizex_set},
-{"mapscriptc::labelObj_shadowsizex_get", _wrap_labelObj_shadowsizex_get},
-{"mapscriptc::labelObj_shadowsizey_set", _wrap_labelObj_shadowsizey_set},
-{"mapscriptc::labelObj_shadowsizey_get", _wrap_labelObj_shadowsizey_get},
-{"mapscriptc::labelObj_backgroundcolor_set", _wrap_labelObj_backgroundcolor_set},
-{"mapscriptc::labelObj_backgroundcolor_get", _wrap_labelObj_backgroundcolor_get},
-{"mapscriptc::labelObj_backgroundshadowcolor_set", _wrap_labelObj_backgroundshadowcolor_set},
-{"mapscriptc::labelObj_backgroundshadowcolor_get", _wrap_labelObj_backgroundshadowcolor_get},
-{"mapscriptc::labelObj_backgroundshadowsizex_set", _wrap_labelObj_backgroundshadowsizex_set},
-{"mapscriptc::labelObj_backgroundshadowsizex_get", _wrap_labelObj_backgroundshadowsizex_get},
-{"mapscriptc::labelObj_backgroundshadowsizey_set", _wrap_labelObj_backgroundshadowsizey_set},
-{"mapscriptc::labelObj_backgroundshadowsizey_get", _wrap_labelObj_backgroundshadowsizey_get},
-{"mapscriptc::labelObj_size_set", _wrap_labelObj_size_set},
-{"mapscriptc::labelObj_size_get", _wrap_labelObj_size_get},
-{"mapscriptc::labelObj_minsize_set", _wrap_labelObj_minsize_set},
-{"mapscriptc::labelObj_minsize_get", _wrap_labelObj_minsize_get},
-{"mapscriptc::labelObj_maxsize_set", _wrap_labelObj_maxsize_set},
-{"mapscriptc::labelObj_maxsize_get", _wrap_labelObj_maxsize_get},
-{"mapscriptc::labelObj_position_set", _wrap_labelObj_position_set},
-{"mapscriptc::labelObj_position_get", _wrap_labelObj_position_get},
-{"mapscriptc::labelObj_offsetx_set", _wrap_labelObj_offsetx_set},
-{"mapscriptc::labelObj_offsetx_get", _wrap_labelObj_offsetx_get},
-{"mapscriptc::labelObj_offsety_set", _wrap_labelObj_offsety_set},
-{"mapscriptc::labelObj_offsety_get", _wrap_labelObj_offsety_get},
-{"mapscriptc::labelObj_angle_set", _wrap_labelObj_angle_set},
-{"mapscriptc::labelObj_angle_get", _wrap_labelObj_angle_get},
-{"mapscriptc::labelObj_autoangle_set", _wrap_labelObj_autoangle_set},
-{"mapscriptc::labelObj_autoangle_get", _wrap_labelObj_autoangle_get},
-{"mapscriptc::labelObj_autofollow_set", _wrap_labelObj_autofollow_set},
-{"mapscriptc::labelObj_autofollow_get", _wrap_labelObj_autofollow_get},
-{"mapscriptc::labelObj_buffer_set", _wrap_labelObj_buffer_set},
-{"mapscriptc::labelObj_buffer_get", _wrap_labelObj_buffer_get},
-{"mapscriptc::labelObj_antialias_set", _wrap_labelObj_antialias_set},
-{"mapscriptc::labelObj_antialias_get", _wrap_labelObj_antialias_get},
-{"mapscriptc::labelObj_align_set", _wrap_labelObj_align_set},
-{"mapscriptc::labelObj_align_get", _wrap_labelObj_align_get},
-{"mapscriptc::labelObj_wrap_set", _wrap_labelObj_wrap_set},
-{"mapscriptc::labelObj_wrap_get", _wrap_labelObj_wrap_get},
-{"mapscriptc::labelObj_maxlength_set", _wrap_labelObj_maxlength_set},
-{"mapscriptc::labelObj_maxlength_get", _wrap_labelObj_maxlength_get},
-{"mapscriptc::labelObj_minlength_set", _wrap_labelObj_minlength_set},
-{"mapscriptc::labelObj_minlength_get", _wrap_labelObj_minlength_get},
-{"mapscriptc::labelObj_space_size_10_set", _wrap_labelObj_space_size_10_set},
-{"mapscriptc::labelObj_space_size_10_get", _wrap_labelObj_space_size_10_get},
-{"mapscriptc::labelObj_minfeaturesize_set", _wrap_labelObj_minfeaturesize_set},
-{"mapscriptc::labelObj_minfeaturesize_get", _wrap_labelObj_minfeaturesize_get},
-{"mapscriptc::labelObj_autominfeaturesize_set", _wrap_labelObj_autominfeaturesize_set},
-{"mapscriptc::labelObj_autominfeaturesize_get", _wrap_labelObj_autominfeaturesize_get},
-{"mapscriptc::labelObj_minscaledenom_set", _wrap_labelObj_minscaledenom_set},
-{"mapscriptc::labelObj_minscaledenom_get", _wrap_labelObj_minscaledenom_get},
-{"mapscriptc::labelObj_maxscaledenom_set", _wrap_labelObj_maxscaledenom_set},
-{"mapscriptc::labelObj_maxscaledenom_get", _wrap_labelObj_maxscaledenom_get},
-{"mapscriptc::labelObj_mindistance_set", _wrap_labelObj_mindistance_set},
-{"mapscriptc::labelObj_mindistance_get", _wrap_labelObj_mindistance_get},
-{"mapscriptc::labelObj_repeatdistance_set", _wrap_labelObj_repeatdistance_set},
-{"mapscriptc::labelObj_repeatdistance_get", _wrap_labelObj_repeatdistance_get},
-{"mapscriptc::labelObj_partials_set", _wrap_labelObj_partials_set},
-{"mapscriptc::labelObj_partials_get", _wrap_labelObj_partials_get},
-{"mapscriptc::labelObj_force_set", _wrap_labelObj_force_set},
-{"mapscriptc::labelObj_force_get", _wrap_labelObj_force_get},
-{"mapscriptc::labelObj_encoding_set", _wrap_labelObj_encoding_set},
-{"mapscriptc::labelObj_encoding_get", _wrap_labelObj_encoding_get},
-{"mapscriptc::labelObj_priority_set", _wrap_labelObj_priority_set},
-{"mapscriptc::labelObj_priority_get", _wrap_labelObj_priority_get},
-{"mapscriptc::labelObj_updateFromString", _wrap_labelObj_updateFromString},
-{"mapscriptc::labelObj_removeBinding", _wrap_labelObj_removeBinding},
-{"mapscriptc::labelObj_getBinding", _wrap_labelObj_getBinding},
-{"mapscriptc::labelObj_setBinding", _wrap_labelObj_setBinding},
-{"mapscriptc::new_labelObj", _wrap_new_labelObj},
-{"mapscriptc::delete_labelObj", _wrap_delete_labelObj},
 {"mapscriptc::webObj_log_set", _wrap_webObj_log_set},
 {"mapscriptc::webObj_log_get", _wrap_webObj_log_get},
 {"mapscriptc::webObj_imagepath_set", _wrap_webObj_imagepath_set},
 {"mapscriptc::webObj_imagepath_get", _wrap_webObj_imagepath_get},
 {"mapscriptc::webObj_imageurl_set", _wrap_webObj_imageurl_set},
 {"mapscriptc::webObj_imageurl_get", _wrap_webObj_imageurl_get},
+{"mapscriptc::webObj_temppath_set", _wrap_webObj_temppath_set},
+{"mapscriptc::webObj_temppath_get", _wrap_webObj_temppath_get},
 {"mapscriptc::webObj_map_get", _wrap_webObj_map_get},
 {"mapscriptc::webObj_template_set", _wrap_webObj_template_set},
 {"mapscriptc::webObj_template_get", _wrap_webObj_template_get},
@@ -41710,6 +42241,82 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::styleObj_getBinding", _wrap_styleObj_getBinding},
 {"mapscriptc::styleObj_getGeomTransform", _wrap_styleObj_getGeomTransform},
 {"mapscriptc::styleObj_setGeomTransform", _wrap_styleObj_setGeomTransform},
+{"mapscriptc::labelObj_font_set", _wrap_labelObj_font_set},
+{"mapscriptc::labelObj_font_get", _wrap_labelObj_font_get},
+{"mapscriptc::labelObj_type_set", _wrap_labelObj_type_set},
+{"mapscriptc::labelObj_type_get", _wrap_labelObj_type_get},
+{"mapscriptc::labelObj_color_set", _wrap_labelObj_color_set},
+{"mapscriptc::labelObj_color_get", _wrap_labelObj_color_get},
+{"mapscriptc::labelObj_outlinecolor_set", _wrap_labelObj_outlinecolor_set},
+{"mapscriptc::labelObj_outlinecolor_get", _wrap_labelObj_outlinecolor_get},
+{"mapscriptc::labelObj_outlinewidth_set", _wrap_labelObj_outlinewidth_set},
+{"mapscriptc::labelObj_outlinewidth_get", _wrap_labelObj_outlinewidth_get},
+{"mapscriptc::labelObj_shadowcolor_set", _wrap_labelObj_shadowcolor_set},
+{"mapscriptc::labelObj_shadowcolor_get", _wrap_labelObj_shadowcolor_get},
+{"mapscriptc::labelObj_shadowsizex_set", _wrap_labelObj_shadowsizex_set},
+{"mapscriptc::labelObj_shadowsizex_get", _wrap_labelObj_shadowsizex_get},
+{"mapscriptc::labelObj_shadowsizey_set", _wrap_labelObj_shadowsizey_set},
+{"mapscriptc::labelObj_shadowsizey_get", _wrap_labelObj_shadowsizey_get},
+{"mapscriptc::labelObj_size_set", _wrap_labelObj_size_set},
+{"mapscriptc::labelObj_size_get", _wrap_labelObj_size_get},
+{"mapscriptc::labelObj_minsize_set", _wrap_labelObj_minsize_set},
+{"mapscriptc::labelObj_minsize_get", _wrap_labelObj_minsize_get},
+{"mapscriptc::labelObj_maxsize_set", _wrap_labelObj_maxsize_set},
+{"mapscriptc::labelObj_maxsize_get", _wrap_labelObj_maxsize_get},
+{"mapscriptc::labelObj_position_set", _wrap_labelObj_position_set},
+{"mapscriptc::labelObj_position_get", _wrap_labelObj_position_get},
+{"mapscriptc::labelObj_offsetx_set", _wrap_labelObj_offsetx_set},
+{"mapscriptc::labelObj_offsetx_get", _wrap_labelObj_offsetx_get},
+{"mapscriptc::labelObj_offsety_set", _wrap_labelObj_offsety_set},
+{"mapscriptc::labelObj_offsety_get", _wrap_labelObj_offsety_get},
+{"mapscriptc::labelObj_angle_set", _wrap_labelObj_angle_set},
+{"mapscriptc::labelObj_angle_get", _wrap_labelObj_angle_get},
+{"mapscriptc::labelObj_anglemode_set", _wrap_labelObj_anglemode_set},
+{"mapscriptc::labelObj_anglemode_get", _wrap_labelObj_anglemode_get},
+{"mapscriptc::labelObj_buffer_set", _wrap_labelObj_buffer_set},
+{"mapscriptc::labelObj_buffer_get", _wrap_labelObj_buffer_get},
+{"mapscriptc::labelObj_antialias_set", _wrap_labelObj_antialias_set},
+{"mapscriptc::labelObj_antialias_get", _wrap_labelObj_antialias_get},
+{"mapscriptc::labelObj_align_set", _wrap_labelObj_align_set},
+{"mapscriptc::labelObj_align_get", _wrap_labelObj_align_get},
+{"mapscriptc::labelObj_wrap_set", _wrap_labelObj_wrap_set},
+{"mapscriptc::labelObj_wrap_get", _wrap_labelObj_wrap_get},
+{"mapscriptc::labelObj_maxlength_set", _wrap_labelObj_maxlength_set},
+{"mapscriptc::labelObj_maxlength_get", _wrap_labelObj_maxlength_get},
+{"mapscriptc::labelObj_minlength_set", _wrap_labelObj_minlength_set},
+{"mapscriptc::labelObj_minlength_get", _wrap_labelObj_minlength_get},
+{"mapscriptc::labelObj_space_size_10_set", _wrap_labelObj_space_size_10_set},
+{"mapscriptc::labelObj_space_size_10_get", _wrap_labelObj_space_size_10_get},
+{"mapscriptc::labelObj_minfeaturesize_set", _wrap_labelObj_minfeaturesize_set},
+{"mapscriptc::labelObj_minfeaturesize_get", _wrap_labelObj_minfeaturesize_get},
+{"mapscriptc::labelObj_autominfeaturesize_set", _wrap_labelObj_autominfeaturesize_set},
+{"mapscriptc::labelObj_autominfeaturesize_get", _wrap_labelObj_autominfeaturesize_get},
+{"mapscriptc::labelObj_minscaledenom_set", _wrap_labelObj_minscaledenom_set},
+{"mapscriptc::labelObj_minscaledenom_get", _wrap_labelObj_minscaledenom_get},
+{"mapscriptc::labelObj_maxscaledenom_set", _wrap_labelObj_maxscaledenom_set},
+{"mapscriptc::labelObj_maxscaledenom_get", _wrap_labelObj_maxscaledenom_get},
+{"mapscriptc::labelObj_mindistance_set", _wrap_labelObj_mindistance_set},
+{"mapscriptc::labelObj_mindistance_get", _wrap_labelObj_mindistance_get},
+{"mapscriptc::labelObj_repeatdistance_set", _wrap_labelObj_repeatdistance_set},
+{"mapscriptc::labelObj_repeatdistance_get", _wrap_labelObj_repeatdistance_get},
+{"mapscriptc::labelObj_maxoverlapangle_set", _wrap_labelObj_maxoverlapangle_set},
+{"mapscriptc::labelObj_maxoverlapangle_get", _wrap_labelObj_maxoverlapangle_get},
+{"mapscriptc::labelObj_partials_set", _wrap_labelObj_partials_set},
+{"mapscriptc::labelObj_partials_get", _wrap_labelObj_partials_get},
+{"mapscriptc::labelObj_force_set", _wrap_labelObj_force_set},
+{"mapscriptc::labelObj_force_get", _wrap_labelObj_force_get},
+{"mapscriptc::labelObj_encoding_set", _wrap_labelObj_encoding_set},
+{"mapscriptc::labelObj_encoding_get", _wrap_labelObj_encoding_get},
+{"mapscriptc::labelObj_priority_set", _wrap_labelObj_priority_set},
+{"mapscriptc::labelObj_priority_get", _wrap_labelObj_priority_get},
+{"mapscriptc::labelObj_numstyles_set", _wrap_labelObj_numstyles_set},
+{"mapscriptc::labelObj_numstyles_get", _wrap_labelObj_numstyles_get},
+{"mapscriptc::labelObj_updateFromString", _wrap_labelObj_updateFromString},
+{"mapscriptc::labelObj_removeBinding", _wrap_labelObj_removeBinding},
+{"mapscriptc::labelObj_getBinding", _wrap_labelObj_getBinding},
+{"mapscriptc::labelObj_setBinding", _wrap_labelObj_setBinding},
+{"mapscriptc::new_labelObj", _wrap_new_labelObj},
+{"mapscriptc::delete_labelObj", _wrap_delete_labelObj},
 {"mapscriptc::classObj_status_set", _wrap_classObj_status_set},
 {"mapscriptc::classObj_status_get", _wrap_classObj_status_get},
 {"mapscriptc::classObj_numstyles_set", _wrap_classObj_numstyles_set},
@@ -41729,6 +42336,8 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::classObj_minscaledenom_get", _wrap_classObj_minscaledenom_get},
 {"mapscriptc::classObj_maxscaledenom_set", _wrap_classObj_maxscaledenom_set},
 {"mapscriptc::classObj_maxscaledenom_get", _wrap_classObj_maxscaledenom_get},
+{"mapscriptc::classObj_minfeaturesize_set", _wrap_classObj_minfeaturesize_set},
+{"mapscriptc::classObj_minfeaturesize_get", _wrap_classObj_minfeaturesize_get},
 {"mapscriptc::classObj_refcount_get", _wrap_classObj_refcount_get},
 {"mapscriptc::classObj_layer_get", _wrap_classObj_layer_get},
 {"mapscriptc::classObj_debug_set", _wrap_classObj_debug_set},
@@ -41769,6 +42378,7 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::labelCacheMemberObj_point_get", _wrap_labelCacheMemberObj_point_get},
 {"mapscriptc::labelCacheMemberObj_poly_get", _wrap_labelCacheMemberObj_poly_get},
 {"mapscriptc::labelCacheMemberObj_status_get", _wrap_labelCacheMemberObj_status_get},
+{"mapscriptc::labelCacheMemberObj_markerid_get", _wrap_labelCacheMemberObj_markerid_get},
 {"mapscriptc::new_labelCacheMemberObj", _wrap_new_labelCacheMemberObj},
 {"mapscriptc::delete_labelCacheMemberObj", _wrap_delete_labelCacheMemberObj},
 {"mapscriptc::markerCacheMemberObj_id_get", _wrap_markerCacheMemberObj_id_get},
@@ -41788,11 +42398,12 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::labelCacheObj_freeCache", _wrap_labelCacheObj_freeCache},
 {"mapscriptc::new_labelCacheObj", _wrap_new_labelCacheObj},
 {"mapscriptc::delete_labelCacheObj", _wrap_delete_labelCacheObj},
-{"mapscriptc::resultCacheMemberObj_shapeindex_get", _wrap_resultCacheMemberObj_shapeindex_get},
-{"mapscriptc::resultCacheMemberObj_tileindex_get", _wrap_resultCacheMemberObj_tileindex_get},
-{"mapscriptc::resultCacheMemberObj_classindex_get", _wrap_resultCacheMemberObj_classindex_get},
-{"mapscriptc::new_resultCacheMemberObj", _wrap_new_resultCacheMemberObj},
-{"mapscriptc::delete_resultCacheMemberObj", _wrap_delete_resultCacheMemberObj},
+{"mapscriptc::resultObj_shapeindex_get", _wrap_resultObj_shapeindex_get},
+{"mapscriptc::resultObj_tileindex_get", _wrap_resultObj_tileindex_get},
+{"mapscriptc::resultObj_resultindex_get", _wrap_resultObj_resultindex_get},
+{"mapscriptc::resultObj_classindex_get", _wrap_resultObj_classindex_get},
+{"mapscriptc::new_resultObj", _wrap_new_resultObj},
+{"mapscriptc::delete_resultObj", _wrap_delete_resultObj},
 {"mapscriptc::resultCacheObj_numresults_get", _wrap_resultCacheObj_numresults_get},
 {"mapscriptc::resultCacheObj_bounds_get", _wrap_resultCacheObj_bounds_get},
 {"mapscriptc::resultCacheObj_usegetshape_set", _wrap_resultCacheObj_usegetshape_set},
@@ -41935,6 +42546,8 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::layerObj_minscaledenom_get", _wrap_layerObj_minscaledenom_get},
 {"mapscriptc::layerObj_maxscaledenom_set", _wrap_layerObj_maxscaledenom_set},
 {"mapscriptc::layerObj_maxscaledenom_get", _wrap_layerObj_maxscaledenom_get},
+{"mapscriptc::layerObj_minfeaturesize_set", _wrap_layerObj_minfeaturesize_set},
+{"mapscriptc::layerObj_minfeaturesize_get", _wrap_layerObj_minfeaturesize_get},
 {"mapscriptc::layerObj_labelminscaledenom_set", _wrap_layerObj_labelminscaledenom_set},
 {"mapscriptc::layerObj_labelminscaledenom_get", _wrap_layerObj_labelminscaledenom_get},
 {"mapscriptc::layerObj_labelmaxscaledenom_set", _wrap_layerObj_labelmaxscaledenom_set},
@@ -41947,6 +42560,8 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::layerObj_sizeunits_get", _wrap_layerObj_sizeunits_get},
 {"mapscriptc::layerObj_maxfeatures_set", _wrap_layerObj_maxfeatures_set},
 {"mapscriptc::layerObj_maxfeatures_get", _wrap_layerObj_maxfeatures_get},
+{"mapscriptc::layerObj_startindex_set", _wrap_layerObj_startindex_set},
+{"mapscriptc::layerObj_startindex_get", _wrap_layerObj_startindex_get},
 {"mapscriptc::layerObj_offsite_set", _wrap_layerObj_offsite_set},
 {"mapscriptc::layerObj_offsite_get", _wrap_layerObj_offsite_get},
 {"mapscriptc::layerObj_transform_set", _wrap_layerObj_transform_set},
@@ -41984,6 +42599,8 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::layerObj_labelrequires_get", _wrap_layerObj_labelrequires_get},
 {"mapscriptc::layerObj_metadata_get", _wrap_layerObj_metadata_get},
 {"mapscriptc::layerObj_validation_get", _wrap_layerObj_validation_get},
+{"mapscriptc::layerObj_bindvals_get", _wrap_layerObj_bindvals_get},
+{"mapscriptc::layerObj_cluster_get", _wrap_layerObj_cluster_get},
 {"mapscriptc::layerObj_opacity_set", _wrap_layerObj_opacity_set},
 {"mapscriptc::layerObj_opacity_get", _wrap_layerObj_opacity_get},
 {"mapscriptc::layerObj_dump_set", _wrap_layerObj_dump_set},
@@ -42005,15 +42622,15 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::layerObj_whichShapes", _wrap_layerObj_whichShapes},
 {"mapscriptc::layerObj_nextShape", _wrap_layerObj_nextShape},
 {"mapscriptc::layerObj_close", _wrap_layerObj_close},
-{"mapscriptc::layerObj_getFeature", _wrap_layerObj_getFeature},
 {"mapscriptc::layerObj_getShape", _wrap_layerObj_getShape},
-{"mapscriptc::layerObj_resultsGetShape", _wrap_layerObj_resultsGetShape},
 {"mapscriptc::layerObj_getNumResults", _wrap_layerObj_getNumResults},
+{"mapscriptc::layerObj_getResultsBounds", _wrap_layerObj_getResultsBounds},
 {"mapscriptc::layerObj_getResult", _wrap_layerObj_getResult},
 {"mapscriptc::layerObj_getClass", _wrap_layerObj_getClass},
 {"mapscriptc::layerObj_getItem", _wrap_layerObj_getItem},
 {"mapscriptc::layerObj_draw", _wrap_layerObj_draw},
 {"mapscriptc::layerObj_drawQuery", _wrap_layerObj_drawQuery},
+{"mapscriptc::layerObj_queryByFilter", _wrap_layerObj_queryByFilter},
 {"mapscriptc::layerObj_queryByAttributes", _wrap_layerObj_queryByAttributes},
 {"mapscriptc::layerObj_queryByPoint", _wrap_layerObj_queryByPoint},
 {"mapscriptc::layerObj_queryByRect", _wrap_layerObj_queryByRect},
@@ -42050,6 +42667,7 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::layerObj_getProcessingKey", _wrap_layerObj_getProcessingKey},
 {"mapscriptc::layerObj_clearProcessing", _wrap_layerObj_clearProcessing},
 {"mapscriptc::layerObj_setConnectionType", _wrap_layerObj_setConnectionType},
+{"mapscriptc::layerObj_getClassIndex", _wrap_layerObj_getClassIndex},
 {"mapscriptc::mapObj_name_set", _wrap_mapObj_name_set},
 {"mapscriptc::mapObj_name_get", _wrap_mapObj_name_get},
 {"mapscriptc::mapObj_status_set", _wrap_mapObj_status_set},
@@ -42137,6 +42755,7 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::mapObj_drawLabelCache", _wrap_mapObj_drawLabelCache},
 {"mapscriptc::mapObj_getLabel", _wrap_mapObj_getLabel},
 {"mapscriptc::mapObj_nextLabel", _wrap_mapObj_nextLabel},
+{"mapscriptc::mapObj_queryByFilter", _wrap_mapObj_queryByFilter},
 {"mapscriptc::mapObj_queryByPoint", _wrap_mapObj_queryByPoint},
 {"mapscriptc::mapObj_queryByRect", _wrap_mapObj_queryByRect},
 {"mapscriptc::mapObj_queryByFeatures", _wrap_mapObj_queryByFeatures},
@@ -42187,9 +42806,6 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::imageObj_imagepath_get", _wrap_imageObj_imagepath_get},
 {"mapscriptc::imageObj_imageurl_get", _wrap_imageObj_imageurl_get},
 {"mapscriptc::imageObj_format_get", _wrap_imageObj_format_get},
-{"mapscriptc::imageObj_buffer_format_get", _wrap_imageObj_buffer_format_get},
-{"mapscriptc::imageObj_renderer_set", _wrap_imageObj_renderer_set},
-{"mapscriptc::imageObj_renderer_get", _wrap_imageObj_renderer_get},
 {"mapscriptc::new_imageObj", _wrap_new_imageObj},
 {"mapscriptc::delete_imageObj", _wrap_delete_imageObj},
 {"mapscriptc::imageObj_save", _wrap_imageObj_save},
@@ -42217,12 +42833,6 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::strokeStyleObj_linejoinmaxsize_get", _wrap_strokeStyleObj_linejoinmaxsize_get},
 {"mapscriptc::new_strokeStyleObj", _wrap_new_strokeStyleObj},
 {"mapscriptc::delete_strokeStyleObj", _wrap_delete_strokeStyleObj},
-{"mapscriptc::fillStyleObj_color_set", _wrap_fillStyleObj_color_set},
-{"mapscriptc::fillStyleObj_color_get", _wrap_fillStyleObj_color_get},
-{"mapscriptc::fillStyleObj_tile_set", _wrap_fillStyleObj_tile_set},
-{"mapscriptc::fillStyleObj_tile_get", _wrap_fillStyleObj_tile_get},
-{"mapscriptc::new_fillStyleObj", _wrap_new_fillStyleObj},
-{"mapscriptc::delete_fillStyleObj", _wrap_delete_fillStyleObj},
 {"mapscriptc::symbolStyleObj_color_set", _wrap_symbolStyleObj_color_set},
 {"mapscriptc::symbolStyleObj_color_get", _wrap_symbolStyleObj_color_get},
 {"mapscriptc::symbolStyleObj_backgroundcolor_set", _wrap_symbolStyleObj_backgroundcolor_set},
@@ -42235,22 +42845,36 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::symbolStyleObj_scale_get", _wrap_symbolStyleObj_scale_get},
 {"mapscriptc::symbolStyleObj_rotation_set", _wrap_symbolStyleObj_rotation_set},
 {"mapscriptc::symbolStyleObj_rotation_get", _wrap_symbolStyleObj_rotation_get},
+{"mapscriptc::symbolStyleObj_gap_set", _wrap_symbolStyleObj_gap_set},
+{"mapscriptc::symbolStyleObj_gap_get", _wrap_symbolStyleObj_gap_get},
+{"mapscriptc::symbolStyleObj_style_set", _wrap_symbolStyleObj_style_set},
+{"mapscriptc::symbolStyleObj_style_get", _wrap_symbolStyleObj_style_get},
 {"mapscriptc::new_symbolStyleObj", _wrap_new_symbolStyleObj},
 {"mapscriptc::delete_symbolStyleObj", _wrap_delete_symbolStyleObj},
-{"mapscriptc::tilecache_symbol_set", _wrap_tilecache_symbol_set},
-{"mapscriptc::tilecache_symbol_get", _wrap_tilecache_symbol_get},
-{"mapscriptc::tilecache_style_set", _wrap_tilecache_style_set},
-{"mapscriptc::tilecache_style_get", _wrap_tilecache_style_get},
-{"mapscriptc::tilecache_width_set", _wrap_tilecache_width_set},
-{"mapscriptc::tilecache_width_get", _wrap_tilecache_width_get},
-{"mapscriptc::tilecache_height_set", _wrap_tilecache_height_set},
-{"mapscriptc::tilecache_height_get", _wrap_tilecache_height_get},
-{"mapscriptc::tilecache_data_set", _wrap_tilecache_data_set},
-{"mapscriptc::tilecache_data_get", _wrap_tilecache_data_get},
-{"mapscriptc::tilecache_next_set", _wrap_tilecache_next_set},
-{"mapscriptc::tilecache_next_get", _wrap_tilecache_next_get},
-{"mapscriptc::new_tilecache", _wrap_new_tilecache},
-{"mapscriptc::delete_tilecache", _wrap_delete_tilecache},
+{"mapscriptc::tileCacheObj_symbol_set", _wrap_tileCacheObj_symbol_set},
+{"mapscriptc::tileCacheObj_symbol_get", _wrap_tileCacheObj_symbol_get},
+{"mapscriptc::tileCacheObj_width_set", _wrap_tileCacheObj_width_set},
+{"mapscriptc::tileCacheObj_width_get", _wrap_tileCacheObj_width_get},
+{"mapscriptc::tileCacheObj_height_set", _wrap_tileCacheObj_height_set},
+{"mapscriptc::tileCacheObj_height_get", _wrap_tileCacheObj_height_get},
+{"mapscriptc::tileCacheObj_color_set", _wrap_tileCacheObj_color_set},
+{"mapscriptc::tileCacheObj_color_get", _wrap_tileCacheObj_color_get},
+{"mapscriptc::tileCacheObj_outlinecolor_set", _wrap_tileCacheObj_outlinecolor_set},
+{"mapscriptc::tileCacheObj_outlinecolor_get", _wrap_tileCacheObj_outlinecolor_get},
+{"mapscriptc::tileCacheObj_backgroundcolor_set", _wrap_tileCacheObj_backgroundcolor_set},
+{"mapscriptc::tileCacheObj_backgroundcolor_get", _wrap_tileCacheObj_backgroundcolor_get},
+{"mapscriptc::tileCacheObj_outlinewidth_set", _wrap_tileCacheObj_outlinewidth_set},
+{"mapscriptc::tileCacheObj_outlinewidth_get", _wrap_tileCacheObj_outlinewidth_get},
+{"mapscriptc::tileCacheObj_rotation_set", _wrap_tileCacheObj_rotation_set},
+{"mapscriptc::tileCacheObj_rotation_get", _wrap_tileCacheObj_rotation_get},
+{"mapscriptc::tileCacheObj_scale_set", _wrap_tileCacheObj_scale_set},
+{"mapscriptc::tileCacheObj_scale_get", _wrap_tileCacheObj_scale_get},
+{"mapscriptc::tileCacheObj_image_set", _wrap_tileCacheObj_image_set},
+{"mapscriptc::tileCacheObj_image_get", _wrap_tileCacheObj_image_get},
+{"mapscriptc::tileCacheObj_next_set", _wrap_tileCacheObj_next_set},
+{"mapscriptc::tileCacheObj_next_get", _wrap_tileCacheObj_next_get},
+{"mapscriptc::new_tileCacheObj", _wrap_new_tileCacheObj},
+{"mapscriptc::delete_tileCacheObj", _wrap_delete_tileCacheObj},
 {"mapscriptc::labelStyleObj_font_set", _wrap_labelStyleObj_font_set},
 {"mapscriptc::labelStyleObj_font_get", _wrap_labelStyleObj_font_get},
 {"mapscriptc::labelStyleObj_size_set", _wrap_labelStyleObj_size_set},
@@ -42263,12 +42887,6 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::labelStyleObj_outlinewidth_get", _wrap_labelStyleObj_outlinewidth_get},
 {"mapscriptc::labelStyleObj_outlinecolor_set", _wrap_labelStyleObj_outlinecolor_set},
 {"mapscriptc::labelStyleObj_outlinecolor_get", _wrap_labelStyleObj_outlinecolor_get},
-{"mapscriptc::labelStyleObj_shadowsizex_set", _wrap_labelStyleObj_shadowsizex_set},
-{"mapscriptc::labelStyleObj_shadowsizex_get", _wrap_labelStyleObj_shadowsizex_get},
-{"mapscriptc::labelStyleObj_shadowsizey_set", _wrap_labelStyleObj_shadowsizey_set},
-{"mapscriptc::labelStyleObj_shadowsizey_get", _wrap_labelStyleObj_shadowsizey_get},
-{"mapscriptc::labelStyleObj_shadowcolor_set", _wrap_labelStyleObj_shadowcolor_set},
-{"mapscriptc::labelStyleObj_shadowcolor_get", _wrap_labelStyleObj_shadowcolor_get},
 {"mapscriptc::new_labelStyleObj", _wrap_new_labelStyleObj},
 {"mapscriptc::delete_labelStyleObj", _wrap_delete_labelStyleObj},
 {"mapscriptc::rectObj_minx_set", _wrap_rectObj_minx_set},
@@ -42304,7 +42922,6 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::pointObj_toString", _wrap_pointObj_toString},
 {"mapscriptc::pointObj_toShape", _wrap_pointObj_toShape},
 {"mapscriptc::lineObj_numpoints_get", _wrap_lineObj_numpoints_get},
-{"mapscriptc::lineObj_point_get", _wrap_lineObj_point_get},
 {"mapscriptc::new_lineObj", _wrap_new_lineObj},
 {"mapscriptc::delete_lineObj", _wrap_delete_lineObj},
 {"mapscriptc::lineObj_project", _wrap_lineObj_project},
@@ -42313,8 +42930,6 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::lineObj_set", _wrap_lineObj_set},
 {"mapscriptc::shapeObj_numlines_get", _wrap_shapeObj_numlines_get},
 {"mapscriptc::shapeObj_numvalues_get", _wrap_shapeObj_numvalues_get},
-{"mapscriptc::shapeObj_line_get", _wrap_shapeObj_line_get},
-{"mapscriptc::shapeObj_values_get", _wrap_shapeObj_values_get},
 {"mapscriptc::shapeObj_bounds_set", _wrap_shapeObj_bounds_set},
 {"mapscriptc::shapeObj_bounds_get", _wrap_shapeObj_bounds_get},
 {"mapscriptc::shapeObj_type_set", _wrap_shapeObj_type_set},
@@ -42327,6 +42942,10 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::shapeObj_classindex_get", _wrap_shapeObj_classindex_get},
 {"mapscriptc::shapeObj_text_set", _wrap_shapeObj_text_set},
 {"mapscriptc::shapeObj_text_get", _wrap_shapeObj_text_get},
+{"mapscriptc::shapeObj_scratch_set", _wrap_shapeObj_scratch_set},
+{"mapscriptc::shapeObj_scratch_get", _wrap_shapeObj_scratch_get},
+{"mapscriptc::shapeObj_resultindex_set", _wrap_shapeObj_resultindex_set},
+{"mapscriptc::shapeObj_resultindex_get", _wrap_shapeObj_resultindex_get},
 {"mapscriptc::new_shapeObj", _wrap_new_shapeObj},
 {"mapscriptc::delete_shapeObj", _wrap_delete_shapeObj},
 {"mapscriptc::shapeObj_fromWKT", _wrap_shapeObj_fromWKT},
@@ -42406,6 +43025,7 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::shapefileObj_addPoint", _wrap_shapefileObj_addPoint},
 {"mapscriptc::shapefileObj_getDBF", _wrap_shapefileObj_getDBF},
 {"mapscriptc::projectionObj_numargs_get", _wrap_projectionObj_numargs_get},
+{"mapscriptc::projectionObj_automatic_get", _wrap_projectionObj_automatic_get},
 {"mapscriptc::new_projectionObj", _wrap_new_projectionObj},
 {"mapscriptc::delete_projectionObj", _wrap_delete_projectionObj},
 {"mapscriptc::projectionObj_setWKTProjection", _wrap_projectionObj_setWKTProjection},
@@ -42447,10 +43067,6 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::symbolObj_numpoints_get", _wrap_symbolObj_numpoints_get},
 {"mapscriptc::symbolObj_filled_set", _wrap_symbolObj_filled_set},
 {"mapscriptc::symbolObj_filled_get", _wrap_symbolObj_filled_get},
-{"mapscriptc::symbolObj_patternlength_set", _wrap_symbolObj_patternlength_set},
-{"mapscriptc::symbolObj_patternlength_get", _wrap_symbolObj_patternlength_get},
-{"mapscriptc::symbolObj_pattern_set", _wrap_symbolObj_pattern_set},
-{"mapscriptc::symbolObj_pattern_get", _wrap_symbolObj_pattern_get},
 {"mapscriptc::symbolObj_imagepath_get", _wrap_symbolObj_imagepath_get},
 {"mapscriptc::symbolObj_transparent_set", _wrap_symbolObj_transparent_set},
 {"mapscriptc::symbolObj_transparent_get", _wrap_symbolObj_transparent_get},
@@ -42462,22 +43078,13 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::symbolObj_antialias_get", _wrap_symbolObj_antialias_get},
 {"mapscriptc::symbolObj_font_set", _wrap_symbolObj_font_set},
 {"mapscriptc::symbolObj_font_get", _wrap_symbolObj_font_get},
-{"mapscriptc::symbolObj_gap_set", _wrap_symbolObj_gap_set},
-{"mapscriptc::symbolObj_gap_get", _wrap_symbolObj_gap_get},
-{"mapscriptc::symbolObj_position_set", _wrap_symbolObj_position_set},
-{"mapscriptc::symbolObj_position_get", _wrap_symbolObj_position_get},
-{"mapscriptc::symbolObj_linecap_set", _wrap_symbolObj_linecap_set},
-{"mapscriptc::symbolObj_linecap_get", _wrap_symbolObj_linecap_get},
-{"mapscriptc::symbolObj_linejoin_set", _wrap_symbolObj_linejoin_set},
-{"mapscriptc::symbolObj_linejoin_get", _wrap_symbolObj_linejoin_get},
-{"mapscriptc::symbolObj_linejoinmaxsize_set", _wrap_symbolObj_linejoinmaxsize_set},
-{"mapscriptc::symbolObj_linejoinmaxsize_get", _wrap_symbolObj_linejoinmaxsize_get},
+{"mapscriptc::symbolObj_svg_text_set", _wrap_symbolObj_svg_text_set},
+{"mapscriptc::symbolObj_svg_text_get", _wrap_symbolObj_svg_text_get},
 {"mapscriptc::new_symbolObj", _wrap_new_symbolObj},
 {"mapscriptc::delete_symbolObj", _wrap_delete_symbolObj},
 {"mapscriptc::symbolObj_setImagepath", _wrap_symbolObj_setImagepath},
 {"mapscriptc::symbolObj_setPoints", _wrap_symbolObj_setPoints},
 {"mapscriptc::symbolObj_getPoints", _wrap_symbolObj_getPoints},
-{"mapscriptc::symbolObj_setPattern", _wrap_symbolObj_setPattern},
 {"mapscriptc::symbolObj_getImage", _wrap_symbolObj_getImage},
 {"mapscriptc::symbolObj_setImage", _wrap_symbolObj_setImage},
 {"mapscriptc::errorObj_code_set", _wrap_errorObj_code_set},
@@ -42486,6 +43093,8 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::errorObj_routine_get", _wrap_errorObj_routine_get},
 {"mapscriptc::errorObj_message_set", _wrap_errorObj_message_set},
 {"mapscriptc::errorObj_message_get", _wrap_errorObj_message_get},
+{"mapscriptc::errorObj_isreported_set", _wrap_errorObj_isreported_set},
+{"mapscriptc::errorObj_isreported_get", _wrap_errorObj_isreported_get},
 {"mapscriptc::new_errorObj", _wrap_new_errorObj},
 {"mapscriptc::delete_errorObj", _wrap_delete_errorObj},
 {"mapscriptc::errorObj_next", _wrap_errorObj_next},
@@ -42513,6 +43122,7 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::OWSRequest_httpcookiedata_get", _wrap_OWSRequest_httpcookiedata_get},
 {"mapscriptc::new_OWSRequest", _wrap_new_OWSRequest},
 {"mapscriptc::OWSRequest_loadParams", _wrap_OWSRequest_loadParams},
+{"mapscriptc::OWSRequest_loadParamsFromURL", _wrap_OWSRequest_loadParamsFromURL},
 {"mapscriptc::OWSRequest_setParameter", _wrap_OWSRequest_setParameter},
 {"mapscriptc::OWSRequest_getName", _wrap_OWSRequest_getName},
 {"mapscriptc::OWSRequest_getValue", _wrap_OWSRequest_getValue},
@@ -42523,6 +43133,7 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::msIO_installStdoutToBuffer", _wrap_msIO_installStdoutToBuffer},
 {"mapscriptc::msIO_installStdinFromBuffer", _wrap_msIO_installStdinFromBuffer},
 {"mapscriptc::msIO_stripStdoutBufferContentType", _wrap_msIO_stripStdoutBufferContentType},
+{"mapscriptc::msIO_stripStdoutBufferContentHeaders", _wrap_msIO_stripStdoutBufferContentHeaders},
 {"mapscriptc::msIO_getStdoutBufferString", _wrap_msIO_getStdoutBufferString},
 {"mapscriptc::msIO_getStdoutBufferBytes", _wrap_msIO_getStdoutBufferBytes},
 {0,0}
@@ -42825,753 +43436,1099 @@ XS(SWIG_init) {
     msSetError(MS_MISCERR, "Error initializing MapServer/Mapscript.", "msSetup()");
   }
   
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_VERSION", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_FromCharPtr("5.6.6"));
+    sv_setsv(sv, SWIG_FromCharPtr("6.0.1"));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_VERSION_MAJOR", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(5)));
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(6)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_VERSION_MINOR", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(6)));
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(0)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_VERSION_REV", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(6)));
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(1)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_VERSION_NUM", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)((5*10000+6*100+6))));
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)((6*10000+0*100+1))));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "__FUNCTION__", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_FromCharPtr("MapServer"));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_TRUE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(1)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_FALSE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(0)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_UNKNOWN", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(-1)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_ON", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(1)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_OFF", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(0)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_DEFAULT", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(2)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_EMBED", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(3)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_DELETE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(4)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_YES", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(1)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_NO", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(0)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_GD_ALPHA", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(1000)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_LAYER_ALLOCSIZE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(64)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_CLASS_ALLOCSIZE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(8)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_STYLE_ALLOCSIZE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(4)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_MAX_LABEL_PRIORITY", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(10)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_DEFAULT_LABEL_PRIORITY", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(1)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_RENDER_WITH_SWF", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(2)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_RENDER_WITH_RAWDATA", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(3)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_RENDER_WITH_IMAGEMAP", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(5)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_RENDER_WITH_TEMPLATE", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(8)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_RENDER_WITH_OGR", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(16)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_RENDER_WITH_PLUGIN", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(100)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_RENDER_WITH_CAIRO_RASTER", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(101)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_RENDER_WITH_CAIRO_PDF", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(102)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_RENDER_WITH_CAIRO_SVG", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(103)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_RENDER_WITH_OGL", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(104)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_RENDER_WITH_AGG", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(105)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_RENDER_WITH_GD", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(106)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_RENDER_WITH_KML", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(107)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_FILE_MAP", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_FILE_MAP)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_FILE_SYMBOL", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_FILE_SYMBOL)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_INCHES", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_INCHES)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_FEET", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_FEET)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_MILES", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_MILES)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_METERS", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_METERS)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_KILOMETERS", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_KILOMETERS)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_DD", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_DD)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_PIXELS", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_PIXELS)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_PERCENTAGES", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_PERCENTAGES)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_NAUTICALMILES", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_NAUTICALMILES)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SHAPE_POINT", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_SHAPE_POINT)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SHAPE_LINE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_SHAPE_LINE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SHAPE_POLYGON", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_SHAPE_POLYGON)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SHAPE_NULL", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_SHAPE_NULL)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_LAYER_POINT", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LAYER_POINT)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_LAYER_LINE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LAYER_LINE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_LAYER_POLYGON", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LAYER_POLYGON)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_LAYER_RASTER", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LAYER_RASTER)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_LAYER_ANNOTATION", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LAYER_ANNOTATION)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_LAYER_QUERY", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LAYER_QUERY)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_LAYER_CIRCLE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LAYER_CIRCLE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_LAYER_TILEINDEX", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LAYER_TILEINDEX)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_LAYER_CHART", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LAYER_CHART)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_TRUETYPE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TRUETYPE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_BITMAP", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_BITMAP)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_POSITIONS_LENGTH", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(12)));
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(14)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_UL", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_UL)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_LR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LR)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_UR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_UR)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_LL", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LL)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_CR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_CR)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_CL", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_CL)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_UC", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_UC)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_LC", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LC)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_CC", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_CC)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_AUTO", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_AUTO)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_XY", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_XY)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_FOLLOW", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_FOLLOW)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_NONE", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_NONE)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_AUTO2", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_AUTO2)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_TINY", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TINY)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SMALL", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_SMALL)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_MEDIUM", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_MEDIUM)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_LARGE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LARGE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_GIANT", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_GIANT)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_NORMAL", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_NORMAL)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_HILITE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_HILITE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SELECTED", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_SELECTED)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_INLINE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_INLINE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SHAPEFILE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_SHAPEFILE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_TILED_SHAPEFILE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TILED_SHAPEFILE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SDE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_SDE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_OGR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_OGR)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_UNUSED_1", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_UNUSED_1)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_POSTGIS", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_POSTGIS)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_WMS", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_WMS)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_ORACLESPATIAL", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_ORACLESPATIAL)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_WFS", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_WFS)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_GRATICULE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_GRATICULE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "MS_MYGIS", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_MYGIS)));
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_MYSQL", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_MYSQL)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_RASTER", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_RASTER)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_PLUGIN", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_PLUGIN)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_UNION", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_UNION)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_DB_XBASE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_DB_XBASE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_DB_CSV", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_DB_CSV)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_DB_MYSQL", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_DB_MYSQL)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_DB_ORACLE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_DB_ORACLE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_DB_POSTGRES", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_DB_POSTGRES)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_JOIN_ONE_TO_ONE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_JOIN_ONE_TO_ONE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_JOIN_ONE_TO_MANY", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_JOIN_ONE_TO_MANY)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SINGLE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(0)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_MULTIPLE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(1)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_QUERY_SINGLE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_QUERY_SINGLE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_QUERY_MULTIPLE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_QUERY_MULTIPLE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_QUERY_IS_NULL", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_QUERY_IS_NULL)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_QUERY_BY_POINT", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_QUERY_BY_POINT)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_QUERY_BY_RECT", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_QUERY_BY_RECT)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_QUERY_BY_SHAPE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_QUERY_BY_SHAPE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_QUERY_BY_ATTRIBUTE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_QUERY_BY_ATTRIBUTE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_QUERY_BY_INDEX", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_QUERY_BY_INDEX)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "MS_QUERY_BY_OPERATOR", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_QUERY_BY_OPERATOR)));
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_QUERY_BY_FILTER", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_QUERY_BY_FILTER)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_ALIGN_LEFT", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_ALIGN_LEFT)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_ALIGN_CENTER", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_ALIGN_CENTER)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_ALIGN_RIGHT", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_ALIGN_RIGHT)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_CJC_NONE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_CJC_NONE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_CJC_BEVEL", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_CJC_BEVEL)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_CJC_BUTT", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_CJC_BUTT)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_CJC_MITER", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_CJC_MITER)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_CJC_ROUND", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_CJC_ROUND)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_CJC_SQUARE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_CJC_SQUARE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_CJC_TRIANGLE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_CJC_TRIANGLE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_CJC_DEFAULT_JOIN_MAXSIZE", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(3)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SUCCESS", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_SUCCESS)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_FAILURE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_FAILURE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_DONE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_DONE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_IMAGEMODE_PC256", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_IMAGEMODE_PC256)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_IMAGEMODE_RGB", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_IMAGEMODE_RGB)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_IMAGEMODE_RGBA", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_IMAGEMODE_RGBA)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_IMAGEMODE_INT16", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_IMAGEMODE_INT16)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_IMAGEMODE_FLOAT32", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_IMAGEMODE_FLOAT32)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_IMAGEMODE_BYTE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_IMAGEMODE_BYTE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_IMAGEMODE_FEATURE", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_IMAGEMODE_FEATURE)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_IMAGEMODE_NULL", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_IMAGEMODE_NULL)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_GEOS_EQUALS", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_GEOS_EQUALS)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_GEOS_DISJOINT", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_GEOS_DISJOINT)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_GEOS_TOUCHES", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_GEOS_TOUCHES)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_GEOS_OVERLAPS", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_GEOS_OVERLAPS)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_GEOS_CROSSES", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_GEOS_CROSSES)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_GEOS_INTERSECTS", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_GEOS_INTERSECTS)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_GEOS_WITHIN", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_GEOS_WITHIN)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_GEOS_CONTAINS", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_GEOS_CONTAINS)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_GEOS_BEYOND", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_GEOS_BEYOND)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_GEOS_DWITHIN", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_GEOS_DWITHIN)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TRANSFORM_NONE", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TRANSFORM_NONE)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TRANSFORM_ROUND", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TRANSFORM_ROUND)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TRANSFORM_SNAPTOGRID", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TRANSFORM_SNAPTOGRID)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TRANSFORM_FULLRESOLUTION", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TRANSFORM_FULLRESOLUTION)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TRANSFORM_SIMPLIFY", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TRANSFORM_SIMPLIFY)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_STYLE_BINDING_LENGTH", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(8)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_STYLE_BINDING_SIZE", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_STYLE_BINDING_SIZE)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_STYLE_BINDING_WIDTH", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_STYLE_BINDING_WIDTH)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_STYLE_BINDING_ANGLE", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_STYLE_BINDING_ANGLE)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_STYLE_BINDING_COLOR", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_STYLE_BINDING_COLOR)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_STYLE_BINDING_OUTLINECOLOR", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_STYLE_BINDING_OUTLINECOLOR)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_STYLE_BINDING_SYMBOL", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_STYLE_BINDING_SYMBOL)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_STYLE_BINDING_OUTLINEWIDTH", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_STYLE_BINDING_OUTLINEWIDTH)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_STYLE_BINDING_OPACITY", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_STYLE_BINDING_OPACITY)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_LABEL_BINDING_LENGTH", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(9)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_LABEL_BINDING_SIZE", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LABEL_BINDING_SIZE)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_LABEL_BINDING_ANGLE", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LABEL_BINDING_ANGLE)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_LABEL_BINDING_COLOR", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LABEL_BINDING_COLOR)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_LABEL_BINDING_OUTLINECOLOR", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LABEL_BINDING_OUTLINECOLOR)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_LABEL_BINDING_FONT", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LABEL_BINDING_FONT)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_LABEL_BINDING_PRIORITY", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LABEL_BINDING_PRIORITY)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_LABEL_BINDING_POSITION", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LABEL_BINDING_POSITION)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_LABEL_BINDING_SHADOWSIZEX", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LABEL_BINDING_SHADOWSIZEX)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_LABEL_BINDING_SHADOWSIZEY", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LABEL_BINDING_SHADOWSIZEY)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
   SWIG_TypeClientData(SWIGTYPE_p_fontSetObj, (void*) "mapscript::fontSetObj");
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_LOGICAL_AND", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_LOGICAL_AND)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_LOGICAL_OR", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_LOGICAL_OR)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_LOGICAL_NOT", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_LOGICAL_NOT)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_LITERAL_NUMBER", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_LITERAL_NUMBER)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_LITERAL_STRING", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_LITERAL_STRING)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_LITERAL_TIME", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_LITERAL_TIME)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_LITERAL_SHAPE", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_LITERAL_SHAPE)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_COMPARISON_EQ", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_COMPARISON_EQ)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_COMPARISON_NE", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_COMPARISON_NE)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_COMPARISON_GT", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_COMPARISON_GT)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_COMPARISON_LT", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_COMPARISON_LT)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_COMPARISON_LE", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_COMPARISON_LE)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_COMPARISON_GE", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_COMPARISON_GE)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_COMPARISON_IEQ", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_COMPARISON_IEQ)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_COMPARISON_RE", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_COMPARISON_RE)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_COMPARISON_IRE", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_COMPARISON_IRE)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_COMPARISON_IN", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_COMPARISON_IN)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_COMPARISON_LIKE", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_COMPARISON_LIKE)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_COMPARISON_INTERSECTS", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_COMPARISON_INTERSECTS)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_COMPARISON_DISJOINT", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_COMPARISON_DISJOINT)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_COMPARISON_TOUCHES", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_COMPARISON_TOUCHES)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_COMPARISON_OVERLAPS", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_COMPARISON_OVERLAPS)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_COMPARISON_CROSSES", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_COMPARISON_CROSSES)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_COMPARISON_WITHIN", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_COMPARISON_WITHIN)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_COMPARISON_CONTAINS", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_COMPARISON_CONTAINS)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_COMPARISON_BEYOND", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_COMPARISON_BEYOND)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_COMPARISON_DWITHIN", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_COMPARISON_DWITHIN)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_FUNCTION_LENGTH", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_FUNCTION_LENGTH)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_FUNCTION_TOSTRING", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_FUNCTION_TOSTRING)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_FUNCTION_COMMIFY", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_FUNCTION_COMMIFY)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_FUNCTION_AREA", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_FUNCTION_AREA)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_FUNCTION_ROUND", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_FUNCTION_ROUND)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_FUNCTION_FROMTEXT", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_FUNCTION_FROMTEXT)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_FUNCTION_BUFFER", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_FUNCTION_BUFFER)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_BINDING_DOUBLE", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_BINDING_DOUBLE)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_BINDING_INTEGER", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_BINDING_INTEGER)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_BINDING_STRING", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_BINDING_STRING)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_BINDING_TIME", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_BINDING_TIME)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_BINDING_SHAPE", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_BINDING_SHAPE)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_PARSE_TYPE_BOOLEAN", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_PARSE_TYPE_BOOLEAN)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_PARSE_TYPE_STRING", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_PARSE_TYPE_STRING)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_PARSE_TYPE_SHAPE", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_PARSE_TYPE_SHAPE)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  SWIG_TypeClientData(SWIGTYPE_p_clusterObj, (void*) "mapscript::clusterObj");
   SWIG_TypeClientData(SWIGTYPE_p_outputFormatObj, (void*) "mapscript::outputFormatObj");
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_NOOVERRIDE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(-1111)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   SWIG_TypeClientData(SWIGTYPE_p_queryMapObj, (void*) "mapscript::queryMapObj");
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "MS_STYLE_BINDING_LENGTH", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(8)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "MS_STYLE_BINDING_SIZE", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_STYLE_BINDING_SIZE)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "MS_STYLE_BINDING_WIDTH", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_STYLE_BINDING_WIDTH)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "MS_STYLE_BINDING_ANGLE", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_STYLE_BINDING_ANGLE)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "MS_STYLE_BINDING_COLOR", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_STYLE_BINDING_COLOR)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "MS_STYLE_BINDING_OUTLINECOLOR", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_STYLE_BINDING_OUTLINECOLOR)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "MS_STYLE_BINDING_SYMBOL", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_STYLE_BINDING_SYMBOL)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "MS_STYLE_BINDING_OUTLINEWIDTH", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_STYLE_BINDING_OUTLINEWIDTH)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "MS_STYLE_BINDING_OPACITY", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_STYLE_BINDING_OPACITY)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "MS_LABEL_BINDING_LENGTH", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(6)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "MS_LABEL_BINDING_SIZE", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LABEL_BINDING_SIZE)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "MS_LABEL_BINDING_ANGLE", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LABEL_BINDING_ANGLE)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "MS_LABEL_BINDING_COLOR", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LABEL_BINDING_COLOR)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "MS_LABEL_BINDING_OUTLINECOLOR", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LABEL_BINDING_OUTLINECOLOR)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "MS_LABEL_BINDING_FONT", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LABEL_BINDING_FONT)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "MS_LABEL_BINDING_PRIORITY", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_LABEL_BINDING_PRIORITY)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  SWIG_TypeClientData(SWIGTYPE_p_labelObj, (void*) "mapscript::labelObj");
   SWIG_TypeClientData(SWIGTYPE_p_webObj, (void*) "mapscript::webObj");
   SWIG_TypeClientData(SWIGTYPE_p_styleObj, (void*) "mapscript::styleObj");
+  SWIG_TypeClientData(SWIGTYPE_p_labelObj, (void*) "mapscript::labelObj");
   SWIG_TypeClientData(SWIGTYPE_p_class_obj, (void*) "mapscript::classObj");
   SWIG_TypeClientData(SWIGTYPE_p_labelCacheMemberObj, (void*) "mapscript::labelCacheMemberObj");
   SWIG_TypeClientData(SWIGTYPE_p_markerCacheMemberObj, (void*) "mapscript::markerCacheMemberObj");
   SWIG_TypeClientData(SWIGTYPE_p_labelCacheSlotObj, (void*) "mapscript::labelCacheSlotObj");
   SWIG_TypeClientData(SWIGTYPE_p_labelCacheObj, (void*) "mapscript::labelCacheObj");
-  SWIG_TypeClientData(SWIGTYPE_p_resultCacheMemberObj, (void*) "mapscript::resultCacheMemberObj");
+  SWIG_TypeClientData(SWIGTYPE_p_resultObj, (void*) "mapscript::resultObj");
   SWIG_TypeClientData(SWIGTYPE_p_resultCacheObj, (void*) "mapscript::resultCacheObj");
   SWIG_TypeClientData(SWIGTYPE_p_symbolSetObj, (void*) "mapscript::symbolSetObj");
   SWIG_TypeClientData(SWIGTYPE_p_referenceMapObj, (void*) "mapscript::referenceMapObj");
@@ -43581,437 +44538,441 @@ XS(SWIG_init) {
   SWIG_TypeClientData(SWIGTYPE_p_map_obj, (void*) "mapscript::mapObj");
   SWIG_TypeClientData(SWIGTYPE_p_imageObj, (void*) "mapscript::imageObj");
   SWIG_TypeClientData(SWIGTYPE_p_strokeStyleObj, (void*) "mapscript::strokeStyleObj");
-  SWIG_TypeClientData(SWIGTYPE_p_fillStyleObj, (void*) "mapscript::fillStyleObj");
   SWIG_TypeClientData(SWIGTYPE_p_symbolStyleObj, (void*) "mapscript::symbolStyleObj");
-  SWIG_TypeClientData(SWIGTYPE_p_tilecache, (void*) "mapscript::tilecache");
+  SWIG_TypeClientData(SWIGTYPE_p_tileCacheObj, (void*) "mapscript::tileCacheObj");
   SWIG_TypeClientData(SWIGTYPE_p_labelStyleObj, (void*) "mapscript::labelStyleObj");
   SWIG_TypeClientData(SWIGTYPE_p_rectObj, (void*) "mapscript::rectObj");
   SWIG_TypeClientData(SWIGTYPE_p_pointObj, (void*) "mapscript::pointObj");
   SWIG_TypeClientData(SWIGTYPE_p_lineObj, (void*) "mapscript::lineObj");
   SWIG_TypeClientData(SWIGTYPE_p_shapeObj, (void*) "mapscript::shapeObj");
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "SHX_BUFFER_PAGE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(1024)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SHAPEFILE_POINT", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(1)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SHAPEFILE_ARC", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(3)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SHAPEFILE_POLYGON", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(5)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SHAPEFILE_MULTIPOINT", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(8)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SHP_POINTZ", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(11)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SHP_ARCZ", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(13)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SHP_POLYGONZ", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(15)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SHP_MULTIPOINTZ", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(18)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SHP_POINTM", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(21)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SHP_ARCM", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(23)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SHP_POLYGONM", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(25)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SHP_MULTIPOINTM", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(28)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   SWIG_TypeClientData(SWIGTYPE_p_DBFInfo, (void*) "mapscript::DBFInfo");
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "FTString", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(FTString)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "FTInteger", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(FTInteger)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "FTDouble", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(FTDouble)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "FTInvalid", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(FTInvalid)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   SWIG_TypeClientData(SWIGTYPE_p_shapefileObj, (void*) "mapscript::shapefileObj");
   SWIG_TypeClientData(SWIGTYPE_p_projectionObj, (void*) "mapscript::projectionObj");
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SYMBOL_SIMPLE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_SYMBOL_SIMPLE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SYMBOL_VECTOR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_SYMBOL_VECTOR)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SYMBOL_ELLIPSE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_SYMBOL_ELLIPSE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SYMBOL_PIXMAP", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_SYMBOL_PIXMAP)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SYMBOL_TRUETYPE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_SYMBOL_TRUETYPE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "MS_SYMBOL_CARTOLINE", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_SYMBOL_CARTOLINE)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SYMBOL_HATCH", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_SYMBOL_HATCH)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_SYMBOL_SVG", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_SYMBOL_SVG)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SYMBOL_ALLOCSIZE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(64)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_MAXVECTORPOINTS", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(100)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_MAXPATTERNLENGTH", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(10)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_IMAGECACHESIZE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(6)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   SWIG_TypeClientData(SWIGTYPE_p_colorObj, (void*) "mapscript::colorObj");
   SWIG_TypeClientData(SWIGTYPE_p_symbolObj, (void*) "mapscript::symbolObj");
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_NOERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(0)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_IOERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(1)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_MEMERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(2)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_TYPEERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(3)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SYMERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(4)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_REGEXERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(5)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_TTFERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(6)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_DBFERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(7)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_GDERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(8)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_IDENTERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(9)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_EOFERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(10)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_PROJERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(11)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_MISCERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(12)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_CGIERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(13)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_WEBERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(14)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_IMGERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(15)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_HASHERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(16)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_JOINERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(17)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_NOTFOUND", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(18)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SHPERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(19)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_PARSEERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(20)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SDEERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(21)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_OGRERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(22)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_QUERYERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(23)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_WMSERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(24)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_WMSCONNERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(25)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_ORACLESPATIALERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(26)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_WFSERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(27)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_WFSCONNERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(28)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_MAPCONTEXTERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(29)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_HTTPERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(30)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_CHILDERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(31)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_WCSERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(32)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_GEOSERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(33)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_RECTERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(34)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_TIMEERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(35)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_GMLERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(36)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SOSERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(37)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_NULLPARENTERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(38)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_AGGERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(39)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_OWSERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(40)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "MS_NUMERRORCODES", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(41)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_OGLERR", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(42)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_RENDERERERR", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(43)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_NUMERRORCODES", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(44)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MESSAGELENGTH", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(2048)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "ROUTINELENGTH", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(64)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_ERROR_LANGUAGE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_FromCharPtr("en-US"));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   SWIG_TypeClientData(SWIGTYPE_p_error_obj, (void*) "mapscript::errorObj");
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_DEBUGLEVEL_ERRORSONLY", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_DEBUGLEVEL_ERRORSONLY)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_DEBUGLEVEL_DEBUG", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_DEBUGLEVEL_DEBUG)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_DEBUGLEVEL_TUNING", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_DEBUGLEVEL_TUNING)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_DEBUGLEVEL_V", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_DEBUGLEVEL_V)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_DEBUGLEVEL_VV", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_DEBUGLEVEL_VV)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_DEBUGLEVEL_VVV", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_DEBUGLEVEL_VVV)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_HASHSIZE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(41)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   SWIG_TypeClientData(SWIGTYPE_p_hashTableObj, (void*) "mapscript::hashTableObj");
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "MS_MAX_CGI_PARAMS", TRUE | 0x2 | GV_ADDMULTI);
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_DEFAULT_CGI_PARAMS", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(100)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_GET_REQUEST", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_GET_REQUEST)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+  /*@SWIG:/usr/local/share/swig/1.3.36/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_POST_REQUEST", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_POST_REQUEST)));
     SvREADONLY_on(sv);

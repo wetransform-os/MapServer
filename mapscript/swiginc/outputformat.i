@@ -1,5 +1,5 @@
 /* ===========================================================================
-   $Id: outputformat.i 5538 2006-07-03 17:29:05Z frank $
+   $Id: outputformat.i 11232 2011-03-18 15:47:40Z tbonfort $
  
    Project:  MapServer
    Purpose:  SWIG interface file for mapscript outputFormatObj extensions
@@ -36,7 +36,7 @@
     {
         outputFormatObj *format;
 
-        format = msCreateDefaultOutputFormat(NULL, driver);
+        format = msCreateDefaultOutputFormat(NULL, driver, name);
 
         /* in the case of unsupported formats, msCreateDefaultOutputFormat
            should return NULL */
@@ -47,15 +47,12 @@
             return NULL;
         }
         
+        msInitializeRendererVTable(format);
+
         /* Else, continue */
         format->refcount++;
 	format->inmapfile = MS_TRUE;
 
-        if (name != NULL)
-        {
-            free(format->name);
-            format->name = strdup(name);
-        }
         return format;
     }
 
@@ -86,7 +83,7 @@
 
     int validate() 
     {
-       	return msOutputFormatValidate( self );
+       	return msOutputFormatValidate( self, MS_FALSE );
     }
 
     %newobject getOption;
@@ -95,6 +92,11 @@
         const char *retval;
         retval = msGetOutputFormatOption(self, key, value);
         return strdup(retval);
+    }
+    
+    void attachDevice( void *device ) 
+    {
+        self->device = device;
     }
     
 }

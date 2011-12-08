@@ -19,5 +19,7 @@ public enum MS_POSITIONS_ENUM {
   MS_CC,
   MS_AUTO,
   MS_XY,
-  MS_FOLLOW
+  MS_FOLLOW,
+  MS_NONE,
+  MS_AUTO2
 }

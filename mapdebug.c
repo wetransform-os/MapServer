@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapdebug.c 7923 2008-09-23 17:58:55Z dmorissette $
+ * $Id: mapdebug.c 11503 2011-04-07 19:56:16Z dmorissette $
  *
  * Project:  MapServer
  * Purpose:  Implementation of debug/logging, msDebug() and related functions.
@@ -48,12 +48,7 @@
 #include <windows.h> /* OutputDebugStringA() */
 #endif
 
-#if defined(_WIN32) && !defined(__CYGWIN__)
-/* Need to use _vsnprintf() with VS2003 */
-#define vsnprintf _vsnprintf
-#endif 
-
-MS_CVSID("$Id: mapdebug.c 7923 2008-09-23 17:58:55Z dmorissette $")
+MS_CVSID("$Id: mapdebug.c 11503 2011-04-07 19:56:16Z dmorissette $")
 
 
 #ifndef USE_THREAD
@@ -97,12 +92,16 @@ debugInfoObj *msGetDebugInfoObj()
         debugInfoObj *new_link;
 
         new_link = (debugInfoObj *) malloc(sizeof(debugInfoObj));
-        new_link->next = debuginfo_list;
-        new_link->thread_id = thread_id;
-        new_link->global_debug_level = MS_DEBUGLEVEL_ERRORSONLY;
-        new_link->debug_mode = MS_DEBUGMODE_OFF;
-        new_link->errorfile = NULL;
-        new_link->fp = NULL;
+        if (new_link != NULL) 
+        {
+            new_link->next = debuginfo_list;
+            new_link->thread_id = thread_id;
+            new_link->global_debug_level = MS_DEBUGLEVEL_ERRORSONLY;
+            new_link->debug_mode = MS_DEBUGMODE_OFF;
+            new_link->errorfile = NULL;
+            new_link->fp = NULL;
+        } else
+            msSetError(MS_MEMERR, "Out of memory allocating %u bytes.\n", "msGetDebugInfoObj()", sizeof(debugInfoObj));
 
         debuginfo_list = new_link;
     }
@@ -130,13 +129,28 @@ debugInfoObj *msGetDebugInfoObj()
 **
 ** Set output target, ready to write to it, open file if necessary
 **
+** If pszRelToPath != NULL then we will try to make the value relative to 
+** this path if it is not absolute already and it's not one of the special
+** values (stderr, stdout, windowsdebug)
+**
 ** Returns MS_SUCCESS/MS_FAILURE
 */
-int msSetErrorFile(const char *pszErrorFile)
+int msSetErrorFile(const char *pszErrorFile, const char *pszRelToPath)
 {
+    char extended_path[MS_MAXPATHLEN];
     debugInfoObj *debuginfo = msGetDebugInfoObj();
 
-    if (debuginfo->errorfile && pszErrorFile &&
+    if (strcmp(pszErrorFile, "stderr") != 0 &&
+        strcmp(pszErrorFile, "stdout") != 0 &&
+        strcmp(pszErrorFile, "windowsdebug") != 0)
+    {
+        /* Try to make the path relative */
+        if(msBuildPath(extended_path, pszRelToPath, pszErrorFile) == NULL)
+            return MS_FAILURE;
+        pszErrorFile = extended_path;
+    }
+
+    if (debuginfo && debuginfo->errorfile && pszErrorFile &&
         strcmp(debuginfo->errorfile, pszErrorFile) == 0)
     {
         /* Nothing to do, already writing to the right place */
@@ -153,7 +167,7 @@ int msSetErrorFile(const char *pszErrorFile)
     if (strcmp(pszErrorFile, "stderr") == 0)
     {
         debuginfo->fp = stderr;
-        debuginfo->errorfile = strdup(pszErrorFile);
+        debuginfo->errorfile = msStrdup(pszErrorFile);
         debuginfo->debug_mode = MS_DEBUGMODE_STDERR;
 #if defined(NEED_NONBLOCKING_STDERR) && !defined(USE_MAPIO) && !defined(_WIN32)
         fcntl(fileno(stderr), F_SETFL, O_NONBLOCK);
@@ -163,13 +177,13 @@ int msSetErrorFile(const char *pszErrorFile)
     else if (strcmp(pszErrorFile, "stdout") == 0)
     {
         debuginfo->fp = stdout;
-        debuginfo->errorfile = strdup(pszErrorFile);
+        debuginfo->errorfile = msStrdup(pszErrorFile);
         debuginfo->debug_mode = MS_DEBUGMODE_STDOUT;
     }
     else if (strcmp(pszErrorFile, "windowsdebug") == 0)
     {
 #ifdef _WIN32
-        debuginfo->errorfile = strdup(pszErrorFile);
+        debuginfo->errorfile = msStrdup(pszErrorFile);
         debuginfo->fp = NULL;
         debuginfo->debug_mode = MS_DEBUGMODE_WINDOWSDEBUG;
 #else
@@ -185,7 +199,7 @@ int msSetErrorFile(const char *pszErrorFile)
             msSetError(MS_MISCERR, "Failed to open MS_ERRORFILE %s", "msSetErrorFile()", pszErrorFile);
             return MS_FAILURE;
         }
-        debuginfo->errorfile = strdup(pszErrorFile);
+        debuginfo->errorfile = msStrdup(pszErrorFile);
         debuginfo->debug_mode = MS_DEBUGMODE_FILE;
     }
 
@@ -272,7 +286,7 @@ int msDebugInitFromEnv()
 
     if( (val=getenv( "MS_ERRORFILE" )) != NULL )
     {
-        if ( msSetErrorFile(val) != MS_SUCCESS )
+        if ( msSetErrorFile(val, NULL) != MS_SUCCESS )
             return MS_FAILURE;
     }
     

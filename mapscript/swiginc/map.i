@@ -1,5 +1,5 @@
 /* ===========================================================================
-   $Id: map.i 9323 2009-09-21 06:26:37Z sdlime $
+   $Id: map.i 10924 2011-02-02 04:28:39Z sdlime $
  
    Project:  MapServer
    Purpose:  SWIG interface file for mapscript mapObj extensions
@@ -240,6 +240,20 @@
       return NULL;	
   }
 
+  int queryByFilter(char *string) {
+    msInitQuery(&(self->query));
+
+    self->query.type = MS_QUERY_BY_FILTER;
+
+    self->query.filter = (expressionObj *) malloc(sizeof(expressionObj));
+    self->query.filter->string = strdup(string);
+    self->query.filter->type = 2000; /* MS_EXPRESSION: lot's of conflicts in mapfile.h */
+
+    self->query.rect = self->extent;
+
+    return msQueryByFilter(self);
+  }
+
   int queryByPoint(pointObj *point, int mode, double buffer) {
     msInitQuery(&(self->query));
 
@@ -295,19 +309,17 @@
     return msSaveMap(self, filename);
   }
 
-    int saveQuery(char *filename) {
-        return msSaveQuery(self, filename);
-    }
+  int saveQuery(char *filename, int results=MS_FALSE) {
+    return msSaveQuery(self, filename, results);
+  }
 
-    int loadQuery(char *filename)
-    {
-        return msLoadQuery(self, filename);
-    }
+  int loadQuery(char *filename)  {
+    return msLoadQuery(self, filename);
+  }
 
-    void freeQuery(int qlayer=-1)
-    {
-        msQueryFree(self, qlayer);
-    }
+  void freeQuery(int qlayer=-1) {
+    msQueryFree(self, qlayer);
+  }
 
   int saveQueryAsGML(char *filename, const char *ns="GOMF") {
     return msGMLWriteQuery(self, filename, ns);

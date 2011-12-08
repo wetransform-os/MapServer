@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapgml.c 9887 2010-02-23 19:30:57Z assefa $
+ * $Id: mapgml.c 11544 2011-04-12 12:38:18Z aboudreault $
  *
  * Project:  MapServer
  * Purpose:  shapeObj to GML output via MapServer queries.
@@ -31,9 +31,9 @@
 #include "maperror.h"
 #include "mapgml.h"
 
-MS_CVSID("$Id: mapgml.c 9887 2010-02-23 19:30:57Z assefa $")
+MS_CVSID("$Id: mapgml.c 11544 2011-04-12 12:38:18Z aboudreault $")
 
-/* Use only mapgml.c if WMS or WFS is available */
+/* Use only mapgml.c if WMS or WFS is available (with minor exceptions at end)*/
 
 #if defined(USE_WMS_SVR) || defined (USE_WFS_SVR)
 
@@ -725,6 +725,7 @@ gmlGeometryListObj *msGMLGetGeometries(layerObj *layer, const char *metadata_nam
 
   /* allocate memory and initialize the item collection */
   geometryList = (gmlGeometryListObj *) malloc(sizeof(gmlGeometryListObj));
+  MS_CHECK_ALLOC(geometryList, sizeof(gmlGeometryListObj), NULL) ;
   geometryList->geometries = NULL;
   geometryList->numgeometries = 0;
 
@@ -734,18 +735,25 @@ gmlGeometryListObj *msGMLGetGeometries(layerObj *layer, const char *metadata_nam
     /* allocation an array of gmlGeometryObj's */
     geometryList->numgeometries = numnames;
     geometryList->geometries = (gmlGeometryObj *) malloc(sizeof(gmlGeometryObj)*geometryList->numgeometries);
+    if (geometryList->geometries ==  NULL)
+    {
+        msSetError(MS_MEMERR, "Out of memory allocating %u bytes.\n", "msGMLGetGeometries()", 
+                   sizeof(gmlGeometryObj)*geometryList->numgeometries);
+        free(geometryList);
+        return NULL;
+    }
 
     for(i=0; i<geometryList->numgeometries; i++) {
       geometry = &(geometryList->geometries[i]);
 
-      geometry->name = strdup(names[i]); /* initialize a few things */
+      geometry->name = msStrdup(names[i]); /* initialize a few things */
       geometry->type = NULL;
       geometry->occurmin = 0;
       geometry->occurmax = 1;      
 
       snprintf(tag, 64, "%s_type", names[i]);
       if((value =  msOWSLookupMetadata(&(layer->metadata), metadata_namespaces, tag)) != NULL)
-        geometry->type = strdup(value); /* TODO: validate input value */
+        geometry->type = msStrdup(value); /* TODO: validate input value */
 
       snprintf(tag, 64, "%s_occurances", names[i]);
       if((value = msOWSLookupMetadata(&(layer->metadata), metadata_namespaces, tag)) != NULL) {
@@ -779,122 +787,9 @@ void msGMLFreeGeometries(gmlGeometryListObj *geometryList)
     msFree(geometryList->geometries[i].name);
     msFree(geometryList->geometries[i].type);
   }
+  free(geometryList->geometries);
 
   free(geometryList);
-}
-
-gmlItemListObj *msGMLGetItems(layerObj *layer, const char *metadata_namespaces) 
-{
-  int i,j;
-
-  char **xmlitems=NULL; 
-  int numxmlitems=0;
-
-  char **incitems=NULL;
-  int numincitems=0;
-
-  char **excitems=NULL;
-  int numexcitems=0;
-
-  const char *value=NULL;
-  char tag[64];
-
-  gmlItemListObj *itemList=NULL; 
-  gmlItemObj *item=NULL;
-
-  /* get a list of items that should be included in output */
-  if((value = msOWSLookupMetadata(&(layer->metadata), metadata_namespaces, "include_items")) != NULL)  
-    incitems = msStringSplit(value, ',', &numincitems);
-
-  /* get a list of items that should be excluded in output */
-  if((value = msOWSLookupMetadata(&(layer->metadata), metadata_namespaces, "exclude_items")) != NULL)  
-    excitems = msStringSplit(value, ',', &numexcitems);
-
-  /* get a list of items that need don't get encoded */
-  if((value = msOWSLookupMetadata(&(layer->metadata), metadata_namespaces, "xml_items")) != NULL)  
-    xmlitems = msStringSplit(value, ',', &numxmlitems);
-
-  /* allocate memory and iinitialize the item collection */
-  itemList = (gmlItemListObj *) malloc(sizeof(gmlItemListObj));
-  itemList->items = NULL;
-  itemList->numitems = 0;
-
-  itemList->numitems = layer->numitems;
-  itemList->items = (gmlItemObj *) malloc(sizeof(gmlItemObj)*itemList->numitems);
-  if(!itemList->items) {
-    msSetError(MS_MEMERR, "Error allocating a collection GML item structures.", "msGMLGetItems()");
-    return NULL;
-  } 
-
-  for(i=0; i<layer->numitems; i++) {
-    item = &(itemList->items[i]);
-
-    item->name = strdup(layer->items[i]);  /* initialize the item */
-    item->alias = NULL;
-    item->type = NULL;
-    item->template = NULL;
-    item->encode = MS_TRUE;
-    item->visible = MS_FALSE;
-
-    /* check visibility, included items first... */
-    if(numincitems == 1 && strcasecmp("all", incitems[0]) == 0) {
-      item->visible = MS_TRUE;
-    } else {
-      for(j=0; j<numincitems; j++) {
-        if(strcasecmp(layer->items[i], incitems[j]) == 0)
-          item->visible = MS_TRUE;
-      }
-    }
-
-    /* ...and now excluded items */
-    for(j=0; j<numexcitems; j++) {
-      if(strcasecmp(layer->items[i], excitems[j]) == 0)
-        item->visible = MS_FALSE;
-    }
-
-    /* check encoding */
-    for(j=0; j<numxmlitems; j++) {
-      if(strcasecmp(layer->items[i], xmlitems[j]) == 0)
-        item->encode = MS_FALSE;
-    }
-
-    snprintf(tag, 64, "%s_alias", layer->items[i]);
-    if((value = msOWSLookupMetadata(&(layer->metadata), metadata_namespaces, tag)) != NULL) 
-      item->alias = strdup(value);
-
-    snprintf(tag, 64, "%s_type", layer->items[i]);
-    if((value = msOWSLookupMetadata(&(layer->metadata), metadata_namespaces, tag)) != NULL) 
-      item->type = strdup(value);
-
-    snprintf(tag, 64, "%s_template", layer->items[i]);
-    if((value = msOWSLookupMetadata(&(layer->metadata), metadata_namespaces, tag)) != NULL) 
-      item->template = strdup(value);
-  }
-
-  msFreeCharArray(incitems, numincitems);
-  msFreeCharArray(excitems, numexcitems);
-  msFreeCharArray(xmlitems, numxmlitems);
-
-  return itemList;
-}
-
-void msGMLFreeItems(gmlItemListObj *itemList)
-{
-  int i;
-
-  if(!itemList) return;
-
-  for(i=0; i<itemList->numitems; i++) {
-    msFree(itemList->items[i].name);
-    msFree(itemList->items[i].alias);
-    msFree(itemList->items[i].type);
-    msFree(itemList->items[i].template);
-  }
-
-  if( itemList->items != NULL )
-      free(itemList->items);
-
-  free(itemList);
 }
 
 static void msGMLWriteItem(FILE *stream, gmlItemObj *item, char *value, const char *namespace, const char *tab)
@@ -910,7 +805,7 @@ static void msGMLWriteItem(FILE *stream, gmlItemObj *item, char *value, const ch
   if(item->encode == MS_TRUE)
     encoded_value = msEncodeHTMLEntities(value);
   else
-    encoded_value = strdup(value);  
+    encoded_value = msStrdup(value);  
   
   if(!item->template) { /* build the tag from pieces */  
     if(item->alias) {
@@ -931,7 +826,7 @@ static void msGMLWriteItem(FILE *stream, gmlItemObj *item, char *value, const ch
   } else {
     char *tag = NULL;
 
-    tag = strdup(item->template);
+    tag = msStrdup(item->template);
     tag = msReplaceSubstring(tag, "$value", encoded_value);
     if(namespace) tag = msReplaceSubstring(tag, "$namespace", namespace);
     msIO_fprintf(stream, "%s%s\n", tab, tag);
@@ -957,6 +852,7 @@ gmlNamespaceListObj *msGMLGetNamespaces(webObj *web, const char *metadata_namesp
 
   /* allocate the collection */
   namespaceList = (gmlNamespaceListObj *) malloc(sizeof(gmlNamespaceListObj)); 
+  MS_CHECK_ALLOC(namespaceList, sizeof(gmlNamespaceListObj), NULL) ;
   namespaceList->namespaces = NULL;
   namespaceList->numnamespaces = 0; 
 
@@ -967,21 +863,28 @@ gmlNamespaceListObj *msGMLGetNamespaces(webObj *web, const char *metadata_namesp
     /* allocation an array of gmlNamespaceObj's */
     namespaceList->numnamespaces = numprefixes;
     namespaceList->namespaces = (gmlNamespaceObj *) malloc(sizeof(gmlNamespaceObj)*namespaceList->numnamespaces);
+    if (namespaceList->namespaces == NULL)
+    {
+        msSetError(MS_MEMERR, "Out of memory allocating %u bytes.\n", "msGMLGetNamespaces()",
+                   sizeof(gmlNamespaceObj)*namespaceList->numnamespaces);
+        free(namespaceList);
+        return NULL;      
+    }
 
     for(i=0; i<namespaceList->numnamespaces; i++) {
       namespace = &(namespaceList->namespaces[i]);
 
-      namespace->prefix = strdup(prefixes[i]); /* initialize a few things */      
+      namespace->prefix = msStrdup(prefixes[i]); /* initialize a few things */      
       namespace->uri = NULL;
       namespace->schemalocation = NULL;
 
       snprintf(tag, 64, "%s_uri", namespace->prefix);
       if((value = msOWSLookupMetadata(&(web->metadata), metadata_namespaces, tag)) != NULL) 
-      namespace->uri = strdup(value);
+      namespace->uri = msStrdup(value);
 
       snprintf(tag, 64, "%s_schema_location", namespace->prefix);
       if((value = msOWSLookupMetadata(&(web->metadata), metadata_namespaces, tag)) != NULL) 
-      namespace->schemalocation = strdup(value);
+      namespace->schemalocation = msStrdup(value);
     }
 
     msFreeCharArray(prefixes, numprefixes);
@@ -1019,6 +922,7 @@ gmlConstantListObj *msGMLGetConstants(layerObj *layer, const char *metadata_name
 
   /* allocate the collection */
   constantList = (gmlConstantListObj *) malloc(sizeof(gmlConstantListObj)); 
+  MS_CHECK_ALLOC(constantList, sizeof(gmlConstantListObj), NULL);
   constantList->constants = NULL;
   constantList->numconstants = 0;
 
@@ -1029,21 +933,29 @@ gmlConstantListObj *msGMLGetConstants(layerObj *layer, const char *metadata_name
     /* allocation an array of gmlConstantObj's */
     constantList->numconstants = numnames;
     constantList->constants = (gmlConstantObj *) malloc(sizeof(gmlConstantObj)*constantList->numconstants);
+    if (constantList->constants == NULL)
+    {
+        msSetError(MS_MEMERR, "Out of memory allocating %u bytes.\n", "msGMLGetConstants()",
+                   sizeof(gmlConstantObj)*constantList->numconstants);
+        free(constantList);
+        return NULL;      
+    }
+
 
     for(i=0; i<constantList->numconstants; i++) {
       constant = &(constantList->constants[i]);
 
-      constant->name = strdup(names[i]); /* initialize a few things */      
+      constant->name = msStrdup(names[i]); /* initialize a few things */      
       constant->value = NULL;
       constant->type = NULL;
 
       snprintf(tag, 64, "%s_value", constant->name);
       if((value = msOWSLookupMetadata(&(layer->metadata), metadata_namespaces, tag)) != NULL) 
-      constant->value = strdup(value);
+      constant->value = msStrdup(value);
 
       snprintf(tag, 64, "%s_type", constant->name);
       if((value = msOWSLookupMetadata(&(layer->metadata), metadata_namespaces, tag)) != NULL) 
-      constant->type = strdup(value);
+      constant->type = msStrdup(value);
     }
 
     msFreeCharArray(names, numnames);
@@ -1102,6 +1014,7 @@ gmlGroupListObj *msGMLGetGroups(layerObj *layer, const char *metadata_namespaces
 
   /* allocate the collection */
   groupList = (gmlGroupListObj *) malloc(sizeof(gmlGroupListObj)); 
+  MS_CHECK_ALLOC(groupList, sizeof(gmlGroupListObj), NULL) ;
   groupList->groups = NULL;
   groupList->numgroups = 0;
 
@@ -1112,11 +1025,18 @@ gmlGroupListObj *msGMLGetGroups(layerObj *layer, const char *metadata_namespaces
     /* allocation an array of gmlGroupObj's */
     groupList->numgroups = numnames;
     groupList->groups = (gmlGroupObj *) malloc(sizeof(gmlGroupObj)*groupList->numgroups);
+    if (groupList->groups == NULL)
+    {
+        msSetError(MS_MEMERR, "Out of memory allocating %u bytes.\n", "msGMLGetGroups()",
+                   sizeof(gmlGroupObj)*groupList->numgroups);
+        free(groupList);
+        return NULL;      
+    }
 
     for(i=0; i<groupList->numgroups; i++) {
       group = &(groupList->groups[i]);
 
-      group->name = strdup(names[i]); /* initialize a few things */
+      group->name = msStrdup(names[i]); /* initialize a few things */
       group->items = NULL;
       group->numitems = 0;
       group->type = NULL;
@@ -1127,7 +1047,7 @@ gmlGroupListObj *msGMLGetGroups(layerObj *layer, const char *metadata_namespaces
 
       snprintf(tag, 64, "%s_type", group->name);
       if((value = msOWSLookupMetadata(&(layer->metadata), metadata_namespaces, tag)) != NULL) 
-      group->type = strdup(value);
+      group->type = msStrdup(value);
     }
 
     msFreeCharArray(names, numnames);
@@ -1163,8 +1083,8 @@ static void msGMLWriteGroup(FILE *stream, gmlGroupObj *group, shapeObj *shape, g
   if(!stream || !group) return;
 
   /* setup the item/constant tab */
-  itemtab = (char *) malloc(sizeof(char)*strlen(tab)+3);
-  if(!itemtab) return;
+  itemtab = (char *) msSmallMalloc(sizeof(char)*strlen(tab)+3);
+
   sprintf(itemtab, "%s  ", tab);
      
   if(!namespace || strchr(group->name, ':') != NULL) add_namespace = MS_FALSE;
@@ -1258,7 +1178,7 @@ int msGMLWriteQuery(mapObj *map, char *filename, const char *namespaces)
     const char *pszOutputSRS = NULL;
     lp = (GET_LAYER(map, map->layerorder[i]));
 
-    if(lp->dump == MS_TRUE && lp->resultcache && lp->resultcache->numresults > 0) { /* found results */
+    if(lp->resultcache && lp->resultcache->numresults > 0) { /* found results */
 
 #ifdef USE_PROJ
       /* Determine output SRS, if map has none, then try using layer's native SRS */
@@ -1273,19 +1193,29 @@ int msGMLWriteQuery(mapObj *map, char *filename, const char *namespaces)
 
       /* start this collection (layer) */
       /* if no layer name provided fall back on the layer name + "_layer" */
-      value = (char*) malloc(strlen(lp->name)+7);
+      value = (char*) msSmallMalloc(strlen(lp->name)+7);
       sprintf(value, "%s_layer", lp->name);
       msOWSPrintValidateMetadata(stream, &(lp->metadata), namespaces, "layername", OWS_NOERR, "\t<%s>\n", value);
       msFree(value);
 
-      /* populate item and group metadata structures (TODO: test for NULLs here, shouldn't happen) */
-      itemList = msGMLGetItems(lp, namespaces);
+      value = (char *) msOWSLookupMetadata(&(lp->metadata), "OM", "title");
+      if (value) {
+        msOWSPrintMetadata(stream, &(lp->metadata), namespaces, "title", OWS_NOERR, "\t<gml:name>%s</gml:name>\n", value);
+      }
+
+      /* populate item and group metadata structures */
+      itemList = msGMLGetItems(lp, namespaces); 
       constantList = msGMLGetConstants(lp, namespaces);
       groupList = msGMLGetGroups(lp, namespaces);
       geometryList = msGMLGetGeometries(lp, namespaces);
+      if (itemList == NULL || constantList == NULL || groupList == NULL || geometryList == NULL)
+      {
+          msSetError(MS_MISCERR, "Unable to populate item and group metadata structures", "msGMLWriteQuery()");
+          return MS_FAILURE;
+      }
 
       for(j=0; j<lp->resultcache->numresults; j++) {
-        status = msLayerResultsGetShape(lp, &shape, lp->resultcache->results[j].tileindex, lp->resultcache->results[j].shapeindex);
+        status = msLayerGetShape(lp, &shape, &(lp->resultcache->results[j]));
         if(status != MS_SUCCESS) return(status);
 
 #ifdef USE_PROJ
@@ -1296,7 +1226,7 @@ int msGMLWriteQuery(mapObj *map, char *filename, const char *namespaces)
 
         /* start this feature */
         /* specify a feature name, if nothing provided fall back on the layer name + "_feature" */
-        value = (char*) malloc(strlen(lp->name)+9);
+        value = (char*) msSmallMalloc(strlen(lp->name)+9);
         sprintf(value, "%s_feature", lp->name);
         msOWSPrintValidateMetadata(stream, &(lp->metadata), namespaces, "featurename", OWS_NOERR, "\t\t<%s>\n", value);
         msFree(value);
@@ -1338,7 +1268,7 @@ int msGMLWriteQuery(mapObj *map, char *filename, const char *namespaces)
         /* end this feature */
         /* specify a feature name if nothing provided */
         /* fall back on the layer name + "Feature" */
-        value = (char*) malloc(strlen(lp->name)+9);
+        value = (char*) msSmallMalloc(strlen(lp->name)+9);
         sprintf(value, "%s_feature", lp->name);
         msOWSPrintValidateMetadata(stream, &(lp->metadata), namespaces, "featurename", OWS_NOERR, "\t\t</%s>\n", value);
         msFree(value);
@@ -1348,7 +1278,7 @@ int msGMLWriteQuery(mapObj *map, char *filename, const char *namespaces)
 
       /* end this collection (layer) */
       /* if no layer name provided fall back on the layer name + "_layer" */
-      value = (char*) malloc(strlen(lp->name)+7);
+      value = (char*) msSmallMalloc(strlen(lp->name)+7);
       sprintf(value, "%s_layer", lp->name);
       msOWSPrintValidateMetadata(stream, &(lp->metadata), namespaces, "layername", OWS_NOERR, "\t</%s>\n", value);
       msFree(value);
@@ -1413,11 +1343,9 @@ void msAxisSwapShape(shapeObj *shape)
 ** msGMLWriteWFSQuery()
 **
 ** Similar to msGMLWriteQuery() but tuned for use with WFS 1.0.0
-** bUseGetShape is used when the query passed through a commplex filter
-** encoding #3305
 */
-int msGMLWriteWFSQuery(mapObj *map, FILE *stream, int maxfeatures, char *default_namespace_prefix, 
-                       int outputformat, int bUseGetShape)
+int msGMLWriteWFSQuery(mapObj *map, FILE *stream, int startindex, int maxfeatures, 
+                       char *default_namespace_prefix, int outputformat)
 {
 #ifdef USE_WFS_SVR
   int status;
@@ -1426,7 +1354,8 @@ int msGMLWriteWFSQuery(mapObj *map, FILE *stream, int maxfeatures, char *default
   shapeObj shape;
   rectObj  resultBounds = {-1.0,-1.0,-1.0,-1.0};
   int features = 0;
-  
+  int currentfeature =0;
+
   gmlGroupListObj *groupList=NULL;
   gmlItemListObj *itemList=NULL;
   gmlConstantListObj *constantList=NULL;
@@ -1438,6 +1367,7 @@ int msGMLWriteWFSQuery(mapObj *map, FILE *stream, int maxfeatures, char *default
   const char *axis = NULL;
   int bSwapAxis = 0;
   double tmp;
+  const char *srsMap =  NULL;
 
   msInitShape(&shape);
 
@@ -1469,18 +1399,23 @@ int msGMLWriteWFSQuery(mapObj *map, FILE *stream, int maxfeatures, char *default
           resultBounds.maxy = tmp;
 
       }
-      gmlWriteBounds(stream, outputformat, &resultBounds, msOWSGetEPSGProj(&(map->projection), &(map->web.metadata), "FGO", MS_TRUE), "      ");
+      srsMap = msOWSGetEPSGProj(&(map->projection), NULL, "FGO", MS_TRUE);
+      if (!srsMap)
+        msOWSGetEPSGProj(&(map->projection), &(map->web.metadata), "FGO", MS_TRUE);
+
+      gmlWriteBounds(stream, outputformat, &resultBounds, srsMap, "      ");
   }
   /* step through the layers looking for query results */
   for(i=0; i<map->numlayers; i++) {
 
     lp = GET_LAYER(map, map->layerorder[i]);
 
-    if(lp->dump == MS_TRUE && lp->resultcache && lp->resultcache->numresults > 0)  { /* found results */
+    if(lp->resultcache && lp->resultcache->numresults > 0)  { /* found results */
       char *layerName;      
       const char *value;
       int featureIdIndex=-1; /* no feature id */
 
+      
       /* setup namespace, a layer can override the default */
       namespace_prefix = (char*) msOWSLookupMetadata(&(lp->metadata), "OFG", "namespace_prefix");
       if(!namespace_prefix) namespace_prefix = default_namespace_prefix;
@@ -1499,25 +1434,34 @@ int msGMLWriteWFSQuery(mapObj *map, FILE *stream, int maxfeatures, char *default
           msIO_fprintf(stream, "<!-- WARNING: FeatureId item '%s' not found in typename '%s'. -->\n", value, lp->name);
       }
 
-      /* populate item and group metadata structures (TODO: test for NULLs here, shouldn't happen) */
+      /* populate item and group metadata structures */
       itemList = msGMLGetItems(lp, "G");
       constantList = msGMLGetConstants(lp, "G");
       groupList = msGMLGetGroups(lp, "G");
-      geometryList = msGMLGetGeometries(lp, "G");
+      geometryList = msGMLGetGeometries(lp, "GFO");
+      if (itemList == NULL || constantList == NULL || groupList == NULL || geometryList == NULL)
+      {
+          msSetError(MS_MISCERR, "Unable to populate item and group metadata structures", "msGMLWriteWFSQuery()");
+          return MS_FAILURE;
+      }
+
 
       if (namespace_prefix) {
-        layerName = (char *) malloc(strlen(namespace_prefix)+strlen(lp->name)+2);
+        layerName = (char *) msSmallMalloc(strlen(namespace_prefix)+strlen(lp->name)+2);
         sprintf(layerName, "%s:%s", namespace_prefix, lp->name);
       } else {
-        layerName = strdup(lp->name);
+        layerName = msStrdup(lp->name);
       }
 
       for(j=0; j<lp->resultcache->numresults; j++) {
-        if (bUseGetShape)
-          status = msLayerGetShape(lp, &shape, lp->resultcache->results[j].tileindex, lp->resultcache->results[j].shapeindex);  
-        else
-          status =  msLayerResultsGetShape(lp, &shape, lp->resultcache->results[j].tileindex, lp->resultcache->results[j].shapeindex);  
 
+        if (startindex > 0 && currentfeature < startindex)
+        {
+            currentfeature++;
+            continue;
+        }
+
+        status = msLayerGetShape(lp, &shape, &(lp->resultcache->results[j]));
         if(status != MS_SUCCESS) 
             return(status);
 
@@ -1547,9 +1491,12 @@ int msGMLWriteWFSQuery(mapObj *map, FILE *stream, int maxfeatures, char *default
         /* write the feature geometry and bounding box */
         if(!(geometryList && geometryList->numgeometries == 1 && strcasecmp(geometryList->geometries[0].name, "none") == 0)) {
 #ifdef USE_PROJ
-          if(msOWSGetEPSGProj(&(map->projection), &(map->web.metadata), "FGO", MS_TRUE)) { /* use the map projection first*/
-            gmlWriteBounds(stream, outputformat, &(shape.bounds), msOWSGetEPSGProj(&(map->projection), &(map->web.metadata), "FGO", MS_TRUE), "        ");
-            gmlWriteGeometry(stream, geometryList, outputformat, &(shape), msOWSGetEPSGProj(&(map->projection), &(map->web.metadata), "FGO", MS_TRUE), namespace_prefix, "        "); 
+          srsMap = msOWSGetEPSGProj(&(map->projection), NULL, "FGO", MS_TRUE);
+          if (!srsMap)
+            msOWSGetEPSGProj(&(map->projection), &(map->web.metadata), "FGO", MS_TRUE);
+          if(srsMap) { /* use the map projection first*/
+            gmlWriteBounds(stream, outputformat, &(shape.bounds), srsMap, "        ");
+            gmlWriteGeometry(stream, geometryList, outputformat, &(shape), srsMap, namespace_prefix, "        "); 
           } else { /* then use the layer projection and/or metadata */
             gmlWriteBounds(stream, outputformat, &(shape.bounds), msOWSGetEPSGProj(&(lp->projection), &(lp->metadata), "FGO", MS_TRUE), "        ");
             gmlWriteGeometry(stream, geometryList, outputformat, &(shape), msOWSGetEPSGProj(&(lp->projection), &(lp->metadata), "FGO", MS_TRUE), namespace_prefix, "        ");
@@ -1637,17 +1584,21 @@ xmlNodePtr msGML3BoundedBy(xmlNsPtr psNs, double minx, double miny, double maxx,
   xmlNodePtr psNode = NULL, psSubNode = NULL, psSubSubNode = NULL;
   char *pszTmp = NULL;
   char *pszTmp2 = NULL;
-  char pszEpsg[11];
+  char *pszEpsg = NULL;
+  size_t bufferSize = 0;
 
   psNode = xmlNewNode(psNs, BAD_CAST "boundedBy");
   psSubNode = xmlNewChild(psNode, NULL, BAD_CAST "Envelope", NULL);
 
   if (psEpsg) {
-    sprintf(pszEpsg, "%s", psEpsg);
+    bufferSize = strlen(psEpsg)+1;
+    pszEpsg = (char*) msSmallMalloc(bufferSize);
+    snprintf(pszEpsg, bufferSize, "%s", psEpsg);
     msStringToLower(pszEpsg);
     pszTmp = msStringConcatenate(pszTmp, "urn:ogc:crs:");
     pszTmp = msStringConcatenate(pszTmp, pszEpsg);
     xmlNewProp(psSubNode, BAD_CAST "srsName", BAD_CAST pszTmp);
+    free(pszEpsg);
     free(pszTmp);
     pszTmp = msIntToString(2);
     xmlNewProp(psSubNode, BAD_CAST "srsDimension", BAD_CAST pszTmp);
@@ -1692,7 +1643,9 @@ xmlNodePtr msGML3Point(xmlNsPtr psNs, const char *psSrsName, const char *id, dou
   xmlNodePtr psNode = NULL, psSubNode = NULL;
   char *pszTmp = NULL;
   int dimension = 2;
-  char pszSrsName[11];
+  char *pszSrsName = NULL;
+  char *pszTmp2 = NULL;
+  size_t bufferSize = 0;
 
   psNode = xmlNewNode(psNs, BAD_CAST "Point");
 
@@ -1701,11 +1654,14 @@ xmlNodePtr msGML3Point(xmlNsPtr psNs, const char *psSrsName, const char *id, dou
   }
 
   if (psSrsName) {
-    sprintf(pszSrsName, "%s", psSrsName);
+    bufferSize = strlen(psSrsName)+1;
+    pszSrsName = (char *) msSmallMalloc(bufferSize);
+    snprintf(pszSrsName, bufferSize, "%s", psSrsName);
     msStringToLower(pszSrsName);
     pszTmp = msStringConcatenate(pszTmp, "urn:ogc:crs:");
     pszTmp = msStringConcatenate(pszTmp, pszSrsName);
     xmlNewProp(psNode, BAD_CAST "srsName", BAD_CAST pszTmp);
+    free(pszSrsName);
     free(pszTmp);
     pszTmp = msIntToString(dimension);
     xmlNewProp(psNode, BAD_CAST "srsDimension", BAD_CAST pszTmp);
@@ -1714,10 +1670,12 @@ xmlNodePtr msGML3Point(xmlNsPtr psNs, const char *psSrsName, const char *id, dou
 
   pszTmp = msDoubleToString(x, MS_TRUE);
   pszTmp = msStringConcatenate(pszTmp, " ");
-  pszTmp = msStringConcatenate(pszTmp, msDoubleToString(y, MS_TRUE));
+  pszTmp2 = msDoubleToString(y, MS_TRUE);
+  pszTmp = msStringConcatenate(pszTmp, pszTmp2);
   psSubNode = xmlNewChild(psNode, NULL, BAD_CAST "pos", BAD_CAST pszTmp);
 
   free(pszTmp);
+  free(pszTmp2);
   return psNode;
 }
 
@@ -1769,3 +1727,139 @@ xmlNodePtr msGML3TimeInstant(xmlNsPtr psNs, char *pszTime) {
 }
 
 #endif /* USE_LIBXML2 */
+
+
+/************************************************************************/
+/*      The following functions are enabled in all cases, even if       */
+/*      WMS and WFS are not available.                                  */
+/************************************************************************/
+
+gmlItemListObj *msGMLGetItems(layerObj *layer, const char *metadata_namespaces) 
+{
+  int i,j;
+
+  char **xmlitems=NULL; 
+  int numxmlitems=0;
+
+  char **incitems=NULL;
+  int numincitems=0;
+
+  char **excitems=NULL;
+  int numexcitems=0;
+
+  const char *value=NULL;
+  char tag[64];
+
+  gmlItemListObj *itemList=NULL; 
+  gmlItemObj *item=NULL;
+
+  /* get a list of items that should be included in output */
+  if((value = msOWSLookupMetadata(&(layer->metadata), metadata_namespaces, "include_items")) != NULL)  
+    incitems = msStringSplit(value, ',', &numincitems);
+
+  /* get a list of items that should be excluded in output */
+  if((value = msOWSLookupMetadata(&(layer->metadata), metadata_namespaces, "exclude_items")) != NULL)  
+    excitems = msStringSplit(value, ',', &numexcitems);
+
+  /* get a list of items that need don't get encoded */
+  if((value = msOWSLookupMetadata(&(layer->metadata), metadata_namespaces, "xml_items")) != NULL)  
+    xmlitems = msStringSplit(value, ',', &numxmlitems);
+
+  /* allocate memory and iinitialize the item collection */
+  itemList = (gmlItemListObj *) malloc(sizeof(gmlItemListObj));
+  if(itemList == NULL) {
+    msSetError(MS_MEMERR, "Error allocating a collection GML item structures.", "msGMLGetItems()");
+    return NULL;
+  } 
+
+  itemList->items = NULL;
+  itemList->numitems = 0;
+
+  itemList->numitems = layer->numitems;
+  itemList->items = (gmlItemObj *) malloc(sizeof(gmlItemObj)*itemList->numitems);
+  if(!itemList->items) {
+    msSetError(MS_MEMERR, "Error allocating a collection GML item structures.", "msGMLGetItems()");
+    return NULL;
+  } 
+
+  for(i=0; i<layer->numitems; i++) {
+    item = &(itemList->items[i]);
+
+    item->name = msStrdup(layer->items[i]);  /* initialize the item */
+    item->alias = NULL;
+    item->type = NULL;
+    item->template = NULL;
+    item->encode = MS_TRUE;
+    item->visible = MS_FALSE;
+    item->width = 0;
+    item->precision = 0;
+
+    /* check visibility, included items first... */
+    if(numincitems == 1 && strcasecmp("all", incitems[0]) == 0) {
+      item->visible = MS_TRUE;
+    } else {
+      for(j=0; j<numincitems; j++) {
+        if(strcasecmp(layer->items[i], incitems[j]) == 0)
+          item->visible = MS_TRUE;
+      }
+    }
+
+    /* ...and now excluded items */
+    for(j=0; j<numexcitems; j++) {
+      if(strcasecmp(layer->items[i], excitems[j]) == 0)
+        item->visible = MS_FALSE;
+    }
+
+    /* check encoding */
+    for(j=0; j<numxmlitems; j++) {
+      if(strcasecmp(layer->items[i], xmlitems[j]) == 0)
+        item->encode = MS_FALSE;
+    }
+
+    snprintf(tag, sizeof(tag), "%s_alias", layer->items[i]);
+    if((value = msOWSLookupMetadata(&(layer->metadata), metadata_namespaces, tag)) != NULL) 
+      item->alias = msStrdup(value);
+
+    snprintf(tag, sizeof(tag), "%s_type", layer->items[i]);
+    if((value = msOWSLookupMetadata(&(layer->metadata), metadata_namespaces, tag)) != NULL) 
+      item->type = msStrdup(value);
+
+    snprintf(tag, sizeof(tag), "%s_template", layer->items[i]);
+    if((value = msOWSLookupMetadata(&(layer->metadata), metadata_namespaces, tag)) != NULL) 
+      item->template = msStrdup(value);
+
+    snprintf(tag, sizeof(tag), "%s_width", layer->items[i]);
+    if((value = msOWSLookupMetadata(&(layer->metadata), metadata_namespaces, tag)) != NULL) 
+        item->width = atoi(value);
+    
+    snprintf(tag, sizeof(tag), "%s_precision", layer->items[i]);
+    if((value = msOWSLookupMetadata(&(layer->metadata), metadata_namespaces, tag)) != NULL) 
+        item->precision = atoi(value);
+  }
+
+  msFreeCharArray(incitems, numincitems);
+  msFreeCharArray(excitems, numexcitems);
+  msFreeCharArray(xmlitems, numxmlitems);
+
+  return itemList;
+}
+
+void msGMLFreeItems(gmlItemListObj *itemList)
+{
+  int i;
+
+  if(!itemList) return;
+
+  for(i=0; i<itemList->numitems; i++) {
+    msFree(itemList->items[i].name);
+    msFree(itemList->items[i].alias);
+    msFree(itemList->items[i].type);
+    msFree(itemList->items[i].template);
+  }
+
+  if( itemList->items != NULL )
+      free(itemList->items);
+
+  free(itemList);
+}
+

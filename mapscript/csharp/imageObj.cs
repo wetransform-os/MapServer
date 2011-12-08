@@ -148,27 +148,7 @@ public class imageObj : IDisposable {
     } 
   }
 
-  public int buffer_format {
-    get {
-      int ret = mapscriptPINVOKE.imageObj_buffer_format_get(swigCPtr);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-      return ret;
-    } 
-  }
-
-  public int renderer {
-    set {
-      mapscriptPINVOKE.imageObj_renderer_set(swigCPtr, value);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-    } 
-    get {
-      int ret = mapscriptPINVOKE.imageObj_renderer_get(swigCPtr);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-      return ret;
-    } 
-  }
-
-  public imageObj(int width, int height, outputFormatObj input_format, string file) : this(mapscriptPINVOKE.new_imageObj(width, height, outputFormatObj.getCPtr(input_format), file), true, null) {
+  public imageObj(int width, int height, outputFormatObj input_format, string file, double resolution, double defresolution) : this(mapscriptPINVOKE.new_imageObj(width, height, outputFormatObj.getCPtr(input_format), file, resolution, defresolution), true, null) {
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
   }
 

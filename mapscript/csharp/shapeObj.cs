@@ -95,31 +95,6 @@ public class shapeObj : IDisposable {
     } 
   }
 
-  public lineObj line {
-    get {
-      IntPtr cPtr = mapscriptPINVOKE.shapeObj_line_get(swigCPtr);
-      lineObj ret = (cPtr == IntPtr.Zero) ? null : new lineObj(cPtr, false, ThisOwn_false());
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-      return ret;
-    } 
-  }
-
-  public string[] values {
-    get {
-        IntPtr cPtr = mapscriptPINVOKE.shapeObj_values_get(swigCPtr);
-        IntPtr objPtr;
-	    string[] ret = new string[this.numvalues];
-        for(int cx = 0; cx < this.numvalues; cx++) {
-            objPtr = System.Runtime.InteropServices.Marshal.ReadIntPtr(cPtr, cx * System.Runtime.InteropServices.Marshal.SizeOf(typeof(IntPtr)));
-            ret[cx]= (objPtr == IntPtr.Zero) ? null : System.Runtime.InteropServices.Marshal.PtrToStringAnsi(objPtr);
-        }
-        
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-        return ret;
-    }
-
-  }
-
   public rectObj bounds {
     set {
       mapscriptPINVOKE.shapeObj_bounds_set(swigCPtr, rectObj.getCPtr(value));
@@ -188,6 +163,30 @@ public class shapeObj : IDisposable {
     } 
     get {
       string ret = mapscriptPINVOKE.shapeObj_text_get(swigCPtr);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public int scratch {
+    set {
+      mapscriptPINVOKE.shapeObj_scratch_set(swigCPtr, value);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      int ret = mapscriptPINVOKE.shapeObj_scratch_get(swigCPtr);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public int resultindex {
+    set {
+      mapscriptPINVOKE.shapeObj_resultindex_set(swigCPtr, value);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      int ret = mapscriptPINVOKE.shapeObj_resultindex_get(swigCPtr);
       if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
       return ret;
     } 

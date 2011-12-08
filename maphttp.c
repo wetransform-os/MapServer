@@ -1,5 +1,5 @@
 /**********************************************************************
- * $Id: maphttp.c 9016 2009-05-15 11:34:38Z dmorissette $
+ * $Id: maphttp.c 10889 2011-01-22 17:25:28Z assefa $
  *
  * Project:  MapServer
  * Purpose:  Utility functions to access files via HTTP (requires libcurl)
@@ -30,14 +30,14 @@
  * This should be changed to a test on the presence of libcurl which
  * is really what the real dependency is.
  */
-#if defined(USE_WMS_LYR) || defined(USE_WFS_LYR)
+#if defined(USE_CURL)
 
 #include "mapserver.h"
+#include "maphttp.h"
 #include "maperror.h"
-#include "mapows.h"
 #include "mapthread.h"
 
-MS_CVSID("$Id: maphttp.c 9016 2009-05-15 11:34:38Z dmorissette $")
+MS_CVSID("$Id: maphttp.c 10889 2011-01-22 17:25:28Z assefa $")
 
 #include <time.h>
 #ifndef _WIN32
@@ -145,7 +145,9 @@ void msHTTPInitRequestObj(httpRequestObj *pasReqInfo, int numRequests)
 
         pasReqInfo[i].curl_handle = NULL;
         pasReqInfo[i].fp = NULL;
-
+        pasReqInfo[i].result_data = NULL;
+        pasReqInfo[i].result_size = 0;
+        pasReqInfo[i].result_buf_size = 0;
     }
 }
 
@@ -192,6 +194,11 @@ void msHTTPFreeRequestObj(httpRequestObj *pasReqInfo, int numRequests)
         pasReqInfo[i].pszHTTPCookieData = NULL;
 
         pasReqInfo[i].curl_handle = NULL;
+
+        free( pasReqInfo[i].result_data );
+        pasReqInfo[i].result_data = NULL;
+        pasReqInfo[i].result_size = 0;
+        pasReqInfo[i].result_buf_size = 0;
     }
 }
 
@@ -219,7 +226,44 @@ static size_t msHTTPWriteFct(void *buffer, size_t size, size_t nmemb,
                 psReq->nLayerId, size*nmemb);
     }
 
-    return fwrite(buffer, size, nmemb, psReq->fp);
+    /* Case where we are writing to a disk file. */
+    if( psReq->fp != NULL )
+    {
+        return fwrite(buffer, size, nmemb, psReq->fp);
+    }
+    
+    /* Case where we build up the result in memory */
+    else
+    {
+        if( psReq->result_data == NULL )
+        {
+            psReq->result_buf_size = size*nmemb + 10000;
+            psReq->result_data = (char *) msSmallMalloc( psReq->result_buf_size );
+        }
+        else if( psReq->result_size + nmemb * size > psReq->result_buf_size )
+        {
+            psReq->result_buf_size = psReq->result_size + nmemb*size + 10000;
+            psReq->result_data = (char *) msSmallRealloc( psReq->result_data,
+                                                          psReq->result_buf_size );
+        }
+
+        if( psReq->result_data == NULL )
+        {
+            msSetError(MS_HTTPERR, 
+                       "Unable to grow HTTP result buffer to size %d.",
+                       "msHTTPWriteFct()",
+                       psReq->result_buf_size );
+            psReq->result_buf_size = 0;
+            psReq->result_size = 0;
+            return -1;
+        }
+        
+        memcpy( psReq->result_data + psReq->result_size,
+                buffer, size*nmemb );
+        psReq->result_size += size*nmemb;
+
+        return size*nmemb;
+    }
 }
 
 /**********************************************************************
@@ -321,8 +365,7 @@ int msHTTPExecuteRequests(httpRequestObj *pasReqInfo, int numRequests,
         CURL *http_handle;
         FILE *fp;
 
-        if (pasReqInfo[i].pszGetUrl == NULL || 
-            pasReqInfo[i].pszOutputFile == NULL)
+        if (pasReqInfo[i].pszGetUrl == NULL )
         {
             msSetError(MS_HTTPERR, "URL or output file parameter missing.", 
                        "msHTTPExecuteRequests()");
@@ -342,7 +385,7 @@ int msHTTPExecuteRequests(httpRequestObj *pasReqInfo, int numRequests,
         pasReqInfo[i].pszContentType = NULL;
 
         /* Check local cache if requested */
-        if (bCheckLocalCache)
+        if (bCheckLocalCache && pasReqInfo[i].pszOutputFile != NULL )
         {
             fp = fopen(pasReqInfo[i].pszOutputFile, "r");
             if (fp)
@@ -353,7 +396,7 @@ int msHTTPExecuteRequests(httpRequestObj *pasReqInfo, int numRequests,
                             pasReqInfo[i].nLayerId);
                 fclose(fp);
                 pasReqInfo[i].nStatus = 242;
-                pasReqInfo[i].pszContentType = strdup("unknown/cached");
+                pasReqInfo[i].pszContentType = msStrdup("unknown/cached");
                 continue;
             }
         }
@@ -379,7 +422,7 @@ int msHTTPExecuteRequests(httpRequestObj *pasReqInfo, int numRequests,
 
             psCurlVInfo = curl_version_info(CURLVERSION_NOW);
 
-            pasReqInfo[i].pszUserAgent = (char*)malloc(100*sizeof(char));
+            pasReqInfo[i].pszUserAgent = (char*)msSmallMalloc(100*sizeof(char));
 
             if (pasReqInfo[i].pszUserAgent)
             {
@@ -442,7 +485,7 @@ int msHTTPExecuteRequests(httpRequestObj *pasReqInfo, int numRequests,
                 && strlen(pasReqInfo[i].pszProxyPassword) > 0)
             {
                 char    szUsernamePasswd[128];    
-#ifdef CURLOPT_PROXYAUTH
+#ifdef USE_CURLOPT_PROXYAUTH
                 long    nProxyAuthType = CURLAUTH_BASIC;
                 /* CURLOPT_PROXYAUTH available only in Curl 7.10.7 and up */
                 nProxyAuthType = msGetCURLAuthType(pasReqInfo[i].eProxyAuthType);
@@ -488,22 +531,26 @@ int msHTTPExecuteRequests(httpRequestObj *pasReqInfo, int numRequests,
         curl_easy_setopt(http_handle, CURLOPT_NOSIGNAL, 1 );
 #endif
 
-        /* Open output file and set write handler */
-        if ( (fp = fopen(pasReqInfo[i].pszOutputFile, "wb")) == NULL)
+        /* If we are writing file to disk, open the file now. */
+        if( pasReqInfo[i].pszOutputFile != NULL )
         {
-            msSetError(MS_HTTPERR, "Can't open output file %s.", 
-                       "msHTTPExecuteRequests()", pasReqInfo[i].pszOutputFile);
-            return(MS_FAILURE);
+            if ( (fp = fopen(pasReqInfo[i].pszOutputFile, "wb")) == NULL)
+            {
+                msSetError(MS_HTTPERR, "Can't open output file %s.", 
+                           "msHTTPExecuteRequests()", pasReqInfo[i].pszOutputFile);
+                return(MS_FAILURE);
+            }
+
+            pasReqInfo[i].fp = fp;
         }
 
-        pasReqInfo[i].fp = fp;
         curl_easy_setopt(http_handle, CURLOPT_WRITEDATA, &(pasReqInfo[i]));
         curl_easy_setopt(http_handle, CURLOPT_WRITEFUNCTION, msHTTPWriteFct);
 
         /* Provide a buffer where libcurl can write human readable error msgs
          */
         if (pasReqInfo[i].pszErrBuf == NULL)
-            pasReqInfo[i].pszErrBuf = (char *)malloc((CURL_ERROR_SIZE+1)*
+            pasReqInfo[i].pszErrBuf = (char *)msSmallMalloc((CURL_ERROR_SIZE+1)*
                                                      sizeof(char));
         pasReqInfo[i].pszErrBuf[0] = '\0';
 
@@ -537,8 +584,8 @@ int msHTTPExecuteRequests(httpRequestObj *pasReqInfo, int numRequests,
             {
                 if(pasReqInfo[i].pszHTTPCookieData[nPos] == '\n')
                 {
-                    msSetError(MS_HTTPERR, "Can't open output file %s.", 
-                       "msHTTPExecuteRequests()", pasReqInfo[i].pszOutputFile);
+                    msSetError(MS_HTTPERR, "Can't use cookie containing a newline character.", 
+                       "msHTTPExecuteRequests()");
                     return(MS_FAILURE);
                 }
             }
@@ -681,7 +728,7 @@ int msHTTPExecuteRequests(httpRequestObj *pasReqInfo, int numRequests,
                                   &pszContentType) == CURLE_OK &&
                 pszContentType != NULL)
             {
-                psReq->pszContentType = strdup(pszContentType);
+                psReq->pszContentType = msStrdup(pszContentType);
             }
         }
 
@@ -796,10 +843,12 @@ int msHTTPGetFile(const char *pszGetUrl, const char *pszOutputFile,
      * object in the array can be set to NULL. 
     */
     pasReqInfo = (httpRequestObj*)calloc(2, sizeof(httpRequestObj));
+    MS_CHECK_ALLOC(pasReqInfo, 2*sizeof(httpRequestObj), MS_FAILURE);
+    
     msHTTPInitRequestObj(pasReqInfo, 2);
 
-    pasReqInfo[0].pszGetUrl = strdup(pszGetUrl);
-    pasReqInfo[0].pszOutputFile = strdup(pszOutputFile);
+    pasReqInfo[0].pszGetUrl = msStrdup(pszGetUrl);
+    pasReqInfo[0].pszOutputFile = msStrdup(pszOutputFile);
     pasReqInfo[0].debug = (char)bDebug;
 
     if (msHTTPExecuteRequests(pasReqInfo, 1, bCheckLocalCache) != MS_SUCCESS)

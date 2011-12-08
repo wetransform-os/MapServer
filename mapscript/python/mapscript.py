@@ -77,6 +77,7 @@ MS_VERSION_MAJOR = _mapscript.MS_VERSION_MAJOR
 MS_VERSION_MINOR = _mapscript.MS_VERSION_MINOR
 MS_VERSION_REV = _mapscript.MS_VERSION_REV
 MS_VERSION_NUM = _mapscript.MS_VERSION_NUM
+__FUNCTION__ = _mapscript.__FUNCTION__
 MS_TRUE = _mapscript.MS_TRUE
 MS_FALSE = _mapscript.MS_FALSE
 MS_UNKNOWN = _mapscript.MS_UNKNOWN
@@ -93,6 +94,19 @@ MS_CLASS_ALLOCSIZE = _mapscript.MS_CLASS_ALLOCSIZE
 MS_STYLE_ALLOCSIZE = _mapscript.MS_STYLE_ALLOCSIZE
 MS_MAX_LABEL_PRIORITY = _mapscript.MS_MAX_LABEL_PRIORITY
 MS_DEFAULT_LABEL_PRIORITY = _mapscript.MS_DEFAULT_LABEL_PRIORITY
+MS_RENDER_WITH_SWF = _mapscript.MS_RENDER_WITH_SWF
+MS_RENDER_WITH_RAWDATA = _mapscript.MS_RENDER_WITH_RAWDATA
+MS_RENDER_WITH_IMAGEMAP = _mapscript.MS_RENDER_WITH_IMAGEMAP
+MS_RENDER_WITH_TEMPLATE = _mapscript.MS_RENDER_WITH_TEMPLATE
+MS_RENDER_WITH_OGR = _mapscript.MS_RENDER_WITH_OGR
+MS_RENDER_WITH_PLUGIN = _mapscript.MS_RENDER_WITH_PLUGIN
+MS_RENDER_WITH_CAIRO_RASTER = _mapscript.MS_RENDER_WITH_CAIRO_RASTER
+MS_RENDER_WITH_CAIRO_PDF = _mapscript.MS_RENDER_WITH_CAIRO_PDF
+MS_RENDER_WITH_CAIRO_SVG = _mapscript.MS_RENDER_WITH_CAIRO_SVG
+MS_RENDER_WITH_OGL = _mapscript.MS_RENDER_WITH_OGL
+MS_RENDER_WITH_AGG = _mapscript.MS_RENDER_WITH_AGG
+MS_RENDER_WITH_GD = _mapscript.MS_RENDER_WITH_GD
+MS_RENDER_WITH_KML = _mapscript.MS_RENDER_WITH_KML
 MS_FILE_MAP = _mapscript.MS_FILE_MAP
 MS_FILE_SYMBOL = _mapscript.MS_FILE_SYMBOL
 MS_INCHES = _mapscript.MS_INCHES
@@ -132,6 +146,8 @@ MS_CC = _mapscript.MS_CC
 MS_AUTO = _mapscript.MS_AUTO
 MS_XY = _mapscript.MS_XY
 MS_FOLLOW = _mapscript.MS_FOLLOW
+MS_NONE = _mapscript.MS_NONE
+MS_AUTO2 = _mapscript.MS_AUTO2
 MS_TINY = _mapscript.MS_TINY
 MS_SMALL = _mapscript.MS_SMALL
 MS_MEDIUM = _mapscript.MS_MEDIUM
@@ -151,9 +167,10 @@ MS_WMS = _mapscript.MS_WMS
 MS_ORACLESPATIAL = _mapscript.MS_ORACLESPATIAL
 MS_WFS = _mapscript.MS_WFS
 MS_GRATICULE = _mapscript.MS_GRATICULE
-MS_MYGIS = _mapscript.MS_MYGIS
+MS_MYSQL = _mapscript.MS_MYSQL
 MS_RASTER = _mapscript.MS_RASTER
 MS_PLUGIN = _mapscript.MS_PLUGIN
+MS_UNION = _mapscript.MS_UNION
 MS_DB_XBASE = _mapscript.MS_DB_XBASE
 MS_DB_CSV = _mapscript.MS_DB_CSV
 MS_DB_MYSQL = _mapscript.MS_DB_MYSQL
@@ -171,7 +188,7 @@ MS_QUERY_BY_RECT = _mapscript.MS_QUERY_BY_RECT
 MS_QUERY_BY_SHAPE = _mapscript.MS_QUERY_BY_SHAPE
 MS_QUERY_BY_ATTRIBUTE = _mapscript.MS_QUERY_BY_ATTRIBUTE
 MS_QUERY_BY_INDEX = _mapscript.MS_QUERY_BY_INDEX
-MS_QUERY_BY_OPERATOR = _mapscript.MS_QUERY_BY_OPERATOR
+MS_QUERY_BY_FILTER = _mapscript.MS_QUERY_BY_FILTER
 MS_ALIGN_LEFT = _mapscript.MS_ALIGN_LEFT
 MS_ALIGN_CENTER = _mapscript.MS_ALIGN_CENTER
 MS_ALIGN_RIGHT = _mapscript.MS_ALIGN_RIGHT
@@ -182,6 +199,7 @@ MS_CJC_MITER = _mapscript.MS_CJC_MITER
 MS_CJC_ROUND = _mapscript.MS_CJC_ROUND
 MS_CJC_SQUARE = _mapscript.MS_CJC_SQUARE
 MS_CJC_TRIANGLE = _mapscript.MS_CJC_TRIANGLE
+MS_CJC_DEFAULT_JOIN_MAXSIZE = _mapscript.MS_CJC_DEFAULT_JOIN_MAXSIZE
 MS_SUCCESS = _mapscript.MS_SUCCESS
 MS_FAILURE = _mapscript.MS_FAILURE
 MS_DONE = _mapscript.MS_DONE
@@ -191,6 +209,7 @@ MS_IMAGEMODE_RGBA = _mapscript.MS_IMAGEMODE_RGBA
 MS_IMAGEMODE_INT16 = _mapscript.MS_IMAGEMODE_INT16
 MS_IMAGEMODE_FLOAT32 = _mapscript.MS_IMAGEMODE_FLOAT32
 MS_IMAGEMODE_BYTE = _mapscript.MS_IMAGEMODE_BYTE
+MS_IMAGEMODE_FEATURE = _mapscript.MS_IMAGEMODE_FEATURE
 MS_IMAGEMODE_NULL = _mapscript.MS_IMAGEMODE_NULL
 MS_GEOS_EQUALS = _mapscript.MS_GEOS_EQUALS
 MS_GEOS_DISJOINT = _mapscript.MS_GEOS_DISJOINT
@@ -202,6 +221,30 @@ MS_GEOS_WITHIN = _mapscript.MS_GEOS_WITHIN
 MS_GEOS_CONTAINS = _mapscript.MS_GEOS_CONTAINS
 MS_GEOS_BEYOND = _mapscript.MS_GEOS_BEYOND
 MS_GEOS_DWITHIN = _mapscript.MS_GEOS_DWITHIN
+MS_TRANSFORM_NONE = _mapscript.MS_TRANSFORM_NONE
+MS_TRANSFORM_ROUND = _mapscript.MS_TRANSFORM_ROUND
+MS_TRANSFORM_SNAPTOGRID = _mapscript.MS_TRANSFORM_SNAPTOGRID
+MS_TRANSFORM_FULLRESOLUTION = _mapscript.MS_TRANSFORM_FULLRESOLUTION
+MS_TRANSFORM_SIMPLIFY = _mapscript.MS_TRANSFORM_SIMPLIFY
+MS_STYLE_BINDING_LENGTH = _mapscript.MS_STYLE_BINDING_LENGTH
+MS_STYLE_BINDING_SIZE = _mapscript.MS_STYLE_BINDING_SIZE
+MS_STYLE_BINDING_WIDTH = _mapscript.MS_STYLE_BINDING_WIDTH
+MS_STYLE_BINDING_ANGLE = _mapscript.MS_STYLE_BINDING_ANGLE
+MS_STYLE_BINDING_COLOR = _mapscript.MS_STYLE_BINDING_COLOR
+MS_STYLE_BINDING_OUTLINECOLOR = _mapscript.MS_STYLE_BINDING_OUTLINECOLOR
+MS_STYLE_BINDING_SYMBOL = _mapscript.MS_STYLE_BINDING_SYMBOL
+MS_STYLE_BINDING_OUTLINEWIDTH = _mapscript.MS_STYLE_BINDING_OUTLINEWIDTH
+MS_STYLE_BINDING_OPACITY = _mapscript.MS_STYLE_BINDING_OPACITY
+MS_LABEL_BINDING_LENGTH = _mapscript.MS_LABEL_BINDING_LENGTH
+MS_LABEL_BINDING_SIZE = _mapscript.MS_LABEL_BINDING_SIZE
+MS_LABEL_BINDING_ANGLE = _mapscript.MS_LABEL_BINDING_ANGLE
+MS_LABEL_BINDING_COLOR = _mapscript.MS_LABEL_BINDING_COLOR
+MS_LABEL_BINDING_OUTLINECOLOR = _mapscript.MS_LABEL_BINDING_OUTLINECOLOR
+MS_LABEL_BINDING_FONT = _mapscript.MS_LABEL_BINDING_FONT
+MS_LABEL_BINDING_PRIORITY = _mapscript.MS_LABEL_BINDING_PRIORITY
+MS_LABEL_BINDING_POSITION = _mapscript.MS_LABEL_BINDING_POSITION
+MS_LABEL_BINDING_SHADOWSIZEX = _mapscript.MS_LABEL_BINDING_SHADOWSIZEX
+MS_LABEL_BINDING_SHADOWSIZEY = _mapscript.MS_LABEL_BINDING_SHADOWSIZEY
 class fontSetObj(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, fontSetObj, name, value)
@@ -222,6 +265,77 @@ class fontSetObj(_object):
     __del__ = lambda self : None;
 fontSetObj_swigregister = _mapscript.fontSetObj_swigregister
 fontSetObj_swigregister(fontSetObj)
+
+MS_TOKEN_LOGICAL_AND = _mapscript.MS_TOKEN_LOGICAL_AND
+MS_TOKEN_LOGICAL_OR = _mapscript.MS_TOKEN_LOGICAL_OR
+MS_TOKEN_LOGICAL_NOT = _mapscript.MS_TOKEN_LOGICAL_NOT
+MS_TOKEN_LITERAL_NUMBER = _mapscript.MS_TOKEN_LITERAL_NUMBER
+MS_TOKEN_LITERAL_STRING = _mapscript.MS_TOKEN_LITERAL_STRING
+MS_TOKEN_LITERAL_TIME = _mapscript.MS_TOKEN_LITERAL_TIME
+MS_TOKEN_LITERAL_SHAPE = _mapscript.MS_TOKEN_LITERAL_SHAPE
+MS_TOKEN_COMPARISON_EQ = _mapscript.MS_TOKEN_COMPARISON_EQ
+MS_TOKEN_COMPARISON_NE = _mapscript.MS_TOKEN_COMPARISON_NE
+MS_TOKEN_COMPARISON_GT = _mapscript.MS_TOKEN_COMPARISON_GT
+MS_TOKEN_COMPARISON_LT = _mapscript.MS_TOKEN_COMPARISON_LT
+MS_TOKEN_COMPARISON_LE = _mapscript.MS_TOKEN_COMPARISON_LE
+MS_TOKEN_COMPARISON_GE = _mapscript.MS_TOKEN_COMPARISON_GE
+MS_TOKEN_COMPARISON_IEQ = _mapscript.MS_TOKEN_COMPARISON_IEQ
+MS_TOKEN_COMPARISON_RE = _mapscript.MS_TOKEN_COMPARISON_RE
+MS_TOKEN_COMPARISON_IRE = _mapscript.MS_TOKEN_COMPARISON_IRE
+MS_TOKEN_COMPARISON_IN = _mapscript.MS_TOKEN_COMPARISON_IN
+MS_TOKEN_COMPARISON_LIKE = _mapscript.MS_TOKEN_COMPARISON_LIKE
+MS_TOKEN_COMPARISON_INTERSECTS = _mapscript.MS_TOKEN_COMPARISON_INTERSECTS
+MS_TOKEN_COMPARISON_DISJOINT = _mapscript.MS_TOKEN_COMPARISON_DISJOINT
+MS_TOKEN_COMPARISON_TOUCHES = _mapscript.MS_TOKEN_COMPARISON_TOUCHES
+MS_TOKEN_COMPARISON_OVERLAPS = _mapscript.MS_TOKEN_COMPARISON_OVERLAPS
+MS_TOKEN_COMPARISON_CROSSES = _mapscript.MS_TOKEN_COMPARISON_CROSSES
+MS_TOKEN_COMPARISON_WITHIN = _mapscript.MS_TOKEN_COMPARISON_WITHIN
+MS_TOKEN_COMPARISON_CONTAINS = _mapscript.MS_TOKEN_COMPARISON_CONTAINS
+MS_TOKEN_COMPARISON_BEYOND = _mapscript.MS_TOKEN_COMPARISON_BEYOND
+MS_TOKEN_COMPARISON_DWITHIN = _mapscript.MS_TOKEN_COMPARISON_DWITHIN
+MS_TOKEN_FUNCTION_LENGTH = _mapscript.MS_TOKEN_FUNCTION_LENGTH
+MS_TOKEN_FUNCTION_TOSTRING = _mapscript.MS_TOKEN_FUNCTION_TOSTRING
+MS_TOKEN_FUNCTION_COMMIFY = _mapscript.MS_TOKEN_FUNCTION_COMMIFY
+MS_TOKEN_FUNCTION_AREA = _mapscript.MS_TOKEN_FUNCTION_AREA
+MS_TOKEN_FUNCTION_ROUND = _mapscript.MS_TOKEN_FUNCTION_ROUND
+MS_TOKEN_FUNCTION_FROMTEXT = _mapscript.MS_TOKEN_FUNCTION_FROMTEXT
+MS_TOKEN_FUNCTION_BUFFER = _mapscript.MS_TOKEN_FUNCTION_BUFFER
+MS_TOKEN_BINDING_DOUBLE = _mapscript.MS_TOKEN_BINDING_DOUBLE
+MS_TOKEN_BINDING_INTEGER = _mapscript.MS_TOKEN_BINDING_INTEGER
+MS_TOKEN_BINDING_STRING = _mapscript.MS_TOKEN_BINDING_STRING
+MS_TOKEN_BINDING_TIME = _mapscript.MS_TOKEN_BINDING_TIME
+MS_TOKEN_BINDING_SHAPE = _mapscript.MS_TOKEN_BINDING_SHAPE
+MS_PARSE_TYPE_BOOLEAN = _mapscript.MS_PARSE_TYPE_BOOLEAN
+MS_PARSE_TYPE_STRING = _mapscript.MS_PARSE_TYPE_STRING
+MS_PARSE_TYPE_SHAPE = _mapscript.MS_PARSE_TYPE_SHAPE
+class clusterObj(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, clusterObj, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, clusterObj, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["maxdistance"] = _mapscript.clusterObj_maxdistance_set
+    __swig_getmethods__["maxdistance"] = _mapscript.clusterObj_maxdistance_get
+    if _newclass:maxdistance = _swig_property(_mapscript.clusterObj_maxdistance_get, _mapscript.clusterObj_maxdistance_set)
+    __swig_setmethods__["buffer"] = _mapscript.clusterObj_buffer_set
+    __swig_getmethods__["buffer"] = _mapscript.clusterObj_buffer_get
+    if _newclass:buffer = _swig_property(_mapscript.clusterObj_buffer_get, _mapscript.clusterObj_buffer_set)
+    __swig_setmethods__["region"] = _mapscript.clusterObj_region_set
+    __swig_getmethods__["region"] = _mapscript.clusterObj_region_get
+    if _newclass:region = _swig_property(_mapscript.clusterObj_region_get, _mapscript.clusterObj_region_set)
+    def updateFromString(*args): return _mapscript.clusterObj_updateFromString(*args)
+    def setGroup(*args): return _mapscript.clusterObj_setGroup(*args)
+    def getGroupString(*args): return _mapscript.clusterObj_getGroupString(*args)
+    def setFilter(*args): return _mapscript.clusterObj_setFilter(*args)
+    def getFilterString(*args): return _mapscript.clusterObj_getFilterString(*args)
+    def __init__(self, *args): 
+        this = _mapscript.new_clusterObj(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _mapscript.delete_clusterObj
+    __del__ = lambda self : None;
+clusterObj_swigregister = _mapscript.clusterObj_swigregister
+clusterObj_swigregister(clusterObj)
 
 class outputFormatObj(_object):
     __swig_setmethods__ = {}
@@ -265,9 +379,6 @@ class outputFormatObj(_object):
     __swig_setmethods__["inmapfile"] = _mapscript.outputFormatObj_inmapfile_set
     __swig_getmethods__["inmapfile"] = _mapscript.outputFormatObj_inmapfile_get
     if _newclass:inmapfile = _swig_property(_mapscript.outputFormatObj_inmapfile_get, _mapscript.outputFormatObj_inmapfile_set)
-    __swig_setmethods__["vtable"] = _mapscript.outputFormatObj_vtable_set
-    __swig_getmethods__["vtable"] = _mapscript.outputFormatObj_vtable_get
-    if _newclass:vtable = _swig_property(_mapscript.outputFormatObj_vtable_get, _mapscript.outputFormatObj_vtable_set)
     def __init__(self, *args): 
         this = _mapscript.new_outputFormatObj(*args)
         try: self.this.append(this)
@@ -279,6 +390,7 @@ class outputFormatObj(_object):
     def setOption(*args): return _mapscript.outputFormatObj_setOption(*args)
     def validate(*args): return _mapscript.outputFormatObj_validate(*args)
     def getOption(*args): return _mapscript.outputFormatObj_getOption(*args)
+    def attachDevice(*args): return _mapscript.outputFormatObj_attachDevice(*args)
 outputFormatObj_swigregister = _mapscript.outputFormatObj_swigregister
 outputFormatObj_swigregister(outputFormatObj)
 
@@ -314,155 +426,6 @@ class queryMapObj(_object):
 queryMapObj_swigregister = _mapscript.queryMapObj_swigregister
 queryMapObj_swigregister(queryMapObj)
 
-MS_STYLE_BINDING_LENGTH = _mapscript.MS_STYLE_BINDING_LENGTH
-MS_STYLE_BINDING_SIZE = _mapscript.MS_STYLE_BINDING_SIZE
-MS_STYLE_BINDING_WIDTH = _mapscript.MS_STYLE_BINDING_WIDTH
-MS_STYLE_BINDING_ANGLE = _mapscript.MS_STYLE_BINDING_ANGLE
-MS_STYLE_BINDING_COLOR = _mapscript.MS_STYLE_BINDING_COLOR
-MS_STYLE_BINDING_OUTLINECOLOR = _mapscript.MS_STYLE_BINDING_OUTLINECOLOR
-MS_STYLE_BINDING_SYMBOL = _mapscript.MS_STYLE_BINDING_SYMBOL
-MS_STYLE_BINDING_OUTLINEWIDTH = _mapscript.MS_STYLE_BINDING_OUTLINEWIDTH
-MS_STYLE_BINDING_OPACITY = _mapscript.MS_STYLE_BINDING_OPACITY
-MS_LABEL_BINDING_LENGTH = _mapscript.MS_LABEL_BINDING_LENGTH
-MS_LABEL_BINDING_SIZE = _mapscript.MS_LABEL_BINDING_SIZE
-MS_LABEL_BINDING_ANGLE = _mapscript.MS_LABEL_BINDING_ANGLE
-MS_LABEL_BINDING_COLOR = _mapscript.MS_LABEL_BINDING_COLOR
-MS_LABEL_BINDING_OUTLINECOLOR = _mapscript.MS_LABEL_BINDING_OUTLINECOLOR
-MS_LABEL_BINDING_FONT = _mapscript.MS_LABEL_BINDING_FONT
-MS_LABEL_BINDING_PRIORITY = _mapscript.MS_LABEL_BINDING_PRIORITY
-class labelObj(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, labelObj, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, labelObj, name)
-    __repr__ = _swig_repr
-    __swig_setmethods__["font"] = _mapscript.labelObj_font_set
-    __swig_getmethods__["font"] = _mapscript.labelObj_font_get
-    if _newclass:font = _swig_property(_mapscript.labelObj_font_get, _mapscript.labelObj_font_set)
-    __swig_setmethods__["type"] = _mapscript.labelObj_type_set
-    __swig_getmethods__["type"] = _mapscript.labelObj_type_get
-    if _newclass:type = _swig_property(_mapscript.labelObj_type_get, _mapscript.labelObj_type_set)
-    __swig_setmethods__["color"] = _mapscript.labelObj_color_set
-    __swig_getmethods__["color"] = _mapscript.labelObj_color_get
-    if _newclass:color = _swig_property(_mapscript.labelObj_color_get, _mapscript.labelObj_color_set)
-    __swig_setmethods__["outlinecolor"] = _mapscript.labelObj_outlinecolor_set
-    __swig_getmethods__["outlinecolor"] = _mapscript.labelObj_outlinecolor_get
-    if _newclass:outlinecolor = _swig_property(_mapscript.labelObj_outlinecolor_get, _mapscript.labelObj_outlinecolor_set)
-    __swig_setmethods__["outlinewidth"] = _mapscript.labelObj_outlinewidth_set
-    __swig_getmethods__["outlinewidth"] = _mapscript.labelObj_outlinewidth_get
-    if _newclass:outlinewidth = _swig_property(_mapscript.labelObj_outlinewidth_get, _mapscript.labelObj_outlinewidth_set)
-    __swig_setmethods__["shadowcolor"] = _mapscript.labelObj_shadowcolor_set
-    __swig_getmethods__["shadowcolor"] = _mapscript.labelObj_shadowcolor_get
-    if _newclass:shadowcolor = _swig_property(_mapscript.labelObj_shadowcolor_get, _mapscript.labelObj_shadowcolor_set)
-    __swig_setmethods__["shadowsizex"] = _mapscript.labelObj_shadowsizex_set
-    __swig_getmethods__["shadowsizex"] = _mapscript.labelObj_shadowsizex_get
-    if _newclass:shadowsizex = _swig_property(_mapscript.labelObj_shadowsizex_get, _mapscript.labelObj_shadowsizex_set)
-    __swig_setmethods__["shadowsizey"] = _mapscript.labelObj_shadowsizey_set
-    __swig_getmethods__["shadowsizey"] = _mapscript.labelObj_shadowsizey_get
-    if _newclass:shadowsizey = _swig_property(_mapscript.labelObj_shadowsizey_get, _mapscript.labelObj_shadowsizey_set)
-    __swig_setmethods__["backgroundcolor"] = _mapscript.labelObj_backgroundcolor_set
-    __swig_getmethods__["backgroundcolor"] = _mapscript.labelObj_backgroundcolor_get
-    if _newclass:backgroundcolor = _swig_property(_mapscript.labelObj_backgroundcolor_get, _mapscript.labelObj_backgroundcolor_set)
-    __swig_setmethods__["backgroundshadowcolor"] = _mapscript.labelObj_backgroundshadowcolor_set
-    __swig_getmethods__["backgroundshadowcolor"] = _mapscript.labelObj_backgroundshadowcolor_get
-    if _newclass:backgroundshadowcolor = _swig_property(_mapscript.labelObj_backgroundshadowcolor_get, _mapscript.labelObj_backgroundshadowcolor_set)
-    __swig_setmethods__["backgroundshadowsizex"] = _mapscript.labelObj_backgroundshadowsizex_set
-    __swig_getmethods__["backgroundshadowsizex"] = _mapscript.labelObj_backgroundshadowsizex_get
-    if _newclass:backgroundshadowsizex = _swig_property(_mapscript.labelObj_backgroundshadowsizex_get, _mapscript.labelObj_backgroundshadowsizex_set)
-    __swig_setmethods__["backgroundshadowsizey"] = _mapscript.labelObj_backgroundshadowsizey_set
-    __swig_getmethods__["backgroundshadowsizey"] = _mapscript.labelObj_backgroundshadowsizey_get
-    if _newclass:backgroundshadowsizey = _swig_property(_mapscript.labelObj_backgroundshadowsizey_get, _mapscript.labelObj_backgroundshadowsizey_set)
-    __swig_setmethods__["size"] = _mapscript.labelObj_size_set
-    __swig_getmethods__["size"] = _mapscript.labelObj_size_get
-    if _newclass:size = _swig_property(_mapscript.labelObj_size_get, _mapscript.labelObj_size_set)
-    __swig_setmethods__["minsize"] = _mapscript.labelObj_minsize_set
-    __swig_getmethods__["minsize"] = _mapscript.labelObj_minsize_get
-    if _newclass:minsize = _swig_property(_mapscript.labelObj_minsize_get, _mapscript.labelObj_minsize_set)
-    __swig_setmethods__["maxsize"] = _mapscript.labelObj_maxsize_set
-    __swig_getmethods__["maxsize"] = _mapscript.labelObj_maxsize_get
-    if _newclass:maxsize = _swig_property(_mapscript.labelObj_maxsize_get, _mapscript.labelObj_maxsize_set)
-    __swig_setmethods__["position"] = _mapscript.labelObj_position_set
-    __swig_getmethods__["position"] = _mapscript.labelObj_position_get
-    if _newclass:position = _swig_property(_mapscript.labelObj_position_get, _mapscript.labelObj_position_set)
-    __swig_setmethods__["offsetx"] = _mapscript.labelObj_offsetx_set
-    __swig_getmethods__["offsetx"] = _mapscript.labelObj_offsetx_get
-    if _newclass:offsetx = _swig_property(_mapscript.labelObj_offsetx_get, _mapscript.labelObj_offsetx_set)
-    __swig_setmethods__["offsety"] = _mapscript.labelObj_offsety_set
-    __swig_getmethods__["offsety"] = _mapscript.labelObj_offsety_get
-    if _newclass:offsety = _swig_property(_mapscript.labelObj_offsety_get, _mapscript.labelObj_offsety_set)
-    __swig_setmethods__["angle"] = _mapscript.labelObj_angle_set
-    __swig_getmethods__["angle"] = _mapscript.labelObj_angle_get
-    if _newclass:angle = _swig_property(_mapscript.labelObj_angle_get, _mapscript.labelObj_angle_set)
-    __swig_setmethods__["autoangle"] = _mapscript.labelObj_autoangle_set
-    __swig_getmethods__["autoangle"] = _mapscript.labelObj_autoangle_get
-    if _newclass:autoangle = _swig_property(_mapscript.labelObj_autoangle_get, _mapscript.labelObj_autoangle_set)
-    __swig_setmethods__["autofollow"] = _mapscript.labelObj_autofollow_set
-    __swig_getmethods__["autofollow"] = _mapscript.labelObj_autofollow_get
-    if _newclass:autofollow = _swig_property(_mapscript.labelObj_autofollow_get, _mapscript.labelObj_autofollow_set)
-    __swig_setmethods__["buffer"] = _mapscript.labelObj_buffer_set
-    __swig_getmethods__["buffer"] = _mapscript.labelObj_buffer_get
-    if _newclass:buffer = _swig_property(_mapscript.labelObj_buffer_get, _mapscript.labelObj_buffer_set)
-    __swig_setmethods__["antialias"] = _mapscript.labelObj_antialias_set
-    __swig_getmethods__["antialias"] = _mapscript.labelObj_antialias_get
-    if _newclass:antialias = _swig_property(_mapscript.labelObj_antialias_get, _mapscript.labelObj_antialias_set)
-    __swig_setmethods__["align"] = _mapscript.labelObj_align_set
-    __swig_getmethods__["align"] = _mapscript.labelObj_align_get
-    if _newclass:align = _swig_property(_mapscript.labelObj_align_get, _mapscript.labelObj_align_set)
-    __swig_setmethods__["wrap"] = _mapscript.labelObj_wrap_set
-    __swig_getmethods__["wrap"] = _mapscript.labelObj_wrap_get
-    if _newclass:wrap = _swig_property(_mapscript.labelObj_wrap_get, _mapscript.labelObj_wrap_set)
-    __swig_setmethods__["maxlength"] = _mapscript.labelObj_maxlength_set
-    __swig_getmethods__["maxlength"] = _mapscript.labelObj_maxlength_get
-    if _newclass:maxlength = _swig_property(_mapscript.labelObj_maxlength_get, _mapscript.labelObj_maxlength_set)
-    __swig_setmethods__["minlength"] = _mapscript.labelObj_minlength_set
-    __swig_getmethods__["minlength"] = _mapscript.labelObj_minlength_get
-    if _newclass:minlength = _swig_property(_mapscript.labelObj_minlength_get, _mapscript.labelObj_minlength_set)
-    __swig_setmethods__["space_size_10"] = _mapscript.labelObj_space_size_10_set
-    __swig_getmethods__["space_size_10"] = _mapscript.labelObj_space_size_10_get
-    if _newclass:space_size_10 = _swig_property(_mapscript.labelObj_space_size_10_get, _mapscript.labelObj_space_size_10_set)
-    __swig_setmethods__["minfeaturesize"] = _mapscript.labelObj_minfeaturesize_set
-    __swig_getmethods__["minfeaturesize"] = _mapscript.labelObj_minfeaturesize_get
-    if _newclass:minfeaturesize = _swig_property(_mapscript.labelObj_minfeaturesize_get, _mapscript.labelObj_minfeaturesize_set)
-    __swig_setmethods__["autominfeaturesize"] = _mapscript.labelObj_autominfeaturesize_set
-    __swig_getmethods__["autominfeaturesize"] = _mapscript.labelObj_autominfeaturesize_get
-    if _newclass:autominfeaturesize = _swig_property(_mapscript.labelObj_autominfeaturesize_get, _mapscript.labelObj_autominfeaturesize_set)
-    __swig_setmethods__["minscaledenom"] = _mapscript.labelObj_minscaledenom_set
-    __swig_getmethods__["minscaledenom"] = _mapscript.labelObj_minscaledenom_get
-    if _newclass:minscaledenom = _swig_property(_mapscript.labelObj_minscaledenom_get, _mapscript.labelObj_minscaledenom_set)
-    __swig_setmethods__["maxscaledenom"] = _mapscript.labelObj_maxscaledenom_set
-    __swig_getmethods__["maxscaledenom"] = _mapscript.labelObj_maxscaledenom_get
-    if _newclass:maxscaledenom = _swig_property(_mapscript.labelObj_maxscaledenom_get, _mapscript.labelObj_maxscaledenom_set)
-    __swig_setmethods__["mindistance"] = _mapscript.labelObj_mindistance_set
-    __swig_getmethods__["mindistance"] = _mapscript.labelObj_mindistance_get
-    if _newclass:mindistance = _swig_property(_mapscript.labelObj_mindistance_get, _mapscript.labelObj_mindistance_set)
-    __swig_setmethods__["repeatdistance"] = _mapscript.labelObj_repeatdistance_set
-    __swig_getmethods__["repeatdistance"] = _mapscript.labelObj_repeatdistance_get
-    if _newclass:repeatdistance = _swig_property(_mapscript.labelObj_repeatdistance_get, _mapscript.labelObj_repeatdistance_set)
-    __swig_setmethods__["partials"] = _mapscript.labelObj_partials_set
-    __swig_getmethods__["partials"] = _mapscript.labelObj_partials_get
-    if _newclass:partials = _swig_property(_mapscript.labelObj_partials_get, _mapscript.labelObj_partials_set)
-    __swig_setmethods__["force"] = _mapscript.labelObj_force_set
-    __swig_getmethods__["force"] = _mapscript.labelObj_force_get
-    if _newclass:force = _swig_property(_mapscript.labelObj_force_get, _mapscript.labelObj_force_set)
-    __swig_setmethods__["encoding"] = _mapscript.labelObj_encoding_set
-    __swig_getmethods__["encoding"] = _mapscript.labelObj_encoding_get
-    if _newclass:encoding = _swig_property(_mapscript.labelObj_encoding_get, _mapscript.labelObj_encoding_set)
-    __swig_setmethods__["priority"] = _mapscript.labelObj_priority_set
-    __swig_getmethods__["priority"] = _mapscript.labelObj_priority_get
-    if _newclass:priority = _swig_property(_mapscript.labelObj_priority_get, _mapscript.labelObj_priority_set)
-    def updateFromString(*args): return _mapscript.labelObj_updateFromString(*args)
-    def removeBinding(*args): return _mapscript.labelObj_removeBinding(*args)
-    def getBinding(*args): return _mapscript.labelObj_getBinding(*args)
-    def setBinding(*args): return _mapscript.labelObj_setBinding(*args)
-    def __init__(self, *args): 
-        this = _mapscript.new_labelObj(*args)
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_destroy__ = _mapscript.delete_labelObj
-    __del__ = lambda self : None;
-labelObj_swigregister = _mapscript.labelObj_swigregister
-labelObj_swigregister(labelObj)
-
 class webObj(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, webObj, name, value)
@@ -478,6 +441,9 @@ class webObj(_object):
     __swig_setmethods__["imageurl"] = _mapscript.webObj_imageurl_set
     __swig_getmethods__["imageurl"] = _mapscript.webObj_imageurl_get
     if _newclass:imageurl = _swig_property(_mapscript.webObj_imageurl_get, _mapscript.webObj_imageurl_set)
+    __swig_setmethods__["temppath"] = _mapscript.webObj_temppath_set
+    __swig_getmethods__["temppath"] = _mapscript.webObj_temppath_get
+    if _newclass:temppath = _swig_property(_mapscript.webObj_temppath_get, _mapscript.webObj_temppath_set)
     __swig_getmethods__["map"] = _mapscript.webObj_map_get
     if _newclass:map = _swig_property(_mapscript.webObj_map_get)
     __swig_setmethods__["template"] = _mapscript.webObj_template_set
@@ -657,6 +623,130 @@ class styleObj(_object):
 styleObj_swigregister = _mapscript.styleObj_swigregister
 styleObj_swigregister(styleObj)
 
+class labelObj(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, labelObj, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, labelObj, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["font"] = _mapscript.labelObj_font_set
+    __swig_getmethods__["font"] = _mapscript.labelObj_font_get
+    if _newclass:font = _swig_property(_mapscript.labelObj_font_get, _mapscript.labelObj_font_set)
+    __swig_setmethods__["type"] = _mapscript.labelObj_type_set
+    __swig_getmethods__["type"] = _mapscript.labelObj_type_get
+    if _newclass:type = _swig_property(_mapscript.labelObj_type_get, _mapscript.labelObj_type_set)
+    __swig_setmethods__["color"] = _mapscript.labelObj_color_set
+    __swig_getmethods__["color"] = _mapscript.labelObj_color_get
+    if _newclass:color = _swig_property(_mapscript.labelObj_color_get, _mapscript.labelObj_color_set)
+    __swig_setmethods__["outlinecolor"] = _mapscript.labelObj_outlinecolor_set
+    __swig_getmethods__["outlinecolor"] = _mapscript.labelObj_outlinecolor_get
+    if _newclass:outlinecolor = _swig_property(_mapscript.labelObj_outlinecolor_get, _mapscript.labelObj_outlinecolor_set)
+    __swig_setmethods__["outlinewidth"] = _mapscript.labelObj_outlinewidth_set
+    __swig_getmethods__["outlinewidth"] = _mapscript.labelObj_outlinewidth_get
+    if _newclass:outlinewidth = _swig_property(_mapscript.labelObj_outlinewidth_get, _mapscript.labelObj_outlinewidth_set)
+    __swig_setmethods__["shadowcolor"] = _mapscript.labelObj_shadowcolor_set
+    __swig_getmethods__["shadowcolor"] = _mapscript.labelObj_shadowcolor_get
+    if _newclass:shadowcolor = _swig_property(_mapscript.labelObj_shadowcolor_get, _mapscript.labelObj_shadowcolor_set)
+    __swig_setmethods__["shadowsizex"] = _mapscript.labelObj_shadowsizex_set
+    __swig_getmethods__["shadowsizex"] = _mapscript.labelObj_shadowsizex_get
+    if _newclass:shadowsizex = _swig_property(_mapscript.labelObj_shadowsizex_get, _mapscript.labelObj_shadowsizex_set)
+    __swig_setmethods__["shadowsizey"] = _mapscript.labelObj_shadowsizey_set
+    __swig_getmethods__["shadowsizey"] = _mapscript.labelObj_shadowsizey_get
+    if _newclass:shadowsizey = _swig_property(_mapscript.labelObj_shadowsizey_get, _mapscript.labelObj_shadowsizey_set)
+    __swig_setmethods__["size"] = _mapscript.labelObj_size_set
+    __swig_getmethods__["size"] = _mapscript.labelObj_size_get
+    if _newclass:size = _swig_property(_mapscript.labelObj_size_get, _mapscript.labelObj_size_set)
+    __swig_setmethods__["minsize"] = _mapscript.labelObj_minsize_set
+    __swig_getmethods__["minsize"] = _mapscript.labelObj_minsize_get
+    if _newclass:minsize = _swig_property(_mapscript.labelObj_minsize_get, _mapscript.labelObj_minsize_set)
+    __swig_setmethods__["maxsize"] = _mapscript.labelObj_maxsize_set
+    __swig_getmethods__["maxsize"] = _mapscript.labelObj_maxsize_get
+    if _newclass:maxsize = _swig_property(_mapscript.labelObj_maxsize_get, _mapscript.labelObj_maxsize_set)
+    __swig_setmethods__["position"] = _mapscript.labelObj_position_set
+    __swig_getmethods__["position"] = _mapscript.labelObj_position_get
+    if _newclass:position = _swig_property(_mapscript.labelObj_position_get, _mapscript.labelObj_position_set)
+    __swig_setmethods__["offsetx"] = _mapscript.labelObj_offsetx_set
+    __swig_getmethods__["offsetx"] = _mapscript.labelObj_offsetx_get
+    if _newclass:offsetx = _swig_property(_mapscript.labelObj_offsetx_get, _mapscript.labelObj_offsetx_set)
+    __swig_setmethods__["offsety"] = _mapscript.labelObj_offsety_set
+    __swig_getmethods__["offsety"] = _mapscript.labelObj_offsety_get
+    if _newclass:offsety = _swig_property(_mapscript.labelObj_offsety_get, _mapscript.labelObj_offsety_set)
+    __swig_setmethods__["angle"] = _mapscript.labelObj_angle_set
+    __swig_getmethods__["angle"] = _mapscript.labelObj_angle_get
+    if _newclass:angle = _swig_property(_mapscript.labelObj_angle_get, _mapscript.labelObj_angle_set)
+    __swig_setmethods__["anglemode"] = _mapscript.labelObj_anglemode_set
+    __swig_getmethods__["anglemode"] = _mapscript.labelObj_anglemode_get
+    if _newclass:anglemode = _swig_property(_mapscript.labelObj_anglemode_get, _mapscript.labelObj_anglemode_set)
+    __swig_setmethods__["buffer"] = _mapscript.labelObj_buffer_set
+    __swig_getmethods__["buffer"] = _mapscript.labelObj_buffer_get
+    if _newclass:buffer = _swig_property(_mapscript.labelObj_buffer_get, _mapscript.labelObj_buffer_set)
+    __swig_setmethods__["antialias"] = _mapscript.labelObj_antialias_set
+    __swig_getmethods__["antialias"] = _mapscript.labelObj_antialias_get
+    if _newclass:antialias = _swig_property(_mapscript.labelObj_antialias_get, _mapscript.labelObj_antialias_set)
+    __swig_setmethods__["align"] = _mapscript.labelObj_align_set
+    __swig_getmethods__["align"] = _mapscript.labelObj_align_get
+    if _newclass:align = _swig_property(_mapscript.labelObj_align_get, _mapscript.labelObj_align_set)
+    __swig_setmethods__["wrap"] = _mapscript.labelObj_wrap_set
+    __swig_getmethods__["wrap"] = _mapscript.labelObj_wrap_get
+    if _newclass:wrap = _swig_property(_mapscript.labelObj_wrap_get, _mapscript.labelObj_wrap_set)
+    __swig_setmethods__["maxlength"] = _mapscript.labelObj_maxlength_set
+    __swig_getmethods__["maxlength"] = _mapscript.labelObj_maxlength_get
+    if _newclass:maxlength = _swig_property(_mapscript.labelObj_maxlength_get, _mapscript.labelObj_maxlength_set)
+    __swig_setmethods__["minlength"] = _mapscript.labelObj_minlength_set
+    __swig_getmethods__["minlength"] = _mapscript.labelObj_minlength_get
+    if _newclass:minlength = _swig_property(_mapscript.labelObj_minlength_get, _mapscript.labelObj_minlength_set)
+    __swig_setmethods__["space_size_10"] = _mapscript.labelObj_space_size_10_set
+    __swig_getmethods__["space_size_10"] = _mapscript.labelObj_space_size_10_get
+    if _newclass:space_size_10 = _swig_property(_mapscript.labelObj_space_size_10_get, _mapscript.labelObj_space_size_10_set)
+    __swig_setmethods__["minfeaturesize"] = _mapscript.labelObj_minfeaturesize_set
+    __swig_getmethods__["minfeaturesize"] = _mapscript.labelObj_minfeaturesize_get
+    if _newclass:minfeaturesize = _swig_property(_mapscript.labelObj_minfeaturesize_get, _mapscript.labelObj_minfeaturesize_set)
+    __swig_setmethods__["autominfeaturesize"] = _mapscript.labelObj_autominfeaturesize_set
+    __swig_getmethods__["autominfeaturesize"] = _mapscript.labelObj_autominfeaturesize_get
+    if _newclass:autominfeaturesize = _swig_property(_mapscript.labelObj_autominfeaturesize_get, _mapscript.labelObj_autominfeaturesize_set)
+    __swig_setmethods__["minscaledenom"] = _mapscript.labelObj_minscaledenom_set
+    __swig_getmethods__["minscaledenom"] = _mapscript.labelObj_minscaledenom_get
+    if _newclass:minscaledenom = _swig_property(_mapscript.labelObj_minscaledenom_get, _mapscript.labelObj_minscaledenom_set)
+    __swig_setmethods__["maxscaledenom"] = _mapscript.labelObj_maxscaledenom_set
+    __swig_getmethods__["maxscaledenom"] = _mapscript.labelObj_maxscaledenom_get
+    if _newclass:maxscaledenom = _swig_property(_mapscript.labelObj_maxscaledenom_get, _mapscript.labelObj_maxscaledenom_set)
+    __swig_setmethods__["mindistance"] = _mapscript.labelObj_mindistance_set
+    __swig_getmethods__["mindistance"] = _mapscript.labelObj_mindistance_get
+    if _newclass:mindistance = _swig_property(_mapscript.labelObj_mindistance_get, _mapscript.labelObj_mindistance_set)
+    __swig_setmethods__["repeatdistance"] = _mapscript.labelObj_repeatdistance_set
+    __swig_getmethods__["repeatdistance"] = _mapscript.labelObj_repeatdistance_get
+    if _newclass:repeatdistance = _swig_property(_mapscript.labelObj_repeatdistance_get, _mapscript.labelObj_repeatdistance_set)
+    __swig_setmethods__["maxoverlapangle"] = _mapscript.labelObj_maxoverlapangle_set
+    __swig_getmethods__["maxoverlapangle"] = _mapscript.labelObj_maxoverlapangle_get
+    if _newclass:maxoverlapangle = _swig_property(_mapscript.labelObj_maxoverlapangle_get, _mapscript.labelObj_maxoverlapangle_set)
+    __swig_setmethods__["partials"] = _mapscript.labelObj_partials_set
+    __swig_getmethods__["partials"] = _mapscript.labelObj_partials_get
+    if _newclass:partials = _swig_property(_mapscript.labelObj_partials_get, _mapscript.labelObj_partials_set)
+    __swig_setmethods__["force"] = _mapscript.labelObj_force_set
+    __swig_getmethods__["force"] = _mapscript.labelObj_force_get
+    if _newclass:force = _swig_property(_mapscript.labelObj_force_get, _mapscript.labelObj_force_set)
+    __swig_setmethods__["encoding"] = _mapscript.labelObj_encoding_set
+    __swig_getmethods__["encoding"] = _mapscript.labelObj_encoding_get
+    if _newclass:encoding = _swig_property(_mapscript.labelObj_encoding_get, _mapscript.labelObj_encoding_set)
+    __swig_setmethods__["priority"] = _mapscript.labelObj_priority_set
+    __swig_getmethods__["priority"] = _mapscript.labelObj_priority_get
+    if _newclass:priority = _swig_property(_mapscript.labelObj_priority_get, _mapscript.labelObj_priority_set)
+    __swig_setmethods__["numstyles"] = _mapscript.labelObj_numstyles_set
+    __swig_getmethods__["numstyles"] = _mapscript.labelObj_numstyles_get
+    if _newclass:numstyles = _swig_property(_mapscript.labelObj_numstyles_get, _mapscript.labelObj_numstyles_set)
+    def updateFromString(*args): return _mapscript.labelObj_updateFromString(*args)
+    def removeBinding(*args): return _mapscript.labelObj_removeBinding(*args)
+    def getBinding(*args): return _mapscript.labelObj_getBinding(*args)
+    def setBinding(*args): return _mapscript.labelObj_setBinding(*args)
+    def __init__(self, *args): 
+        this = _mapscript.new_labelObj(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _mapscript.delete_labelObj
+    __del__ = lambda self : None;
+labelObj_swigregister = _mapscript.labelObj_swigregister
+labelObj_swigregister(labelObj)
+
 class classObj(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, classObj, name, value)
@@ -693,6 +783,9 @@ class classObj(_object):
     __swig_setmethods__["maxscaledenom"] = _mapscript.classObj_maxscaledenom_set
     __swig_getmethods__["maxscaledenom"] = _mapscript.classObj_maxscaledenom_get
     if _newclass:maxscaledenom = _swig_property(_mapscript.classObj_maxscaledenom_get, _mapscript.classObj_maxscaledenom_set)
+    __swig_setmethods__["minfeaturesize"] = _mapscript.classObj_minfeaturesize_set
+    __swig_getmethods__["minfeaturesize"] = _mapscript.classObj_minfeaturesize_get
+    if _newclass:minfeaturesize = _swig_property(_mapscript.classObj_minfeaturesize_get, _mapscript.classObj_minfeaturesize_set)
     __swig_getmethods__["refcount"] = _mapscript.classObj_refcount_get
     if _newclass:refcount = _swig_property(_mapscript.classObj_refcount_get)
     __swig_getmethods__["layer"] = _mapscript.classObj_layer_get
@@ -770,6 +863,8 @@ class labelCacheMemberObj(_object):
     if _newclass:poly = _swig_property(_mapscript.labelCacheMemberObj_poly_get)
     __swig_getmethods__["status"] = _mapscript.labelCacheMemberObj_status_get
     if _newclass:status = _swig_property(_mapscript.labelCacheMemberObj_status_get)
+    __swig_getmethods__["markerid"] = _mapscript.labelCacheMemberObj_markerid_get
+    if _newclass:markerid = _swig_property(_mapscript.labelCacheMemberObj_markerid_get)
     def __init__(self, *args): 
         this = _mapscript.new_labelCacheMemberObj(*args)
         try: self.this.append(this)
@@ -845,26 +940,28 @@ class labelCacheObj(_object):
 labelCacheObj_swigregister = _mapscript.labelCacheObj_swigregister
 labelCacheObj_swigregister(labelCacheObj)
 
-class resultCacheMemberObj(_object):
+class resultObj(_object):
     __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, resultCacheMemberObj, name, value)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, resultObj, name, value)
     __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, resultCacheMemberObj, name)
+    __getattr__ = lambda self, name: _swig_getattr(self, resultObj, name)
     __repr__ = _swig_repr
-    __swig_getmethods__["shapeindex"] = _mapscript.resultCacheMemberObj_shapeindex_get
-    if _newclass:shapeindex = _swig_property(_mapscript.resultCacheMemberObj_shapeindex_get)
-    __swig_getmethods__["tileindex"] = _mapscript.resultCacheMemberObj_tileindex_get
-    if _newclass:tileindex = _swig_property(_mapscript.resultCacheMemberObj_tileindex_get)
-    __swig_getmethods__["classindex"] = _mapscript.resultCacheMemberObj_classindex_get
-    if _newclass:classindex = _swig_property(_mapscript.resultCacheMemberObj_classindex_get)
+    __swig_getmethods__["shapeindex"] = _mapscript.resultObj_shapeindex_get
+    if _newclass:shapeindex = _swig_property(_mapscript.resultObj_shapeindex_get)
+    __swig_getmethods__["tileindex"] = _mapscript.resultObj_tileindex_get
+    if _newclass:tileindex = _swig_property(_mapscript.resultObj_tileindex_get)
+    __swig_getmethods__["resultindex"] = _mapscript.resultObj_resultindex_get
+    if _newclass:resultindex = _swig_property(_mapscript.resultObj_resultindex_get)
+    __swig_getmethods__["classindex"] = _mapscript.resultObj_classindex_get
+    if _newclass:classindex = _swig_property(_mapscript.resultObj_classindex_get)
     def __init__(self, *args): 
-        this = _mapscript.new_resultCacheMemberObj(*args)
+        this = _mapscript.new_resultObj(*args)
         try: self.this.append(this)
         except: self.this = this
-    __swig_destroy__ = _mapscript.delete_resultCacheMemberObj
+    __swig_destroy__ = _mapscript.delete_resultObj
     __del__ = lambda self : None;
-resultCacheMemberObj_swigregister = _mapscript.resultCacheMemberObj_swigregister
-resultCacheMemberObj_swigregister(resultCacheMemberObj)
+resultObj_swigregister = _mapscript.resultObj_swigregister
+resultObj_swigregister(resultObj)
 
 class resultCacheObj(_object):
     __swig_setmethods__ = {}
@@ -1146,6 +1243,9 @@ class layerObj(_object):
     __swig_setmethods__["maxscaledenom"] = _mapscript.layerObj_maxscaledenom_set
     __swig_getmethods__["maxscaledenom"] = _mapscript.layerObj_maxscaledenom_get
     if _newclass:maxscaledenom = _swig_property(_mapscript.layerObj_maxscaledenom_get, _mapscript.layerObj_maxscaledenom_set)
+    __swig_setmethods__["minfeaturesize"] = _mapscript.layerObj_minfeaturesize_set
+    __swig_getmethods__["minfeaturesize"] = _mapscript.layerObj_minfeaturesize_get
+    if _newclass:minfeaturesize = _swig_property(_mapscript.layerObj_minfeaturesize_get, _mapscript.layerObj_minfeaturesize_set)
     __swig_setmethods__["labelminscaledenom"] = _mapscript.layerObj_labelminscaledenom_set
     __swig_getmethods__["labelminscaledenom"] = _mapscript.layerObj_labelminscaledenom_get
     if _newclass:labelminscaledenom = _swig_property(_mapscript.layerObj_labelminscaledenom_get, _mapscript.layerObj_labelminscaledenom_set)
@@ -1164,6 +1264,9 @@ class layerObj(_object):
     __swig_setmethods__["maxfeatures"] = _mapscript.layerObj_maxfeatures_set
     __swig_getmethods__["maxfeatures"] = _mapscript.layerObj_maxfeatures_get
     if _newclass:maxfeatures = _swig_property(_mapscript.layerObj_maxfeatures_get, _mapscript.layerObj_maxfeatures_set)
+    __swig_setmethods__["startindex"] = _mapscript.layerObj_startindex_set
+    __swig_getmethods__["startindex"] = _mapscript.layerObj_startindex_get
+    if _newclass:startindex = _swig_property(_mapscript.layerObj_startindex_get, _mapscript.layerObj_startindex_set)
     __swig_setmethods__["offsite"] = _mapscript.layerObj_offsite_set
     __swig_getmethods__["offsite"] = _mapscript.layerObj_offsite_get
     if _newclass:offsite = _swig_property(_mapscript.layerObj_offsite_get, _mapscript.layerObj_offsite_set)
@@ -1221,6 +1324,10 @@ class layerObj(_object):
     if _newclass:metadata = _swig_property(_mapscript.layerObj_metadata_get)
     __swig_getmethods__["validation"] = _mapscript.layerObj_validation_get
     if _newclass:validation = _swig_property(_mapscript.layerObj_validation_get)
+    __swig_getmethods__["bindvals"] = _mapscript.layerObj_bindvals_get
+    if _newclass:bindvals = _swig_property(_mapscript.layerObj_bindvals_get)
+    __swig_getmethods__["cluster"] = _mapscript.layerObj_cluster_get
+    if _newclass:cluster = _swig_property(_mapscript.layerObj_cluster_get)
     __swig_setmethods__["opacity"] = _mapscript.layerObj_opacity_set
     __swig_getmethods__["opacity"] = _mapscript.layerObj_opacity_get
     if _newclass:opacity = _swig_property(_mapscript.layerObj_opacity_get, _mapscript.layerObj_opacity_set)
@@ -1263,10 +1370,9 @@ class layerObj(_object):
     def whichShapes(*args): return _mapscript.layerObj_whichShapes(*args)
     def nextShape(*args): return _mapscript.layerObj_nextShape(*args)
     def close(*args): return _mapscript.layerObj_close(*args)
-    def getFeature(*args): return _mapscript.layerObj_getFeature(*args)
     def getShape(*args): return _mapscript.layerObj_getShape(*args)
-    def resultsGetShape(*args): return _mapscript.layerObj_resultsGetShape(*args)
     def getNumResults(*args): return _mapscript.layerObj_getNumResults(*args)
+    def getResultsBounds(*args): return _mapscript.layerObj_getResultsBounds(*args)
     def getResult(*args): return _mapscript.layerObj_getResult(*args)
     def getClass(*args):
     	clazz = _mapscript.layerObj_getClass(*args)
@@ -1280,6 +1386,7 @@ class layerObj(_object):
     def getItem(*args): return _mapscript.layerObj_getItem(*args)
     def draw(*args): return _mapscript.layerObj_draw(*args)
     def drawQuery(*args): return _mapscript.layerObj_drawQuery(*args)
+    def queryByFilter(*args): return _mapscript.layerObj_queryByFilter(*args)
     def queryByAttributes(*args): return _mapscript.layerObj_queryByAttributes(*args)
     def queryByPoint(*args): return _mapscript.layerObj_queryByPoint(*args)
     def queryByRect(*args): return _mapscript.layerObj_queryByRect(*args)
@@ -1316,6 +1423,7 @@ class layerObj(_object):
     def getProcessingKey(*args): return _mapscript.layerObj_getProcessingKey(*args)
     def clearProcessing(*args): return _mapscript.layerObj_clearProcessing(*args)
     def setConnectionType(*args): return _mapscript.layerObj_setConnectionType(*args)
+    def getClassIndex(*args): return _mapscript.layerObj_getClassIndex(*args)
 layerObj_swigregister = _mapscript.layerObj_swigregister
 layerObj_swigregister(layerObj)
 
@@ -1473,6 +1581,7 @@ class mapObj(_object):
     def drawLabelCache(*args): return _mapscript.mapObj_drawLabelCache(*args)
     def getLabel(*args): return _mapscript.mapObj_getLabel(*args)
     def nextLabel(*args): return _mapscript.mapObj_nextLabel(*args)
+    def queryByFilter(*args): return _mapscript.mapObj_queryByFilter(*args)
     def queryByPoint(*args): return _mapscript.mapObj_queryByPoint(*args)
     def queryByRect(*args): return _mapscript.mapObj_queryByRect(*args)
     def queryByFeatures(*args): return _mapscript.mapObj_queryByFeatures(*args)
@@ -1554,11 +1663,6 @@ class imageObj(_object):
     if _newclass:imageurl = _swig_property(_mapscript.imageObj_imageurl_get)
     __swig_getmethods__["format"] = _mapscript.imageObj_format_get
     if _newclass:format = _swig_property(_mapscript.imageObj_format_get)
-    __swig_getmethods__["buffer_format"] = _mapscript.imageObj_buffer_format_get
-    if _newclass:buffer_format = _swig_property(_mapscript.imageObj_buffer_format_get)
-    __swig_setmethods__["renderer"] = _mapscript.imageObj_renderer_set
-    __swig_getmethods__["renderer"] = _mapscript.imageObj_renderer_get
-    if _newclass:renderer = _swig_property(_mapscript.imageObj_renderer_get, _mapscript.imageObj_renderer_set)
     __swig_destroy__ = _mapscript.delete_imageObj
     __del__ = lambda self : None;
     def save(*args): return _mapscript.imageObj_save(*args)
@@ -1614,27 +1718,6 @@ class strokeStyleObj(_object):
 strokeStyleObj_swigregister = _mapscript.strokeStyleObj_swigregister
 strokeStyleObj_swigregister(strokeStyleObj)
 
-class fillStyleObj(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, fillStyleObj, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, fillStyleObj, name)
-    __repr__ = _swig_repr
-    __swig_setmethods__["color"] = _mapscript.fillStyleObj_color_set
-    __swig_getmethods__["color"] = _mapscript.fillStyleObj_color_get
-    if _newclass:color = _swig_property(_mapscript.fillStyleObj_color_get, _mapscript.fillStyleObj_color_set)
-    __swig_setmethods__["tile"] = _mapscript.fillStyleObj_tile_set
-    __swig_getmethods__["tile"] = _mapscript.fillStyleObj_tile_get
-    if _newclass:tile = _swig_property(_mapscript.fillStyleObj_tile_get, _mapscript.fillStyleObj_tile_set)
-    def __init__(self, *args): 
-        this = _mapscript.new_fillStyleObj(*args)
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_destroy__ = _mapscript.delete_fillStyleObj
-    __del__ = lambda self : None;
-fillStyleObj_swigregister = _mapscript.fillStyleObj_swigregister
-fillStyleObj_swigregister(fillStyleObj)
-
 class symbolStyleObj(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, symbolStyleObj, name, value)
@@ -1659,6 +1742,12 @@ class symbolStyleObj(_object):
     __swig_setmethods__["rotation"] = _mapscript.symbolStyleObj_rotation_set
     __swig_getmethods__["rotation"] = _mapscript.symbolStyleObj_rotation_get
     if _newclass:rotation = _swig_property(_mapscript.symbolStyleObj_rotation_get, _mapscript.symbolStyleObj_rotation_set)
+    __swig_setmethods__["gap"] = _mapscript.symbolStyleObj_gap_set
+    __swig_getmethods__["gap"] = _mapscript.symbolStyleObj_gap_get
+    if _newclass:gap = _swig_property(_mapscript.symbolStyleObj_gap_get, _mapscript.symbolStyleObj_gap_set)
+    __swig_setmethods__["style"] = _mapscript.symbolStyleObj_style_set
+    __swig_getmethods__["style"] = _mapscript.symbolStyleObj_style_get
+    if _newclass:style = _swig_property(_mapscript.symbolStyleObj_style_get, _mapscript.symbolStyleObj_style_set)
     def __init__(self, *args): 
         this = _mapscript.new_symbolStyleObj(*args)
         try: self.this.append(this)
@@ -1668,38 +1757,53 @@ class symbolStyleObj(_object):
 symbolStyleObj_swigregister = _mapscript.symbolStyleObj_swigregister
 symbolStyleObj_swigregister(symbolStyleObj)
 
-class tilecache(_object):
+class tileCacheObj(_object):
     __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, tilecache, name, value)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, tileCacheObj, name, value)
     __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, tilecache, name)
+    __getattr__ = lambda self, name: _swig_getattr(self, tileCacheObj, name)
     __repr__ = _swig_repr
-    __swig_setmethods__["symbol"] = _mapscript.tilecache_symbol_set
-    __swig_getmethods__["symbol"] = _mapscript.tilecache_symbol_get
-    if _newclass:symbol = _swig_property(_mapscript.tilecache_symbol_get, _mapscript.tilecache_symbol_set)
-    __swig_setmethods__["style"] = _mapscript.tilecache_style_set
-    __swig_getmethods__["style"] = _mapscript.tilecache_style_get
-    if _newclass:style = _swig_property(_mapscript.tilecache_style_get, _mapscript.tilecache_style_set)
-    __swig_setmethods__["width"] = _mapscript.tilecache_width_set
-    __swig_getmethods__["width"] = _mapscript.tilecache_width_get
-    if _newclass:width = _swig_property(_mapscript.tilecache_width_get, _mapscript.tilecache_width_set)
-    __swig_setmethods__["height"] = _mapscript.tilecache_height_set
-    __swig_getmethods__["height"] = _mapscript.tilecache_height_get
-    if _newclass:height = _swig_property(_mapscript.tilecache_height_get, _mapscript.tilecache_height_set)
-    __swig_setmethods__["data"] = _mapscript.tilecache_data_set
-    __swig_getmethods__["data"] = _mapscript.tilecache_data_get
-    if _newclass:data = _swig_property(_mapscript.tilecache_data_get, _mapscript.tilecache_data_set)
-    __swig_setmethods__["next"] = _mapscript.tilecache_next_set
-    __swig_getmethods__["next"] = _mapscript.tilecache_next_get
-    if _newclass:next = _swig_property(_mapscript.tilecache_next_get, _mapscript.tilecache_next_set)
+    __swig_setmethods__["symbol"] = _mapscript.tileCacheObj_symbol_set
+    __swig_getmethods__["symbol"] = _mapscript.tileCacheObj_symbol_get
+    if _newclass:symbol = _swig_property(_mapscript.tileCacheObj_symbol_get, _mapscript.tileCacheObj_symbol_set)
+    __swig_setmethods__["width"] = _mapscript.tileCacheObj_width_set
+    __swig_getmethods__["width"] = _mapscript.tileCacheObj_width_get
+    if _newclass:width = _swig_property(_mapscript.tileCacheObj_width_get, _mapscript.tileCacheObj_width_set)
+    __swig_setmethods__["height"] = _mapscript.tileCacheObj_height_set
+    __swig_getmethods__["height"] = _mapscript.tileCacheObj_height_get
+    if _newclass:height = _swig_property(_mapscript.tileCacheObj_height_get, _mapscript.tileCacheObj_height_set)
+    __swig_setmethods__["color"] = _mapscript.tileCacheObj_color_set
+    __swig_getmethods__["color"] = _mapscript.tileCacheObj_color_get
+    if _newclass:color = _swig_property(_mapscript.tileCacheObj_color_get, _mapscript.tileCacheObj_color_set)
+    __swig_setmethods__["outlinecolor"] = _mapscript.tileCacheObj_outlinecolor_set
+    __swig_getmethods__["outlinecolor"] = _mapscript.tileCacheObj_outlinecolor_get
+    if _newclass:outlinecolor = _swig_property(_mapscript.tileCacheObj_outlinecolor_get, _mapscript.tileCacheObj_outlinecolor_set)
+    __swig_setmethods__["backgroundcolor"] = _mapscript.tileCacheObj_backgroundcolor_set
+    __swig_getmethods__["backgroundcolor"] = _mapscript.tileCacheObj_backgroundcolor_get
+    if _newclass:backgroundcolor = _swig_property(_mapscript.tileCacheObj_backgroundcolor_get, _mapscript.tileCacheObj_backgroundcolor_set)
+    __swig_setmethods__["outlinewidth"] = _mapscript.tileCacheObj_outlinewidth_set
+    __swig_getmethods__["outlinewidth"] = _mapscript.tileCacheObj_outlinewidth_get
+    if _newclass:outlinewidth = _swig_property(_mapscript.tileCacheObj_outlinewidth_get, _mapscript.tileCacheObj_outlinewidth_set)
+    __swig_setmethods__["rotation"] = _mapscript.tileCacheObj_rotation_set
+    __swig_getmethods__["rotation"] = _mapscript.tileCacheObj_rotation_get
+    if _newclass:rotation = _swig_property(_mapscript.tileCacheObj_rotation_get, _mapscript.tileCacheObj_rotation_set)
+    __swig_setmethods__["scale"] = _mapscript.tileCacheObj_scale_set
+    __swig_getmethods__["scale"] = _mapscript.tileCacheObj_scale_get
+    if _newclass:scale = _swig_property(_mapscript.tileCacheObj_scale_get, _mapscript.tileCacheObj_scale_set)
+    __swig_setmethods__["image"] = _mapscript.tileCacheObj_image_set
+    __swig_getmethods__["image"] = _mapscript.tileCacheObj_image_get
+    if _newclass:image = _swig_property(_mapscript.tileCacheObj_image_get, _mapscript.tileCacheObj_image_set)
+    __swig_setmethods__["next"] = _mapscript.tileCacheObj_next_set
+    __swig_getmethods__["next"] = _mapscript.tileCacheObj_next_get
+    if _newclass:next = _swig_property(_mapscript.tileCacheObj_next_get, _mapscript.tileCacheObj_next_set)
     def __init__(self, *args): 
-        this = _mapscript.new_tilecache(*args)
+        this = _mapscript.new_tileCacheObj(*args)
         try: self.this.append(this)
         except: self.this = this
-    __swig_destroy__ = _mapscript.delete_tilecache
+    __swig_destroy__ = _mapscript.delete_tileCacheObj
     __del__ = lambda self : None;
-tilecache_swigregister = _mapscript.tilecache_swigregister
-tilecache_swigregister(tilecache)
+tileCacheObj_swigregister = _mapscript.tileCacheObj_swigregister
+tileCacheObj_swigregister(tileCacheObj)
 
 class labelStyleObj(_object):
     __swig_setmethods__ = {}
@@ -1725,15 +1829,6 @@ class labelStyleObj(_object):
     __swig_setmethods__["outlinecolor"] = _mapscript.labelStyleObj_outlinecolor_set
     __swig_getmethods__["outlinecolor"] = _mapscript.labelStyleObj_outlinecolor_get
     if _newclass:outlinecolor = _swig_property(_mapscript.labelStyleObj_outlinecolor_get, _mapscript.labelStyleObj_outlinecolor_set)
-    __swig_setmethods__["shadowsizex"] = _mapscript.labelStyleObj_shadowsizex_set
-    __swig_getmethods__["shadowsizex"] = _mapscript.labelStyleObj_shadowsizex_get
-    if _newclass:shadowsizex = _swig_property(_mapscript.labelStyleObj_shadowsizex_get, _mapscript.labelStyleObj_shadowsizex_set)
-    __swig_setmethods__["shadowsizey"] = _mapscript.labelStyleObj_shadowsizey_set
-    __swig_getmethods__["shadowsizey"] = _mapscript.labelStyleObj_shadowsizey_get
-    if _newclass:shadowsizey = _swig_property(_mapscript.labelStyleObj_shadowsizey_get, _mapscript.labelStyleObj_shadowsizey_set)
-    __swig_setmethods__["shadowcolor"] = _mapscript.labelStyleObj_shadowcolor_set
-    __swig_getmethods__["shadowcolor"] = _mapscript.labelStyleObj_shadowcolor_get
-    if _newclass:shadowcolor = _swig_property(_mapscript.labelStyleObj_shadowcolor_get, _mapscript.labelStyleObj_shadowcolor_set)
     def __init__(self, *args): 
         this = _mapscript.new_labelStyleObj(*args)
         try: self.this.append(this)
@@ -1835,8 +1930,6 @@ class lineObj(_object):
     __repr__ = _swig_repr
     __swig_getmethods__["numpoints"] = _mapscript.lineObj_numpoints_get
     if _newclass:numpoints = _swig_property(_mapscript.lineObj_numpoints_get)
-    __swig_getmethods__["point"] = _mapscript.lineObj_point_get
-    if _newclass:point = _swig_property(_mapscript.lineObj_point_get)
     def __init__(self, *args): 
         this = _mapscript.new_lineObj(*args)
         try: self.this.append(this)
@@ -1860,10 +1953,6 @@ class shapeObj(_object):
     if _newclass:numlines = _swig_property(_mapscript.shapeObj_numlines_get)
     __swig_getmethods__["numvalues"] = _mapscript.shapeObj_numvalues_get
     if _newclass:numvalues = _swig_property(_mapscript.shapeObj_numvalues_get)
-    __swig_getmethods__["line"] = _mapscript.shapeObj_line_get
-    if _newclass:line = _swig_property(_mapscript.shapeObj_line_get)
-    __swig_getmethods__["values"] = _mapscript.shapeObj_values_get
-    if _newclass:values = _swig_property(_mapscript.shapeObj_values_get)
     __swig_setmethods__["bounds"] = _mapscript.shapeObj_bounds_set
     __swig_getmethods__["bounds"] = _mapscript.shapeObj_bounds_get
     if _newclass:bounds = _swig_property(_mapscript.shapeObj_bounds_get, _mapscript.shapeObj_bounds_set)
@@ -1882,6 +1971,12 @@ class shapeObj(_object):
     __swig_setmethods__["text"] = _mapscript.shapeObj_text_set
     __swig_getmethods__["text"] = _mapscript.shapeObj_text_get
     if _newclass:text = _swig_property(_mapscript.shapeObj_text_get, _mapscript.shapeObj_text_set)
+    __swig_setmethods__["scratch"] = _mapscript.shapeObj_scratch_set
+    __swig_getmethods__["scratch"] = _mapscript.shapeObj_scratch_get
+    if _newclass:scratch = _swig_property(_mapscript.shapeObj_scratch_get, _mapscript.shapeObj_scratch_set)
+    __swig_setmethods__["resultindex"] = _mapscript.shapeObj_resultindex_set
+    __swig_getmethods__["resultindex"] = _mapscript.shapeObj_resultindex_get
+    if _newclass:resultindex = _swig_property(_mapscript.shapeObj_resultindex_get, _mapscript.shapeObj_resultindex_set)
     def __init__(self, *args): 
         this = _mapscript.new_shapeObj(*args)
         try: self.this.append(this)
@@ -2045,6 +2140,8 @@ class projectionObj(_object):
     __repr__ = _swig_repr
     __swig_getmethods__["numargs"] = _mapscript.projectionObj_numargs_get
     if _newclass:numargs = _swig_property(_mapscript.projectionObj_numargs_get)
+    __swig_getmethods__["automatic"] = _mapscript.projectionObj_automatic_get
+    if _newclass:automatic = _swig_property(_mapscript.projectionObj_automatic_get)
     def __init__(self, *args): 
         this = _mapscript.new_projectionObj(*args)
         try: self.this.append(this)
@@ -2061,8 +2158,8 @@ MS_SYMBOL_VECTOR = _mapscript.MS_SYMBOL_VECTOR
 MS_SYMBOL_ELLIPSE = _mapscript.MS_SYMBOL_ELLIPSE
 MS_SYMBOL_PIXMAP = _mapscript.MS_SYMBOL_PIXMAP
 MS_SYMBOL_TRUETYPE = _mapscript.MS_SYMBOL_TRUETYPE
-MS_SYMBOL_CARTOLINE = _mapscript.MS_SYMBOL_CARTOLINE
 MS_SYMBOL_HATCH = _mapscript.MS_SYMBOL_HATCH
+MS_SYMBOL_SVG = _mapscript.MS_SYMBOL_SVG
 MS_SYMBOL_ALLOCSIZE = _mapscript.MS_SYMBOL_ALLOCSIZE
 MS_MAXVECTORPOINTS = _mapscript.MS_MAXVECTORPOINTS
 MS_MAXPATTERNLENGTH = _mapscript.MS_MAXPATTERNLENGTH
@@ -2140,12 +2237,6 @@ class symbolObj(_object):
     __swig_setmethods__["filled"] = _mapscript.symbolObj_filled_set
     __swig_getmethods__["filled"] = _mapscript.symbolObj_filled_get
     if _newclass:filled = _swig_property(_mapscript.symbolObj_filled_get, _mapscript.symbolObj_filled_set)
-    __swig_setmethods__["patternlength"] = _mapscript.symbolObj_patternlength_set
-    __swig_getmethods__["patternlength"] = _mapscript.symbolObj_patternlength_get
-    if _newclass:patternlength = _swig_property(_mapscript.symbolObj_patternlength_get, _mapscript.symbolObj_patternlength_set)
-    __swig_setmethods__["pattern"] = _mapscript.symbolObj_pattern_set
-    __swig_getmethods__["pattern"] = _mapscript.symbolObj_pattern_get
-    if _newclass:pattern = _swig_property(_mapscript.symbolObj_pattern_get, _mapscript.symbolObj_pattern_set)
     __swig_getmethods__["imagepath"] = _mapscript.symbolObj_imagepath_get
     if _newclass:imagepath = _swig_property(_mapscript.symbolObj_imagepath_get)
     __swig_setmethods__["transparent"] = _mapscript.symbolObj_transparent_set
@@ -2163,21 +2254,9 @@ class symbolObj(_object):
     __swig_setmethods__["font"] = _mapscript.symbolObj_font_set
     __swig_getmethods__["font"] = _mapscript.symbolObj_font_get
     if _newclass:font = _swig_property(_mapscript.symbolObj_font_get, _mapscript.symbolObj_font_set)
-    __swig_setmethods__["gap"] = _mapscript.symbolObj_gap_set
-    __swig_getmethods__["gap"] = _mapscript.symbolObj_gap_get
-    if _newclass:gap = _swig_property(_mapscript.symbolObj_gap_get, _mapscript.symbolObj_gap_set)
-    __swig_setmethods__["position"] = _mapscript.symbolObj_position_set
-    __swig_getmethods__["position"] = _mapscript.symbolObj_position_get
-    if _newclass:position = _swig_property(_mapscript.symbolObj_position_get, _mapscript.symbolObj_position_set)
-    __swig_setmethods__["linecap"] = _mapscript.symbolObj_linecap_set
-    __swig_getmethods__["linecap"] = _mapscript.symbolObj_linecap_get
-    if _newclass:linecap = _swig_property(_mapscript.symbolObj_linecap_get, _mapscript.symbolObj_linecap_set)
-    __swig_setmethods__["linejoin"] = _mapscript.symbolObj_linejoin_set
-    __swig_getmethods__["linejoin"] = _mapscript.symbolObj_linejoin_get
-    if _newclass:linejoin = _swig_property(_mapscript.symbolObj_linejoin_get, _mapscript.symbolObj_linejoin_set)
-    __swig_setmethods__["linejoinmaxsize"] = _mapscript.symbolObj_linejoinmaxsize_set
-    __swig_getmethods__["linejoinmaxsize"] = _mapscript.symbolObj_linejoinmaxsize_get
-    if _newclass:linejoinmaxsize = _swig_property(_mapscript.symbolObj_linejoinmaxsize_get, _mapscript.symbolObj_linejoinmaxsize_set)
+    __swig_setmethods__["svg_text"] = _mapscript.symbolObj_svg_text_set
+    __swig_getmethods__["svg_text"] = _mapscript.symbolObj_svg_text_get
+    if _newclass:svg_text = _swig_property(_mapscript.symbolObj_svg_text_get, _mapscript.symbolObj_svg_text_set)
     def __init__(self, *args): 
         this = _mapscript.new_symbolObj(*args)
         try: self.this.append(this)
@@ -2187,7 +2266,6 @@ class symbolObj(_object):
     def setImagepath(*args): return _mapscript.symbolObj_setImagepath(*args)
     def setPoints(*args): return _mapscript.symbolObj_setPoints(*args)
     def getPoints(*args): return _mapscript.symbolObj_getPoints(*args)
-    def setPattern(*args): return _mapscript.symbolObj_setPattern(*args)
     def getImage(*args): return _mapscript.symbolObj_getImage(*args)
     def setImage(*args): return _mapscript.symbolObj_setImage(*args)
 symbolObj_swigregister = _mapscript.symbolObj_swigregister
@@ -2234,8 +2312,9 @@ MS_SOSERR = _mapscript.MS_SOSERR
 MS_NULLPARENTERR = _mapscript.MS_NULLPARENTERR
 MS_AGGERR = _mapscript.MS_AGGERR
 MS_OWSERR = _mapscript.MS_OWSERR
-MS_NUMERRORCODES = _mapscript.MS_NUMERRORCODES
 MS_OGLERR = _mapscript.MS_OGLERR
+MS_RENDERERERR = _mapscript.MS_RENDERERERR
+MS_NUMERRORCODES = _mapscript.MS_NUMERRORCODES
 MESSAGELENGTH = _mapscript.MESSAGELENGTH
 ROUTINELENGTH = _mapscript.ROUTINELENGTH
 MS_ERROR_LANGUAGE = _mapscript.MS_ERROR_LANGUAGE
@@ -2254,6 +2333,9 @@ class errorObj(_object):
     __swig_setmethods__["message"] = _mapscript.errorObj_message_set
     __swig_getmethods__["message"] = _mapscript.errorObj_message_get
     if _newclass:message = _swig_property(_mapscript.errorObj_message_get, _mapscript.errorObj_message_set)
+    __swig_setmethods__["isreported"] = _mapscript.errorObj_isreported_set
+    __swig_getmethods__["isreported"] = _mapscript.errorObj_isreported_get
+    if _newclass:isreported = _swig_property(_mapscript.errorObj_isreported_get, _mapscript.errorObj_isreported_set)
     def __init__(self, *args): 
         this = _mapscript.new_errorObj(*args)
         try: self.this.append(this)
@@ -2298,7 +2380,7 @@ class hashTableObj(_object):
 hashTableObj_swigregister = _mapscript.hashTableObj_swigregister
 hashTableObj_swigregister(hashTableObj)
 
-MS_MAX_CGI_PARAMS = _mapscript.MS_MAX_CGI_PARAMS
+MS_DEFAULT_CGI_PARAMS = _mapscript.MS_DEFAULT_CGI_PARAMS
 MS_GET_REQUEST = _mapscript.MS_GET_REQUEST
 MS_POST_REQUEST = _mapscript.MS_POST_REQUEST
 class OWSRequest(_object):
@@ -2326,6 +2408,7 @@ class OWSRequest(_object):
         try: self.this.append(this)
         except: self.this = this
     def loadParams(*args): return _mapscript.OWSRequest_loadParams(*args)
+    def loadParamsFromURL(*args): return _mapscript.OWSRequest_loadParamsFromURL(*args)
     def setParameter(*args): return _mapscript.OWSRequest_setParameter(*args)
     def getName(*args): return _mapscript.OWSRequest_getName(*args)
     def getValue(*args): return _mapscript.OWSRequest_getValue(*args)
@@ -2340,6 +2423,7 @@ msIO_resetHandlers = _mapscript.msIO_resetHandlers
 msIO_installStdoutToBuffer = _mapscript.msIO_installStdoutToBuffer
 msIO_installStdinFromBuffer = _mapscript.msIO_installStdinFromBuffer
 msIO_stripStdoutBufferContentType = _mapscript.msIO_stripStdoutBufferContentType
+msIO_stripStdoutBufferContentHeaders = _mapscript.msIO_stripStdoutBufferContentHeaders
 msIO_getStdoutBufferString = _mapscript.msIO_getStdoutBufferString
 msIO_getStdoutBufferBytes = _mapscript.msIO_getStdoutBufferBytes
 def fromstring(data, mappath=None):

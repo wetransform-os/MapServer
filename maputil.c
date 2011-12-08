@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: maputil.c 10305 2010-07-08 20:04:54Z dmorissette $
+ * $Id: maputil.c 11521 2011-04-11 12:09:16Z tbonfort $
  *
  * Project:  MapServer
  * Purpose:  Various utility functions ... a real hodgepodge.
@@ -31,35 +31,26 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-
 #include <time.h>
 
 #include "mapserver.h"
 #include "maptime.h"
-#include "mapparser.h"
 #include "mapthread.h"
-#include "mapfile.h"
 #include "mapcopy.h"
 
-#ifdef _WIN32
-#include <fcntl.h>
-#include <io.h>
-#endif
-
 #if defined(_WIN32) && !defined(__CYGWIN__)
+# include <windows.h>
+# include <tchar.h>
+# include <fcntl.h>
+# include <io.h>
 #include <process.h>
 #endif
 
-MS_CVSID("$Id: maputil.c 10305 2010-07-08 20:04:54Z dmorissette $")
+MS_CVSID("$Id: maputil.c 11521 2011-04-11 12:09:16Z tbonfort $")
 
-extern int msyyparse(void);
-extern int msyylex(void);
+extern char *msyystring_buffer;
 extern int msyylex_destroy(void);
-extern char *msyytext;
-
-extern int msyyresult; /* result of parsing, true/false */
-extern int msyystate;
-extern char *msyystring;
+extern int yyparse(parseObj *);
 
 /*
 ** Helper functions to convert from strings to other types or objects.
@@ -80,9 +71,11 @@ static int bindDoubleAttribute(double *attribute, char *value)
 
 static int bindColorAttribute(colorObj *attribute, char *value)
 {
-  if(!value || strlen(value) == 0) return MS_FAILURE;
+  int len;
 
-  if(value[0] == '#' && strlen(value) == 7) { /* got a hex color */
+  if(!value || ((len = strlen(value)) == 0)) return MS_FAILURE;
+  
+  if(value[0] == '#' && (len == 7 || len == 9)) { /* got a hex color */
     char hex[2];
 
     hex[0] = value[1];
@@ -94,7 +87,11 @@ static int bindColorAttribute(colorObj *attribute, char *value)
     hex[0] = value[5];
     hex[1] = value[6];
     attribute->blue = msHexToInt(hex);
-
+    if(len == 9) {
+      hex[0] = value[7];
+      hex[1] = value[8];
+      attribute->alpha = msHexToInt(hex);
+    }
     return MS_SUCCESS;
   } else { /* try a space delimited string */
     char **tokens=NULL;
@@ -117,6 +114,55 @@ static int bindColorAttribute(colorObj *attribute, char *value)
   return MS_FAILURE; /* shouldn't get here */
 }
 
+static void bindStyle(layerObj *layer, shapeObj *shape, styleObj *style, int querymapMode) {
+  if(style->numbindings > 0) {
+    if(style->bindings[MS_STYLE_BINDING_SYMBOL].index != -1) {
+      style->symbol = msGetSymbolIndex(&(layer->map->symbolset), shape->values[style->bindings[MS_STYLE_BINDING_SYMBOL].index], MS_TRUE);
+      if(style->symbol == -1) style->symbol = 0; /* a reasonable default (perhaps should throw an error?) */
+    }
+    if(style->bindings[MS_STYLE_BINDING_ANGLE].index != -1) {
+      style->angle = 360.0;
+      bindDoubleAttribute(&style->angle, shape->values[style->bindings[MS_STYLE_BINDING_ANGLE].index]);
+    }
+    if(style->bindings[MS_STYLE_BINDING_SIZE].index != -1) {
+      style->size = 1;
+      bindDoubleAttribute(&style->size, shape->values[style->bindings[MS_STYLE_BINDING_SIZE].index]);
+    }
+    if(style->bindings[MS_STYLE_BINDING_WIDTH].index != -1) {
+      style->width = 1;
+      bindDoubleAttribute(&style->width, shape->values[style->bindings[MS_STYLE_BINDING_WIDTH].index]);
+    }
+    if(style->bindings[MS_STYLE_BINDING_COLOR].index != -1 && (querymapMode != MS_TRUE)) {
+      MS_INIT_COLOR(style->color, -1,-1,-1,255);
+      bindColorAttribute(&style->color, shape->values[style->bindings[MS_STYLE_BINDING_COLOR].index]);
+    }
+    if(style->bindings[MS_STYLE_BINDING_OUTLINECOLOR].index != -1 && (querymapMode != MS_TRUE)) {
+      MS_INIT_COLOR(style->outlinecolor, -1,-1,-1,255);
+      bindColorAttribute(&style->outlinecolor, shape->values[style->bindings[MS_STYLE_BINDING_OUTLINECOLOR].index]);
+    }
+    if(style->bindings[MS_STYLE_BINDING_OUTLINEWIDTH].index != -1) {
+        style->outlinewidth = 1;
+        bindDoubleAttribute(&style->outlinewidth, shape->values[style->bindings[MS_STYLE_BINDING_OUTLINEWIDTH].index]);
+    }
+    if(style->bindings[MS_STYLE_BINDING_OPACITY].index != -1) {
+      style->opacity = 100;
+      bindIntegerAttribute(&style->opacity, shape->values[style->bindings[MS_STYLE_BINDING_OPACITY].index]);
+
+      if(style->opacity < 100) {
+        int alpha;
+	alpha = MS_NINT(style->opacity*2.55);
+
+	style->color.alpha = alpha;
+	style->outlinecolor.alpha = alpha;
+	style->backgroundcolor.alpha = alpha;
+
+	style->mincolor.alpha = alpha;
+	style->maxcolor.alpha = alpha;
+      }
+    }
+  }
+}
+
 /*
 ** Function to bind various layer properties to shape attributes.
 */
@@ -124,7 +170,6 @@ int msBindLayerToShape(layerObj *layer, shapeObj *shape, int querymapMode)
 {
   int i, j;
   labelObj *label; /* for brevity */
-  styleObj *style;
 
   if(!layer || !shape) return MS_FAILURE;
 
@@ -132,54 +177,16 @@ int msBindLayerToShape(layerObj *layer, shapeObj *shape, int querymapMode)
 
     /* check the styleObj's */
     for(j=0; j<layer->class[i]->numstyles; j++) {
-      style = layer->class[i]->styles[j];
-
-      if(style->numbindings > 0) {
-
-        if(style->bindings[MS_STYLE_BINDING_SYMBOL].index != -1) {
-          style->symbol = msGetSymbolIndex(&(layer->map->symbolset), shape->values[style->bindings[MS_STYLE_BINDING_SYMBOL].index], MS_TRUE);
-          if(style->symbol == -1) style->symbol = 0; /* a reasonable default (perhaps should throw an error?) */
-        }
-
-        if(style->bindings[MS_STYLE_BINDING_ANGLE].index != -1) {
-          style->angle = 360.0;
-          bindDoubleAttribute(&style->angle, shape->values[style->bindings[MS_STYLE_BINDING_ANGLE].index]);
-        }
-
-        if(style->bindings[MS_STYLE_BINDING_SIZE].index != -1) {
-          style->size = 1;
-          bindDoubleAttribute(&style->size, shape->values[style->bindings[MS_STYLE_BINDING_SIZE].index]);
-        }
-
-        if(style->bindings[MS_STYLE_BINDING_WIDTH].index != -1) {
-          style->width = 1;
-          bindDoubleAttribute(&style->width, shape->values[style->bindings[MS_STYLE_BINDING_WIDTH].index]);
-        }
-
-        if(style->bindings[MS_STYLE_BINDING_COLOR].index != -1 && (querymapMode != MS_TRUE)) {
-          MS_INIT_COLOR(style->color, -1,-1,-1);
-          bindColorAttribute(&style->color, shape->values[style->bindings[MS_STYLE_BINDING_COLOR].index]);
-        }
-
-        if(style->bindings[MS_STYLE_BINDING_OUTLINECOLOR].index != -1 && (querymapMode != MS_TRUE)) {
-          MS_INIT_COLOR(style->outlinecolor, -1,-1,-1);
-          bindColorAttribute(&style->outlinecolor, shape->values[style->bindings[MS_STYLE_BINDING_OUTLINECOLOR].index]);
-        }
-
-        if(style->bindings[MS_STYLE_BINDING_OUTLINEWIDTH].index != -1) {
-          style->outlinewidth = 1;
-          bindDoubleAttribute(&style->outlinewidth, shape->values[style->bindings[MS_STYLE_BINDING_OUTLINEWIDTH].index]);
-        }
-
-        if(style->bindings[MS_STYLE_BINDING_OPACITY].index != -1) {
-          style->opacity = 100;
-          bindIntegerAttribute(&style->opacity, shape->values[style->bindings[MS_STYLE_BINDING_OPACITY].index]);
-        }
-      }
+      bindStyle(layer, shape, layer->class[i]->styles[j], querymapMode);
     } /* next styleObj */
 
     /* check the labelObj */
     label = &(layer->class[i]->label);
+
+    /* check the label styleObj's */
+    for(j=0; j<label->numstyles; j++) {
+      bindStyle(layer, shape, label->styles[j], querymapMode);
+    }
 
     if(label->numbindings > 0) {
       if(label->bindings[MS_LABEL_BINDING_ANGLE].index != -1) {
@@ -193,23 +200,62 @@ int msBindLayerToShape(layerObj *layer, shapeObj *shape, int querymapMode)
       }
 
       if(label->bindings[MS_LABEL_BINDING_COLOR].index != -1) {
-        MS_INIT_COLOR(label->color, -1,-1,-1);
+        MS_INIT_COLOR(label->color, -1,-1,-1,255);
         bindColorAttribute(&label->color, shape->values[label->bindings[MS_LABEL_BINDING_COLOR].index]);
       }
 
       if(label->bindings[MS_LABEL_BINDING_OUTLINECOLOR].index != -1) {
-        MS_INIT_COLOR(label->outlinecolor, -1,-1,-1);
+        MS_INIT_COLOR(label->outlinecolor, -1,-1,-1,255);
         bindColorAttribute(&label->outlinecolor, shape->values[label->bindings[MS_LABEL_BINDING_OUTLINECOLOR].index]);
       }
 
       if(label->bindings[MS_LABEL_BINDING_FONT].index != -1) {
         msFree(label->font);
-        label->font = strdup(shape->values[label->bindings[MS_LABEL_BINDING_FONT].index]);
+        label->font = msStrdup(shape->values[label->bindings[MS_LABEL_BINDING_FONT].index]);
       }
 
       if(label->bindings[MS_LABEL_BINDING_PRIORITY].index != -1) {
         label->priority = MS_DEFAULT_LABEL_PRIORITY;
         bindIntegerAttribute(&label->priority, shape->values[label->bindings[MS_LABEL_BINDING_PRIORITY].index]);
+      }
+
+      if(label->bindings[MS_LABEL_BINDING_SHADOWSIZEX].index != -1) { 
+        label->shadowsizex = 1; 
+        bindIntegerAttribute(&label->shadowsizex, shape->values[label->bindings[MS_LABEL_BINDING_SHADOWSIZEX].index]); 
+      } 
+      if(label->bindings[MS_LABEL_BINDING_SHADOWSIZEY].index != -1) { 
+        label->shadowsizey = 1; 
+        bindIntegerAttribute(&label->shadowsizey, shape->values[label->bindings[MS_LABEL_BINDING_SHADOWSIZEY].index]); 
+      } 
+
+      if(label->bindings[MS_LABEL_BINDING_POSITION].index != -1) {
+        int tmpPosition;
+        bindIntegerAttribute(&tmpPosition, shape->values[label->bindings[MS_LABEL_BINDING_POSITION].index]);
+        if(tmpPosition != 0) { /* is this test sufficient */
+          label->position = tmpPosition;
+        } else { /* Integer binding failed, look for strings like cc,ul,lr etc */
+          if(strlen(shape->values[label->bindings[MS_LABEL_BINDING_POSITION].index]) == 2) {
+            char *vp = shape->values[label->bindings[MS_LABEL_BINDING_POSITION].index];
+            if(!strncasecmp(vp,"ul",2))
+              label->position = MS_UL;     
+            else if(!strncasecmp(vp,"lr",2))
+              label->position = MS_LR;     
+            else if(!strncasecmp(vp,"ur",2))
+              label->position = MS_UR;     
+            else if(!strncasecmp(vp,"ll",2))
+              label->position = MS_LL;     
+            else if(!strncasecmp(vp,"cr",2))
+              label->position = MS_CR;     
+            else if(!strncasecmp(vp,"cl",2))
+              label->position = MS_CL;     
+	    else if(!strncasecmp(vp,"uc",2))
+              label->position = MS_UC;     
+            else if(!strncasecmp(vp,"lc",2))
+              label->position = MS_LC;     
+            else if(!strncasecmp(vp,"cc",2))
+              label->position = MS_CC;     
+          }       
+        }
       }
     }
   } /* next classObj */
@@ -268,12 +314,12 @@ int msValidateContexts(mapObj *map)
   char **ltags;
   int status = MS_SUCCESS;
 
-  ltags = (char **) malloc(map->numlayers*sizeof(char *));
+  ltags = (char **) msSmallMalloc(map->numlayers*sizeof(char *));
   for(i=0; i<map->numlayers; i++) {
     if(GET_LAYER(map, i)->name == NULL) {
-      ltags[i] = strdup("[NULL]");
+      ltags[i] = msStrdup("[NULL]");
     } else {
-      ltags[i] = (char *) malloc(sizeof(char)*strlen(GET_LAYER(map, i)->name) + 3);
+      ltags[i] = (char *) msSmallMalloc(sizeof(char)*strlen(GET_LAYER(map, i)->name) + 3);
       sprintf(ltags[i], "[%s]", GET_LAYER(map, i)->name);
     }
   }
@@ -303,43 +349,53 @@ int msValidateContexts(mapObj *map)
 int msEvalContext(mapObj *map, layerObj *layer, char *context)
 {
   int i, status;
-  char *tmpstr1=NULL, *tmpstr2=NULL;
-  int result;       /* result of expression parsing operation */
+  char *tag=NULL;
 
-  if(!context) return(MS_TRUE); /* no context requirements */
+  expressionObj e;
+  parseObj p;
 
-  tmpstr1 = strdup(context);
+  if(!context) return(MS_TRUE);
+
+  /* initialize a temporary expression (e) */
+  initExpression(&e);
+
+  e.string = msStrdup(context);
+  e.type = MS_EXPRESSION; /* todo */
 
   for(i=0; i<map->numlayers; i++) { /* step through all the layers */
     if(layer->index == i) continue; /* skip the layer in question */    
     if (GET_LAYER(map, i)->name == NULL) continue; /* Layer without name cannot be used in contexts */
 
-    tmpstr2 = (char *)malloc(sizeof(char)*strlen(GET_LAYER(map, i)->name) + 3);
-    sprintf(tmpstr2, "[%s]", GET_LAYER(map, i)->name);
+    tag = (char *)msSmallMalloc(sizeof(char)*strlen(GET_LAYER(map, i)->name) + 3);
+    sprintf(tag, "[%s]", GET_LAYER(map, i)->name);
 
-    if(strstr(tmpstr1, tmpstr2)) {
+    if(strstr(e.string, tag)) {
       if(msLayerIsVisible(map, (GET_LAYER(map, i))))
-          tmpstr1 = msReplaceSubstring(tmpstr1, tmpstr2, "1");
+        e.string = msReplaceSubstring(e.string, tag, "1");
       else
-          tmpstr1 = msReplaceSubstring(tmpstr1, tmpstr2, "0");
+        e.string = msReplaceSubstring(e.string, tag, "0");
     }
 
-    free(tmpstr2);
+    free(tag);
   }
 
-  msAcquireLock( TLOCK_PARSER );
-  msyystate = MS_TOKENIZE_EXPRESSION; msyystring = tmpstr1;
-  status = msyyparse();
-  result = msyyresult;
-  msReleaseLock( TLOCK_PARSER );
-  free(tmpstr1);
+  msTokenizeExpression(&e, NULL, NULL);
+
+  p.shape = NULL;
+  p.expr = &e;
+  p.expr->curtoken = p.expr->tokens; /* reset */
+  p.type = MS_PARSE_TYPE_BOOLEAN;
+
+  status = yyparse(&p);
+
+  freeExpression(&e);
 
   if (status != 0) {
     msSetError(MS_PARSEERR, "Failed to parse context", "msEvalContext");
     return MS_FALSE; /* error in parse */
   }
 
-  return result;
+  return p.result.intval;
 }
 
 /* msEvalExpression()
@@ -349,111 +405,78 @@ int msEvalContext(mapObj *map, layerObj *layer, char *context)
  * May also return MS_FALSE in case of parsing errors or invalid expressions
  * (check the error stack if you care)
  *
- * Parser mutex added for type MS_EXPRESSION -- SG
  */
-int msEvalExpression(expressionObj *expression, int itemindex, char **items, int numitems)
+int msEvalExpression(layerObj *layer, shapeObj *shape, expressionObj *expression, int itemindex)
 {
-  int i;
-  char *tmpstr=NULL, *tmpstr2=NULL;
-  int status;
-  int expresult;  /* result of logical expression parsing operation */
-  
-  if(!expression->string) return(MS_TRUE); /* empty expressions are ALWAYS true */
+  if(!expression->string) return MS_TRUE; /* empty expressions are ALWAYS true */
 
   switch(expression->type) {
   case(MS_STRING):
     if(itemindex == -1) {
       msSetError(MS_MISCERR, "Cannot evaluate expression, no item index defined.", "msEvalExpression()");
-      return(MS_FALSE);
+      return MS_FALSE;
     }
-    if(itemindex >= numitems) {
+    if(itemindex >= layer->numitems) {
       msSetError(MS_MISCERR, "Invalid item index.", "msEvalExpression()");
-      return(MS_FALSE);
+      return MS_FALSE;
     }
     if(expression->flags & MS_EXP_INSENSITIVE) {
-      if(strcasecmp(expression->string, items[itemindex]) == 0) return(MS_TRUE); /* got a match */
+      if(strcasecmp(expression->string, shape->values[itemindex]) == 0) return MS_TRUE; /* got a match */
     } else {
-      if(strcmp(expression->string, items[itemindex]) == 0) return(MS_TRUE); /* got a match */
+      if(strcmp(expression->string, shape->values[itemindex]) == 0) return MS_TRUE; /* got a match */
     }
     break;
   case(MS_EXPRESSION):
-    tmpstr = strdup(expression->string);
+    {
+      int status;
+      parseObj p;
 
-    for(i=0; i<expression->numitems; i++) {
-      tmpstr2 = strdup(items[expression->indexes[i]]);
-      tmpstr2 = msReplaceSubstring(tmpstr2, "\'", "\\\'");
-      tmpstr2 = msReplaceSubstring(tmpstr2, "\"", "\\\"");
-      tmpstr = msReplaceSubstring(tmpstr, expression->items[i], tmpstr2);
-      free(tmpstr2);
+      p.shape = shape;
+      p.expr = expression;
+      p.expr->curtoken = p.expr->tokens; /* reset */
+      p.type = MS_PARSE_TYPE_BOOLEAN;
+
+      status = yyparse(&p);
+
+      if (status != 0) {
+        msSetError(MS_PARSEERR, "Failed to parse expression: %s", "msEvalExpression", expression->string);
+        return MS_FALSE;
+      }
+
+      return p.result.intval;
+      break;
     }
-
-    // fprintf(stderr, "exp; %s\n", tmpstr);
-
-    msAcquireLock( TLOCK_PARSER );
-    msyystate = MS_TOKENIZE_EXPRESSION;
-    msyystring = tmpstr; /* set lexer state to EXPRESSION_STRING */
-    status = msyyparse();
-    expresult = msyyresult;
-    msReleaseLock( TLOCK_PARSER );
-
-    if (status != 0) {
-      msSetError(MS_PARSEERR, "Failed to parse expression: %s", "msEvalExpression", tmpstr);
-      free(tmpstr);
-      return MS_FALSE;
-    }
-
-    free(tmpstr);
-    return expresult;
-    
-    break;
   case(MS_REGEX):
     if(itemindex == -1) {
       msSetError(MS_MISCERR, "Cannot evaluate expression, no item index defined.", "msEvalExpression()");
-      return(MS_FALSE);
+      return MS_FALSE;
     }
-    if(itemindex >= numitems) {
+    if(itemindex >= layer->numitems) {
       msSetError(MS_MISCERR, "Invalid item index.", "msEvalExpression()");
-      return(MS_FALSE);
+      return MS_FALSE;
     }
 
     if(!expression->compiled) {
-      if(expression->flags & MS_EXP_INSENSITIVE)
-      {
+      if(expression->flags & MS_EXP_INSENSITIVE) {
         if(ms_regcomp(&(expression->regex), expression->string, MS_REG_EXTENDED|MS_REG_NOSUB|MS_REG_ICASE) != 0) { /* compile the expression */
           msSetError(MS_REGEXERR, "Invalid regular expression.", "msEvalExpression()");
-          return(MS_FALSE);
+          return MS_FALSE;
         }
-      }
-      else
-      {
+      } else {
         if(ms_regcomp(&(expression->regex), expression->string, MS_REG_EXTENDED|MS_REG_NOSUB) != 0) { /* compile the expression */
           msSetError(MS_REGEXERR, "Invalid regular expression.", "msEvalExpression()");
-          return(MS_FALSE);
+          return MS_FALSE;
         }
       }
       expression->compiled = MS_TRUE;
     }
 
-    if(ms_regexec(&(expression->regex), items[itemindex], 0, NULL, 0) == 0) return(MS_TRUE); /* got a match */
+    if(ms_regexec(&(expression->regex), shape->values[itemindex], 0, NULL, 0) == 0) return MS_TRUE; /* got a match */
     break;
   }
 
-  return(MS_FALSE);
+  return MS_FALSE;
 }
-
-/*
- * int msShapeGetClass(layerObj *layer, shapeObj *shape)
- * {
- *   int i;
- * 
- *   for(i=0; i<layer->numclasses; i++) {
- *     if(layer->class[i]->status != MS_DELETE && msEvalExpression(&(layer->class[i]->expression), layer->classitemindex, shape->values, layer->numitems) == MS_TRUE)
- *       return(i);
- *   }
- * 
- *   return(-1); // no match
- * }
- */
 
 int *msAllocateValidClassGroups(layerObj *lp, int *nclasses)
 {
@@ -463,7 +486,7 @@ int *msAllocateValidClassGroups(layerObj *lp, int *nclasses)
     if (!lp || !lp->classgroup || lp->numclasses <=0 || !nclasses)
       return NULL;
 
-    classgroup = (int *)malloc(sizeof(int)*lp->numclasses);       
+    classgroup = (int *)msSmallMalloc(sizeof(int)*lp->numclasses);       
     nvalidclass = 0;
     for (i=0; i<lp->numclasses; i++)
     {
@@ -475,7 +498,7 @@ int *msAllocateValidClassGroups(layerObj *lp, int *nclasses)
     }
     if (nvalidclass > 0)
     {
-        classgroup = (int *)realloc(classgroup, sizeof(int)*nvalidclass);
+        classgroup = (int *)msSmallRealloc(classgroup, sizeof(int)*nvalidclass);
         *nclasses = nvalidclass;
         return classgroup;
     }
@@ -487,83 +510,136 @@ int *msAllocateValidClassGroups(layerObj *lp, int *nclasses)
         
 }       
 
-int msShapeGetClass(layerObj *layer, shapeObj *shape, double scaledenom, int *classgroup, int numclasses)
+int msShapeGetClass(layerObj *layer, mapObj *map, shapeObj *shape, int *classgroup, int numclasses)
 {
   int i, iclass;
-
 
   /* INLINE features do not work with expressions, allow the classindex */
   /* value set prior to calling this function to carry through. */
   if(layer->connectiontype == MS_INLINE) {
     if(shape->classindex < 0 || shape->classindex >= layer->numclasses) return(-1);
 
-    if(scaledenom > 0) {  /* verify scaledenom here */
-      if((layer->class[shape->classindex]->maxscaledenom > 0) && (scaledenom > layer->class[shape->classindex]->maxscaledenom))
+    if(map->scaledenom > 0) {  /* verify scaledenom here */
+      if((layer->class[shape->classindex]->maxscaledenom > 0) && (map->scaledenom > layer->class[shape->classindex]->maxscaledenom))
         return(-1); /* can skip this feature */
-      if((layer->class[shape->classindex]->minscaledenom > 0) && (scaledenom <= layer->class[shape->classindex]->minscaledenom))
+      if((layer->class[shape->classindex]->minscaledenom > 0) && (map->scaledenom <= layer->class[shape->classindex]->minscaledenom))
         return(-1); /* can skip this feature */
     }
 
     return(shape->classindex);
   }
 
-  if (layer->numclasses > 0)
-  {
+  if (layer->numclasses > 0) {
+    if (classgroup == NULL || numclasses <=0)
+      numclasses = layer->numclasses;
 
-      if (classgroup == NULL || numclasses <=0)
-        numclasses = layer->numclasses;
+    for(i=0; i<numclasses; i++) {
+      if (classgroup)
+        iclass = classgroup[i];
+      else
+        iclass = i;
 
-      for(i=0; i<numclasses; i++) 
-      {
-          if (classgroup)
-            iclass = classgroup[i];
-          else
-            iclass = i;
+       if (iclass < 0 || iclass >= layer->numclasses)        
+         continue; /* this should never happen but just in case */
 
-          if (iclass < 0 || iclass >= layer->numclasses)        
-            continue; /*this should never happen but just in case*/
+       if(map->scaledenom > 0) { /* verify scaledenom here  */
+         if((layer->class[iclass]->maxscaledenom > 0) && (map->scaledenom > layer->class[iclass]->maxscaledenom))
+           continue; /* can skip this one, next class */
+         if((layer->class[iclass]->minscaledenom > 0) && (map->scaledenom <= layer->class[iclass]->minscaledenom))
+           continue; /* can skip this one, next class */
+        }
 
-          if(scaledenom > 0) {  /* verify scaledenom here  */
-              if((layer->class[iclass]->maxscaledenom > 0) && (scaledenom > layer->class[iclass]->maxscaledenom))
-                continue; /* can skip this one, next class */
-              if((layer->class[iclass]->minscaledenom > 0) && (scaledenom <= layer->class[iclass]->minscaledenom))
-                continue; /* can skip this one, next class */
-          }
+       /* verify the minfeaturesize */
+       if ((shape->type == MS_SHAPE_LINE || shape->type == MS_SHAPE_POLYGON) && (layer->class[iclass]->minfeaturesize > 0))
+       {
+           double minfeaturesize = Pix2LayerGeoref(map, layer,
+                                                   layer->class[iclass]->minfeaturesize);
+           if (msShapeCheckSize(shape, minfeaturesize) == MS_FALSE)
+               continue; //skip this one, next class
+       }
 
-          if(layer->class[iclass]->status != MS_DELETE && 
-             msEvalExpression(&(layer->class[iclass]->expression), 
-                              layer->classitemindex, shape->values, layer->numitems) == MS_TRUE)
-          {
-              return(iclass);
-          }
-      }
+       if(layer->class[iclass]->status != MS_DELETE && msEvalExpression(layer, shape, &(layer->class[iclass]->expression), layer->classitemindex) == MS_TRUE)
+	 return(iclass);
+    }
   }
+
   return(-1); /* no match */
 }
 
 char *msShapeGetAnnotation(layerObj *layer, shapeObj *shape)
 {
-  int i;
   char *tmpstr=NULL;
 
   if(layer->class[shape->classindex]->text.string) { /* test for global label first */
-    tmpstr = strdup(layer->class[shape->classindex]->text.string);
     switch(layer->class[shape->classindex]->text.type) {
     case(MS_STRING):
+      {
+        char *target=NULL;
+        tokenListNodeObjPtr node=NULL;
+        tokenListNodeObjPtr nextNode=NULL;
+
+        tmpstr = msStrdup(layer->class[shape->classindex]->text.string);
+
+        node = layer->class[shape->classindex]->text.tokens;
+        if(node) {
+          while(node != NULL) {
+            nextNode = node->next;
+            if(node->token == MS_TOKEN_BINDING_DOUBLE || node->token == MS_TOKEN_BINDING_INTEGER || node->token == MS_TOKEN_BINDING_STRING || node->token == MS_TOKEN_BINDING_TIME) {
+              target = (char *) msSmallMalloc(strlen(node->tokenval.bindval.item) + 3);
+              sprintf(target, "[%s]", node->tokenval.bindval.item);
+              tmpstr = msReplaceSubstring(tmpstr, target, shape->values[node->tokenval.bindval.index]);
+              msFree(target);
+	    }
+            node = nextNode;
+          }
+        }
+      }
       break;
     case(MS_EXPRESSION):
-      tmpstr = strdup(layer->class[shape->classindex]->text.string);
+      {
+        int status;
+        parseObj p;
 
-      for(i=0; i<layer->class[shape->classindex]->text.numitems; i++)
-        tmpstr = msReplaceSubstring(tmpstr, layer->class[shape->classindex]->text.items[i], shape->values[layer->class[shape->classindex]->text.indexes[i]]);
+        p.shape = shape;
+        p.expr = &(layer->class[shape->classindex]->text);
+        p.expr->curtoken = p.expr->tokens; /* reset */
+        p.type = MS_PARSE_TYPE_STRING;
+
+        status = yyparse(&p);
+
+        if (status != 0) {
+	  msSetError(MS_PARSEERR, "Failed to process text expression: %s", "msShapeGetAnnotation", layer->class[shape->classindex]->text.string);
+	  return NULL;
+        }
+
+        tmpstr = p.result.strval;        
+        break;
+      }
+    default:
       break;
     }
   } else {
     if (shape->values && layer->labelitemindex >= 0)
-        tmpstr = strdup(shape->values[layer->labelitemindex]);
+      tmpstr = msStrdup(shape->values[layer->labelitemindex]);
   }
 
   return(tmpstr);
+}
+
+/* Check if the shape is enough big to be drawn with the
+   layer::minfeaturesize setting. The minfeaturesize parameter should be
+   the value in geo ref (not in pixel) and should have been multiplied by
+   the resolution factor.
+ */
+int msShapeCheckSize(shapeObj *shape, double minfeaturesize)
+{
+    double dx = (shape->bounds.maxx-shape->bounds.minx);
+    double dy = (shape->bounds.maxy-shape->bounds.miny);
+
+    if (pow(minfeaturesize,2.0) > (pow(dx,2.0)+pow(dy,2.0)))
+        return MS_FALSE;
+    
+    return MS_TRUE;
 }
 
 /*
@@ -655,64 +731,18 @@ int msConstrainExtent(rectObj *bounds, rectObj *rect, double overlay)
 
 int msSaveImage(mapObj *map, imageObj *img, char *filename)
 {
-    int nReturnVal = -1;
+    int nReturnVal = MS_FAILURE;
     char szPath[MS_MAXPATHLEN];
     struct mstimeval starttime, endtime;
 
-    if(map && map->debug >= MS_DEBUGLEVEL_TUNING) 
+    if(map && map->debug >= MS_DEBUGLEVEL_TUNING) {
         msGettimeofday(&starttime, NULL);
+    }
 
     if (img)
     {
-        if (MS_RENDERER_PLUGIN(img->format)) {
-            rendererVTableObj *renderer = img->format->vtable;
-            FILE *stream;
-            if(filename) 
-                stream = fopen(msBuildPath(szPath, map->mappath, filename),"wb");
-            else {
-                if ( msIO_needBinaryStdout() == MS_FAILURE )
-                    return MS_FAILURE;
-                stream = stdout;
-            }
-            if(!stream)
-                return MS_FAILURE;
-            if(renderer->supports_pixel_buffer) {
-                rasterBufferObj data;
-                renderer->getRasterBuffer(img,&data);
-
-                msSaveRasterBuffer(&data,stream,img->format );
-            } else {
-                renderer->saveImage(img, stream, img->format);
-            }
-            fclose(stream);
-            return MS_SUCCESS;
-        }
-    	else if( MS_DRIVER_GD(img->format) )
-        {
-            if(map != NULL && filename != NULL )
-                nReturnVal = msSaveImageGD(img, 
-                                           msBuildPath(szPath, map->mappath, 
-                                                       filename), 
-                                           img->format );
-            else
-                nReturnVal = msSaveImageGD(img, filename, img->format);
-        }
-#ifdef USE_AGG
-        else if( MS_DRIVER_AGG(img->format) )
-        {
-            if(map != NULL && filename != NULL )
-                nReturnVal = msSaveImageAGG(img, 
-                                           msBuildPath(szPath, map->mappath, 
-                                                       filename), 
-                                           img->format );
-            else
-                nReturnVal = msSaveImageAGG(img, filename, img->format);
-        }
-#endif
-        else if( MS_DRIVER_IMAGEMAP(img->format) )
-            nReturnVal = msSaveImageIM(img, filename, img->format);
 #ifdef USE_GDAL
-        else if( MS_DRIVER_GDAL(img->format) )
+        if( MS_DRIVER_GDAL(img->format) )
         {
            if (map != NULL && filename != NULL )
              nReturnVal = msSaveImageGDAL(map, img,
@@ -720,41 +750,45 @@ int msSaveImage(mapObj *map, imageObj *img, char *filename)
                                                       filename));
            else
              nReturnVal = msSaveImageGDAL(map, img, filename);
-        }
+        } else
 #endif
-#ifdef USE_MING_FLASH
-        else if(MS_DRIVER_SWF(img->format) )
-        {
-            if (map != NULL && filename != NULL )
-              nReturnVal = msSaveImageSWF(img, 
-                                          msBuildPath(szPath, map->mappath, 
-                                                      filename));
-            else
-              nReturnVal = msSaveImageSWF(img, filename);
-        }
+       if (MS_RENDERER_PLUGIN(img->format)) {
+            rendererVTableObj *renderer = img->format->vtable;
+            FILE *stream = NULL;
+            if(filename) {
+               if(map)
+                  stream = fopen(msBuildPath(szPath, map->mappath, filename),"wb");
+               else
+                  stream = fopen(filename,"wb");
 
-#endif
-#ifdef USE_PDF
-        else if( MS_RENDERER_PDF(img->format) )
-        {
-            if (map != NULL && filename != NULL )
-              nReturnVal = msSaveImagePDF(img, 
-                                          msBuildPath(szPath, map->mappath, 
-                                                      filename));
-            else
-              nReturnVal = msSaveImagePDF(img, filename);
-        }
-#endif
-        else if(MS_DRIVER_SVG(img->format) )
-        {
-            if (map != NULL && filename != NULL )
-              nReturnVal = msSaveImageSVG(img, 
-                                          msBuildPath(szPath, map->mappath, 
-                                                      filename));
-            else
-              nReturnVal = msSaveImageSVG(img, filename);
-        }
+               if(!stream) {
+                  msSetError(MS_IOERR, 
+                             "Failed to create output file (%s).", 
+                             "msSaveImage()", (map?szPath:filename) );
+                  return MS_FAILURE;
+               }
+ 
+            } else {
+                if ( msIO_needBinaryStdout() == MS_FAILURE )
+                    return MS_FAILURE;
+                stream = stdout;
+            }
 
+           if(renderer->supports_pixel_buffer) {
+                rasterBufferObj data;
+                if(renderer->getRasterBufferHandle(img,&data) != MS_SUCCESS)
+                   return MS_FAILURE;
+
+                nReturnVal = msSaveRasterBuffer(map,&data,stream,img->format );
+            } else {
+                nReturnVal = renderer->saveImage(img, stream, img->format);
+            }
+            if( stream != stdout )
+                fclose(stream);
+
+        }
+        else if( MS_DRIVER_IMAGEMAP(img->format) )
+            nReturnVal = msSaveImageIM(img, filename, img->format);
         else
             msSetError(MS_MISCERR, "Unknown image type", 
                        "msSaveImage()"); 
@@ -762,7 +796,8 @@ int msSaveImage(mapObj *map, imageObj *img, char *filename)
 
     if(map && map->debug >= MS_DEBUGLEVEL_TUNING) {
       msGettimeofday(&endtime, NULL);
-      msDebug("msSaveImage() total time: %.3fs\n", 
+      msDebug("msSaveImage(%s) total time: %.3fs\n", 
+              (filename ? filename : "stdout"), 
               (endtime.tv_sec+endtime.tv_usec/1.0e6)-
               (starttime.tv_sec+starttime.tv_usec/1.0e6) );
     }
@@ -789,26 +824,20 @@ unsigned char *msSaveImageBuffer(imageObj* image, int *size_ptr, outputFormatObj
         if(renderer->supports_pixel_buffer) {
             bufferObj buffer;
             msBufferInit(&buffer);
-            renderer->getRasterBuffer(image,&data);
+            renderer->getRasterBufferHandle(image,&data);
             msSaveRasterBufferToBuffer(&data,&buffer,format);
+            *size_ptr = buffer.size;
             return buffer.data;
             //don't free the bufferObj as we don't own the bytes anymore
         } else {
+            /* check if the renderer supports native buffer output */
+            if (renderer->saveImageBuffer)
+                return renderer->saveImageBuffer(image, size_ptr, format);
+
 	        msSetError(MS_MISCERR, "Unsupported image type", "msSaveImageBuffer()");
             return NULL;
         }
     }
-    else if( MS_DRIVER_GD(image->format) )
-    {
-        return msSaveImageBufferGD(image, size_ptr, format);
-    }
-#ifdef USE_AGG
-    else if( MS_DRIVER_AGG(image->format) )
-    {
-        return msSaveImageBufferAGG(image, size_ptr, format);
-    }
-#endif   
-	
 	msSetError(MS_MISCERR, "Unsupported image type", "msSaveImage()");
     return NULL;
 }
@@ -820,41 +849,21 @@ void msFreeImage(imageObj *image)
 {
     if (image)
     {
-        if(MS_RENDERER_PLUGIN(image->format)) {
-            rendererVTableObj *renderer = image->format->vtable;
-            if(renderer->supports_imagecache) {
-                tileCacheObj *next,*cur = image->tilecache;
-                while(cur) {
-                    renderer->freeTile(cur->data);
-                    next = cur->next;
-                    free(cur);
-                    cur = next;
-                }
-                image->ntiles = 0;
-            }
-        	renderer->freeImage(image);
-        }
-        else if( MS_RENDERER_GD(image->format) ) {
-            if( image->img.gd != NULL )
-                msFreeImageGD(image);
-#ifdef USE_AGG
-        } else if( MS_RENDERER_AGG(image->format) ) {
-            msFreeImageAGG(image);
-#endif
+       if(MS_RENDERER_PLUGIN(image->format)) {
+          rendererVTableObj *renderer = image->format->vtable;
+          tileCacheObj *next,*cur = image->tilecache;
+          while(cur) {
+             msFreeImage(cur->image);
+             next = cur->next;
+             free(cur);
+             cur = next;
+          }
+          image->ntiles = 0;
+          renderer->freeImage(image);
         } else if( MS_RENDERER_IMAGEMAP(image->format) )
             msFreeImageIM(image);
         else if( MS_RENDERER_RAWDATA(image->format) )
             msFree(image->img.raw_16bit);
-#ifdef USE_MING_FLASH
-        else if( MS_RENDERER_SWF(image->format) )
-            msFreeImageSWF(image);
-#endif
-#ifdef USE_PDF
-        else if( MS_RENDERER_PDF(image->format) )
-            msFreeImagePDF(image);
-#endif
-        else if( MS_RENDERER_SVG(image->format) )
-            msFreeImageSVG(image);
         else
             msSetError(MS_MISCERR, "Unknown image type", 
                        "msFreeImage()"); 
@@ -869,6 +878,9 @@ void msFreeImage(imageObj *image)
 
         image->imagepath = NULL;
         image->imageurl = NULL;
+
+        msFree( image->img_mask );
+        image->img_mask= NULL;
 
         msFree( image );
     }     
@@ -891,7 +903,7 @@ int *msGetLayersIndexByGroup(mapObj *map, char *groupname, int *pnCount)
         return NULL;
     }
 
-    aiIndex = (int *)malloc(sizeof(int) * map->numlayers);
+    aiIndex = (int *)msSmallMalloc(sizeof(int) * map->numlayers);
 
     for(i=0;i<map->numlayers; i++)
     {
@@ -912,7 +924,7 @@ int *msGetLayersIndexByGroup(mapObj *map, char *groupname, int *pnCount)
     }
     else
     {
-        aiIndex = (int *)realloc(aiIndex, sizeof(int)* iLayer);
+        aiIndex = (int *)msSmallRealloc(aiIndex, sizeof(int)* iLayer);
         *pnCount = iLayer;
     }
 
@@ -1010,7 +1022,7 @@ pointObj *msGetPointUsingMeasure(shapeObj *shape, double m)
         else
           dfFactor = 0;
 
-        point = (pointObj *)malloc(sizeof(pointObj));
+        point = (pointObj *)msSmallMalloc(sizeof(pointObj));
         
         point->x = dfFirstPointX + (dfFactor * (dfSecondPointX - dfFirstPointX));
         point->y = dfFirstPointY + 
@@ -1120,7 +1132,7 @@ pointObj *msIntersectionPointLine(pointObj *p, pointObj *a, pointObj *b)
         else
           r = 0;
 
-        result = (pointObj *)malloc(sizeof(pointObj));
+        result = (pointObj *)msSmallMalloc(sizeof(pointObj));
 /* -------------------------------------------------------------------- */
 /*      We want to make sure that the point returned is on the line     */
 /*                                                                      */
@@ -1249,7 +1261,7 @@ char **msGetAllGroupNames(mapObj *map, int *numTok)
    
     if (!map->layerorder)
     {
-       map->layerorder = (int*)malloc(map->numlayers * sizeof(int));
+       map->layerorder = (int*)msSmallMalloc(map->numlayers * sizeof(int));
 
        /*
         * Initiate to default order
@@ -1261,7 +1273,7 @@ char **msGetAllGroupNames(mapObj *map, int *numTok)
     if (map != NULL && map->numlayers > 0)
     {
         nCount = map->numlayers;
-        papszGroups = (char **)malloc(sizeof(char *)*nCount);
+        papszGroups = (char **)msSmallMalloc(sizeof(char *)*nCount);
 
         for (i=0; i<nCount; i++)
             papszGroups[i] = NULL;
@@ -1286,7 +1298,7 @@ char **msGetAllGroupNames(mapObj *map, int *numTok)
                 if (!bFound)
                 {
                     /* New group... add to the list of groups found */
-                    papszGroups[(*numTok)] = strdup(lp->group);
+                    papszGroups[(*numTok)] = msStrdup(lp->group);
                     (*numTok)++;
                 }
             }
@@ -1323,101 +1335,151 @@ void msForceTmpFileBase( const char *new_base )
 /* -------------------------------------------------------------------- */
 /*      Record new base.                                                */
 /* -------------------------------------------------------------------- */
-    ForcedTmpBase = strdup( new_base );
+    ForcedTmpBase = msStrdup( new_base );
     tmpCount = 0;
 }
 
 /**********************************************************************
  *                          msTmpFile()
  *
- * Generate a Unique temporary filename using:
- * 
- *    PID + timestamp + sequence# + extension
- * 
- * If msForceTmpFileBase() has been called to control the temporary filename
- * then the filename will be:
- *
- *    TmpBase + sequence# + extension
+ * Generate a Unique temporary file.
  * 
  * Returns char* which must be freed by caller.
  **********************************************************************/
-char *msTmpFile(const char *mappath, const char *tmppath, const char *ext)
+char *msTmpFile(mapObj *map, const char *mappath, const char *tmppath, const char *ext)
 {
-    char *tmpFname;
     char szPath[MS_MAXPATHLEN];
     const char *fullFname;
-    char tmpId[128]; /* big enough for time + pid + ext */
-    const char *tmpBase = NULL;
+    char *tmpFileName; /* big enough for time + pid + ext */
+    char *tmpBase = NULL;
 
-    if( ForcedTmpBase != NULL )
-    {
-        tmpBase = ForcedTmpBase;
-    }
-    else 
-    {
-        /* We'll use tmpId and tmpCount to generate unique filenames */
-        sprintf(tmpId, "%lx_%x",(long)time(NULL),(int)getpid());
-        tmpBase = tmpId;
-    }
+    tmpBase = msTmpPath(map, mappath, tmppath);
+    tmpFileName = msTmpFilename(ext);
 
-    if (ext == NULL)  ext = "";
-    tmpFname = (char*)malloc(strlen(tmpBase) + 10  + strlen(ext) + 1);
+    fullFname = msBuildPath(szPath, tmpBase, tmpFileName);
 
-    msAcquireLock( TLOCK_TMPFILE );
-    sprintf(tmpFname, "%s_%x.%s", tmpBase, tmpCount++, ext);
-    msReleaseLock( TLOCK_TMPFILE );
-
-    fullFname = msBuildPath3(szPath, mappath, tmppath, tmpFname);
-    free(tmpFname);
+    free(tmpFileName);
+    free(tmpBase);
 
     if (fullFname)
-        return strdup(fullFname);
+        return msStrdup(fullFname);
 
     return NULL;
+}
+
+/**********************************************************************
+ *                          msTmpPath()
+ *
+ * Return the temporary path based on the platform.
+ * 
+ * Returns char* which must be freed by caller.
+ **********************************************************************/
+char *msTmpPath(mapObj *map, const char *mappath, const char *tmppath)
+{
+    char szPath[MS_MAXPATHLEN];
+    const char *fullPath;
+    const char *tmpBase;
+#ifdef _WIN32
+    DWORD dwRetVal = 0;
+    TCHAR lpTempPathBuffer[MAX_PATH];
+#endif
+
+    if( ForcedTmpBase != NULL )
+        tmpBase = ForcedTmpBase;
+    else if (tmppath != NULL)
+        tmpBase = tmppath;
+    else if (getenv("MS_TEMPPATH"))
+        tmpBase = getenv("MS_TEMPPATH");
+    else if (map && map->web.temppath)
+        tmpBase = map->web.temppath;
+    else /* default paths */
+    {
+#ifndef _WIN32        
+        tmpBase = "/tmp/";
+#else
+        dwRetVal =  GetTempPath(MAX_PATH,          // length of the buffer
+                                lpTempPathBuffer); // buffer for path 
+        if (dwRetVal > MAX_PATH || (dwRetVal == 0))
+        {
+            tmpBase = "C:\\";
+        } 
+        else
+        {
+            tmpBase = (char*)lpTempPathBuffer;
+        }
+#endif
+    }
+
+    fullPath = msBuildPath(szPath, mappath, tmpBase);
+    return strdup(fullPath);
+}
+
+/**********************************************************************
+ *                          msTmpFilename()
+ *
+ * Generate a Unique temporary filename.
+ * 
+ * Returns char* which must be freed by caller.
+ **********************************************************************/
+char *msTmpFilename(const char *ext)
+{
+    char *tmpFname;
+    int tmpFnameBufsize;
+    char *fullFname;
+    char tmpId[128]; /* big enough for time + pid + ext */
+
+    snprintf(tmpId, sizeof(tmpId), "%lx_%x",(long)time(NULL),(int)getpid());
+
+    if (ext == NULL)  ext = "";
+    tmpFnameBufsize = strlen(tmpId) + 10 + strlen(ext) + 1;
+    tmpFname = (char*)msSmallMalloc(tmpFnameBufsize);
+
+    msAcquireLock( TLOCK_TMPFILE );
+    snprintf(tmpFname, tmpFnameBufsize, "%s_%x.%s", tmpId, tmpCount++, ext);
+    msReleaseLock( TLOCK_TMPFILE );
+
+    fullFname = strdup(tmpFname);
+    free(tmpFname);
+
+    return fullFname;
 }
 
 /**
  *  Generic function to Initalize an image object.
  */
 imageObj *msImageCreate(int width, int height, outputFormatObj *format, 
-                        char *imagepath, char *imageurl, mapObj *map)
+                        char *imagepath, char *imageurl, double resolution,
+                        double defresolution, colorObj *bg)
 {
     imageObj *image = NULL;
-    if( MS_RENDERER_GD(format) )
-    {
-        image = msImageCreateGD(width, height, format,
-                                imagepath, imageurl, map->resolution, map->defresolution);
-        if( image != NULL && map) msImageInitGD( image, &map->imagecolor );
-    }
-    else if(MS_RENDERER_PLUGIN(format)) {
-    	image = format->vtable->createImage(width,height,format,&map->imagecolor);
+    if(MS_RENDERER_PLUGIN(format)) {
+        
+    	image = format->vtable->createImage(width,height,format,bg);
+        if (image == NULL)
+        {
+            msSetError(MS_MEMERR, "Unable to create new image object.", "msImageCreate()");
+            return NULL;
+        }
+
     	image->format = format;
-		format->refcount++;
+        format->refcount++;
 
-		image->width = width;
-		image->height = height;
-		image->imagepath = NULL;
-		image->imageurl = NULL;
-                image->tilecache = NULL;
-                image->ntiles = 0;
-                image->resolution = map->resolution;
-                image->resolutionfactor = map->resolution/map->defresolution;
+        image->width = width;
+        image->height = height;
+        image->imagepath = NULL;
+        image->imageurl = NULL;
+        image->tilecache = NULL;
+        image->ntiles = 0;
+        image->resolution = resolution;
+        image->resolutionfactor = resolution/defresolution;
 
-		if (imagepath)
-			image->imagepath = strdup(imagepath);
-		if (imageurl)
-			image->imageurl = strdup(imageurl);
+        if (imagepath)
+            image->imagepath = msStrdup(imagepath);
+        if (imageurl)
+            image->imageurl = msStrdup(imageurl);
 
-		return image;
+        return image;
     }
-#ifdef USE_AGG
-    else if( MS_RENDERER_AGG(format) )
-    {
-        image = msImageCreateAGG(width, height, format,
-                                 imagepath, imageurl, map->resolution, map->defresolution);
-        if( image != NULL && map) msImageInitAGG( image, &map->imagecolor );
-    }
-#endif
     else if( MS_RENDERER_RAWDATA(format) )
     {
         if( format->imagemode != MS_IMAGEMODE_INT16
@@ -1425,22 +1487,27 @@ imageObj *msImageCreate(int width, int height, outputFormatObj *format,
             && format->imagemode != MS_IMAGEMODE_BYTE )
         {
             msSetError(MS_IMGERR, 
-                    "Attempt to use illegal imagemode with rawdata renderer.",
+                       "Attempt to use illegal imagemode with rawdata renderer.",
                        "msImageCreate()" );
             return NULL;
         }
 
         image = (imageObj *)calloc(1,sizeof(imageObj));
+        if (image == NULL)
+        {
+            msSetError(MS_MEMERR, "Unable to create new image object.", "msImageCreate()");
+            return NULL;
+        }
 
         if( format->imagemode == MS_IMAGEMODE_INT16 )
             image->img.raw_16bit = (short *) 
-                calloc(sizeof(short),width*height*format->bands);
+                msSmallCalloc(sizeof(short),width*height*format->bands);
         else if( format->imagemode == MS_IMAGEMODE_FLOAT32 )
             image->img.raw_float = (float *) 
-                calloc(sizeof(float),width*height*format->bands);
+                msSmallCalloc(sizeof(float),width*height*format->bands);
         else if( format->imagemode == MS_IMAGEMODE_BYTE )
             image->img.raw_byte = (unsigned char *) 
-                calloc(sizeof(unsigned char),width*height*format->bands);
+                msSmallCalloc(sizeof(unsigned char),width*height*format->bands);
 
         if( image->img.raw_16bit == NULL )
         {
@@ -1450,6 +1517,8 @@ imageObj *msImageCreate(int width, int height, outputFormatObj *format,
                        "msImageCreate()" );
             return NULL;
         }
+
+        image->img_mask = msAllocBitArray( width*height );
             
         image->format = format;
         format->refcount++;
@@ -1458,41 +1527,55 @@ imageObj *msImageCreate(int width, int height, outputFormatObj *format,
         image->height = height;
         image->imagepath = NULL;
         image->imageurl = NULL;
-        image->resolution = map->resolution;
-        image->resolutionfactor = map->resolution/map->defresolution;
+        image->resolution = resolution;
+        image->resolutionfactor = resolution/defresolution;
 
         if (imagepath)
-            image->imagepath = strdup(imagepath);
+            image->imagepath = msStrdup(imagepath);
         if (imageurl)
-            image->imageurl = strdup(imageurl);
-            
+            image->imageurl = msStrdup(imageurl);
+
+        /* initialize to requested nullvalue if there is one */
+        if( msGetOutputFormatOption(image->format,"NULLVALUE",NULL) != NULL )
+        {
+            int i = image->width * image->height * format->bands;
+            const char *nullvalue = msGetOutputFormatOption(image->format,
+                                                            "NULLVALUE",NULL);
+
+            if( atof(nullvalue) == 0.0 )
+                /* nothing to do */;
+            else if( format->imagemode == MS_IMAGEMODE_INT16 )
+            {
+                short nv = atoi(nullvalue);
+                for( ; i > 0; )
+                    image->img.raw_16bit[--i] = nv;
+            }
+            else if( format->imagemode == MS_IMAGEMODE_FLOAT32 )
+            {
+                float nv = atoi(nullvalue);
+                for( ; i > 0; )
+                    image->img.raw_float[--i] = nv;
+            }
+            else if( format->imagemode == MS_IMAGEMODE_BYTE )
+            {
+                unsigned char nv = (unsigned char) atoi(nullvalue);
+
+                memset( image->img.raw_byte, nv, i );
+            }
+        }
+
         return image;
     }
     else if( MS_RENDERER_IMAGEMAP(format) )
     {
         image = msImageCreateIM(width, height, format,
-                                imagepath, imageurl, map->resolution, map->defresolution);
+                                imagepath, imageurl, resolution, defresolution);
         if( image != NULL ) msImageInitIM( image );
     }
-#ifdef USE_MING_FLASH
-    else if( MS_RENDERER_SWF(format) && map )
-    {
-        image = msImageCreateSWF(width, height, format,
-                                 imagepath, imageurl, map);
-    }
-#endif
-#ifdef USE_PDF
-    else if( MS_RENDERER_PDF(format) && map)
-    {
-        image = msImageCreatePDF(width, height, format,
-                                 imagepath, imageurl, map);
-    }
-#endif
-    
     else 
     {
         msSetError(MS_MISCERR, 
-               "Unsupported renderer requested, unable to initialize image.", 
+                   "Unsupported renderer requested, unable to initialize image.", 
                    "msImageCreate()");
         return NULL;
     }
@@ -1505,59 +1588,23 @@ imageObj *msImageCreate(int width, int height, outputFormatObj *format,
 
 
 /**
- * Generic function to transorm the shape coordinates to output coordinates
+ * Generic function to transorm a point.
+ * 
  */
-void  msTransformShape(shapeObj *shape, rectObj extent, double cellsize, 
+void  msTransformPoint(pointObj *point, rectObj *extent, double cellsize, 
                        imageObj *image)   
 {
-	if (image != NULL && MS_RENDERER_PLUGIN(image->format)) {
-		image->format->vtable->transformShape(shape, extent, cellsize);
+    /*We should probabaly have a function defined at all the renders*/
+    if (image != NULL && MS_RENDERER_PLUGIN(image->format) && 
+        image->format->renderer == MS_RENDER_WITH_KML)
+      return;
 
-		return;
-	}
-#ifdef USE_MING_FLASH
-    if (image != NULL && MS_RENDERER_SWF(image->format) )
-    {
-        if (strcasecmp(msGetOutputFormatOption(image->format, "FULL_RESOLUTION",""), 
-                       "FALSE") == 0)
-          msTransformShapeToPixel(shape, extent, cellsize);
-        else
-          msTransformShapeSWF(shape, extent, cellsize);
-          
-
-        return;
-    }
-#endif
-#ifdef USE_PDF
-    if (image != NULL && MS_RENDERER_PDF(image->format) )
-    {
-        if (strcasecmp(msGetOutputFormatOption(image->format, "FULL_RESOLUTION",""), 
-                       "FALSE") == 0)
-          msTransformShapeToPixel(shape, extent, cellsize);
-        else
-          msTransformShapePDF(shape, extent, cellsize);
-
-        return;
-    }
-#endif
-    if (image != NULL && MS_RENDERER_SVG(image->format) )
-    {
-        
-        msTransformShapeSVG(shape, extent, cellsize, image);
-
-        return;
-    }
-#ifdef USE_AGG
-    if (image != NULL && MS_RENDERER_AGG(image->format) )
-    {
-        msTransformShapeAGG(shape, extent, cellsize);
-
-        return;
-    }
-#endif
-
-    msTransformShapeToPixel(shape, extent, cellsize);
+    point->x = MS_MAP2IMAGE_X(point->x, extent->minx, cellsize);
+    point->y = MS_MAP2IMAGE_Y(point->y, extent->maxy, cellsize);
 }
+
+
+
 
 /*
 ** Helper functions supplied as part of bug #2868 solution. Consider moving these to
@@ -1650,18 +1697,22 @@ static double point_cross(const pointObj a, const pointObj b) {
 shapeObj *msOffsetPolyline(shapeObj *p, double offsetx, double offsety) {
   int i, j, first,idx;
 
-  shapeObj *ret = (shapeObj*)malloc(sizeof(shapeObj));
+  shapeObj *ret = (shapeObj*)msSmallMalloc(sizeof(shapeObj));
   msInitShape(ret);
   ret->numlines = p->numlines;
-  ret->line=(lineObj*)malloc(sizeof(lineObj)*ret->numlines);
+  ret->line=(lineObj*)msSmallMalloc(sizeof(lineObj)*ret->numlines);
   for(i=0;i<ret->numlines;i++) {
     ret->line[i].numpoints=p->line[i].numpoints;
-    ret->line[i].point=(pointObj*)malloc(sizeof(pointObj)*ret->line[i].numpoints);
+    ret->line[i].point=(pointObj*)msSmallMalloc(sizeof(pointObj)*ret->line[i].numpoints);
   }
 
   if(offsety == -99) { /* complex calculations */
     for (i = 0; i < p->numlines; i++) {
       pointObj old_pt, old_diffdir, old_offdir;
+      /* initialize old_offdir and old_diffdir, as gcc isn't smart enough to see that it
+       * is not an error to do so, and prints a warning */
+      old_offdir.x=old_offdir.y=old_diffdir.x=old_diffdir.y = 0;
+
       idx=0;
       first = 1;
 
@@ -1711,7 +1762,7 @@ shapeObj *msOffsetPolyline(shapeObj *p, double offsetx, double offsety) {
       if(idx != p->line[i].numpoints) {
         /* printf("shouldn't happen :(\n"); */
         ret->line[i].numpoints=idx;
-        ret->line=realloc(ret->line,ret->line[i].numpoints*sizeof(pointObj));
+        ret->line=msSmallRealloc(ret->line,ret->line[i].numpoints*sizeof(pointObj));
       }
     }
   } else { /* normal offset (eg. drop shadow) */
@@ -1765,6 +1816,12 @@ void msCleanup()
 {
   msForceTmpFileBase( NULL );
   msConnPoolFinalCleanup();
+  /* Lexer string parsing variable */
+  if (msyystring_buffer != NULL)
+  {
+    msFree(msyystring_buffer);
+    msyystring_buffer = NULL;
+  }
   msyylex_destroy();
 
 #ifdef USE_OGR
@@ -1774,10 +1831,13 @@ void msCleanup()
   msGDALCleanup();
 #endif    
 #ifdef USE_PROJ
+#  if PJ_VERSION >= 480
+  pj_clear_initcache();
+#  endif
   pj_deallocate_grids();
-  msSetPROJ_LIB( NULL );
+  msSetPROJ_LIB( NULL, NULL );
 #endif
-#if defined(USE_WMS_LYR) || defined(USE_WFS_LYR)
+#if defined(USE_CURL)
   msHTTPCleanup();
 #endif
 
@@ -1788,69 +1848,155 @@ void msCleanup()
 #ifdef USE_GEOS
   msGEOSCleanup();
 #endif
+  
   msIO_Cleanup();
 
   msResetErrorList();
 
   /* Close/cleanup log/debug output. Keep this at the very end. */
   msDebugCleanup();
+
+  /* Clean up the vtable factory */
+  msPluginFreeVirtualTableFactory();
 }
 
 /************************************************************************/
 /*                            msAlphaBlend()                            */
 /*                                                                      */
-/*      MapServer variation on gdAlphaBlend() that, I think, does a     */
-/*      better job of merging a non-opaque color into an opaque         */
-/*      color.  In particular from gd 2.0.12 on the GD                  */
-/*      gdAlphaBlend() will give a transparent "dst" color influence    */
-/*      in the result if the overlay is non-opaque.                     */
+/*      Function to overlay/blend an RGBA value into an existing        */
+/*      RGBA value using the Porter-Duff "over" operator.               */
+/*      Primarily intended for use with rasterBufferObj                 */
+/*      raster rendering.  The "src" is the overlay value, and "dst"    */
+/*      is the existing value being overlaid. dst is expected to be     */
+/*      premultiplied, but the source should not be.                    */
 /*                                                                      */
-/*      Note that "src" is layered over "dst".                          */
+/*      NOTE: alpha_dst may be NULL.                                    */
 /************************************************************************/
 
-int msAlphaBlend (int dst, int src)
+void msAlphaBlend( unsigned char red_src, unsigned char green_src,
+                    unsigned char blue_src, unsigned char alpha_src, 
+                    unsigned char *red_dst, unsigned char *green_dst,
+                    unsigned char *blue_dst, unsigned char *alpha_dst )
 {
-    int src_alpha = gdTrueColorGetAlpha(src);
-    int dst_alpha, alpha, red, green, blue;
-    int src_weight, dst_weight, tot_weight;
-
 /* -------------------------------------------------------------------- */
 /*      Simple cases we want to handle fast.                            */
 /* -------------------------------------------------------------------- */
-    if( src_alpha == gdAlphaOpaque )
-        return src;
-
-    dst_alpha = gdTrueColorGetAlpha(dst);
-    if( src_alpha == gdAlphaTransparent )
-        return dst;
-    if( dst_alpha == gdAlphaTransparent )
-        return src;
-
-/* -------------------------------------------------------------------- */
-/*      What will the source and destination alphas be?  Note that      */
-/*      the destination weighting is substantially reduced as the       */
-/*      overlay becomes quite opaque.                                   */
-/* -------------------------------------------------------------------- */
-    src_weight = gdAlphaTransparent - src_alpha;
-    dst_weight = (gdAlphaTransparent - dst_alpha) * src_alpha / gdAlphaMax;
-    tot_weight = src_weight + dst_weight;
+    if( alpha_src == 0 )
+        return;
     
-/* -------------------------------------------------------------------- */
-/*      What red, green and blue result values will we use?             */
-/* -------------------------------------------------------------------- */
-    alpha = src_alpha * dst_alpha / gdAlphaMax;
-
-    red = (gdTrueColorGetRed(src) * src_weight
-           + gdTrueColorGetRed(dst) * dst_weight) / tot_weight;
-    green = (gdTrueColorGetGreen(src) * src_weight
-           + gdTrueColorGetGreen(dst) * dst_weight) / tot_weight;
-    blue = (gdTrueColorGetBlue(src) * src_weight
-           + gdTrueColorGetBlue(dst) * dst_weight) / tot_weight;
+    if( alpha_src == 255 )
+    {
+        *red_dst = red_src;
+        *green_dst = green_src;
+        *blue_dst = blue_src;
+        if( alpha_dst )
+            *alpha_dst = 255;
+        return;
+    }
 
 /* -------------------------------------------------------------------- */
-/*      Return merged result.                                           */
+/*      Premultiple alpha for source values now.                        */
 /* -------------------------------------------------------------------- */
-    return ((alpha << 24) + (red << 16) + (green << 8) + blue);
+    red_src   = red_src * alpha_src / 255;
+    green_src = green_src * alpha_src / 255;
+    blue_src  = blue_src * alpha_src / 255;
+
+/* -------------------------------------------------------------------- */
+/*      Another pretty fast case if there is nothing in the             */
+/*      destination to mix with.                                        */
+/* -------------------------------------------------------------------- */
+    if( alpha_dst && *alpha_dst == 0) {
+       *red_dst = red_src;
+       *green_dst = green_src;
+       *blue_dst = blue_src;
+       *alpha_dst = alpha_src;
+       return;
+    }
+
+/* -------------------------------------------------------------------- */
+/*      Cases with actual blending.                                     */
+/* -------------------------------------------------------------------- */
+    if(!alpha_dst || *alpha_dst == 255) 
+    {
+        int weight_dst = 256 - alpha_src;
+
+        *red_dst   = (256 * red_src   + *red_dst   * weight_dst) >> 8;
+        *green_dst = (256 * green_src + *green_dst * weight_dst) >> 8;
+        *blue_dst  = (256 * blue_src  + *blue_dst  * weight_dst) >> 8;
+    } 
+    else 
+    {
+        int   weight_dst = (256 - alpha_src);
+
+        *red_dst   = (256 * red_src   + *red_dst   * weight_dst) >> 8;
+        *green_dst = (256 * green_src + *green_dst * weight_dst) >> 8;
+        *blue_dst  = (256 * blue_src  + *blue_dst  * weight_dst) >> 8;
+
+        *alpha_dst = (256 * alpha_src + *alpha_dst * weight_dst) >> 8;
+    }
+}
+
+/************************************************************************/
+/*                           msAlphaBlendPM()                           */
+/*                                                                      */
+/*      Same as msAlphaBlend() except that the source RGBA is           */
+/*      assumed to already be premultiplied.                            */
+/************************************************************************/
+
+void msAlphaBlendPM( unsigned char red_src, unsigned char green_src,
+                     unsigned char blue_src, unsigned char alpha_src, 
+                     unsigned char *red_dst, unsigned char *green_dst,
+                     unsigned char *blue_dst, unsigned char *alpha_dst )
+{
+/* -------------------------------------------------------------------- */
+/*      Simple cases we want to handle fast.                            */
+/* -------------------------------------------------------------------- */
+    if( alpha_src == 0 )
+        return;
+    
+    if( alpha_src == 255 )
+    {
+        *red_dst = red_src;
+        *green_dst = green_src;
+        *blue_dst = blue_src;
+        if( alpha_dst )
+            *alpha_dst = 255;
+        return;
+    }
+
+/* -------------------------------------------------------------------- */
+/*      Another pretty fast case if there is nothing in the             */
+/*      destination to mix with.                                        */
+/* -------------------------------------------------------------------- */
+    if( alpha_dst && *alpha_dst == 0) {
+       *red_dst = red_src;
+       *green_dst = green_src;
+       *blue_dst = blue_src;
+       *alpha_dst = alpha_src;
+       return;
+    }
+
+/* -------------------------------------------------------------------- */
+/*      Cases with actual blending.                                     */
+/* -------------------------------------------------------------------- */
+    if(!alpha_dst || *alpha_dst == 255) 
+    {
+        int weight_dst = 256 - alpha_src;
+
+        *red_dst   = (256 * red_src   + *red_dst   * weight_dst) >> 8;
+        *green_dst = (256 * green_src + *green_dst * weight_dst) >> 8;
+        *blue_dst  = (256 * blue_src  + *blue_dst  * weight_dst) >> 8;
+    } 
+    else 
+    {
+        int   weight_dst = (256 - alpha_src);
+
+        *red_dst   = (256 * red_src   + *red_dst   * weight_dst) >> 8;
+        *green_dst = (256 * green_src + *green_dst * weight_dst) >> 8;
+        *blue_dst  = (256 * blue_src  + *blue_dst  * weight_dst) >> 8;
+
+        *alpha_dst = (256 * alpha_src + *alpha_dst * weight_dst) >> 8;
+    }
 }
 
 /*
@@ -1876,22 +2022,22 @@ int msCheckParentPointer(void* p, char *objname) {
     return MS_SUCCESS;
 }
 
-inline void msBufferInit(bufferObj *buffer) {
+void msBufferInit(bufferObj *buffer) {
     buffer->data=NULL;
     buffer->size=0;
     buffer->available=0;
     buffer->_next_allocation_size = MS_DEFAULT_BUFFER_ALLOC;
 }
 
-inline void msBufferResize(bufferObj *buffer, size_t target_size){
+void msBufferResize(bufferObj *buffer, size_t target_size){
     while(buffer->available <= target_size) {
-        buffer->data = realloc(buffer->data,buffer->available+buffer->_next_allocation_size);
+        buffer->data = msSmallRealloc(buffer->data,buffer->available+buffer->_next_allocation_size);
         buffer->available += buffer->_next_allocation_size;
         buffer->_next_allocation_size *= 2;
     }
 }
 
-inline void msBufferAppend(bufferObj *buffer, void *data, size_t length) {
+void msBufferAppend(bufferObj *buffer, void *data, size_t length) {
     if(buffer->available < buffer->size+length) {
         msBufferResize(buffer,buffer->size+length);
     }
@@ -1899,14 +2045,29 @@ inline void msBufferAppend(bufferObj *buffer, void *data, size_t length) {
     buffer->size += length;
 }
 
-inline void msBufferFree(bufferObj *buffer) {
+void msBufferFree(bufferObj *buffer) {
     if(buffer->available>0)
         free(buffer->data);
 }
 
 
 void msFreeRasterBuffer(rasterBufferObj *b) {
-    msFree(b->pixelbuffer);
+    switch(b->type) {
+    case MS_BUFFER_BYTE_RGBA:
+		msFree(b->data.rgba.pixels);
+		b->data.rgba.pixels = NULL;
+		break;
+    case MS_BUFFER_BYTE_PALETTE:
+    	msFree(b->data.palette.pixels);
+    	msFree(b->data.palette.palette);
+    	b->data.palette.pixels = NULL;
+    	b->data.palette.palette = NULL;
+    	break;
+    case MS_BUFFER_GD:
+    	gdImageDestroy(b->data.gd_img);
+        b->data.gd_img = NULL;
+        break;
+    }
 }
 
 /*
@@ -1966,4 +2127,178 @@ int msExtentsOverlap(mapObj *map, layerObj *layer)
     return MS_FALSE;
 #endif
 
+}
+
+/************************************************************************/
+/*                             msSmallMalloc()                          */
+/************************************************************************/
+
+/* Safe version of malloc(). This function is taken from gdal/cpl. */
+
+void *msSmallMalloc( size_t nSize )
+{
+    void        *pReturn;
+
+    if( nSize == 0 )
+        return NULL;
+
+    if( nSize < 0 )
+    {
+        fprintf(stderr, "msSmallMalloc(%ld): Silly size requested.\n",
+                (long) nSize );
+        return NULL;
+    }
+    
+    pReturn = malloc( nSize );
+    if( pReturn == NULL )
+    {
+        fprintf(stderr, "msSmallMalloc(): Out of memory allocating %ld bytes.\n",
+                (long) nSize );
+        exit(1);
+    }
+
+    return pReturn;
+}
+
+/************************************************************************/
+/*                             msSmallRealloc()                         */
+/************************************************************************/
+
+/* Safe version of realloc(). This function is taken from gdal/cpl. */
+
+void * msSmallRealloc( void * pData, size_t nNewSize )
+{
+    void        *pReturn;
+
+    if ( nNewSize == 0 )
+        return NULL;
+
+    if( nNewSize < 0 )
+    {
+        fprintf(stderr, "msSmallRealloc(%ld): Silly size requested.\n",
+                (long) nNewSize );
+        return NULL;
+    }
+
+    pReturn = realloc( pData, nNewSize );
+
+    if( pReturn == NULL )
+    {
+        fprintf(stderr, "msSmallRealloc(): Out of memory allocating %ld bytes.\n",
+                (long)nNewSize );
+        exit(1);
+    }
+
+    return pReturn;
+}
+
+/************************************************************************/
+/*                             msSmallCalloc()                         */
+/************************************************************************/
+
+/* Safe version of calloc(). This function is taken from gdal/cpl. */
+
+void *msSmallCalloc( size_t nCount, size_t nSize )
+{
+    void  *pReturn;
+
+    if( nSize * nCount == 0 )
+        return NULL;
+    
+    pReturn = calloc( nCount, nSize );
+    if( pReturn == NULL )
+    {
+        fprintf(stderr, "msSmallCalloc(): Out of memory allocating %ld bytes.\n",
+                (long)(nCount*nSize));
+        exit(1);
+    }
+
+    return pReturn;
+}
+
+/*
+** msBuildOnlineResource()
+**
+** Try to build the online resource (mapserv URL) for this service.
+** "http://$(SERVER_NAME):$(SERVER_PORT)$(SCRIPT_NAME)?"
+** (+append the map=... param if it was explicitly passed in QUERY_STRING)
+**
+** Returns a newly allocated string that should be freed by the caller or
+** NULL in case of error.
+*/
+char *msBuildOnlineResource(mapObj *map, cgiRequestObj *req)
+{
+    char *online_resource = NULL;
+    const char *value, *hostname, *port, *script, *protocol="http", *mapparam=NULL;
+    int mapparam_len = 0;
+
+    hostname = getenv("SERVER_NAME");
+    port = getenv("SERVER_PORT");
+    script = getenv("SCRIPT_NAME");
+
+    /* HTTPS is set by Apache to "on" in an HTTPS server ... if not set */
+    /* then check SERVER_PORT: 443 is the default https port. */
+    if ( ((value=getenv("HTTPS")) && strcasecmp(value, "on") == 0) ||
+	 ((value=getenv("SERVER_PORT")) && atoi(value) == 443) )
+    {
+        protocol = "https";
+    }
+
+    /* If map=.. was explicitly set then we'll include it in onlineresource
+     */
+    if (req->type == MS_GET_REQUEST)
+    {
+        int i;
+        for(i=0; i<req->NumParams; i++)
+        {
+            if (strcasecmp(req->ParamNames[i], "map") == 0)
+            {
+                mapparam = req->ParamValues[i];
+                mapparam_len = strlen(mapparam)+5; /* +5 for "map="+"&" */
+                break;
+            }
+        }
+    }
+
+    if (hostname && port && script) 
+    {
+        size_t buffer_size;
+        buffer_size = strlen(hostname)+strlen(port)+strlen(script)+mapparam_len+10;
+        online_resource = (char*)msSmallMalloc(buffer_size);
+        if ((atoi(port) == 80 && strcmp(protocol, "http") == 0) ||
+            (atoi(port) == 443 && strcmp(protocol, "https") == 0) )
+          snprintf(online_resource, buffer_size, "%s://%s%s?", protocol, hostname, script);
+        else
+          snprintf(online_resource, buffer_size, "%s://%s:%s%s?", protocol, hostname, port, script);
+
+        if (mapparam)
+        {
+            int baselen;
+            baselen = strlen(online_resource);
+            snprintf(online_resource+baselen, buffer_size-baselen, "map=%s&", mapparam);
+        }
+    }
+    else 
+    {
+        msSetError(MS_CGIERR, "Impossible to establish server URL.", "msBuildOnlineResource()");
+        return NULL;
+    }
+
+    return online_resource;
+}
+
+
+/************************************************************************/
+/*                             msIntegerInArray()                        */
+/************************************************************************/
+
+/* Check if a integer is in a array */
+int msIntegerInArray(const int value, int *array, int numelements)
+{
+    int i;
+    for (i=0;i<numelements;++i) {
+        if (value == array[i])
+            return MS_TRUE;
+    }
+    return MS_FALSE;
 }

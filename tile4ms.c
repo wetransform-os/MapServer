@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: tile4ms.c 7785 2008-07-03 23:47:28Z pramsey $
+ * $Id: tile4ms.c 10772 2010-11-29 18:27:02Z aboudreault $
  *
  * Project:  MapServer
  * Purpose:  Create shapefile of rectangles from extents of several shapefiles 
@@ -43,7 +43,7 @@
 #include "mapserver.h"
 #include <string.h>
 
-MS_CVSID("$Id: tile4ms.c 7785 2008-07-03 23:47:28Z pramsey $")
+MS_CVSID("$Id: tile4ms.c 10772 2010-11-29 18:27:02Z aboudreault $")
 
 /***********************************************************************/
 int process_shapefiles(char *metaFileNameP, char *tileFileNameP, 
@@ -81,7 +81,7 @@ int     tilesFound = 0;
 int     tilesProcessed = 0;
 
   msInitShape(&shapeRect);
-  line.point = (pointObj *)malloc(sizeof(pointObj)*5);
+  line.point = (pointObj *)msSmallMalloc(sizeof(pointObj)*5);
   line.numpoints = 5;
  
   /* open metafile */
@@ -94,7 +94,7 @@ int     tilesProcessed = 0;
 
   /* create new tileindex shapefiles and create a header */
   /* -------------------------------------------------- */
-  sprintf(tileshapeName, "%s.shp", tileFileNameP);
+  snprintf(tileshapeName, sizeof(tileshapeName), "%s.shp", tileFileNameP);
 
   if(NULL==(tileSHP=msSHPCreate(tileFileNameP, SHP_POLYGON))) {
     fclose(metaFP);
@@ -105,7 +105,7 @@ int     tilesProcessed = 0;
   
   /* create new tileindex dbf-file */
   /* ----------------------------- */
-  sprintf(tiledbfName, "%s.dbf", tileFileNameP);
+  snprintf(tiledbfName, sizeof(tiledbfName), "%s.dbf", tileFileNameP);
   if (NULL==(tileDBF=msDBFCreate(tiledbfName))) {
     fclose(metaFP);
     msSHPClose(tileSHP);
@@ -147,7 +147,7 @@ int     tilesProcessed = 0;
 
     if( theFields == NULL ) {
         fieldCnt = msDBFGetFieldCount(shpDBF);
-        theFields = (DBFFieldDef *) calloc(fieldCnt, sizeof(DBFFieldDef));
+        theFields = (DBFFieldDef *) msSmallCalloc(fieldCnt, sizeof(DBFFieldDef));
         for (i=0; i<fieldCnt; i++) {
             theFields[i].type = msDBFGetFieldInfo(shpDBF, i, 
                     theFields[i].name, 

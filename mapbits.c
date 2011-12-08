@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapbits.c 8755 2009-03-10 13:35:19Z jlacroix $
+ * $Id: mapbits.c 10017 2010-03-26 05:01:03Z warmerdam $
  *
  * Project:  MapServer
  * Purpose:  Implementation of bit array functions.
@@ -32,7 +32,7 @@
 
 #include "mapserver.h"
 
-MS_CVSID("$Id: mapbits.c 8755 2009-03-10 13:35:19Z jlacroix $")
+MS_CVSID("$Id: mapbits.c 10017 2010-03-26 05:01:03Z warmerdam $")
 
 #include <limits.h>
 
@@ -40,7 +40,6 @@ MS_CVSID("$Id: mapbits.c 8755 2009-03-10 13:35:19Z jlacroix $")
  * Hardcoded size of our bit array. 
  * See function msGetNextBit for another hardcoded value.
  */
-#define MS_ARRAY_BIT 32
 
 /* #define msGetBit(array, index) (*((array) + (index)/MS_ARRAY_BIT) & ( 1 << ((index) % MS_ARRAY_BIT))) */
 

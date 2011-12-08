@@ -1,6 +1,6 @@
 
 /******************************************************************************
- * $Id: swig_csharp_extensions.i 10808 2010-12-20 16:03:35Z tamas $
+ * $Id: swig_csharp_extensions.i 10807 2010-12-20 15:58:22Z tamas $
  *
  * Project:  MapServer
  * Purpose:  Fix for the SWIG Interface problems (early GC)
@@ -212,6 +212,7 @@
   [DllImport("$dllimport", EntryPoint="SetEnvironmentVariable")]
   public static extern int SetEnvironmentVariable(string envstring);
 %}
+
 
 %insert(runtime) %{
 #ifdef __cplusplus

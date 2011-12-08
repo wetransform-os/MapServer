@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id$
+ * $Id: mapgeomtransform.c 11513 2011-04-10 09:50:28Z tbonfort $
  *
  * Project:  MapServer
  * Purpose: RFC48 implementation of geometry transformations for styling
@@ -28,30 +28,36 @@
  *****************************************************************************/
 
 #include "mapserver.h"
+#include "mapthread.h"
+
+extern int yyparse(parseObj *p);
 
 void msStyleSetGeomTransform(styleObj *s, char *transform) {
-  msFree(s->_geomtransformexpression);
-  s->_geomtransformexpression = strdup(transform);
+  msFree(s->_geomtransform.string);                                                                                                                                                          
+  s->_geomtransform.string = msStrdup(transform);
   if(!strncasecmp("start",transform,5)) {
-    s->_geomtransform = MS_GEOMTRANSFORM_START;
+    s->_geomtransform.type = MS_GEOMTRANSFORM_START;
   }
   else if(!strncasecmp("end",transform,3)) {
-    s->_geomtransform = MS_GEOMTRANSFORM_END;
+    s->_geomtransform.type = MS_GEOMTRANSFORM_END;
   }
   else if(!strncasecmp("vertices",transform,8)) {
-    s->_geomtransform = MS_GEOMTRANSFORM_VERTICES;
+    s->_geomtransform.type = MS_GEOMTRANSFORM_VERTICES;
   }
   else if(!strncasecmp("bbox",transform,4)) {
-    s->_geomtransform = MS_GEOMTRANSFORM_BBOX;
+    s->_geomtransform.type = MS_GEOMTRANSFORM_BBOX;
   }
-  else if(!strncasecmp("centroid",transform,8)) {
-    s->_geomtransform = MS_GEOMTRANSFORM_CENTROID;
+  else if(!strncasecmp("labelpnt",transform,8)) {
+    s->_geomtransform.type = MS_GEOMTRANSFORM_LABELPOINT;
+  }
+  else if(!strncasecmp("labelpoly",transform,9)) {
+    s->_geomtransform.type = MS_GEOMTRANSFORM_LABELPOLY;
   }
   else {
-    s->_geomtransform = MS_GEOMTRANSFORM_NONE;
+    s->_geomtransform.type = MS_GEOMTRANSFORM_NONE;
     msSetError(MS_MISCERR,"unknown transform expression","msStyleSetGeomTransform()");
-    msFree(s->_geomtransformexpression);
-    s->_geomtransformexpression = NULL;
+    msFree(s->_geomtransform.string);
+    s->_geomtransform.string = NULL;
   }
 }
 
@@ -61,9 +67,7 @@ void msStyleSetGeomTransform(styleObj *s, char *transform) {
  * returned char* must be freed by the caller
  */
 char *msStyleGetGeomTransform(styleObj *s) {
-  if(s->_geomtransformexpression==NULL)
-    return NULL;
-  return strdup(s->_geomtransformexpression);
+  return msStrdup(s->_geomtransform.string);
 }
 
 
@@ -88,7 +92,7 @@ double calcMidAngle(pointObj *p1, pointObj *p2, pointObj *p3) {
  *  - use the styleObj to render the transformed shapeobj
  */
 int msDrawTransformedShape(mapObj *map, symbolSetObj *symbolset, imageObj *image, shapeObj *shape, styleObj *style, double scalefactor){
-  int type = style->_geomtransform;
+  int type = style->_geomtransform.type;
   int i,j;
   switch(type) {
     case MS_GEOMTRANSFORM_END: /*render point on last vertex only*/
@@ -99,8 +103,6 @@ int msDrawTransformedShape(mapObj *map, symbolSetObj *symbolset, imageObj *image
             continue;
         if(style->autoangle==MS_TRUE && line->numpoints>1) {
           style->angle = calcOrientation(&(line->point[line->numpoints-2]),p);
-          if(symbolset->symbol[style->symbol]->type==MS_SYMBOL_VECTOR)
-            style->angle = - style->angle;
         }
         msDrawMarkerSymbol(symbolset,image,p,style,scalefactor);
       }
@@ -114,8 +116,6 @@ int msDrawTransformedShape(mapObj *map, symbolSetObj *symbolset, imageObj *image
             continue;
         if(style->autoangle==MS_TRUE && line->numpoints>1) {
           style->angle = calcOrientation(p,&(line->point[1]));
-          if(symbolset->symbol[style->symbol]->type==MS_SYMBOL_VECTOR)
-            style->angle = - style->angle;
         }
         msDrawMarkerSymbol(symbolset,image,p,style,scalefactor);
       }
@@ -130,8 +130,6 @@ int msDrawTransformedShape(mapObj *map, symbolSetObj *symbolset, imageObj *image
             continue;
           if(style->autoangle==MS_TRUE) {
             style->angle = calcMidAngle(&(line->point[i-1]),&(line->point[i]),&(line->point[i+1]));
-            if(symbolset->symbol[style->symbol]->type==MS_SYMBOL_VECTOR)
-              style->angle = - style->angle;
           }
           msDrawMarkerSymbol(symbolset,image,p,style,scalefactor);
         }
@@ -170,9 +168,38 @@ int msDrawTransformedShape(mapObj *map, symbolSetObj *symbolset, imageObj *image
           msDrawMarkerSymbol(symbolset,image,&centroid,style,scalefactor);
         }
       }
+      break;
+    case MS_GEOMTRANSFORM_EXPRESSION:
+      {
+        int status;
+	shapeObj *tmpshp;
+        parseObj p;
+
+	p.shape = shape; /* set a few parser globals (hence the lock) */
+	p.expr = &(style->_geomtransform);
+	p.expr->curtoken = p.expr->tokens; /* reset */
+	p.type = MS_PARSE_TYPE_SHAPE;
+
+	status = yyparse(&p);
+	if (status != 0) {
+	  msSetError(MS_PARSEERR, "Failed to process shape expression: %s", "msDrawTransformedShape", style->_geomtransform.string);
+	  return MS_FAILURE;
+	}
+
+	tmpshp = p.result.shpval;
+
+        /* TODO: check resulting shape type and draw accordingly */
+        msDrawShadeSymbol(symbolset, image, tmpshp, style, scalefactor);
+
+        msFreeShape(tmpshp);
+      }
+      break;
+    case MS_GEOMTRANSFORM_LABELPOINT:
+    case MS_GEOMTRANSFORM_LABELPOLY:
+      break;
     default:
-     msSetError(MS_MISCERR, "unknown geomtransform", "msDrawTransformedShape()");
-     return MS_FAILURE;
+      msSetError(MS_MISCERR, "unknown geomtransform", "msDrawTransformedShape()");
+      return MS_FAILURE;
   }
   return MS_SUCCESS;
 }

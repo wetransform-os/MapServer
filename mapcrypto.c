@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapcrypto.c 7544 2008-04-29 18:16:05Z pramsey $
+ * $Id: mapcrypto.c 10678 2010-10-28 13:38:27Z aboudreault $
  *
  * Project:  MapServer
  * Purpose:  Encryption functions (see MS-RFC-18)
@@ -34,7 +34,7 @@
 
 #include "mapserver.h"
 
-MS_CVSID("$Id: mapcrypto.c 7544 2008-04-29 18:16:05Z pramsey $")
+MS_CVSID("$Id: mapcrypto.c 10678 2010-10-28 13:38:27Z aboudreault $")
 
 
 /**********************************************************************
@@ -483,13 +483,13 @@ char *msDecryptStringTokens(mapObj *map, const char *in)
                     return NULL;
 
                 pszTmp = (char*)malloc( (pszEnd-pszStart+1)*sizeof(char));
-                strncpy(pszTmp, pszStart, pszEnd-pszStart);
-                pszTmp[pszEnd-pszStart] = '\0';
+                strlcpy(pszTmp, pszStart, (pszEnd-pszStart)+1);
 
                 msDecryptStringWithKey(map->encryption_key, pszTmp, out);
-
+                
                 out += strlen(out);
                 in = pszEnd+1;
+                free(pszTmp);
             }
             else
             {

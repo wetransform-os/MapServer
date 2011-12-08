@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mappluginlayer.c 9571 2009-12-03 17:39:20Z sdlime $
+ * $Id: mappluginlayer.c 11147 2011-03-11 03:26:44Z dmorissette $
  *
  * Project:  MapServer
  * Purpose:  Implementation of plug-in layer functionality
@@ -30,7 +30,7 @@
 #include "mapserver.h"
 #include "mapthread.h"
 
-MS_CVSID("$Id: mappluginlayer.c 9571 2009-12-03 17:39:20Z sdlime $")
+MS_CVSID("$Id: mappluginlayer.c 11147 2011-03-11 03:26:44Z dmorissette $")
 
 typedef struct {
     char *name;
@@ -52,10 +52,9 @@ createVTFItem(const char *name)
     VTFactoryItemObj *pVTFI;
 
     pVTFI = (VTFactoryItemObj *)malloc(sizeof(VTFactoryItemObj));
-    if ( ! pVTFI) {
-        return NULL;
-    }
-    pVTFI->name = strdup(name);
+    MS_CHECK_ALLOC(pVTFI, sizeof(VTFactoryItemObj), NULL);
+
+    pVTFI->name = msStrdup(name);
     memset(&pVTFI->vtable, 0, sizeof(layerVTableObj));
 
     return pVTFI;
@@ -97,11 +96,8 @@ insertNewVTFItem(VTFactoryObj *pVTFactory,
         VTFactoryItemObj **vtItemPtr;
         vtItemPtr = (VTFactoryItemObj**)realloc(pVTFactory->vtItems,
                                                 (pVTFactory->size+MS_LAYER_ALLOCSIZE)*sizeof(VTFactoryItemObj*));
+        MS_CHECK_ALLOC(vtItemPtr, (pVTFactory->size+MS_LAYER_ALLOCSIZE)*sizeof(VTFactoryItemObj*), MS_FAILURE);
 
-        if (vtItemPtr == NULL) {
-            msSetError(MS_MEMERR, "Failed to allocate memory for array of VTFactoryItemObj", "insertNewVTFItem()");
-            return MS_FAILURE;
-        }
 
         pVTFactory->size += MS_LAYER_ALLOCSIZE;
         pVTFactory->vtItems = vtItemPtr;
@@ -165,7 +161,7 @@ copyVirtualTable(layerVTableObj *dest,
     dest->LayerWhichShapes = src->LayerWhichShapes ? src->LayerWhichShapes : dest->LayerWhichShapes;
     dest->LayerNextShape = src->LayerNextShape ? src->LayerNextShape : dest->LayerNextShape;
     dest->LayerGetShape = src->LayerGetShape ? src->LayerGetShape : dest->LayerGetShape;
-    dest->LayerResultsGetShape = src->LayerResultsGetShape ? src->LayerResultsGetShape : dest->LayerResultsGetShape;
+    // dest->LayerResultsGetShape = src->LayerResultsGetShape ? src->LayerResultsGetShape : dest->LayerResultsGetShape;
     dest->LayerClose = src->LayerClose ? src->LayerClose : dest->LayerClose;
     dest->LayerGetItems = src->LayerGetItems ? src->LayerGetItems : dest->LayerGetItems;
     dest->LayerGetExtent = src->LayerGetExtent ? src->LayerGetExtent : dest->LayerGetExtent;
@@ -175,6 +171,7 @@ copyVirtualTable(layerVTableObj *dest,
     dest->LayerApplyFilterToLayer = src->LayerApplyFilterToLayer ? src->LayerApplyFilterToLayer : dest->LayerApplyFilterToLayer;
     dest->LayerCreateItems = src->LayerCreateItems ? src->LayerCreateItems : dest->LayerCreateItems;
     dest->LayerGetNumFeatures = src->LayerGetNumFeatures ? src->LayerGetNumFeatures : dest->LayerGetNumFeatures;
+    dest->LayerGetAutoProjection = src->LayerGetAutoProjection ? src->LayerGetAutoProjection: dest->LayerGetAutoProjection;
 }
 
 int

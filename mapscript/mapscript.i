@@ -1,6 +1,6 @@
 /* 
 ===========================================================================
- $Id: mapscript.i 7207 2007-12-22 20:32:11Z tamas $
+ $Id: mapscript.i 11324 2011-03-24 08:59:58Z unicoletti $
  
  Project:  MapServer
  Purpose:  SWIG interface file for the MapServer mapscript module
@@ -35,6 +35,10 @@
 #ifdef SWIGCSHARP
 %ignore frompointer;
 %include swig_csharp_extensions.i
+#endif
+
+#ifdef SWIGJAVA
+%ignore layer_obj::extent;
 #endif
 
 %{
@@ -248,6 +252,7 @@ typedef struct {
 %include "../swiginc/symbolset.i"
 %include "../swiginc/layer.i"
 %include "../swiginc/class.i"
+%include "../swiginc/cluster.i"
 %include "../swiginc/style.i"
 %include "../swiginc/rect.i"
 %include "../swiginc/image.i"
@@ -262,6 +267,7 @@ typedef struct {
 %include "../swiginc/color.i"
 %include "../swiginc/hashtable.i"
 %include "../swiginc/resultcache.i"
+%include "../swiginc/result.i"
 %include "../swiginc/owsrequest.i"
 %include "../swiginc/connpool.i"
 %include "../swiginc/msio.i"

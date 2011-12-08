@@ -1,5 +1,5 @@
 dnl **************************************************************************
-dnl $Id: configure.in 10306 2010-07-08 20:07:15Z dmorissette $
+dnl $Id: configure.in 11618 2011-04-27 15:06:17Z dmorissette $
 dnl
 dnl Project:  MapServer
 dnl Purpose:  Main autoconf script ( Process this file with autoconf to 
@@ -70,6 +70,7 @@ AC_CHECK_FUNC(strdup, ,      STRINGS="-DNEED_STRDUP $STRINGS")
 AC_CHECK_FUNC(strrstr, ,      STRINGS="-DNEED_STRRSTR $STRINGS")
 AC_CHECK_FUNC(strcasestr, ,      STRINGS="-DNEED_STRCASESTR $STRINGS")
 AC_CHECK_FUNC(strlcat, ,      STRINGS="-DNEED_STRLCAT $STRINGS")
+AC_CHECK_FUNC(strlcpy, ,      STRINGS="-DNEED_STRLCPY $STRINGS")
 AC_CHECK_FUNC(vsnprintf, STRINGS="-DHAVE_VSNPRINTF $STRINGS", )
 AC_SUBST(STRINGS, $STRINGS)
 
@@ -130,52 +131,70 @@ AC_ARG_WITH(freetype,
                               path to freetype-config program or install dir).],
     FT_DIR=$withval,FT_DIR='')
 
-AC_EXPAND_PATH($FT_DIR, FT_DIR)
-AC_CHECKING(where FreeType 2.x is installed)
-FT_LIB=''
+FT_LDFLAGS=''
+FT_CFLAGS=''
 FT_BIN=''
-FT_TYPE=''
 
-test -x "$FT_DIR" -a "freetype-config" = "`basename $FT_DIR ''`" && FT_BIN="$FT_DIR"
-test -x "$FT_DIR/freetype-config" && FT_BIN="$FT_DIR/freetype-config"
-test -x "$FT_DIR/bin/freetype-config" && FT_BIN="$FT_DIR/bin/freetype-config"
-
-if test "$with_freetype" = "yes" ; then
- AC_PATH_PROG(FT_BIN, freetype-config, no)
+if test "x$FT_DIR" = "xno" ; then
+    AC_MSG_ERROR([Freetype support disabled but is now mandatory. Rerun without --without-freetype or --with-freetype=no])
 fi
 
-if test -n "$FT_BIN" ; then
-  dnl we have freetype-config program, use its values
-  FT_LIB=`$FT_BIN --libs`
-  FT_LIBDIR="`$FT_BIN --exec-prefix`/lib"
-  AC_MSG_RESULT([        using libfreetype from $FT_LIB])
-  AC_ADD_RUNPATH("$FT_LIBDIR")
-
+     
+if test -z "$FT_DIR" -o "$FT_DIR" = "yes" ; then
+    dnl no supplied argument
+    AC_PATH_PROG(FT_BIN, freetype-config, "")
+    if test "x$FT_BIN" = "xno" ; then
+        dnl freetype-config not found, check system locations
+        AC_MSG_CHECKING([for Freetype2.x in system locations])
+        test -f /usr/include/ft2build.h -a -d /usr/include/freetype2 && FT_CFLAGS=-I/usr/include/freetype2
+        test -f /usr/local/include/ft2build.h -a -d /usr/local/include/freetype2 && FT_CFLAGS=-I/usr/local/include -I/usr/local/include/freetype2
+        FT_LDFLAGS="-lfreetype -lz"  
+    dnl else freetype-config found, will test further down
+    fi
 else
-  dnl try freetype 2.x install lib name
-  test -f $FT_DIR/lib/libfreetype.a -o -f $FT_DIR/lib/libfreetype.so -o -f $FT_DIR/lib/libfreetype.sl -o -f $FT_DIR/lib/libfreetype.dylib && FT_LIBDIR="$FT_DIR/lib"
-  test -f $FT_DIR/lib64/libfreetype.a -o -f $FT_DIR/lib64/libfreetype.so -o -f $FT_DIR/lib64/libfreetype.sl && FT_LIBDIR="$FT_DIR/lib64"
-  test -f $FT_DIR/libfreetype.a -o -f $FT_DIR/libfreetype.so -o -f $FT_DIR/libfreetype.sl -o -f $FT_DIR/libfreetype.dylib && FT_LIBDIR="$FT_DIR"
-
-  if test -n "$FT_LIBDIR" ; then
-     FT_TYPE="-lfreetype"  
-  fi
+    AC_EXPAND_PATH($FT_DIR, FT_DIR)
+    AC_MSG_CHECKING(for Freetype2.x in $FT_DIR)
+    test -x "$FT_DIR" -a "freetype-config" = "`basename $FT_DIR ''`" && FT_BIN="$FT_DIR"
+    test -x "$FT_DIR/freetype-config" && FT_BIN="$FT_DIR/freetype-config"
+    test -x "$FT_DIR/bin/freetype-config" && FT_BIN="$FT_DIR/bin/freetype-config"
+    if test "x$FT_BIN" = "x"; then
+        test -f $FT_DIR/ft2build.h -a -d $FT_DIR/freetype2 && FT_CFLAGS="-I$FT_DIR -I$FT_DIR/freetype2"
+        test -f $FT_DIR/include/ft2build.h -a -d $FT_DIR/include/freetype2 && FT_CFLAGS="-I$FT_DIR/include -I$FT_DIR/include/freetype2"
+        test -f $FT_DIR/lib/libfreetype.a -o -f $FT_DIR/lib/libfreetype.so -o -f $FT_DIR/lib/libfreetype.sl -o -f $FT_DIR/lib/libfreetype.dylib && FT_LDFLAGS="-L$FT_DIR/lib"
+        test -f $FT_DIR/lib64/libfreetype.a -o -f $FT_DIR/lib64/libfreetype.so -o -f $FT_DIR/lib64/libfreetype.sl && FT_LDFLAGS="-L$FT_DIR/lib64"
+        test -f $FT_DIR/libfreetype.a -o -f $FT_DIR/libfreetype.so -o -f $FT_DIR/libfreetype.sl -o -f $FT_DIR/libfreetype.dylib && FT_LDFLAGS="-L$FT_DIR"
+    dnl else freetype-config found, will test further down
+    fi
 fi
 
-if test -n "$FT_LIBDIR" -a -z "$FT_BIN" ; then
-  FT_LIB="-L$FT_LIBDIR $FT_TYPE"
-  AC_MSG_RESULT([        using libfreetype from $FT_LIB])
-  AC_ADD_RUNPATH("$FT_LIB")
-elif test -z "$FT_LIBDIR" -a -z "$FT_BIN" ; then dnl replaced else by elif
-  dnl check for lib in system libs  
-  AC_CHECK_LIB(freetype, FT_Init_FreeType, FT_LIB="-lfreetype",,)
-
-  if test -n "$FT_LIB" ; then
-    AC_MSG_RESULT([        using libfreetype $FT_LIB from system libs.])
-  else
-    AC_MSG_RESULT([        freetype-config or libfreetype cannot be found, possibly needed for GD])
-  fi
+if test "x$FT_BIN" != "x" ; then
+        FT_LDFLAGS=`$FT_BIN --libs`
+        FT_CFLAGS=`$FT_BIN --cflags`
 fi
+
+
+_cppflags="$CPPFLAGS"
+_ldflags="$LDFLAGS"
+_libs="$LIBS"
+CPPFLAGS="$FT_CFLAGS $CPPFLAGS"
+LDFLAGS="$FT_LDFLAGS $LDFLAGS"
+
+AC_CHECK_LIB(freetype,FT_Init_FreeType,,
+             AC_MSG_ERROR([unable to link - reconfigure with correct --with-freetype=dir ]))
+
+AC_CHECK_HEADERS(ft2build.h,,
+                 AC_MSG_ERROR([ft2build.h header not found - reconfigure with correct --with-freetype=dir ]))
+
+CPPFLAGS=$_cppflags
+LDFLAGS=$_ldflags
+LIBS=$_libs
+FT_ENABLED="-DUSE_FREETYPE"
+AC_SUBST(FT_ENABLED,$FT_ENABLED)
+AC_SUBST(FT_INC,$FT_CFLAGS)
+AC_SUBST(FT_LIB,$FT_LDFLAGS)
+ALL_ENABLED="$FT_ENABLED $ALL_ENABLED"
+ALL_INC="$FT_CFLAGS $ALL_INC"
+ALL_LIB="$FT_LDFLAGS $ALL_LIB"
 
 
 dnl ---------------------------------------------------------------------
@@ -261,30 +280,122 @@ AC_ARG_WITH(png,
 AC_EXPAND_PATH($PNG_DIR, PNG_DIR)
 AC_CHECKING(where PNG is installed)
 PNG_LIB=''
+PNG_INC=''
+PNG_ENABLED=''
 
-test -f $PNG_DIR/lib/libpng.a -o -f $PNG_DIR/lib/libpng.so -o -f $PNG_DIR/lib/libpng.sl -o -f $PNG_DIR/lib/libpng.dylib && PNG_LIBDIR="$PNG_DIR/lib"
-test -f $PNG_DIR/lib64/libpng.a -o -f $PNG_DIR/lib64/libpng.so -o -f $PNG_DIR/lib64/libpng.sl -o -f $PNG_DIR/libpng.dylib && PNG_LIBDIR="$PNG_DIR/lib64"
-test -f $PNG_DIR/libpng.a -o -f $PNG_DIR/libpng.so -o -f $PNG_DIR/libpng.sl -o -f $PNG_DIR/libpng.dylib && PNG_LIBDIR="$PNG_DIR"
 
-if test -n "$PNG_LIBDIR" ; then
-
-  PNG_LIB="-L$PNG_LIBDIR -lpng"
-  AC_MSG_RESULT([        using libpng from $PNG_LIB])
-  AC_ADD_RUNPATH("$PNG_LIBDIR")
-
+if test -n "$PNG_DIR" ; then
+    test -f $PNG_DIR/lib/libpng.a -o -f $PNG_DIR/lib/libpng.so -o -f $PNG_DIR/lib/libpng.sl -o -f $PNG_DIR/lib/libpng.dylib && PNG_LIBDIR="$PNG_DIR/lib"
+    test -f $PNG_DIR/lib64/libpng.a -o -f $PNG_DIR/lib64/libpng.so -o -f $PNG_DIR/lib64/libpng.sl -o -f $PNG_DIR/libpng.dylib && PNG_LIBDIR="$PNG_DIR/lib64"
+    test -f $PNG_DIR/libpng.a -o -f $PNG_DIR/libpng.so -o -f $PNG_DIR/libpng.sl -o -f $PNG_DIR/libpng.dylib && PNG_LIBDIR="$PNG_DIR"
+    test -f $PNG_DIR/include/png.h && PNG_INCLUDE="$PNG_DIR/include"
+    test -f $PNG_DIR/lib/png.h && PNG_INCLUDE="$PNG_DIR/lib"
+    test -f $PNG_DIR/png.h && PNG_INCLUDE="$PNG_DIR"
+    
+    if test -n "$PNG_LIBDIR" ; then   
+      PNG_LIB="-L$PNG_LIBDIR -lpng"
+      AC_MSG_RESULT([        using libpng from $PNG_LIB])
+      AC_ADD_RUNPATH("$PNG_LIBDIR")
+    else
+      AC_MSG_ERROR([cannot find png lib in $PNG_DIR])
+    fi
+    
+    if test -n "$PNG_INCLUDE" ; then
+      dnl make sure we'll be able to find zlib.h
+      old_cflags="$CFLAGS"
+      CFLAGS="$ZLIB_INC $CFLAGS"
+      AC_CHECK_HEADER([$PNG_INCLUDE/png.h],PNG_INC=-I$PNG_INCLUDE,
+        [AC_MSG_ERROR([cannot find png headers])])
+      CFLAGS="$old_cflags"
+      ALL_INC="$PNG_INC $ALL_INC"
+    else
+        AC_MSG_ERROR([cannot find png headers in $PNG_DIR])
+    fi
+    PNG_ENABLED="-DUSE_PNG"
 else
 
-  dnl check for lib in system libs
+  dnl check for png in system locations
 
   AC_CHECK_LIB(png, png_init_io, PNG_LIB="-lpng",, $ZLIB_LIB)
-
+  AC_CHECK_HEADER([png.h],,
+        [AC_MSG_ERROR([cannot find png headers in system path])])
   if test -n "$PNG_LIB" ; then
     AC_MSG_RESULT([        using libpng from system libs.])
   else
-    AC_MSG_RESULT([        PNG (libpng) library cannot be found, possibly needed for GD])
+    AC_MSG_ERROR([PNG (libpng) library cannot be found. install or reconfigure with --with-png=DIR])
   fi
-
+  PNG_ENABLED="-DUSE_PNG"
 fi
+
+AC_CHECK_HEADER([setjmp.h],,
+        [AC_MSG_ERROR([setjmp.h is required with libpng])])
+
+ALL_ENABLED="$PNG_ENABLED $ALL_ENABLED"
+AC_SUBST(PNG_ENABLED, $PNG_ENABLED)
+AC_SUBST(PNG_INC,    $PNG_INC)
+AC_SUBST(PNG_LIB,    $PNG_LIB)
+
+
+dnl ---------------------------------------------------------------------
+dnl Check where GIF is installed
+dnl ---------------------------------------------------------------------
+
+AC_ARG_WITH(gif,
+[  --with-gif=DIR          Specify where GIF is installed (DIR is path to
+                              GIF install dir).],
+    GIF_DIR=$withval,GIF_DIR='')
+
+AC_EXPAND_PATH($GIF_DIR, GIF_DIR)
+AC_CHECKING(where GIF is installed)
+GIF_LIB=''
+GIF_INC=''
+GIF_ENABLED=''
+
+
+if test -n "$GIF_DIR" -a "GIF_DIR" != "yes" ; then
+    test -f $GIF_DIR/lib/libgif.a -o -f $GIF_DIR/lib/libgif.so -o -f $GIF_DIR/lib/libgif.sl -o -f $GIF_DIR/lib/libgif.dylib && GIF_LIBDIR="$GIF_DIR/lib"
+    test -f $GIF_DIR/lib64/libgif.a -o -f $GIF_DIR/lib64/libgif.so -o -f $GIF_DIR/lib64/libgif.sl -o -f $GIF_DIR/libgif.dylib && GIF_LIBDIR="$GIF_DIR/lib64"
+    test -f $GIF_DIR/libgif.a -o -f $GIF_DIR/libgif.so -o -f $GIF_DIR/libgif.sl -o -f $GIF_DIR/libgif.dylib && GIF_LIBDIR="$GIF_DIR"
+    test -f $GIF_DIR/include/gif_lib.h && GIF_INCLUDE="$GIF_DIR/include"
+    test -f $GIF_DIR/lib/gif_lib.h && GIF_INCLUDE="$GIF_DIR/lib"
+    test -f $GIF_DIR/gif_lib.h && GIF_INCLUDE="$GIF_DIR"
+    
+    if test -n "$GIF_LIBDIR" ; then   
+      GIF_LIB="-L$GIF_LIBDIR -lgif"
+      AC_MSG_RESULT([        using libgif from $GIF_LIB])
+      AC_ADD_RUNPATH("$GIF_LIBDIR")
+    else
+      AC_MSG_ERROR([cannot find gif lib in $GIF_DIR])
+    fi
+    
+    if test -n "$GIF_INCLUDE" ; then
+      AC_CHECK_HEADER([$GIF_INCLUDE/gif_lib.h],GIF_INC=-I$GIF_INCLUDE,
+        [AC_MSG_ERROR([cannot find gif headers])])
+      ALL_INC="$GIF_INC $ALL_INC"
+    else
+        AC_MSG_ERROR([cannot find gif headers in $GIF_DIR])
+    fi
+    GIF_ENABLED="-DUSE_GIF"
+else
+
+  dnl check for gif in system locations
+
+  AC_CHECK_LIB(gif, DGifOpenFileHandle, GIF_LIB="-lgif",,)
+  AC_CHECK_HEADER([gif_lib.h],,
+        [AC_MSG_ERROR([cannot find gif headers in system path])])
+  if test -n "$GIF_LIB" ; then
+    AC_MSG_RESULT([        using libgif from system libs.])
+  else
+    AC_MSG_ERROR([GIF (libgif) library cannot be found. install or reconfigure with --with-gif=DIR])
+  fi
+  GIF_ENABLED="-DUSE_GIF"
+fi
+
+ALL_ENABLED="$GIF_ENABLED $ALL_ENABLED"
+AC_SUBST(GIF_ENABLED, $GIF_ENABLED)
+AC_SUBST(GIF_INC,    $GIF_INC)
+AC_SUBST(GIF_LIB,    $GIF_LIB)
+
 
 dnl ---------------------------------------------------------------------
 dnl libJPEG (included by default if found on system).
@@ -313,50 +424,35 @@ if test -n "$with_jpeg" -a "$with_jpeg" != "yes" ; then
   test -f $JPEG_DIR/libjpeg.so -o -f $JPEG_DIR/libjpeg.sl -o -f $JPEG_DIR/libjpeg.dylib && JPEG_LIBDIR="$JPEG_DIR"
 
   if test -n "$JPEG_INCLUDE" -a -n "$JPEG_LIBDIR" ; then
-      JPEG_ENABLED="-DUSE_JPEG"
       JPEG_INC=-I$JPEG_INCLUDE
       JPEG_LIB="-L$JPEG_LIBDIR -ljpeg"
       AC_ADD_RUNPATH("$JPEG_LIBDIR")
   else
-      if test "$with_jpeg" != "no" ; then
-        AC_MSG_RESULT("Could not find jpeglib.h or libjpeg.a/libjpeg.so/libjpeg.dylib in $JPEG_DIR.")
-      fi
+        AC_MSG_ERROR("Could not find jpeglib.h or libjpeg.a/libjpeg.so/libjpeg.dylib in $JPEG_DIR.")
   fi
 
-  dnl if --without-jpeg was requested, disable mapserver from using it, but
-  dnl libjpeg may still be needed by GD
 
-  if test "$with_jpeg" = "no" ; then
-    AC_MSG_RESULT([        disabled by --without-jpeg])
-  else
+    _cppflags="$CPPFLAGS"
+    _ldflags="$LDFLAGS"
+    _libs="$LIBS"
+    CPPFLAGS="$JPEG_INC $CPPFLAGS"
+    LDFLAGS="$JPEG_LIB $LDFLAGS"
+    AC_CHECK_LIB(jpeg, jpeg_read_header,,AC_MSG_ERROR(["cannot link with libjpeg"]),,)
+    AC_CHECK_HEADER(jpeglib.h,,AC_MSG_ERROR(["cannot find jpeg headers"]))
     JPEG_ENABLED="-DUSE_JPEG"
-  fi
-
-  if test -z "$JPEG_LIB" ; then
-
-    AC_CHECK_LIB(jpeg, jpeg_read_header, JPEG_LIB="-ljpeg",,,)
-
-    if test -n "$JPEG_LIB" ; then
-        JPEG_LIB="-ljpeg"
-        AC_MSG_RESULT([        using libjpeg from system libs.])
-    else
-        AC_MSG_RESULT([        libjpeg not found. JPEG support not included, possibly needed for GD.])
-    fi
-  else
-     AC_MSG_RESULT([        using libjpeg from system $JPEG_LIB])
-  fi
+    CPPFLAGS=$_cppflags
+    LDFLAGS=$_ldflags
+    LIBS=$_libs
+    AC_MSG_RESULT([        using libjpeg from system $JPEG_LIB])
 
 else
+    dnl Look for libjpeg in system dirs
 
-  AC_CHECK_LIB(jpeg, jpeg_read_header, JPEG_ENABLED=-DUSE_JPEG,,,)
-
-  if test -n "$JPEG_ENABLED" ; then
-      JPEG_LIB="-ljpeg"
-      AC_MSG_RESULT([        using libjpeg from system libs.])
-  else
-      AC_MSG_RESULT([        libjpeg not found. JPEG support not included, possibly needed for GD.])
-  fi
-
+    AC_CHECK_LIB(jpeg, jpeg_read_header,,AC_MSG_ERROR(["cannot link with libjpeg"]),,)
+    AC_CHECK_HEADER(jpeglib.h,,AC_MSG_ERROR(["cannot find jpeg headers"]))
+    JPEG_ENABLED="-DUSE_JPEG"
+    JPEG_LIB="-ljpeg"
+    AC_MSG_RESULT([        using libjpeg from system libs.])
 fi
 
 AC_SUBST(JPEG_ENABLED,$JPEG_ENABLED)
@@ -520,9 +616,9 @@ unset ac_cv_lib_c_gdImageWBMP
 unset ac_cv_lib_c_gdImageStringFT
 unset ac_cv_lib_c_gdImageGifPtr
 unset ac_cv_lib_c_gdFontGetTiny
-unset ac_cv_lib_gd_gdFontCacheSetup
+unset ac_cv_lib_gd_gdImageCreatePaletteFromTrueColor
 
-AC_CHECKING(for GD 2.0.16 or higher)
+AC_CHECKING(for GD 2.0.28 or higher)
 AC_ARG_WITH(gd,
 [  --with-gd[[=[static,]DIR]]
                           Specify which version of GD to use (DIR is GD's
@@ -552,14 +648,14 @@ elif test -n "$with_gd" -a "$with_gd" != "yes" ; then
   test -f $GD_DIR/_libs/libgd.so -o -f $GD_DIR/_libs/libgd.sl -o -f $GD_DIR/_libs/libgd.dylib && GD_LIBDIR="$GD_DIR/_libs"
   test -f $GD_DIR/libgd.so -o -f $GD_DIR/libgd.sl -o -f $GD_DIR/libgd.dylib && GD_LIBDIR="$GD_DIR"
 
-  dnl make sure it is GD 2.0.16+ with antialias and gdFontCacheSetup() support
-  AC_CHECK_LIB(gd, gdFontCacheSetup,IS_GD2="true",,$GD_XTRA_LIBS -L$GD_LIBDIR)
+  dnl make sure it is GD 2.0.28+ with antialias and gdFontCacheSetup() and gdImageCreatePaletteFromTrueColor support
+  AC_CHECK_LIB(gd, gdImageCreatePaletteFromTrueColor,IS_GD2="true",,$GD_XTRA_LIBS -L$GD_LIBDIR)
 
   if test "$IS_GD2" = "false" -a -n "$ICONV_LIB"; then
     dnl try again including libiconv this time
-    unset ac_cv_lib_gd_gdFontCacheSetup
+    unset ac_cv_lib_gd_gdImageCreatePaletteFromTrueColor
     AC_CHECKING(whether GD needs libiconv)
-    AC_CHECK_LIB(gd, gdFontCacheSetup,IS_GD2="true",,$GD_XTRA_LIBS -L$GD_LIBDIR $ICONV_LIB)
+    AC_CHECK_LIB(gd, gdImageCreatePaletteFromTrueColor,IS_GD2="true",,$GD_XTRA_LIBS -L$GD_LIBDIR $ICONV_LIB)
     GD_NEED_ICONV_LIB="$ICONV_LIB"
   fi
 
@@ -567,10 +663,10 @@ elif test -n "$with_gd" -a "$with_gd" != "yes" ; then
       GD_INC=-I$GD_INCLUDE
       GD_LIB="-L$GD_LIBDIR -lgd"
       GD_XTRA_LIBS="$GD_XTRA_LIBS $GD_NEED_ICONV_LIB"
-      AC_MSG_RESULT([        using libgd 2.0.16 (or higher) from $GD_LIB $GD_XTRA_LIBS])
+      AC_MSG_RESULT([        using libgd 2.0.28 (or higher) from $GD_LIB $GD_XTRA_LIBS])
       AC_ADD_RUNPATH("$GD_LIBDIR")
   else
-      AC_MSG_ERROR([Could not find gd.h or libgd.a/libgd.so in $GD_DIR.  Make sure GD 2.0.16 or higher is compiled before calling configure. You may also get this error if you didn't specify the appropriate location for one of GD's dependencies (freetype, libpng, libjpeg or libiconv).])
+      AC_MSG_ERROR([Could not find gd.h or libgd.a/libgd.so in $GD_DIR.  Make sure GD 2.0.28 or higher is compiled before calling configure. You may also get this error if you didn't specify the appropriate location for one of GD's dependencies (freetype, libpng, libjpeg or libiconv).])
   fi
 else
   dnl  --with-gd specified without a DIR, look for gd in system dirs /usr or /usr/local
@@ -583,14 +679,14 @@ else
     test -f $GD_DIR/lib/libgd.so -o -f $GD_DIR/lib/libgd.sl -o -f $GD_DIR/lib/libgd.dylib && GD_LIBDIR="$GD_DIR/lib"
     test -f $GD_DIR/lib64/libgd.so -o -f $GD_DIR/lib/libgd.sl && GD_LIBDIR="$GD_DIR/lib64"
 
-    dnl make sure it is GD 2.0.16 or higher
-    AC_CHECK_LIB(gd, gdFontCacheSetup, IS_GD2="true",,$GD_XTRA_LIBS)
+    dnl make sure it is GD 2.0.28 or higher
+    AC_CHECK_LIB(gd, gdImageCreatePaletteFromTrueColor, IS_GD2="true",,$GD_XTRA_LIBS)
  
     if test "$IS_GD2" = "false" -a -n "$ICONV_LIB"; then
       dnl try again including libiconv this time
       AC_CHECKING(whether GD needs libiconv)
-      unset ac_cv_lib_gd_gdFontCacheSetup
-      AC_CHECK_LIB(gd, gdFontCacheSetup,IS_GD2="true",,$GD_XTRA_LIBS $ICONV_LIB)
+      unset ac_cv_lib_gd_gdImageCreatePaletteFromTrueColor
+      AC_CHECK_LIB(gd, gdImageCreatePaletteFromTrueColor,IS_GD2="true",,$GD_XTRA_LIBS $ICONV_LIB)
       GD_NEED_ICONV_LIB="$ICONV_LIB"
     fi
 
@@ -598,7 +694,7 @@ else
       GD_INC=-I$GD_INCLUDE
       GD_LIB="-L$GD_LIBDIR -lgd"
       GD_XTRA_LIBS="$GD_XTRA_LIBS $GD_NEED_ICONV_LIB"
-      AC_MSG_RESULT([        using libgd 2.0.16 (or higher) from system libs ($GD_LIB $GD_XTRA_LIBS).])
+      AC_MSG_RESULT([        using libgd 2.0.28 (or higher) from system libs ($GD_LIB $GD_XTRA_LIBS).])
       AC_ADD_RUNPATH("$GD_LIBDIR")
       FOUND_GD="true"
       break;
@@ -606,7 +702,7 @@ else
   done
 
   if test "$FOUND_GD" = "false" ; then
-    AC_MSG_ERROR([Could not find gd.h or libgd.a/libgd.so in $GD_DIR.  Make sure GD 2.0.16 or higher is compiled before calling configure. You may also get this error if you didn't specify the appropriate location for one of GD's dependencies (freetype, libpng, libjpeg or libiconv).])
+    AC_MSG_ERROR([Could not find gd.h or libgd.a/libgd.so in $GD_DIR.  Make sure GD 2.0.28 or higher is compiled before calling configure. You may also get this error if you didn't specify the appropriate location for one of GD's dependencies (freetype, libpng, libjpeg or libiconv).])
   fi
 fi
 
@@ -669,6 +765,25 @@ if test -n "$with_gd" -a "$with_gd" != "yes" ; then
   dnl getter functions.
   AC_CHECK_LIB($GD_CHECKLIB, gdFontGetTiny, GD_DEF="$GD_DEF -DGD_HAS_GETBITMAPFONTS",, $GD_STATIC $GD_LIB $GD_XTRA_LIBS)
 
+  dnl check for gdImageGetTrueColorPixel.
+  dnl In some GD versions this function is defined, but not declared in gd.h,
+  dnl so check headers first
+  GD_HAS_GET_TRUE_COLOR_PIXEL=
+
+  dnl AC_CHECK_DECL needs to know the gd include path
+  CFLAGS_BACKUP="$CFLAGS"
+  CXXFLAGS_BACKUP="$CXXFLAGS"
+  CFLAGS="$CFLAGS $GD_INC"
+  CXXFLAGS="$CXXFLAGS $GD_INC"
+  AC_CHECK_DECL(gdImageGetTrueColorPixel,[GD_HAS_GET_TRUE_COLOR_PIXEL=yes],,[#include <gd.h>])
+  CFLAGS="$CFLAGS_BACKUP"
+  CXXFLAGS="$CXXFLAGS_BACKUP"
+
+  dnl if it's declared, check if we can link with it
+  if test .$GD_HAS_GET_TRUE_COLOR_PIXEL = .yes ; then
+    AC_CHECK_LIB($GD_CHECKLIB, gdImageGetTrueColorPixel, GD_DEF="$GD_DEF -DGD_HAS_GET_TRUE_COLOR_PIXEL",, $GD_STATIC $GD_LIB $GD_XTRA_LIBS)
+  fi
+
   AC_MSG_RESULT([        using GD ($GD_DEF) from $GD_DIR.])
 
 else
@@ -710,6 +825,16 @@ else
      GD_DEF="$GD_DEF -DUSE_GD_RESOLUTION"
   fi
 
+  dnl check for gdImageGetTrueColorPixel.
+  dnl In some GD versions this function is defined, but not declared in gd.h,
+  dnl so check headers first
+  GD_HAS_GET_TRUE_COLOR_PIXEL=
+  AC_CHECK_DECL(gdImageGetTrueColorPixel,[GD_HAS_GET_TRUE_COLOR_PIXEL=yes],,[#include <gd.h>])
+  dnl if it's declared, check if we can link with it
+  if test .$GD_HAS_GET_TRUE_COLOR_PIXEL = .yes ; then
+    AC_CHECK_LIB(gd, gdImageGetTrueColorPixel, GD_DEF="$GD_DEF -DGD_HAS_GET_TRUE_COLOR_PIXEL",, $GD_STATIC $GD_LIB $GD_XTRA_LIBS)
+  fi
+
   if test -n "$GD_DEF" ; then
       GD_LIB="-lgd $GD_LIB"
       AC_MSG_RESULT([        using GD ($GD_DEF) from system libs.])
@@ -733,105 +858,6 @@ ALL_STATIC_LIB="$GD_STATIC $ALL_STATIC_LIB"
 dnl Restore LIBS environment to state at beginning of gd tests.
 LIBS="$ms_saved_LIBS"
 
-dnl ---------------------------------------------------------------------
-dnl Find PDFlib library
-dnl
-dnl If --with-pdflib not given, then check in system libs.
-dnl ---------------------------------------------------------------------
-
-dnl We don't want LIBS updated by all the PDF stuff, so we save it and
-dnl restore later.
-
-ms_saved_LIBS="$LIBS"
-
-dnl Clear some cache variables
-unset ac_cv_lib_pdf_PDF_setlinewidth
-unset ac_cv_lib_pdf_PDF_setrgbcolor
-unset ac_cv_lib_pdf_PDF_moveto
-unset ac_cv_lib_pdf_PDF_curveto
-unset ac_cv_lib_pdf_PDF_show_xy
-unset ac_cv_lib_pdf_PDF_load_font
-
-AC_CHECKING(whether we should include PDF support)
-AC_ARG_WITH(pdf,
-[  --without-pdf           Disable PDF support.
-  --with-pdf[[=DIR]]        Include PDF support (DIR is PDFlib's install dir).],,)
-if test "$with_pdf" = "no" ; then
-  AC_MSG_RESULT([        disabled by --without-pdf])
-elif test -n "$with_pdf" -a "$with_pdf" != "yes" ; then
-
-  AC_EXPAND_PATH($with_pdf, PDF_DIR)
-  test -f $PDF_DIR/include/pdflib.h && PDF_INCLUDE="$PDF_DIR/include"
-  test -f $PDF_DIR/libpdf/pdflib.h && PDF_INCLUDE="$PDF_DIR/libpdf"
-  test -f $PDF_DIR/include/libpdf/pdflib.h && PDF_INCLUDE="$PDF_DIR/include/libpdf"
-  test -f $PDF_DIR/pdflib.h && PDF_INCLUDE="$PDF_DIR"
-
-  test -f $PDF_DIR/lib/libpdf.a && PDF_LIBDIR="$PDF_DIR/lib"
-  test -f $PDF_DIR/lib64/libpdf.a && PDF_LIBDIR="$PDF_DIR/lib64"
-  test -f $PDF_DIR/libpdf/libpdf.a && PDF_LIBDIR="$PDF_DIR/libpdf"
-  test -f $PDF_DIR/libpdf.a && PDF_LIBDIR="$PDF_DIR"
-
-  test -f $PDF_DIR/lib/libpdf.so -o -f $PDF_DIR/lib/libpdf.sl -o -f $PDF_DIR/lib/libpdf.dylib && PDF_LIBDIR="$PDF_DIR/lib"
-  test -f $PDF_DIR/lib64/libpdf.so -o -f $PDF_DIR/lib64/libpdf.sl && PDF_LIBDIR="$PDF_DIR/lib64"
-  test -f $PDF_DIR/libpdf/libpdf.so -o -f $PDF_DIR/libpdf/libpdf.sl -o -f $PDF_DIR/libpdf/libpdf.dylib && PDF_LIBDIR="$PDF_DIR/libpdf"
-  test -f $PDF_DIR/libpdf.so -o -f $PDF_DIR/libpdf.sl -o -f $PDF_DIR/libpdf.dylib && PDF_LIBDIR="$PDF_DIR"
-
-  if test -n "$PDF_INCLUDE" -a -n "$PDF_LIBDIR" ; then
-
-      PDF_LIB="-L$PDF_LIBDIR -lpdf"
-      PDF_INC=-I$PDF_INCLUDE
-      AC_ADD_RUNPATH("$PDF_LIBDIR")
-  else
-      AC_MSG_ERROR("Could not find pdflib.h or libpdf.a/libpdf.so in $PDF_DIR.")
-  fi
-
-  PDF_VERSION_CHECK="pass"
-  AC_CHECK_LIB(pdf,PDF_setlinewidth,,PDF_VERSION_CHECK="fail",$PDF_LIB)
-  AC_CHECK_LIB(pdf,PDF_setrgbcolor,,PDF_VERSION_CHECK="fail",$PDF_LIB)
-  AC_CHECK_LIB(pdf,PDF_moveto,,PDF_VERSION_CHECK="fail",$PDF_LIB)
-  AC_CHECK_LIB(pdf,PDF_curveto,,PDF_VERSION_CHECK="fail",$PDF_LIB)
-  AC_CHECK_LIB(pdf,PDF_show_xy,,PDF_VERSION_CHECK="fail",$PDF_LIB)
-  AC_CHECK_LIB(pdf,PDF_load_font,,PDF_VERSION_CHECK="fail",$PDF_LIB)
-
-  if test "$PDF_VERSION_CHECK" = "fail" ; then
-      AC_MSG_ERROR([libpdf in $PDF_DIR missing some required functions. Please upgrade to a more recent version of libpdf.])
-  fi
-
-  PDF_ENABLED="-DUSE_PDF"
-  AC_MSG_RESULT([        using libpdf from $PDF_LIB.])
-
-else
-
-  AC_CHECK_LIB(pdf,PDF_setlinewidth,PDF_LIB="-lpdf",,)
-  AC_CHECK_LIB(pdf,PDF_setrgbcolor,PDF_LIB="-lpdf",,)
-  AC_CHECK_LIB(pdf,PDF_moveto,PDF_LIB="-lpdf",,)
-  AC_CHECK_LIB(pdf,PDF_curveto,PDF_LIB="-lpdf",,)
-  AC_CHECK_LIB(pdf,PDF_show_xy,PDF_LIB="-lpdf",,)
-  AC_CHECK_LIB(pdf,PDF_load_font,PDF_LIB="-lpdf",,)
-  if test -n "$PDF_LIB" ; then
-      PDF_ENABLED=-DUSE_PDF
-      AC_MSG_RESULT([        using libpdf from system libs.])
-  else
-      AC_MSG_RESULT([        libpdf not found or too old... PDF support not included.])
-  fi
-
-fi
-
-dnl
-dnl libpdf may need the same libs (libz, libjpeg) that are included with GD
-dnl
-PDF_LIB="$PDF_LIB"
-
-AC_SUBST(PDF_ENABLED,$PDF_ENABLED)
-AC_SUBST(PDF_INC,    $PDF_INC)
-AC_SUBST(PDF_LIB,    $PDF_LIB)
-
-ALL_ENABLED="$PDF_ENABLED $ALL_ENABLED"
-ALL_INC="$PDF_INC $ALL_INC"
-ALL_LIB="$PDF_LIB $ALL_LIB"
-
-dnl Restore LIBS environment to state at beginning of PDF tests.
-LIBS="$ms_saved_LIBS"
 
 dnl ---------------------------------------------------------------------
 dnl FTGL Support.
@@ -849,13 +875,20 @@ if test -n "$with_ftgl" -a "$with_ftgl" != "no" ; then
 
   AC_EXPAND_PATH($with_ftgl, FTGL_DIR)
 
-  test -f $FTGL_DIR/include/FTGL/ftgl.h -a -f $FTGL_DIR/include/FTGL/FTGLTextureFont.h && FTGL_INCLUDE="-I$FTGL_DIR/include/FTGL/"
+  FTGL_FLAG=""
+  if [ test -f $FTGL_DIR/include/FTGL/ftgl.h -a -f $FTGL_DIR/include/FTGL/FTGLTextureFont.h ]; then
+      FTGL_INCLUDE="-I$FTGL_DIR/include/FTGL/"
+  elif [ test -f $FTGL_DIR/include/FTGL/FTGL.h -a -f $FTGL_DIR/include/FTGL/FTGLTextureFont.h ]; then
+      FTGL_INCLUDE="-I$FTGL_DIR/include/FTGL/"
+      FTGL_FLAG="-DUSE_FTGL_2_1_2"
+  fi
 
   if test -z "$FTGL_INCLUDE" ; then
-      AC_MSG_ERROR("could not find ftgl.h in $FTGL_DIR/include/FTGL.")
+      AC_MSG_ERROR("could not find ftgl.h/FTGL.h in $FTGL_DIR/include/FTGL.")
   fi
   
   test -f $FTGL_DIR/lib/libftgl.so && FTGL_LIBDIR="$FTGL_DIR/lib"
+  test -f $FTGL_DIR/lib/libftgl.dylib && FTGL_LIBDIR="$FTGL_DIR/lib"
   test -f $FTGL_DIR/lib64/libftgl.so && FTGL_LIBDIR="$FTGL_DIR/lib64"
    
   if test -z "$FTGL_LIBDIR" ; then
@@ -865,7 +898,7 @@ if test -n "$with_ftgl" -a "$with_ftgl" != "no" ; then
   
 
   dnl If we got this far all is well!
-  FTGL_ENABLED="-DUSE_FTGL"
+  FTGL_ENABLED="-DUSE_FTGL $FTGL_FLAG"
   FTGL_INC="$FTGL_INCLUDE"
   FTGL_LIB="-L$FTGL_LIBDIR -lftgl"
   AC_ADD_RUNPATH("$FTGL_LIBDIR")
@@ -903,9 +936,7 @@ if test "$with_opengl" = "yes" ; then
 fi
 if test -n "$with_opengl" -a "$with_opengl" != "no" ; then
 
-  if test -n "$FTGL_LIB" ; then
-     FT_INC=`$FTGL_LIB --cflags`
-  else
+  if test -z "$FTGL_LIB" ; then
      AC_MSG_ERROR([FTGL required for opengl support - please configure --with-ftgl.])
   fi
   
@@ -918,9 +949,11 @@ if test -n "$with_opengl" -a "$with_opengl" != "no" ; then
   fi
   
   test -f $OGL_DIR/lib/libGL.so -a -f $OGL_DIR/lib/libGLU.so && OGL_LIBDIR="$OGL_DIR/lib"
+  test -f $OGL_DIR/lib/libGL.dylib -a -f $OGL_DIR/lib/libGLU.dylib && OGL_LIBDIR="$OGL_DIR/lib"
+  test -f $OGL_DIR/lib64/libGL.so -a -f $OGL_DIR/lib64/libGLU.so && OGL_LIBDIR="$OGL_DIR/lib64"
    
   if test -z "$OGL_LIBDIR" ; then
-      AC_MSG_ERROR("could not find libGL or libGLU in $OGL_DIR/lib/.")
+      AC_MSG_ERROR("could not find libGL or libGLU in $OGL_DIR/lib/ or $OGL_DIR/lib64/.")
   fi
 
   
@@ -948,122 +981,110 @@ ALL_ENABLED="$OGL_ENABLED $ALL_ENABLED"
 ALL_INC="$OGL_INC $ALL_INC"
 ALL_LIB="$OGL_LIB $ALL_LIB"
 
+
 dnl ---------------------------------------------------------------------
-dnl Optional AGG Support.
+dnl Check whether expat is available (needed for svg symbol parsing)
 dnl ---------------------------------------------------------------------
 
-AC_MSG_CHECKING(if AGG support requested)
-AC_ARG_WITH(agg,
-[  --with-agg[[=DIR]]        Include AGG support (DIR is AGG's install dir).],,)
 
-if test "$with_agg" != "no" ; then
+AC_ARG_WITH(expat,
+[  --with-expat=DIR          Specify expat location, needed for SVG symbol parsing],
+    EXPAT_DIR=$withval,EXPAT_DIR='')
 
-  if test -z "$FT_BIN" ; then
-    AC_PATH_PROG(FT_BIN, freetype-config, no)
-    if test "$FT_BIN" == "no" ; then
-      AC_MSG_ERROR([the freetype-config executable could not be found and is required for agg support
-        to fix this, you should either:
-        * install the freetype development headers
-        * rerun configure with --with-freetype=/path/to/freetype-config
-        * disable agg support with --with-agg=no ])
+AC_EXPAND_PATH($EXPAT_DIR, EXPAT_DIR)
+AC_CHECKING(where EXPAT is installed)
+EXPAT_LIB=''
+EXPAT_INC=''
+EXPAT_FOUND='no'
+
+
+if test -n "$EXPAT_DIR" ; then
+    test -f $EXPAT_DIR/lib/libexpat.a -o -f $EXPAT_DIR/lib/libexpat.so -o -f $EXPAT_DIR/lib/libexpat.sl -o -f $EXPAT_DIR/lib/libexpat.dylib && EXPAT_LIBDIR="$PNG_DIR/lib"
+    test -f $EXPAT_DIR/lib64/libexpat.a -o -f $EXPAT_DIR/lib64/libexpat.so -o -f $EXPAT_DIR/lib64/libexpat.sl -o -f $EXPAT_DIR/libexpat.dylib && EXPAT_LIBDIR="$PNG_DIR/lib64"
+    test -f $EXPAT_DIR/libexpat.a -o -f $EXPAT_DIR/libexpat.so -o -f $EXPAT_DIR/libexpat.sl -o -f $PNG_DIR/libexpat.dylib && EXPAT_LIBDIR="$PNG_DIR"
+    test -f $EXPAT_DIR/include/expat.h && EXPAT_INCDIR="$EXPAT_DIR/include"
+    test -f $EXPAT_DIR/lib/expat.h && EXPAT_INCDIR="$EXPAT_DIR/lib"
+    test -f $EXPAT_DIR/expat.h && EXPAT_INCDIR="$EXPAT_DIR"
+    
+    if test -n "$EXPAT_LIBDIR" ; then   
+      EXPAT_LIB="-L$EXPAT_LIBDIR -lexpat"
+      AC_MSG_RESULT([        using libexpat from $EXPAT_LIB])
+      AC_ADD_RUNPATH("$EXPAT_LIBDIR")
+    else
+      AC_MSG_ERROR([cannot find expat lib in $EXPAT_DIR])
     fi
-  fi
-  
-  FT_INC=`$FT_BIN --cflags`
-
-
-  dnl If we got this far all is well!
-  AGG_ENABLED="-DUSE_AGG"
-  AGG_INC="$FT_INC"
- # AGG_OBJ="renderers/agg/src/agg_arc.o renderers/agg/src/agg_arrowhead.o renderers/agg/src/agg_bezier_arc.o renderers/agg/src/agg_bspline.o renderers/agg/src/agg_curves.o renderers/agg/src/agg_vcgen_contour.o renderers/agg/src/agg_vcgen_dash.o renderers/agg/src/agg_vcgen_markers_term.o renderers/agg/src/agg_vcgen_smooth_poly1.o renderers/agg/src/agg_vcgen_stroke.o renderers/agg/src/agg_vcgen_bspline.o renderers/agg/src/agg_gsv_text.o renderers/agg/src/agg_image_filters.o renderers/agg/src/agg_line_aa_basics.o renderers/agg/src/agg_line_profile_aa.o renderers/agg/src/agg_rounded_rect.o renderers/agg/src/agg_sqrt_tables.o renderers/agg/src/agg_embedded_raster_fonts.o renderers/agg/src/agg_trans_affine.o renderers/agg/src/agg_trans_warp_magnifier.o renderers/agg/src/agg_trans_single_path.o renderers/agg/src/agg_trans_double_path.o renderers/agg/src/agg_vpgen_clip_polygon.o renderers/agg/src/agg_vpgen_clip_polyline.o renderers/agg/src/agg_vpgen_segmentator.o renderers/agg/src/agg_font_freetype.o"
-  AGG_OBJ="renderers/agg/src/agg_arc.o renderers/agg/src/agg_curves.o renderers/agg/src/agg_vcgen_contour.o renderers/agg/src/agg_vcgen_dash.o renderers/agg/src/agg_vcgen_stroke.o renderers/agg/src/agg_image_filters.o renderers/agg/src/agg_line_aa_basics.o renderers/agg/src/agg_line_profile_aa.o renderers/agg/src/agg_sqrt_tables.o renderers/agg/src/agg_embedded_raster_fonts.o renderers/agg/src/agg_trans_affine.o renderers/agg/src/agg_vpgen_clip_polygon.o renderers/agg/src/agg_vpgen_clip_polyline.o renderers/agg/src/agg_font_freetype.o"
+    
+    if test -n "$EXPAT_INCDIR" ; then
+      AC_CHECK_HEADER([$EXPAT_INCDIR/expat.h],EXPAT_INC=-I$EXPAT_INCDIR,
+        [AC_MSG_ERROR([cannot find expat headers])])
+      ALL_INC="$EXPAT_INC $ALL_INC"
+    else
+        AC_MSG_ERROR([cannot find expat headers in $EXPAT_DIR])
+    fi
+    EXPAT_FOUND="yes"
 else
 
-  AC_MSG_RESULT([no])
+  dnl check for expat in system locations
+
+  AC_CHECK_LIB(expat, XML_ParserCreate, EXPAT_LIB="-lexpat",,)
+  AC_CHECK_HEADER([expat.h],,EXPAT_HEADER_FOUND="no")
+  if test -n "$EXPAT_LIB" -a "$EXPAT_HEADER_FOUND" != "no"; then
+    AC_MSG_RESULT([        using libexpat from system libs.])
+    EXPAT_FOUND='yes'
+  else
+    AC_MSG_RESULT([        not found in system libs. svg symbol support will be disabled])
+    EXPAT_FOUND='no'
+  fi
 
 fi
 
-AC_SUBST(AGG_ENABLED,$AGG_ENABLED)
-AC_SUBST(AGG_INC,    $AGG_INC)
-AC_SUBST(AGG_OBJ,    $AGG_OBJ)
+dnl ---------------------------------------------------------------------
+dnl Optional AGG SVG Symbol Support.
+dnl ---------------------------------------------------------------------
 
-ALL_ENABLED="$AGG_ENABLED $ALL_ENABLED"
+AC_MSG_CHECKING(for AGG support)
+AGG_ENABLED="internal"
+AC_MSG_RESULT([        yes])
+AGG_OBJ="renderers/agg/src/clipper.o renderers/agg/src/agg_arc.o renderers/agg/src/agg_curves.o renderers/agg/src/agg_vcgen_contour.o renderers/agg/src/agg_vcgen_dash.o renderers/agg/src/agg_vcgen_stroke.o renderers/agg/src/agg_image_filters.o renderers/agg/src/agg_line_aa_basics.o renderers/agg/src/agg_line_profile_aa.o renderers/agg/src/agg_sqrt_tables.o renderers/agg/src/agg_embedded_raster_fonts.o renderers/agg/src/agg_trans_affine.o renderers/agg/src/agg_vpgen_clip_polygon.o renderers/agg/src/agg_vpgen_clip_polyline.o renderers/agg/src/agg_font_freetype.o"
+AGG_LIB=""
+AGG_INC="-Irenderers/agg/include"
 ALL_INC="$AGG_INC $ALL_INC"
 
-
 dnl ---------------------------------------------------------------------
-dnl Optional RGBA palette png output
+dnl Optional AGG SVG Symbol Support.
 dnl ---------------------------------------------------------------------
 
-AC_MSG_CHECKING(if RGBA palette png support requested)
-AC_ARG_WITH(experimental-png,
-[  --with-experimental-png Include experimental palette support for rgba png.],,)
+AC_MSG_CHECKING(if SVG Symbol support requested)
+AC_ARG_WITH(agg-svg-symbols,
+[  --with-agg-svg-symbols[[=yes/no]]
+                          Include AGG SVG symbol support (Requires expat).],,)
 
-if test -z "$with_experimental_png" -o "$with_experimental_png" = "no" ; then
-  AC_MSG_RESULT([no])
-else
-  if test -z "$PNG_LIB" ; then
-     AC_MSG_ERROR([libpng required - please reconfigure --with-png.])
-  fi
-  if test -n "$PNG_DIR" ; then
-    test -f $PNG_DIR/include/png.h && PNG_INCLUDE="$PNG_DIR/include"
-    test -f $PNG_DIR/lib/png.h && PNG_INCLUDE="$PNG_DIR/lib"
-    test -f $PNG_DIR/png.h && PNG_INCLUDE="$PNG_DIR"
-    if test -n "$PNG_INCLUDE" ; then
-      dnl make sure we'll be able to find zlib.h
-      old_cflags="$CFLAGS"
-      CFLAGS="$ZLIB_INC $CFLAGS"
-      AC_CHECK_HEADER([$PNG_INCLUDE/png.h],,
-        [AC_MSG_ERROR([cannot find png headers])])
-      CFLAGS="$old_cflags"
+dnl Check for expat availability
+
+if test "$with_agg_svg_symbols" != "no" ; then
+    if test "$EXPAT_FOUND" = "yes" ; then
+        dnl add SVG to the AGG build
+        AGG_OBJ="$AGG_OBJ renderers/agg/src/agg_svg_parser.o renderers/agg/src/agg_svg_path_renderer.o renderers/agg/src/agg_svg_path_tokenizer.o"
+        AGG_LIB="$AGG_LIB $EXPAT_LIB"
+        AC_SUBST(AGG_LIB, $AGG_LIB)
+        ALL_LIB="$AGG_LIB $ALL_LIB"
+        AGG_INC="$AGG_INC $EXPAT_INC"
+        AC_SUBST(AGG_INC, $AGG_INC)
+        ALL_INC="$AGG_INC $ALL_INC"
+        AGG_SVG_SYMBOLS_ENABLED="-DUSE_AGG_SVG_SYMBOLS"
+        ALL_ENABLED="$AGG_SVG_SYMBOLS_ENABLED $ALL_ENABLED"
+        AC_MSG_RESULT([        enabled])
+
     else
-        AC_MSG_ERROR([cannot find png headers in $PNG_DIR])
+        AC_MSG_RESULT([        disabled due to missing expat dependency])
     fi
-  else
-    AC_CHECK_HEADER([png.h],,
-        [AC_MSG_ERROR([cannot find png headers in system path])])
-  fi
-  if test -n "$PNG_DIR" ; then
-    PNG_INC=-I$PNG_INCLUDE
-    AC_MSG_RESULT([ using libpng from $PNG_DIR.])
-  else
-    AC_MSG_RESULT([ using libpng from system libs.])
-  fi
-  AC_CHECK_HEADER([setjmp.h],,
-        [AC_MSG_ERROR([setjmp.h is required with libpng])])
-  RGBA_PNG_ENABLED=-DUSE_RGBA_PNG
 fi
 
-AC_SUBST(RGBA_PNG_ENABLED, $RGBA_PNG_ENABLED)
-AC_SUBST(PNG_INC,    $PNG_INC)
-AC_SUBST(PNG_LIB,    $PNG_LIB)
+AC_SUBST(AGG_OBJ,    $AGG_OBJ)
 
-ALL_ENABLED="$RGBA_PNG_ENABLED $ALL_ENABLED"
-ALL_INC="$PNG_INC $ALL_INC"
 
-dnl ---------------------------------------------------------------------
-dnl EPPL7 support (included by default)
-dnl ---------------------------------------------------------------------
 
-AC_CHECKING(whether we should include EPPL7 support)
-AC_ARG_WITH(eppl,
-[  --without-eppl          Disable EPPL7 support.
-  --with-eppl             Include EPPL7 support.],,)
-if test "$with_eppl" = "no" ; then
-  AC_MSG_RESULT([        disabled by --without-eppl])
-else
 
-  EPPL_OBJ="epplib.o"
-  EPPL_ENABLED="-DUSE_EPPL"
-
-  AC_MSG_RESULT([        including EPPL7 support.])
-
-fi
-
-AC_SUBST(EPPL_ENABLED,$EPPL_ENABLED)
-AC_SUBST(EPPL_OBJ,    $EPPL_OBJ)
-
-ALL_ENABLED="$EPPL_ENABLED $ALL_ENABLED"
 
 dnl ---------------------------------------------------------------------
 dnl Find PROJ.4 ONLY IF REQUESTED.
@@ -1280,11 +1301,11 @@ if test -n "$with_geos" -a "$with_geos" != "no" ; then
   fi
 
   dnl
-  dnl Test that we have at least version 2.2.2
+  dnl Test that we have at least version 3.0.0
   dnl (Version check code borrowed from GDAL's geos.m4)
   dnl
 
-  min_geos_version=2.2.2
+  min_geos_version=3.0.0
 
   AC_MSG_CHECKING(for GEOS version >= $min_geos_version)
 
@@ -1318,12 +1339,6 @@ if test -n "$with_geos" -a "$with_geos" != "no" ; then
   dnl
 
   GEOS_ENABLED=-DUSE_GEOS
-
-  dnl GEOS 3.0+ required for GEOSSimplify
-  if test 300000 -le $ac_geos_version  ; then
-    AC_MSG_RESULT([GEOS >= 3.0.0 found. Adding -DGEOS_HAS_SIMPLIFY])
-    GEOS_ENABLED="$GEOS_ENABLED -DGEOS_HAS_SIMPLIFY"
-  fi
 
   GEOS_INCDIR=`$GEOS_CONFIG --includes`
   GEOS_INC="-I$GEOS_INCDIR"
@@ -1433,7 +1448,7 @@ dnl
 
 if test -n "$GDAL_ENABLED" -o "$OGR_ENABLED"; then
 
-  GDAL_LIB=`$GDAL_CONFIG --libs`' '`$GDAL_CONFIG --dep-libs`
+  GDAL_LIB=`$GDAL_CONFIG --libs`
   GDAL_INC=`$GDAL_CONFIG --cflags`
 
 fi
@@ -1451,90 +1466,18 @@ dnl ---------------------------------------------------------------------------
 dnl Determine whether we should enable JPEG output - not if we have GDAL.
 dnl ---------------------------------------------------------------------------
 
-if test -n "$JPEG_ENABLED" ; then
-  AC_MSG_CHECKING(checking ms JPEG output)
-  if test -n "$GDAL_ENABLED" ; then 
-    JPEG_ENABLED=
-    AC_MSG_RESULT([no we, have GDAL available.])
-  else
-    ALL_ENABLED="$JPEG_ENABLED $ALL_ENABLED"
-    ALL_INC="$JPEG_INC $ALL_INC"
-    ALL_LIB="$JPEG_LIB $ALL_LIB"
-    AC_MSG_RESULT([yes, GDAL is not available but libjpeg is.])
-  fi
-fi
-
-dnl ---------------------------------------------------------------------
-dnl libTIFF (included by default if found on system).
-dnl ---------------------------------------------------------------------
-
-dnl Clear some cache variables
-unset ac_cv_lib_tiff_TIFFOpen
-
-AC_CHECKING(whether we should include TIFF support)
-AC_ARG_WITH(tiff,
-[  --without-tiff          Disable TIFF support.
-  --with-tiff[[=DIR]]       Include TIFF support (DIR is LibTIFF's install dir).],,)
-if test -z "$with_tiff" -a -n "$GDAL_ENABLED" ; then
-  AC_MSG_RESULT([        disabled since gdal is in use])
-
-elif test "$with_tiff" = "no" ; then
-  AC_MSG_RESULT([        disabled by --without-tiff])
-
-elif test -n "$with_tiff" -a "$with_tiff" != "yes" ; then
-
-  AC_EXPAND_PATH($with_tiff, TIFF_DIR)
-  test -f $TIFF_DIR/include/tiffio.h && TIFF_INCLUDE="$TIFF_DIR/include"
-  test -f $TIFF_DIR/libtiff/tiffio.h && TIFF_INCLUDE="$TIFF_DIR/libtiff"
-  test -f $TIFF_DIR/include/libtiff/tiffio.h && TIFF_INCLUDE="$TIFF_DIR/include/libtiff"
-  test -f $TIFF_DIR/tiffio.h && TIFF_INCLUDE="$TIFF_DIR"
-
-  test -f $TIFF_DIR/lib/libtiff.a && TIFF_LIBDIR="$TIFF_DIR/lib"
-  test -f $TIFF_DIR/lib64/libtiff.a && TIFF_LIBDIR="$TIFF_DIR/lib64"
-  test -f $TIFF_DIR/libtiff/libtiff.a && TIFF_LIBDIR="$TIFF_DIR/libtiff"
-  test -f $TIFF_DIR/libtiff.a && TIFF_LIBDIR="$TIFF_DIR"
-
-  test -f $TIFF_DIR/lib/libtiff.so -o $TIFF_DIR/lib/libtiff.sl -o -f $TIFF_DIR/lib/libtiff.dylib && TIFF_LIBDIR="$TIFF_DIR/lib"
-  test -f $TIFF_DIR/lib64/libtiff.so -o $TIFF_DIR/lib64/libtiff.sl && TIFF_LIBDIR="$TIFF_DIR/lib64"
-  test -f $TIFF_DIR/libtiff/libtiff.so -o -f $TIFF_DIR/libtiff/libtiff.sl -o -f $TIFF_DIR/libtiff/libtiff.dylib && TIFF_LIBDIR="$TIFF_DIR/libtiff"
-  test -f $TIFF_DIR/libtiff.so -o -f $TIFF_DIR/libtiff.sl -o -f $TIFF_DIR/libtiff.dylib && TIFF_LIBDIR="$TIFF_DIR"
-
-  if test -n "$TIFF_INCLUDE" -a -n "$TIFF_LIBDIR" ; then
-
-      TIFF_LIB="-L$TIFF_LIBDIR -ltiff"
-      TIFF_INC=-I$TIFF_INCLUDE
-      AC_ADD_RUNPATH("$TIFF_LIBDIR")
-  else
-      AC_MSG_ERROR("Could not find tiffio.h or libtiff.a/libtiff.so in $TIFF_DIR.")
-  fi
-
-  TIFF_ENABLED="-DUSE_TIFF"
-  AC_MSG_RESULT([        using libtiff from $TIFF_LIB.])
-
-else
-
-  AC_CHECK_LIB(tiff,TIFFOpen,TIFF_LIB="-ltiff",,$GD_XTRA_LIBS)
-  if test -n "$TIFF_LIB" ; then
-      TIFF_ENABLED=-DUSE_TIFF
-      AC_MSG_RESULT([        using libtiff from system libs.])
-  else
-      AC_MSG_RESULT([        libtiff not found... TIFF support not included.])
-  fi
-
-fi
-
-dnl
-dnl libtiff may need the same libs (libz, libjpeg) that are included with GD
-dnl
-TIFF_LIB="$TIFF_LIB $GD_XTRA_LIBS"
-
-AC_SUBST(TIFF_ENABLED,$TIFF_ENABLED)
-AC_SUBST(TIFF_INC,    $TIFF_INC)
-AC_SUBST(TIFF_LIB,    $TIFF_LIB)
-
-ALL_ENABLED="$TIFF_ENABLED $ALL_ENABLED"
-ALL_INC="$TIFF_INC $ALL_INC"
-ALL_LIB="$TIFF_LIB $ALL_LIB"
+dnl if test -n "$JPEG_ENABLED" ; then
+dnl   AC_MSG_CHECKING(checking ms JPEG output)
+dnl   if test -n "$GDAL_ENABLED" ; then 
+dnl     JPEG_ENABLED=
+dnl     AC_MSG_RESULT([no we, have GDAL available.])
+dnl   else
+dnl     ALL_ENABLED="$JPEG_ENABLED $ALL_ENABLED"
+dnl     ALL_INC="$JPEG_INC $ALL_INC"
+dnl     ALL_LIB="$JPEG_LIB $ALL_LIB"
+dnl     AC_MSG_RESULT([yes, GDAL is not available but libjpeg is.])
+dnl   fi
+dnl fi
 
 dnl ---------------------------------------------------------------------------
 dnl Try to find PostgreSQL if PostGIS support requested.
@@ -1559,25 +1502,42 @@ if test "$PG_CONFIG" = "no" ; then
   POSTGIS_INC=
   POSTGIS_LIB=
 else
+  POSTGIS_ENABLED=
+
   if test -f "$PG_CONFIG" -a -x "$PG_CONFIG" ; then
     AC_MSG_RESULT([yes, user supplied pg_config ($PG_CONFIG)])
   else
     AC_MSG_ERROR(['$PG_CONFIG' is not an executable.  Make sure you use --with-postgis=/path/to/pg_config])
   fi
 
-  POSTGIS_ENABLED=-DUSE_POSTGIS
-  POSTGIS_EXTRALIBS=`$PG_CONFIG --libs`
+  POSTGIS_EXTRALIBS="`$PG_CONFIG --libs`"
   dnl Verify if pg_config has the "--libs" option..
-  if test $? -eq 0 ; then  
-      POSTGIS_LIB="-L`$PG_CONFIG --libdir` -lpq $POSTGIS_EXTRALIBS"
-  else
-      POSTGIS_LIB="-L`$PG_CONFIG --libdir` -lpq"
+  if test $? -ne 0 ; then  
+      POSTGIS_EXTRALIBS=
   fi
+
   POSTGIS_INC="-I`$PG_CONFIG --includedir`"
 
   old_LDFLAGS="$LDFLAGS"
-  LDFLAGS="$LDFLAGS -L`$PG_CONFIG --libdir`"
-  AC_CHECK_LIB(pq, PQserverVersion, POSTGIS_ENABLED="$POSTGIS_ENABLED -DPOSTGIS_HAS_SERVER_VERSION")
+
+  POSTGIS_LIB="-L`$PG_CONFIG --libdir` -lpq"
+  LDFLAGS="$LDFLAGS $POSTGIS_LIB"
+
+  AC_CHECK_LIB(pq, PQconnectdb, POSTGIS_ENABLED="-DUSE_POSTGIS")
+
+  dnl if that didn't work, try adding in the dependent libs. 
+  if test  "$POSTGIS_ENABLED"x = x ; then
+    POSTGIS_LIB="$POSTGIS_LIB $POSTGIS_EXTRALIBS"
+    LDFLAGS="$old_LDFLAGS $POSTGIS_LIB"
+    unset ac_cv_lib_pq_PQconnectdb
+    AC_CHECK_LIB(pq, PQconnectdb, POSTGIS_ENABLED="-DUSE_POSTGIS")
+  fi
+
+  dnl If we have postgresql client lib, check for versioninfo.
+  if test "$POSTGIS_ENABLED" = "-DUSE_POSTGIS" ; then
+    AC_CHECK_LIB(pq, PQserverVersion, POSTGIS_ENABLED="$POSTGIS_ENABLED -DPOSTGIS_HAS_SERVER_VERSION")
+  fi
+
   LDFLAGS="$old_LDFLAGS"
 
 fi
@@ -1591,48 +1551,48 @@ ALL_INC="$POSTGIS_INC $ALL_INC"
 ALL_LIB="$POSTGIS_LIB $ALL_LIB"
 
 dnl ---------------------------------------------------------------------------
-dnl Try to find MySQL if MYGIS support requested.
+dnl Try to find MySQL if MYSQL support requested.
 dnl ---------------------------------------------------------------------------
 
-AC_MSG_CHECKING(if MyGIS support requested)
+AC_MSG_CHECKING(if Mysql support requested)
 
-AC_ARG_WITH(mygis,[  --with-mygis[[=ARG]]      Include MyGIS Support (ARG=yes/path to mysql_config)],,)
+AC_ARG_WITH(mysql,[  --with-mysql[[=ARG]]      Include Mysql Support (ARG=yes/path to mysql_config)],,)
 
-if test "$with_mygis" = "no" -o "$with_mygis" = "" ; then
+if test "$with_mysql" = "no" -o "$with_mysql" = "" ; then
   AC_MSG_RESULT(no)
   MY_CONFIG="no"
-elif test "$with_mygis" = "yes" ; then
+elif test "$with_mysql" = "yes" ; then
   AC_MSG_RESULT(yes)
   AC_PATH_PROG(MY_CONFIG, mysql_config, no)
 else
-  MY_CONFIG=$with_mygis
+  MY_CONFIG=$with_mysql
 fi
 
 if test "$MY_CONFIG" = "no" ; then
-  MYGIS_ENABLED=
-  MYGIS_INC=
-  MYGIS_LIB=
+  MYSQL_ENABLED=
+  MYSQL_INC=
+  MYSQL_LIB=
 else
   if test -f "$MY_CONFIG" -a -x "$MY_CONFIG" ; then
     AC_MSG_RESULT([yes, user supplied mysql_config ($MY_CONFIG)])
   else
-    AC_MSG_ERROR(['$MY_CONFIG' is not an executable.  Make sure you use --with-mygis=/path/to/mysql_config])
+    AC_MSG_ERROR(['$MY_CONFIG' is not an executable.  Make sure you use --with-mysql=/path/to/mysql_config])
   fi
 
-  MYGIS_ENABLED=-DUSE_MYGIS
-  MYGIS_LIB="`$MY_CONFIG --libs` -lmysqlclient"
-#  MYGIS_LIB="-L/usr/lib/mysql -lmysqlclient"
-  MYGIS_INC="`$MY_CONFIG --cflags`"
-#  MYGIS_INC="-I/usr/include/mysql"
+  MYSQL_ENABLED=-DUSE_MYSQL
+  MYSQL_LIB="`$MY_CONFIG --libs` -lmysqlclient"
+#  MYSQL_LIB="-L/usr/lib/mysql -lmysqlclient"
+  MYSQL_INC="`$MY_CONFIG --cflags`"
+#  MYSQL_INC="-I/usr/include/mysql"
 fi
 
-AC_SUBST(MYGIS_ENABLED,$MYGIS_ENABLED)
-AC_SUBST(MYGIS_INC,$MYGIS_INC)
-AC_SUBST(MYGIS_LIB,$MYGIS_LIB)
+AC_SUBST(MYSQL_ENABLED,$MYSQL_ENABLED)
+AC_SUBST(MYSQL_INC,$MYSQL_INC)
+AC_SUBST(MYSQL_LIB,$MYSQL_LIB)
 
-ALL_ENABLED="$MYGIS_ENABLED $ALL_ENABLED"
-ALL_INC="$MYGIS_INC $ALL_INC"
-ALL_LIB="$MYGIS_LIB $ALL_LIB"
+ALL_ENABLED="$MYSQL_ENABLED $ALL_ENABLED"
+ALL_INC="$MYSQL_INC $ALL_INC"
+ALL_LIB="$MYSQL_LIB $ALL_LIB"
 
 dnl ---------------------------------------------------------------------------
 dnl Try to find out if OracleSpatial support requested.
@@ -1706,35 +1666,35 @@ dnl ---------------------------------------------------------------------------
 dnl Try to find out if MING FLASH support requested.
 dnl ---------------------------------------------------------------------------
 
-AC_MSG_CHECKING(if MING/Flash support requested)
-AC_ARG_WITH(ming,
-[  --with-ming[[=DIR]]       Include MING/Flash Support (DIR=path to Ming
-                          directory)],,)
-
-if test "$with_ming" = "no" -o "$with_ming" = ""; then
-  AC_MSG_RESULT([no])
-  MING_ENABLED=
-  MING_LIB=
-  MING_INC=
-elif test "$with_ming" = "yes"; then
-  AC_MSG_RESULT([yes])
-  MING_ENABLED=-DUSE_MING_FLASH
-  MING_LIB="-lming"
-  MING_INC=
-else
-  AC_MSG_RESULT([yes, user supplied MING directory])
-  MING_ENABLED=-DUSE_MING_FLASH
-  MING_LIB="-L$with_ming/lib -lming"
-  MING_INC="-I$with_ming/include"
-fi
-
-AC_SUBST(MING_ENABLED,$MING_ENABLED)
-AC_SUBST(MING_INC,$MING_INC)
-AC_SUBST(MING_LIB,$MING_LIB)
-
-ALL_ENABLED="$MING_ENABLED $ALL_ENABLED"
-ALL_INC="$MING_INC $ALL_INC"
-ALL_LIB="$MING_LIB $ALL_LIB"
+dnl AC_MSG_CHECKING(if MING/Flash support requested)
+dnl AC_ARG_WITH(ming,
+dnl [  --with-ming[[=DIR]]       Include MING/Flash Support (DIR=path to Ming
+dnl                           directory)],,)
+dnl 
+dnl if test "$with_ming" = "no" -o "$with_ming" = ""; then
+dnl   AC_MSG_RESULT([no])
+dnl   MING_ENABLED=
+dnl   MING_LIB=
+dnl   MING_INC=
+dnl elif test "$with_ming" = "yes"; then
+dnl   AC_MSG_RESULT([yes])
+dnl   MING_ENABLED=-DUSE_MING_FLASH
+dnl   MING_LIB="-lming"
+dnl   MING_INC=
+dnl else
+dnl   AC_MSG_RESULT([yes, user supplied MING directory])
+dnl   MING_ENABLED=-DUSE_MING_FLASH
+dnl   MING_LIB="-L$with_ming/lib -lming"
+dnl   MING_INC="-I$with_ming/include"
+dnl fi
+dnl 
+dnl AC_SUBST(MING_ENABLED,$MING_ENABLED)
+dnl AC_SUBST(MING_INC,$MING_INC)
+dnl AC_SUBST(MING_LIB,$MING_LIB)
+dnl 
+dnl ALL_ENABLED="$MING_ENABLED $ALL_ENABLED"
+dnl ALL_INC="$MING_INC $ALL_INC"
+dnl ALL_LIB="$MING_LIB $ALL_LIB"
 
 dnl ---------------------------------------------------------------------
 dnl WMS Server Compatibility - Enabled by default if PROJ.4 is there.
@@ -1826,16 +1786,16 @@ dnl ---------------------------------------------------------------------
 
 AC_CHECKING(whether we should include WMS Client Connections support)
 AC_ARG_WITH(wmsclient,
-[  --with-wmsclient        Enable OGC WMS Client Connections (PROJ4 and libcurl
-                          required).],,)
+[  --with-wmsclient        Enable OGC WMS Client Connections (PROJ4, libcurl and
+                          GDAL required).],,)
 
 if test "$with_wmsclient" = "no" ; then
 
   AC_MSG_RESULT([        OGC WMS Client Layers disabled by --without-wmsclient.])
 
-elif test -z "$PROJ_ENABLED" ; then
+elif test -z "$PROJ_ENABLED" -o -z "$GDAL_ENABLED"; then
 
-  AC_MSG_RESULT([        OGC WMS Client Connections not enabled (PROJ.4 and libcurl required).])
+  AC_MSG_RESULT([        OGC WMS Client Connections not enabled (PROJ.4, libcurl and GDAL required).])
 
 elif test "$with_wmsclient" = "yes" ; then
 
@@ -1923,12 +1883,22 @@ if test "$WMS_REQUESTED" = "yes" -o "$WFS_REQUESTED" = "yes" ; then
 
   CURL_VERNUM=`$LIBCURL_CONFIG --vernum`
   CURL_VER=`$LIBCURL_CONFIG --version | awk '{print $2}'`
+  CURL_FLAGS=""
 
   AC_MSG_RESULT([        found libcurl version $CURL_VER])
   
   dnl Need libcurl 7.10.1 or more recent
   if test -z "$CURL_VERNUM" -o `expr "0x$CURL_VERNUM" \< "0x070a01"` = 1; then
     AC_MSG_ERROR([libcurl version 7.10.1 or more recent is required.])
+  fi
+
+  dnl Verify if the the PROXYAUTH support is avaible (>= 7.10.7)
+  AC_MSG_CHECKING(for CURLOPT_PROXYAUTH support)
+  if test -z "$CURL_VERNUM" -o `expr "0x$CURL_VERNUM" \>= "0x070a07"` = 1; then
+    AC_MSG_RESULT([yes.])
+    CURL_FLAGS="-DUSE_CURLOPT_PROXYAUTH"
+  else
+    AC_MSG_RESULT([no.])
   fi
 
   dnl set WMS_LYR_ENABLED/WFS_LYR_ENABLED here, Makefile substitutions are
@@ -1945,7 +1915,7 @@ if test "$WMS_REQUESTED" = "yes" -o "$WFS_REQUESTED" = "yes" ; then
 
   CURL_INC=`$LIBCURL_CONFIG --cflags`
   CURL_LIB=`$LIBCURL_CONFIG --libs`
-  CURL_ENABLED=-DUSE_CURL
+  CURL_ENABLED="-DUSE_CURL $CURL_FLAGS"
 
 fi
 
@@ -1955,6 +1925,21 @@ AC_SUBST(CURL_LIB,    $CURL_LIB)
 ALL_INC="$CURL_INC $ALL_INC"
 ALL_LIB="$CURL_LIB $ALL_LIB"
 
+dnl ---------------------------------------------------------------------
+dnl KML support
+dnl ---------------------------------------------------------------------
+
+AC_ARG_WITH(kml,[  --with-kml=                KML output Support (ARG=yes/no).],)
+
+AC_MSG_CHECKING(if KML output is requested)
+KML_REQUESTED=""
+
+if test "$with_kml" = "yes"; then
+    AC_MSG_RESULT(yes)
+    KML_REQUESTED="yes"
+else
+    AC_MSG_RESULT(no)
+fi
 
 dnl ---------------------------------------------------------------------
 dnl Look for libxml2 if SOS Server requested
@@ -1975,11 +1960,19 @@ if test -z "$with_xml2_config" ; then
   if test "x$SOS_REQUESTED" = "xyes" ; then
     with_xml2_config=yes
     AC_MSG_RESULT([libxml2 required.])
+  elif test "x$KML_REQUESTED" = "xyes" ; then
+    with_xml2_config=yes
+    AC_MSG_RESULT([libxml2 required.])
   elif test "x$WCS_SVR_ENABLED" != "x" ; then 
     with_xml2_config=yes
     AC_MSG_RESULT([libxml2 requested for WCS Server.])
     AC_MSG_RESULT([      If unavailable disable using --without-xml2-config,])
     AC_MSG_RESULT([      but WCS 1.1 support will be disabled.])
+  elif test "x$WFS_SVR_ENABLED" != "x" ; then 
+    with_xml2_config=yes
+    AC_MSG_RESULT([libxml2 requested for WFS Server.])
+    AC_MSG_RESULT([      If unavailable disable using --without-xml2-config,])
+    AC_MSG_RESULT([      but WFS 1.1 support will be disabled.])
   else
     with_xml2_config=no
     AC_MSG_RESULT([libxml2 not required.])
@@ -2014,6 +2007,9 @@ if test "$with_xml2_config" != "no" ; then
   if test "$SOS_REQUESTED" = "yes" ; then  
     SOS_SVR_ENABLED="-DUSE_SOS_SVR"
   fi
+  if test "$KML_REQUESTED" = "yes" ; then  
+    KML_ENABLED="-DUSE_KML"
+  fi
 fi
 
 AC_SUBST(XML2_INC,    $XML2_INC)
@@ -2030,7 +2026,121 @@ AC_SUBST(WMS_LYR_ENABLED,$WMS_LYR_ENABLED)
 AC_SUBST(WFS_LYR_ENABLED,$WFS_LYR_ENABLED)
 AC_SUBST(SOS_SVR_ENABLED,$SOS_SVR_ENABLED)
 
-ALL_ENABLED="$WMS_LYR_ENABLED $WFS_LYR_ENABLED $SOS_SVR_ENABLED $XML2_ENABLED $CURL_ENABLED $ALL_ENABLED"
+ALL_ENABLED="$WMS_LYR_ENABLED $WFS_LYR_ENABLED $SOS_SVR_ENABLED $XML2_ENABLED $CURL_ENABLED $KML_ENABLED $ALL_ENABLED"
+
+
+dnl ---------------------------------------------------------------------
+dnl Check if xml-mapfile requested
+dnl ---------------------------------------------------------------------
+
+AC_ARG_WITH(xml-mapfile,
+[  --with-xml-mapfile=                Include xml-mapfile Support (ARG=yes/no).],
+   XMLMAPFILE_REQUESTED="")
+
+AC_MSG_CHECKING(if xml-mapfile is requested)
+XMLMAPFILE_ENABLED=""
+
+if test "$with_xml_mapfile" = "yes"; then
+  XMLMAPFILE_ENABLED="-DUSE_XMLMAPFILE"
+  AC_MSG_RESULT(yes.. xslt and exslt support needed)
+else
+  AC_MSG_RESULT(no)
+fi
+
+ALL_ENABLED="$XMLMAPFILE_ENABLED $ALL_ENABLED"
+
+dnl ---------------------------------------------------------------------
+dnl Check if xslt requested
+dnl ---------------------------------------------------------------------
+
+AC_ARG_WITH(xslt,
+[  --with-xslt=DIR         Include xslt Support (ARG=yes/path to 
+                          to xslt install dir).],
+    XSLT_DIR=$withval,XSLT_DIR='')
+
+AC_MSG_CHECKING(if xslt is requested)
+XSLT_LIB=''
+
+if test -z "$XMLMAPFILE_ENABLED" -a \( "$with_xslt" = "no" -o "$with_xslt" = ""  \); then
+  AC_MSG_RESULT(no)
+else
+
+  if test "$XSLT_DIR" = "yes" -o "$XSLT_DIR" = ""; then
+     XSLT_DIR="/usr"
+  fi
+
+  test -f $XSLT_DIR/include/libxslt/xslt.h && XSLT_INCDIR="$XSLT_DIR/include"
+  test -f $XSLT_DIR/lib/libxslt.so && XSLT_LIBDIR="$XSLT_DIR/lib"
+  test -f $XSLT_DIR/lib64/libxslt.so && XSLT_LIBDIR="$XSLT_DIR/lib64"
+
+  if test -n "$XSLT_LIBDIR" -a -n "$XSLT_INCDIR" ; then
+    dnl
+    dnl Found xslt runtime and headers. Enable USE_XSLT .
+    dnl
+    XSLT_ENABLED="-DUSE_XSLT"
+    XSLT_INC="-I$XSLT_INCDIR"
+    XSLT_LIB="-L$XSLT_LIBDIR -lxslt"
+    AC_MSG_RESULT([using xslt from $XSLT_LIB ($XSLT_ENABLED)])
+    AC_ADD_RUNPATH("$XSLT_DIR")
+
+  else
+    AC_MSG_ERROR(['$XSLT_DIR' not a valid installation path of xslt.])
+  fi
+fi
+
+AC_SUBST(XSLT_ENABLED,$XSLT_ENABLED)
+AC_SUBST(XSLT_INC,    $XSLT_INC)
+AC_SUBST(XSLT_LIB,    $XSLT_LIB)
+
+ALL_ENABLED="$XSLT_ENABLED $ALL_ENABLED"
+ALL_INC="$XSLT_INC $ALL_INC"
+ALL_LIB="$XSLT_LIB $ALL_LIB"
+
+dnl ---------------------------------------------------------------------
+dnl Check if exslt requested
+dnl ---------------------------------------------------------------------
+
+AC_ARG_WITH(exslt,
+[  --with-exslt=DIR         Include exslt Support (ARG=yes/path to 
+                           to exslt install dir).],
+    EXSLT_DIR=$withval,EXSLT_DIR='')
+
+AC_MSG_CHECKING(if exslt is requested)
+EXSLT_LIB=''
+
+if test -z "$XMLMAPFILE_ENABLED" -a \( "$with_exslt" = "no" -o "$with_exslt" = ""  \); then
+  AC_MSG_RESULT(no)
+else
+
+  if test "$EXSLT_DIR" = "yes" -o "$EXSLT_DIR" = ""; then
+     EXSLT_DIR="/usr"
+  fi
+
+  test -f $EXSLT_DIR/include/libexslt/exslt.h && EXSLT_INCDIR="$EXSLT_DIR/include"
+  test -f $EXSLT_DIR/lib/libexslt.so && EXSLT_LIBDIR="$EXSLT_DIR/lib"
+  test -f $EXSLT_DIR/lib64/libexslt.so && EXSLT_LIBDIR="$EXSLT_DIR/lib64"
+
+  if test -n "$EXSLT_LIBDIR" -a -n "$EXSLT_INCDIR" ; then
+    dnl
+    dnl Found exslt runtime and headers. Enable USE_EXSLT .
+    dnl
+    EXSLT_ENABLED="-DUSE_EXSLT"
+    EXSLT_INC="-I$EXSLT_INCDIR"
+    EXSLT_LIB="-L$EXSLT_LIBDIR -lexslt"
+    AC_MSG_RESULT([using exslt from $EXSLT_LIB ($EXSLT_ENABLED)])
+    AC_ADD_RUNPATH("$EXSLT_DIR")
+  else
+    AC_MSG_ERROR(['$EXSLT_DIR' not a valid installation path of exslt.])
+  fi
+fi
+
+AC_SUBST(EXSLT_ENABLED,$EXSLT_ENABLED)
+AC_SUBST(EXSLT_INC,    $EXSLT_INC)
+AC_SUBST(EXSLT_LIB,    $EXSLT_LIB)
+
+ALL_ENABLED="$EXSLT_ENABLED $ALL_ENABLED"
+ALL_INC="$EXSLT_INC $ALL_INC"
+ALL_LIB="$EXSLT_LIB $ALL_LIB"
 
 
 dnl ---------------------------------------------------------------------------
@@ -2378,8 +2488,8 @@ if test "$enable_debug" = "yes" ; then
   AC_MSG_RESULT([        Enabling debug features: -g in CFLAGS.])
 
 else
-  CXXFLAGS=`echo "$CXXFLAGS " | sed "s/-g //"`
-  CFLAGS=`echo "$CFLAGS " | sed "s/-g //"`
+  CXXFLAGS=`echo "$CXXFLAGS -DNDEBUG " | sed "s/-g //"`
+  CFLAGS=`echo "$CFLAGS -DNDEBUG " | sed "s/-g //"`
 fi
 
 dnl ---------------------------------------------------------------------
@@ -2420,7 +2530,7 @@ dnl ---------------------------------------------------------------------
 
 AC_CHECKING(for PHP/MapScript module options)
 AC_ARG_WITH(php,
-[  --with-php=DIR          Specify directory where PHP4's include files are
+[  --with-php=DIR          Specify directory where PHP5's include files are
                           installed (or a pointer to the full source tree)
                           Required in order to compile the PHP/MapScript 
                           module.],,)
@@ -2467,22 +2577,15 @@ if test -n "$with_php" -a -d "$with_php" ; then
   fi
 
   dnl
-  dnl Look for PHP3's config.h or PHP4's php_config.h.
+  dnl Look for PHP5's php_config.h.
   dnl We'll need the config file to find info about the PHP configuration
   dnl
-  AC_MSG_CHECKING([for location of config.h or php_config.h])
-  dnl In PHP3, it was called config.h
-  test -f "$PHP_SRC_DIR/config.h" && PHP_CONFIG_H="$PHP_SRC_DIR/config.h"
-
-  dnl In PHP 4.0.1 to 4.0.3, it was php-4.0.x/php_config.h
-  test -f "$PHP_SRC_DIR/php_config.h" && PHP_CONFIG_H="$PHP_SRC_DIR/php_config.h"
-
-  dnl Starting with PHP 4.0.4, it's php-4.0.x/main/php_config.h
-  test -f "$PHP_SRC_DIR/main/php_config.h" && PHP_CONFIG_H="$PHP_SRC_DIR/main/php_config.h"
+  AC_MSG_CHECKING([for location of php_config.h])
+  dnl Look for the main/php_config.h
+  test -f "$PHP_SRC_DIR/main/php_config.h" && test -f "$PHP_SRC_DIR/main/php_version.h"  && PHP_CONFIG_H="$PHP_SRC_DIR/main/php_config.h"
 
   dnl If php was installed, then the headers are under $prefix/include/php/*
   test -f "$PHP_SRC_DIR/include/php/main/php_config.h" && PHP_SRC_DIR="$PHP_SRC_DIR/include/php/" && PHP_CONFIG_H="$PHP_SRC_DIR/main/php_config.h"
-
   dnl In PHP 5, few distributions use "/usr/include/php5" directory
   test -f "$PHP_SRC_DIR/include/php5/main/php_config.h" && PHP_SRC_DIR="$PHP_SRC_DIR/include/php5/" && PHP_CONFIG_H="$PHP_SRC_DIR/main/php_config.h"
 
@@ -2490,22 +2593,23 @@ if test -n "$with_php" -a -d "$with_php" ; then
     AC_MSG_RESULT([$PHP_CONFIG_H])
   else
     AC_MSG_ERROR([
-!!! Could not find config.h or php_config.h in $PHP_SRC_DIR.          !!!
+!!! Could not find php_config.h and php_version.h in $PHP_SRC_DIR.          !!!
 !!! Has PHP been configured yet?                                      !!!])
   fi
 
-  dnl
+
   dnl Check which PHP version we're using.
   dnl Default is PHP3, and if ZEND_API is set then we assume that we have PHP4.
   dnl
-  AC_MSG_CHECKING([whether we have PHP3 or PHP4])
-  if test -n "`grep 'ZEND_API' $PHP_CONFIG_H`"  ; then
-    PHP_VERSION_FLAG="-DPHP4"
-  else
-    PHP_VERSION_FLAG="-DPHP3"
+  AC_MSG_CHECKING([if we have PHP 5.2.0+])
+  PHP_VERSION=`grep 'PHP_VERSION_ID' $PHP_SRC_DIR/main/php_version.h | cut -d' ' -f3`
+  if test -z "$PHP_VERSION" || test $PHP_VERSION -lt 50200; then
     AC_MSG_ERROR([
-!!! PHP MapScript now requires PHP 4.1.2 or more recent.              !!!
-!!! Support for PHP3 has been dropped after MapServer version 3.5.    !!!])
+!!! PHP MapScript now requires PHP 5.2.0 or more recent.              !!!
+!!! Support for PHP3 has been dropped after MapServer version 3.5.    !!!
+!!! Support for PHP4 has been dropped after MapServer version 5.6.    !!!])
+  else
+     AC_MSG_RESULT([yes])
   fi
   AC_MSG_RESULT([$PHP_VERSION_FLAG])
 
@@ -2546,9 +2650,9 @@ if test -n "$with_php" -a -d "$with_php" ; then
     AC_MSG_RESULT(no)
   fi
 
-  PHPMS_MAKEFILE=mapscript/php3/Makefile
-  MAKE_PHPMS=php3_mapscript
-  MAKE_PHPMS_CLEAN=php3_mapscript_clean
+  PHPMS_MAKEFILE=mapscript/php/Makefile
+  MAKE_PHPMS=php_mapscript
+  MAKE_PHPMS_CLEAN=php_mapscript_clean
 
   AC_SUBST(PHP_VERSION_FLAG, $PHP_VERSION_FLAG)
   AC_SUBST(PHP_SRC_DIR, $PHP_SRC_DIR)
@@ -2745,14 +2849,15 @@ AC_MSG_RESULT()
 AC_MSG_RESULT([ -------------- Renderer Settings --------- ])
 AC_MSG_RESULT([  OpenGL support:            ${OGL_ENABLED}])
 AC_MSG_RESULT([  zlib support:              ${ZLIB_ENABLED}])
-AC_MSG_RESULT([  png support:               ${PNG_SETTING}])
-AC_MSG_RESULT([  palette rgba png support:  ${RGBA_PNG_ENABLED}])
+AC_MSG_RESULT([  png support:               ${PNG_ENABLED}])
+AC_MSG_RESULT([  gif support:               ${GIF_ENABLED}])
 AC_MSG_RESULT([  jpeg support:              ${JPEG_ENABLED}])
+AC_MSG_RESULT([  freetype support:          ${FT_ENABLED}])
 AC_MSG_RESULT([  iconv support:             ${ICONV_ENABLED}])
 AC_MSG_RESULT([  AGG support:               ${AGG_ENABLED}])
+AC_MSG_RESULT([  SVG Symbol support:        ${AGG_SVG_SYMBOLS_ENABLED}])
 AC_MSG_RESULT([  Cairo (SVG,PDF) support:   ${CAIRO_ENABLED}])
-AC_MSG_RESULT([  Ming(flash) support:       ${MING_ENABLED}])
-AC_MSG_RESULT([  PDFLib support:            ${PDF_ENABLED}])
+AC_MSG_RESULT([  KML support:               ${KML_ENABLED}])
 AC_MSG_RESULT()
 
 AC_MSG_RESULT([ -------------- Support Libraries --------- ])
@@ -2763,12 +2868,13 @@ AC_MSG_RESULT([  Curl support:              ${CURL_ENABLED}])
 AC_MSG_RESULT([  FastCGI support:           ${FASTCGI_ENABLED}])
 AC_MSG_RESULT([  Threading support:         ${THREAD_FLAG}])
 AC_MSG_RESULT([  GEOS support:              ${GEOS_ENABLED}])
+AC_MSG_RESULT([  XML Mapfile support:        ${XMLMAPFILE_ENABLED}])
+AC_MSG_RESULT([  XSLT support:              ${XSLT_ENABLED}])
+AC_MSG_RESULT([  EXSLT support:              ${EXSLT_ENABLED}])
 AC_MSG_RESULT()
 
 AC_MSG_RESULT([ -------------- Data Format Drivers ------- ])
-AC_MSG_RESULT([  native tiff support:       ${TIFF_ENABLED}])
 AC_MSG_RESULT([  PostGIS support:           ${POSTGIS_ENABLED}])
-AC_MSG_RESULT([  EPPL7 support:             ${EPPL_ENABLED}])
 AC_MSG_RESULT([  ArcSDE support:            ${SDE_ENABLED}])
 AC_MSG_RESULT([  OGR support:               ${OGR_ENABLED}])
 AC_MSG_RESULT([  GDAL support:              ${GDAL_ENABLED}])
@@ -2779,7 +2885,7 @@ AC_MSG_RESULT([ -------------- OGC Services -------------- ])
 AC_MSG_RESULT([  WMS Server:                ${WMS_SVR_ENABLED}])
 AC_MSG_RESULT([  WMS Client:                ${WMS_LYR_ENABLED}])
 AC_MSG_RESULT([  WFS Server:                ${WFS_SVR_ENABLED}])
-AC_MSG_RESULT([  WFS Client:                ${WMS_LYR_ENABLED}])
+AC_MSG_RESULT([  WFS Client:                ${WFS_LYR_ENABLED}])
 AC_MSG_RESULT([  WCS Server:                ${WCS_SVR_ENABLED}])
 AC_MSG_RESULT([  SOS Server:                ${SOS_SVR_ENABLED}])
 AC_MSG_RESULT()

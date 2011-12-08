@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapgeos.c 9569 2009-11-27 21:16:01Z dmorissette $
+ * $Id: mapgeos.c 11470 2011-04-05 20:11:33Z tamas $
  *
  * Project:  MapServer
  * Purpose:  MapServer-GEOS integration.
@@ -568,7 +568,8 @@ shapeObj *msGEOSGeometry2Shape(GEOSGeom g)
     return msGEOSGeometry2Shape_multipolygon(g);
     break;
   default:
-    msSetError(MS_GEOSERR, "Unsupported GEOS geometry type (%d).", "msGEOSGeometry2Shape()", type);
+    if (!GEOSisEmpty(g))
+        msSetError(MS_GEOSERR, "Unsupported GEOS geometry type (%d).", "msGEOSGeometry2Shape()", type);
     return NULL;
   }
 }
@@ -619,6 +620,7 @@ shapeObj *msGEOSShapeFromWKT(const char *wkt)
 #endif
 }
 
+/* Return should be freed with msGEOSFreeWKT */
 char *msGEOSShapeToWKT(shapeObj *shape)
 {
 #ifdef USE_GEOS
@@ -638,6 +640,17 @@ char *msGEOSShapeToWKT(shapeObj *shape)
 #else
   msSetError(MS_GEOSERR, "GEOS support is not available.", "msGEOSShapeToWKT()");
   return NULL;
+#endif
+}
+
+void msGEOSFreeWKT(char* pszGEOSWKT)
+{
+#ifdef USE_GEOS
+#if GEOS_VERSION_MAJOR > 3 || (GEOS_VERSION_MAJOR == 3 && GEOS_VERSION_MINOR >= 2)
+  GEOSFree(pszGEOSWKT);
+#endif
+#else
+  msSetError(MS_GEOSERR, "GEOS support is not available.", "msGEOSFreeWKT()");
 #endif
 }
 
@@ -669,7 +682,7 @@ shapeObj *msGEOSBuffer(shapeObj *shape, double width)
 
 shapeObj *msGEOSSimplify(shapeObj *shape, double tolerance)
 {
-#if defined(USE_GEOS) && defined(GEOS_HAS_SIMPLIFY)
+#ifdef USE_GEOS
   GEOSGeom g1, g2; 
 
   if(!shape) 
@@ -684,14 +697,14 @@ shapeObj *msGEOSSimplify(shapeObj *shape, double tolerance)
   g2 = GEOSSimplify(g1, tolerance);
   return msGEOSGeometry2Shape(g2);
 #else
-  msSetError(MS_GEOSERR, "GEOS Simplify support is not available.", "msGEOSTopologyPreservingSimplifier()");
+  msSetError(MS_GEOSERR, "GEOS Simplify support is not available.", "msGEOSSimplify()");
   return NULL;
 #endif
 }
 
 shapeObj *msGEOSTopologyPreservingSimplify(shapeObj *shape, double tolerance)
 {
-#if defined(USE_GEOS) && defined(GEOS_HAS_SIMPLIFY)
+#ifdef USE_GEOS
   GEOSGeom g1, g2; 
 
   if(!shape) 
@@ -706,7 +719,7 @@ shapeObj *msGEOSTopologyPreservingSimplify(shapeObj *shape, double tolerance)
   g2 = GEOSTopologyPreserveSimplify(g1, tolerance);
   return msGEOSGeometry2Shape(g2);
 #else
-  msSetError(MS_GEOSERR, "GEOS Simplify support is not available.", "msGEOSTopologyPreservingSimplifier()");
+  msSetError(MS_GEOSERR, "GEOS Simplify support is not available.", "msGEOSTopologyPreservingSimplify()");
   return NULL;
 #endif
 }

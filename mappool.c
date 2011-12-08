@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mappool.c 7081 2007-11-26 16:05:34Z warmerdam $
+ * $Id: mappool.c 11072 2011-03-04 19:57:16Z dmorissette $
  *
  * Project:  MapServer
  * Purpose:  Implement new style connection pooling.
@@ -56,13 +56,17 @@ following information for each:
 
 The life span indicator is controlled by the CLOSE_CONNECTION PROCESSING
 option on the layer(s).  If this is set to NORMAL (or not set at all) the
-connection will be close as soon as the reference count drops to zero.  This
+connection will be closed as soon as the reference count drops to zero.  This
 is MS_LIFE_ZEROREF, and in normal use results in connections only be shared
 between layers in a given map as the connection will be closed when no layers
 are open against it anymore.  The other possible value for the CLOSE_CONNECTION
 option is DEFER which basically results in the connection being kept open
 till the application closes (msCleanup() will ensure the connection is closed
 on exit if called).  This case is called MS_LIFE_FOREVER.
+The CLOSE_CONNECTION=ALWAYS setting provides to suppress the connection pooling
+for a particular layer. In this case the MS_LIFE_SINGLE setting is used, which
+ensures that a new connection is created for each request and it is always 
+closed when the connection is released. This kind of connection cannot be reused.
 
 The callback is a function provided with the connection handle when it is
 registered.  It takes a single "void *" argument which is the connection
@@ -130,13 +134,14 @@ o The connection pooling API will let a connection be used/referenced multiple
 #include "mapserver.h"
 #include "mapthread.h"
 
-MS_CVSID("$Id: mappool.c 7081 2007-11-26 16:05:34Z warmerdam $")
+MS_CVSID("$Id: mappool.c 11072 2011-03-04 19:57:16Z dmorissette $")
 
 /* defines for lifetime.  
    A positive number is a time-from-last use in seconds */
 
 #define MS_LIFE_FOREVER       -1
 #define MS_LIFE_ZEROREF       -2
+#define MS_LIFE_SINGLE        -3
 
 typedef struct {
     enum MS_CONNECTION_TYPE connectiontype;
@@ -186,14 +191,22 @@ void msConnPoolRegister( layerObj *layer,
 /* -------------------------------------------------------------------- */
     if( layer->connection == NULL )
     {
-        msDebug( "%s: Missing CONNECTION on layer %s.\n",
-                 "msConnPoolRegister()", 
-                 layer->name );
-
-        msSetError( MS_MISCERR, 
-                    "Missing CONNECTION on layer %s.",
-                    "msConnPoolRegister()", 
-                    layer->name );
+        if( layer->tileindex != NULL
+            && layer->connectiontype == MS_OGR )
+        {
+            /* this is ok, no need to make a fuss */
+        }
+        else
+        {
+            msDebug( "%s: Missing CONNECTION on layer %s.\n",
+                     "msConnPoolRegister()", 
+                     layer->name );
+            
+            msSetError( MS_MISCERR, 
+                        "Missing CONNECTION on layer %s.",
+                        "msConnPoolRegister()", 
+                        layer->name );
+        }
         return;
     }
 
@@ -224,7 +237,7 @@ void msConnPoolRegister( layerObj *layer,
     connectionCount++;
 
     conn->connectiontype = layer->connectiontype;
-    conn->connection = strdup( layer->connection );
+    conn->connection = msStrdup( layer->connection );
     conn->close = close_func;
     conn->ref_count = 1;
     conn->thread_id = msGetThreadId();
@@ -245,6 +258,8 @@ void msConnPoolRegister( layerObj *layer,
         conn->lifespan = MS_LIFE_ZEROREF;
     else if( strcasecmp(close_connection,"DEFER") == 0 )
         conn->lifespan = MS_LIFE_FOREVER;
+    else if( strcasecmp(close_connection,"ALWAYS") == 0 )
+        conn->lifespan = MS_LIFE_SINGLE;
     else
     {
         msDebug("msConnPoolRegister(): "
@@ -327,8 +342,14 @@ void *msConnPoolRequest( layerObj *layer )
 
 {
     int  i;
+    const char* close_connection;
 
     if( layer->connection == NULL )
+        return NULL;
+
+    /* check if we must always create a new connection */
+    close_connection = msLayerGetProcessingKey( layer, "CLOSE_CONNECTION" );
+    if( close_connection && strcasecmp(close_connection,"ALWAYS") == 0 )
         return NULL;
 
     msAcquireLock( TLOCK_POOL );
@@ -338,7 +359,8 @@ void *msConnPoolRequest( layerObj *layer )
 
         if( layer->connectiontype == conn->connectiontype
             && strcasecmp( layer->connection, conn->connection ) == 0 
-            && (conn->ref_count == 0 || conn->thread_id == msGetThreadId()) )
+            && (conn->ref_count == 0 || conn->thread_id == msGetThreadId())
+            && conn->lifespan != MS_LIFE_SINGLE)
         {
             void *conn_handle = NULL;
 
@@ -401,7 +423,7 @@ void msConnPoolRelease( layerObj *layer, void *conn_handle )
             if( conn->ref_count == 0 )
                 conn->thread_id = 0;
 
-            if( conn->ref_count == 0 && conn->lifespan == MS_LIFE_ZEROREF )
+            if( conn->ref_count == 0 && (conn->lifespan == MS_LIFE_ZEROREF || conn->lifespan == MS_LIFE_SINGLE) )
                 msConnPoolClose( i );
 
             msReleaseLock( TLOCK_POOL );

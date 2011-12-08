@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mappostgresql.c 9266 2009-08-25 03:13:40Z sdlime $
+ * $Id: mappostgresql.c 10772 2010-11-29 18:27:02Z aboudreault $
  *
  * Project:  MapServer
  * Purpose:  Postgres CONNECTIONTYPE support.
@@ -28,7 +28,7 @@
  ****************************************************************************/
 
 
-/* $Id: mappostgresql.c 9266 2009-08-25 03:13:40Z sdlime $ */
+/* $Id: mappostgresql.c 10772 2010-11-29 18:27:02Z aboudreault $ */
 #include <assert.h>
 #include "mapserver.h"
 #include "maptime.h"
@@ -50,7 +50,7 @@
 #include <string.h>
 #include <ctype.h> /* tolower() */
 
-MS_CVSID("$Id: mappostgresql.c 9266 2009-08-25 03:13:40Z sdlime $")
+MS_CVSID("$Id: mappostgresql.c 10772 2010-11-29 18:27:02Z aboudreault $")
 
 
 typedef struct {
@@ -74,6 +74,7 @@ typedef struct {
 
 int msPOSTGRESQLJoinConnect(layerObj *layer, joinObj *join) {
     char *maskeddata, *temp, *sql, *column;
+    char *conn_decrypted;
     int i, count, test;
     PGresult *query_result;
     msPOSTGRESQLJoinInfo *joininfo;
@@ -117,7 +118,11 @@ int msPOSTGRESQLJoinConnect(layerObj *layer, joinObj *join) {
     }
 
     /* Establish database connection */
-    joininfo->conn = PQconnectdb(join->connection);
+    conn_decrypted = msDecryptStringTokens(layer->map, join->connection);
+    if (conn_decrypted != NULL) {
+      joininfo->conn = PQconnectdb(conn_decrypted);
+      free(conn_decrypted);
+    }
     if(!joininfo->conn || PQstatus(joininfo->conn) == CONNECTION_BAD) {
         maskeddata = (char *)malloc(strlen(layer->connection) + 1);
         strcpy(maskeddata, join->connection);
@@ -126,7 +131,7 @@ int msPOSTGRESQLJoinConnect(layerObj *layer, joinObj *join) {
             temp = (char *)(temp + 9);
             count = (int)(strstr(temp, " ") - temp);
             for(i = 0; i < count; i++) {
-                strncpy(temp, "*", (int)1);
+                strlcpy(temp, "*", (int)1);
                 temp++;
             }
         }
@@ -250,7 +255,7 @@ int msPOSTGRESQLJoinPrepare(joinObj *join, shapeObj *shape) {
     }
 
     /* Copy the next join value from the shape. */
-    joininfo->from_value = strdup(shape->values[joininfo->from_index]);
+    joininfo->from_value = msStrdup(shape->values[joininfo->from_index]);
 
     if(joininfo->layer_debug) {
         msDebug("msPOSTGRESQLJoinPrepare() preping for value %s.\n", 
@@ -365,7 +370,7 @@ int msPOSTGRESQLJoinNext(joinObj *join) {
     /* Copy the resulting values into the joinObj. */
     join->values = (char **)malloc(sizeof(char *) * join->numitems);
     for(i = 0; i < join->numitems; i++) {
-        join->values[i] = strdup(PQgetvalue(
+        join->values[i] = msStrdup(PQgetvalue(
                 joininfo->query_result, joininfo->row_num, i));
     }
 

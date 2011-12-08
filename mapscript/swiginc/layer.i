@@ -1,6 +1,6 @@
 
 /* ===========================================================================
-   $Id: layer.i 10113 2010-04-24 17:07:20Z sdlime $
+   $Id: layer.i 11881 2011-07-07 19:55:43Z sdlime $
  
    Project:  MapServer
    Purpose:  SWIG interface file for mapscript layerObj extensions
@@ -165,7 +165,7 @@
         }
         self->connectiontype = oldconnectiontype;
 
-        return msLayerWhichShapes(self, rect);
+        return msLayerWhichShapes(self, rect, MS_FALSE);
     }	
 
     %newobject nextShape;
@@ -192,33 +192,22 @@
         msLayerClose(self);
     }
 
-    %newobject getFeature;
-    shapeObj *getFeature(int shapeindex, int tileindex=-1) 
+    %newobject getShape;
+    shapeObj *getShape(resultObj *record) 
     {
-    /* This version properly returns shapeObj and also has its
-     * arguments properly ordered so that users can ignore the
-     * tileindex if they are not accessing a tileindexed layer.
-     * See bug 586:
-     * http://mapserver.gis.umn.edu/bugs/show_bug.cgi?id=586 */
         int retval;
         shapeObj *shape;
-        shape = (shapeObj *)malloc(sizeof(shapeObj));
-        if (!shape)
-            return NULL;
-        msInitShape(shape);
-        shape->type = self->type;
-        retval = msLayerGetShape(self, shape, tileindex, shapeindex);
-        return shape;
-    }
 
-    int getShape(shapeObj *shape, int tileindex, int shapeindex) 
-    {
-        return msLayerGetShape(self, shape, tileindex, shapeindex);
-    }
-  
-    int resultsGetShape(shapeObj *shape, int shapeindex, int tileindex=-1)
-    {
-        return msLayerResultsGetShape(self, shape, tileindex, shapeindex);
+        if (!record) return NULL;
+    
+        shape = (shapeObj *)malloc(sizeof(shapeObj));
+        if (!shape) return NULL;
+
+        msInitShape(shape);
+        shape->type = self->type; /* is this right? */
+
+        retval = msLayerGetShape(self, shape, record);
+        return shape;
     }
 
     int getNumResults() 
@@ -227,7 +216,17 @@
         return self->resultcache->numresults;
     }
 
-    resultCacheMemberObj *getResult(int i) 
+    %newobject getResultsBounds;
+    rectObj *getResultsBounds() 
+    {
+        rectObj *bounds;
+        if (!self->resultcache) return NULL;
+        bounds = (rectObj *) malloc(sizeof(rectObj));
+        MS_COPYRECT(bounds, &self->resultcache->bounds);
+        return bounds;
+    }
+
+    resultObj *getResult(int i) 
     {
         if (!self->resultcache) return NULL;
         if (i >= 0 && i < self->resultcache->numresults)
@@ -268,6 +267,29 @@
 
     /* For querying, we switch layer status ON and then back to original
        value before returning. */
+
+    int queryByFilter(mapObj *map, char *string)
+    {
+        int status;
+        int retval;
+
+        msInitQuery(&(map->query));
+
+        map->query.type = MS_QUERY_BY_FILTER;
+
+        map->query.filter = (expressionObj *) malloc(sizeof(expressionObj));
+        map->query.filter->string = strdup(string);
+	map->query.filter->type = 2000; /* MS_EXPRESSION: lot's of conflicts in mapfile.h */
+
+        map->query.layer = self->index;
+     	map->query.rect = map->extent;
+
+	status = self->status;
+	self->status = MS_ON;
+        retval = msQueryByFilter(map);
+        self->status = status;
+	return retval;
+    }
 
     int queryByAttributes(mapObj *map, char *qitem, char *qstring, int mode) 
     {
@@ -609,4 +631,9 @@
           msLayerClose(self);
         return msConnectLayer(self, connectiontype, library_str);
     }
+
+    int getClassIndex(mapObj *map, shapeObj *shape, int *classgroup=NULL, int numclasses=0) {
+        return msShapeGetClass(self, map, shape, classgroup, numclasses);
+    }
+
 }

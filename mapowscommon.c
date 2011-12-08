@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapowscommon.c 8170 2008-12-02 17:28:34Z tomkralidis $
+ * $Id: mapowscommon.c 10772 2010-11-29 18:27:02Z aboudreault $
  *
  * Project:  MapServer
  * Purpose:  OGC OWS Common Implementation for use by MapServer OGC code
@@ -42,37 +42,8 @@
 #include "mapowscommon.h"
 #include "maplibxml2.h"
 
-MS_CVSID("$Id: mapowscommon.c 8170 2008-12-02 17:28:34Z tomkralidis $")
+MS_CVSID("$Id: mapowscommon.c 10772 2010-11-29 18:27:02Z aboudreault $")
 
-/**
- * msOWSCommonNegotiateVersion()
- *
- * returns a supported version as per subclause 7.3.2
- *
- * @param requested_version the version passed by the client
- * @param supported_versions an array of supported versions
- * @param num_supported_versions size of supported_versions
- *
- * @return supported version integer, or -1 on error
- *
- */
-
-int msOWSCommonNegotiateVersion(int requested_version, int supported_versions[], int num_supported_versions) {
-  int i;
-
-  /* if version is not set return error */
-  if (! requested_version)
-    return -1;
-
-  /* return the first entry that's equal to the requested version */
-  for (i = 0; i < num_supported_versions; i++) {
-    if (supported_versions[i] == requested_version)
-      return supported_versions[i];
-  }
-
-  /* no match; calling code should throw an exception */
-  return -1;
-}
 
 
 /**
@@ -487,7 +458,7 @@ xmlNodePtr msOWSCommonExceptionReport(xmlNsPtr psNsOws, int ows_version, const c
     xmlNewProp(psRootNode, BAD_CAST "xml:lang", BAD_CAST language);
   }
 
-  xsi_schemaLocation = strdup((char *)psNsOws->href);
+  xsi_schemaLocation = msStrdup((char *)psNsOws->href);
   xsi_schemaLocation = msStringConcatenate(xsi_schemaLocation, " ");
   xsi_schemaLocation = msStringConcatenate(xsi_schemaLocation, (char *)schemas_location);
   xsi_schemaLocation = msStringConcatenate(xsi_schemaLocation, "/ows/");
@@ -563,11 +534,11 @@ xmlNodePtr msOWSCommonBoundingBox(xmlNsPtr psNsOws, const char *crs, int dimensi
   /* add attributes to the root element */
   xmlNewProp(psRootNode, BAD_CAST "crs", BAD_CAST crs);
 
-  sprintf( dim_string, "%d", dimensions );
+  snprintf( dim_string, sizeof(dim_string), "%d", dimensions );
   xmlNewProp(psRootNode, BAD_CAST "dimensions", BAD_CAST dim_string);
 
-  sprintf(LowerCorner, "%.15g %.15g", minx, miny);
-  sprintf(UpperCorner, "%.15g %.15g", maxx, maxy);
+  snprintf(LowerCorner, sizeof(LowerCorner), "%.15g %.15g", minx, miny);
+  snprintf(UpperCorner, sizeof(UpperCorner), "%.15g %.15g", maxx, maxy);
 
   /* add child elements */
   xmlNewChild(psRootNode, psNsOws,BAD_CAST "LowerCorner",BAD_CAST LowerCorner);
@@ -604,11 +575,11 @@ xmlNodePtr msOWSCommonWGS84BoundingBox(xmlNsPtr psNsOws, int dimensions, double 
   /* create element name */
   psRootNode = xmlNewNode(psNsOws, BAD_CAST "WGS84BoundingBox");
 
-  sprintf( dim_string, "%d", dimensions );
+  snprintf( dim_string, sizeof(dim_string), "%d", dimensions );
   xmlNewProp(psRootNode, BAD_CAST "dimensions", BAD_CAST dim_string);
 
-  sprintf(LowerCorner, "%.15g %.15g", minx, miny);
-  sprintf(UpperCorner, "%.15g %.15g", maxx, maxy);
+  snprintf(LowerCorner, sizeof(LowerCorner), "%.15g %.15g", minx, miny);
+  snprintf(UpperCorner, sizeof(UpperCorner), "%.15g %.15g", maxx, maxy);
 
   /* add child elements */
   xmlNewChild(psRootNode, psNsOws,BAD_CAST "LowerCorner",BAD_CAST LowerCorner);
@@ -630,11 +601,123 @@ xmlNodePtr msOWSCommonWGS84BoundingBox(xmlNsPtr psNsOws, int dimensions, double 
 
 int _validateNamespace(xmlNsPtr psNsOws) {
   char namespace_prefix[10];
-  sprintf(namespace_prefix, "%s", psNsOws->prefix);
+  snprintf(namespace_prefix, sizeof(namespace_prefix), "%s", psNsOws->prefix);
   if (strcmp(namespace_prefix, MS_OWSCOMMON_OWS_NAMESPACE_PREFIX) == 0)
     return MS_SUCCESS;
   else 
     return MS_FAILURE;
 }
 
+xmlNodePtr msOWSCommonxmlNewChildEncoded( xmlNodePtr psParent, xmlNsPtr psNs, const char* name, 
+					  const char *content, const char *encoding)
+{
+    char *encoded = NULL;
+    xmlNodePtr psNode;
+
+    if (encoding && content)
+    {
+	encoded = msGetEncodedString(content, encoding);
+	psNode =  xmlNewChild(psParent, psNs, BAD_CAST name, BAD_CAST encoded);
+	msFree(encoded);
+	return psNode;
+    }
+    else
+      return xmlNewChild(psParent, psNs, BAD_CAST name, BAD_CAST content);
+}
+
+/*
+ * Valid an xml string against an XML schema
+ * Inpired from: http://xml.developpez.com/sources/?page=validation#validate_XSD_CppCLI_2
+ * taken from tinyows.org
+ */
+int msOWSSchemaValidation(const char* xml_schema, const char* xml)
+{
+    xmlSchemaPtr schema;
+    xmlSchemaParserCtxtPtr ctxt;
+    xmlSchemaValidCtxtPtr validctxt;
+    int ret;
+    xmlDocPtr doc;
+
+    if (!xml_schema || !xml)
+      return MS_FAILURE;
+
+    xmlInitParser();
+    schema = NULL;
+    ret = -1;
+
+    /* Open XML Schema File */
+    ctxt = xmlSchemaNewParserCtxt(xml_schema);
+    /*
+    else ctxt = xmlSchemaNewMemParserCtxt(xml_schema);
+    */
+    /*
+    xmlSchemaSetParserErrors(ctxt,
+                             (xmlSchemaValidityErrorFunc) libxml2_callback,
+                             (xmlSchemaValidityWarningFunc) libxml2_callback, stderr);
+    */
+
+    schema = xmlSchemaParse(ctxt);
+    xmlSchemaFreeParserCtxt(ctxt);
+
+    /* If XML Schema hasn't been rightly loaded */
+    if (schema == NULL) {
+        xmlSchemaCleanupTypes();
+        xmlMemoryDump();
+        xmlCleanupParser();
+        return ret;
+    }
+
+    doc = xmlParseDoc((xmlChar *)xml);
+
+    if (doc != NULL) {
+        /* Loading XML Schema content */
+        validctxt = xmlSchemaNewValidCtxt(schema);
+        /*
+        xmlSchemaSetValidErrors(validctxt,
+                                (xmlSchemaValidityErrorFunc) libxml2_callback,
+                                (xmlSchemaValidityWarningFunc) libxml2_callback, stderr);
+        */
+        /* validation */
+        ret = xmlSchemaValidateDoc(validctxt, doc);
+        xmlSchemaFreeValidCtxt(validctxt);
+    }
+
+    xmlSchemaFree(schema);
+    xmlFreeDoc(doc);
+    xmlCleanupParser();
+
+    return ret;
+}
+
 #endif /* defined(USE_LIBXML2) */
+
+
+/**
+ * msOWSCommonNegotiateVersion()
+ *
+ * returns a supported version as per subclause 7.3.2
+ *
+ * @param requested_version the version passed by the client
+ * @param supported_versions an array of supported versions
+ * @param num_supported_versions size of supported_versions
+ *
+ * @return supported version integer, or -1 on error
+ *
+ */
+
+int msOWSCommonNegotiateVersion(int requested_version, int supported_versions[], int num_supported_versions) {
+  int i;
+
+  /* if version is not set return error */
+  if (! requested_version)
+    return -1;
+
+  /* return the first entry that's equal to the requested version */
+  for (i = 0; i < num_supported_versions; i++) {
+    if (supported_versions[i] == requested_version)
+      return supported_versions[i];
+  }
+
+  /* no match; calling code should throw an exception */
+  return -1;
+}

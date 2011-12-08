@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapcpl.c 7418 2008-02-29 00:02:49Z nsavard $ 
+ * $Id: mapcpl.c 10678 2010-10-28 13:38:27Z aboudreault $ 
  *
  * Project:  MapServer
  * Purpose:  Functions copied from GDAL's CPL. This file contain utility 
@@ -36,12 +36,12 @@
  * DEALINGS IN THE SOFTWARE.
  ****************************************************************************/
 
-/* $Id: mapcpl.c 7418 2008-02-29 00:02:49Z nsavard $ */
+/* $Id: mapcpl.c 10678 2010-10-28 13:38:27Z aboudreault $ */
 
 #include <assert.h>
 #include "mapserver.h"
 
-MS_CVSID("$Id: mapcpl.c 7418 2008-02-29 00:02:49Z nsavard $")
+MS_CVSID("$Id: mapcpl.c 10678 2010-10-28 13:38:27Z aboudreault $")
 
 /* should be size of largest possible filename */
 #define MS_PATH_BUF_SIZE 2048
@@ -107,8 +107,7 @@ const char *msGetBasename( const char *pszFullFilename )
 
     assert( nLength < MS_PATH_BUF_SIZE );
 
-    strncpy( szStaticResult, pszFullFilename + iFileStart, nLength );
-    szStaticResult[nLength] = '\0';
+    strlcpy( szStaticResult, pszFullFilename + iFileStart, nLength+1 );
 
     return szStaticResult;
 }

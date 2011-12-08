@@ -57,6 +57,7 @@
           <driver>GDAL/GTIFF</driver>
           <extension>tiff</extension>
           <formatOption>TILED=YES</formatOption>
+          <formatOption>TRANSPARENCY=TRUE</formatOption>
           <imageMode>FLOAT32</imageMode>
           <mimeType>image/tiff</mimeType>
           <transparent>OFF</transparent>
@@ -65,7 +66,7 @@
           <driver>AGG/PNG</driver>
           <extension>png</extension>
           <formatOption>TILED=YES</formatOption>
-          <imageMode>RGB</imageMode>
+          <imageMode>RGBA</imageMode>
           <mimeType>image/png</mimeType>
           <transparent>ON</transparent>
         </OutputFormat>

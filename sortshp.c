@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: sortshp.c 7418 2008-02-29 00:02:49Z nsavard $
+ * $Id: sortshp.c 11397 2011-03-30 20:09:01Z sdlime $
  *
  * Project:  MapServer
  * Purpose:  Command line utility to sort a shapefile based on a single 
@@ -36,7 +36,7 @@
 
 #include "mapserver.h"
 
-MS_CVSID("$Id: sortshp.c 7418 2008-02-29 00:02:49Z nsavard $")
+MS_CVSID("$Id: sortshp.c 11397 2011-03-30 20:09:01Z sdlime $")
 
 typedef struct {
   double number;
@@ -101,8 +101,10 @@ int main(int argc, char *argv[])
   /* ------------------------------------------------------------------------------- */
   if( argc != 5 ) {
       fprintf(stderr,"Syntax: sortshp [infile] [outfile] [item] [ascending|descending]\n" );
-      exit(0);
+      exit(1);
   }
+
+  msSetErrorFile("stderr", NULL);
 
   /* ------------------------------------------------------------------------------- */
   /*       Open the shapefile                                                        */
@@ -110,18 +112,18 @@ int main(int argc, char *argv[])
   inSHP = msSHPOpen(argv[1], "rb" );
   if( !inSHP ) {
     fprintf(stderr,"Unable to open %s shapefile.\n",argv[1]);
-    exit(0);
+    exit(1);
   }
   msSHPGetInfo(inSHP, &nShapes, &shpType);
 
   /* ------------------------------------------------------------------------------- */
   /*       Open the dbf file                                                         */
   /* ------------------------------------------------------------------------------- */
-  sprintf(buffer,"%s.dbf",argv[1]);
+  snprintf(buffer, sizeof(buffer), "%s.dbf",argv[1]);
   inDBF = msDBFOpen(buffer,"rb");
   if( inDBF == NULL ) {
     fprintf(stderr,"Unable to open %s XBASE file.\n",buffer);
-    exit(0);
+    exit(1);
   }
 
   num_fields = msDBFGetFieldCount(inDBF);
@@ -137,13 +139,13 @@ int main(int argc, char *argv[])
 
   if(fieldNumber < 0) {
     fprintf(stderr,"Item %s doesn't exist in %s\n",argv[3],buffer);
-    exit(0);
+    exit(1);
   }  
 
   array = (sortStruct *)malloc(sizeof(sortStruct)*num_records); /* ---- Allocate the array ---- */
   if(!array) {
     fprintf(stderr, "Unable to allocate sort array.\n");
-    exit(0);
+    exit(1);
   }
   
   /* ------------------------------------------------------------------------------- */
@@ -153,7 +155,7 @@ int main(int argc, char *argv[])
   switch (dbfField) {
   case FTString:
     for(i=0;i<num_records;i++) {
-      strcpy(array[i].string, msDBFReadStringAttribute( inDBF, i, fieldNumber));
+      strlcpy(array[i].string, msDBFReadStringAttribute( inDBF, i, fieldNumber), sizeof(array[i].string));
       array[i].index = i;
     }
 
@@ -177,15 +179,26 @@ int main(int argc, char *argv[])
     break;
   default:
       fprintf(stderr,"Data type for item %s not supported.\n",argv[3]);
-      exit(0);
+      exit(1);
   } 
   
   /* ------------------------------------------------------------------------------- */
   /*       Setup the output .shp/.shx and .dbf files                                 */
   /* ------------------------------------------------------------------------------- */
   outSHP = msSHPCreate(argv[2],shpType);
+  if( outSHP == NULL )
+  {
+      fprintf( stderr, "Failed to create file '%s'.\n", argv[2] );
+      exit( 1 );
+  }
+
   sprintf(buffer,"%s.dbf",argv[2]);
   outDBF = msDBFCreate(buffer);
+  if( outDBF == NULL )
+  {
+      fprintf( stderr, "Failed to create dbf file '%s'.\n", buffer );
+      exit( 1 );
+  }
 
   for(i=0;i<num_fields;i++) {
     dbfField = msDBFGetFieldInfo(inDBF,i,fName,&fWidth,&fnDecimals); /* ---- Get field info from in file ---- */

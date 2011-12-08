@@ -108,9 +108,9 @@ public class resultCacheObj : IDisposable {
     } 
   }
 
-  public resultCacheMemberObj getResult(int i) {
+  public resultObj getResult(int i) {
     IntPtr cPtr = mapscriptPINVOKE.resultCacheObj_getResult(swigCPtr, i);
-    resultCacheMemberObj ret = (cPtr == IntPtr.Zero) ? null : new resultCacheMemberObj(cPtr, false, ThisOwn_false());
+    resultObj ret = (cPtr == IntPtr.Zero) ? null : new resultObj(cPtr, false, ThisOwn_false());
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
     return ret;
   }

@@ -87,9 +87,9 @@ public class DBFInfo : IDisposable {
     } 
   }
 
-  public int nRecordLength {
+  public uint nRecordLength {
     get {
-      int ret = mapscriptPINVOKE.DBFInfo_nRecordLength_get(swigCPtr);
+      uint ret = mapscriptPINVOKE.DBFInfo_nRecordLength_get(swigCPtr);
       if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
       return ret;
     } 

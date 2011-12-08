@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapthread.c 9374 2009-10-01 22:23:58Z warmerdam $
+ * $Id: mapthread.c 10048 2010-04-06 16:06:21Z warmerdam $
  *
  * Project:  UMN MapServer
  * Purpose:  Support code for abstracting thread issues.
@@ -137,7 +137,7 @@ files instead.
 #include "mapserver.h"
 #include "mapthread.h"
 
-MS_CVSID("$Id: mapthread.c 9374 2009-10-01 22:23:58Z warmerdam $")
+MS_CVSID("$Id: mapthread.c 10048 2010-04-06 16:06:21Z warmerdam $")
 
 #if defined(USE_THREAD)
 static int thread_debug = 0;
@@ -259,8 +259,8 @@ void msThreadInit()
 
     if( core_lock == NULL )
         core_lock = CreateMutex( NULL, TRUE, NULL );
-    
-    WaitForSingleObject( core_lock, INFINITE );
+    else
+        WaitForSingleObject( core_lock, INFINITE );
 
     for( ; mutexes_initialized < TLOCK_STATIC_MAX; mutexes_initialized++ )
         mutex_locks[mutexes_initialized] = CreateMutex( NULL, FALSE, NULL );
