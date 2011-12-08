@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapregex.c 9154 2009-07-08 18:40:27Z aboudreault $
+ * $Id: mapregex.c 10772 2010-11-29 18:27:02Z aboudreault $
  *
  * Project:  MapServer
  * Purpose:  Regex wrapper
@@ -49,13 +49,14 @@
 #define off_t  long
 #endif
 
+#include "mapserver.h"
 #include "mapregex.h"
 #include <regex.h>
 
 MS_API_EXPORT(int) ms_regcomp(ms_regex_t *regex, const char *expr, int cflags)
 {
   /* Must free in regfree() */
-  regex_t* sys_regex = (regex_t*) malloc(sizeof(regex_t));
+  regex_t* sys_regex = (regex_t*) msSmallMalloc(sizeof(regex_t));
   regex->sys_regex = (void*) sys_regex;
   return regcomp(sys_regex, expr, cflags);
 }

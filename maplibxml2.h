@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: maplibxml2.h 7685 2008-06-17 16:01:49Z tomkralidis $
+ * $Id: maplibxml2.h 11503 2011-04-07 19:56:16Z dmorissette $
  *
  * Project:  MapServer
  * Purpose:  libxml2 convenience wrapper functions include file
@@ -36,6 +36,8 @@
 #include<libxml/tree.h>
 #include<libxml/xpath.h>
 #include<libxml/xpathInternals.h>
+#include <libxml/xmlschemas.h>
+#include <libxml/xmlschemastypes.h>
 
 xmlXPathObjectPtr msLibXml2GetXPath(xmlDocPtr doc, xmlXPathContextPtr context, xmlChar *xpath);
 

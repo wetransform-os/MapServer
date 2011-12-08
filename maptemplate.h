@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: maptemplate.h 9503 2009-10-23 04:39:51Z sdlime $
+ * $Id: maptemplate.h 11078 2011-03-05 05:20:03Z sdlime $
  *
  * Project:  MapServer
  * Purpose:  Template processing related declarations.
@@ -38,15 +38,14 @@
 #define TEMPLATE_TYPE(s)  (((strncmp("http://", s, 7) == 0) || (strncmp("https://", s, 8) == 0) || (strncmp("ftp://", s, 6)) == 0)  ? MS_URL : MS_FILE)
 #define MAXZOOM 25
 #define MINZOOM -25
+#define DEFAULT_DATE_FORMAT "%d/%b/%Y:%H:%M:%S %z"
 
 enum coordSources {NONE, FROMIMGPNT, FROMIMGBOX, FROMIMGSHAPE, FROMREFPNT, FROMUSERPNT, FROMUSERBOX, FROMUSERSHAPE, FROMBUF, FROMSCALE, FROMTILE};
 
 enum modes {BROWSE, ZOOMIN, ZOOMOUT, MAP, LEGEND, LEGENDICON, REFERENCE, SCALEBAR, COORDINATE, 
-            QUERY, QUERYMAP, NQUERY, NQUERYMAP, 
-            ITEMQUERY, ITEMQUERYMAP, ITEMNQUERY, ITEMNQUERYMAP, 
-            FEATUREQUERY, FEATUREQUERYMAP, FEATURENQUERY, FEATURENQUERYMAP, 
-            ITEMFEATUREQUERY, ITEMFEATUREQUERYMAP, ITEMFEATURENQUERY, ITEMFEATURENQUERYMAP,
-            INDEXQUERY, INDEXQUERYMAP, TILE, OWS};
+            QUERY, NQUERY, ITEMQUERY, ITEMNQUERY, 
+            FEATUREQUERY, FEATURENQUERY, ITEMFEATUREQUERY, ITEMFEATURENQUERY, 
+            INDEXQUERY, TILE, OWS, WFS};
 
 
 /* struct mapservObj
@@ -139,6 +138,7 @@ MS_DLL_EXPORT int msReturnPage(mapservObj* msObj, char* , int, char **);
 MS_DLL_EXPORT int msReturnURL(mapservObj* msObj, char*, int);
 MS_DLL_EXPORT int msReturnNestedTemplateQuery(mapservObj* msObj, char* pszMimeType, char **papszBuffer);
 MS_DLL_EXPORT int msReturnTemplateQuery(mapservObj *msObj, char* pszMimeType,  char **papszBuffer);
+MS_DLL_EXPORT int msReturnOpenLayersPage(mapservObj *mapserv);
 
 MS_DLL_EXPORT int msRedirect(char* url);
 

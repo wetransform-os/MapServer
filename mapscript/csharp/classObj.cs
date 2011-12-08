@@ -202,6 +202,18 @@ public class classObj : IDisposable {
     } 
   }
 
+  public int minfeaturesize {
+    set {
+      mapscriptPINVOKE.classObj_minfeaturesize_set(swigCPtr, value);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      int ret = mapscriptPINVOKE.classObj_minfeaturesize_get(swigCPtr);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
   public int refcount {
     get {
       int ret = mapscriptPINVOKE.classObj_refcount_get(swigCPtr);

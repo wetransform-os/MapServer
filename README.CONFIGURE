@@ -22,7 +22,7 @@ directory where you extracted the MapServer source code package and...
 
 ::
 
- $ cd mapserver-5.0.x
+ $ cd mapserver-6.0.x
  $ ./configure
  $ make
 
@@ -106,16 +106,14 @@ Optional Packages:
   --without-tiff          Disable TIFF support.
   --with-tiff[=DIR]       Include TIFF support (DIR is LibTIFF's install dir).
   --with-postgis[=ARG]    Include PostGIS Support (ARG=yes/path to pg_config)
-  --with-mygis[=ARG]      Include MyGIS Support (ARG=yes/path to my_config)
+  --with-mysql[=ARG]      Include Mysql Support (ARG=yes/path to my_config)
   --with-oraclespatial[=ARG] Include OracleSpatial Support (ARG=yes/path to
                           Oracle home)
-  --with-ming[=DIR]       Include MING/Flash Support (DIR=path to Ming
-                          directory)
   --without-wms           Disable OGC WMS Compatibility (enabled by default).
   --with-wfs              Enable OGC WFS Server Support (OGR+PROJ4 required).
   --with-wcs              Enable OGC WCS Server Support (GDAL+PROJ4 required).
-  --with-wmsclient        Enable OGC WMS Client Connections (PROJ4 and libcurl
-                          required).
+  --with-wmsclient        Enable OGC WMS Client Connections (PROJ4, libcurl and
+                          GDAL required).
   --with-wfsclient        Enable OGC WFS Client Connections (PROJ4, libcurl and
                           OGR required).
   --with-sos              Enable OGC SOS Server Support (libxml2 and PROJ4 and
@@ -165,7 +163,11 @@ GD and Support Libraries:
 
 - The GD library is the only component that is not optional.  
   Version 2.0.16 or more recent is required, and GD 2.0.35 or higher is
-  strongly recommended (see http://www.boutell.com/gd/ .
+  strongly recommended. 
+
+- To get the GD source code: The official home of the GD library is
+  http://www.libgd.org/ and in case it is down a copy of recent GD releases
+  is provided as a convenience at http://download.osgeo.org/mapserver/libgd/
 
 - Version 2.0.29 or more recent is required for the LABEL FOLLOW option 
   to work (curved labels, added in 4.10).
@@ -414,15 +416,15 @@ PostGIS Support:
 
 
 
-MyGIS (MySQL v3.xx SFSQL) Support:
+Mysql (MySQL v3.xx SFSQL) Support:
 ----------------------------------
 
 ::
 
-  --with-mygis[=ARG]      Include MyGIS Support (ARG=yes/path to my_config)
+  --with-mysql[=ARG]      Include Mysql Support (ARG=yes/path to my_config)
 
-- MyGIS provides OGC SFSQL support using MySQl v3.xx.  This option is 
-  disabled by default and can be enabled using the --with-mygis option.
+- Mysql provides join support using MySQl v3.xx.  This option is 
+  disabled by default and can be enabled using the --with-mysql option.
 
 Oracle Spatial Support:
 -----------------------
@@ -444,47 +446,16 @@ Flash/SWF/Ming Output Support:
 
 ::
 
-  --with-ming[=DIR]       Include MING/Flash Support (DIR=path to Ming
-                          directory)
-
-- Support for generating Flash output is enabled only if requested.  Use
-  the --with-ming switch to request it if the ming libraries have been 
-  installed in the default path.  To use a local ming build also provide the
-  path to the ming build directory.
-
-- The IMAGETYPE for Flash output is SWF.  
-
-More information on the MING library should be available at http://www.opaque.net/ming/
-
-
+Flash support has been removed since MapServer 6.0 due to lack of support and/or
+funding. Get in touch with the mapserver team if this is something you wish to sponsor.
 
 PDF output support:
 -------------------
 
 ::
 
-  --without-pdf           Disable PDF support.
-  --with-pdf[=DIR]        Include PDF support (DIR is PDFlib's install dir).
-
-- Support for PDF output using PDFLib (http://www.pdflib.com/)
-  is disabled by default and can be enabled using the --with-pdf option.
-
-- If PDFLib is installed in the default system directories then using 
-  --with-pdf with no argument should be enough.  If not then pass the 
-  full path to the PDFLib installation directory.
-  e.g.
-
-      ./configure ..... --with-pdf=/usr/local
-
-IMPORTANT NOTE: PDFLib comes bundled with and is built by default using
-its own internal copy of libpng and zlib.  The PDFLib internal copy of
-those libpng and zlib are very likely of different versions from the
-ones used by the GD library.  Loading both versions could lead to 
-crashes or instability of your MapServer or MapScript installation.  
-For this reason you should make sure that your PDFLib is configured 
-using '--with-pnglib --with-zlib' which will force PDFLib to use the 
-system verison of libpng and zlib.
-
+PDF support has been transitionned to use the cairo rendering backend. Use --with-cairo
+to enable it.
 
 CAIRO Support:
 --------------
@@ -520,14 +491,14 @@ OGC WMS Client Support:
 
 ::
 
-  --with-wmsclient        Enable OGC WMS Client Connections (PROJ4 and libcurl
-                          required).
+  --with-wmsclient        Enable OGC WMS Client Connections (PROJ4, libcurl and
+                          GDAL required).
 
 - This option enables MapServer's 'CONNECTIONTYPE WMS' to include layers
   from remote WMS servers in MapServer applications.
-  It requires PROJ4, libcurl (see  --with-curl-config option below) and OGR.
-  GDAL is optional but highly recommended in order to support 
-  reprojection of layers obtained from remote WMS servers.
+  It requires PROJ4, libcurl (see  --with-curl-config option below) and GDAL.
+  GDAL is required in order to support reprojection of layers obtained from 
+  remote WMS servers.
 
 - See the MapServer WMS Client HOWTO for more details at 
   http://mapserver.gis.umn.edu/docs/howto/wms_client
@@ -803,7 +774,7 @@ Java Mapscript Module:
                      http://trac.osgeo.org/mapserver/tickets/1209
 
 ----------------
-$Id: README.CONFIGURE 10306 2010-07-08 20:07:15Z dmorissette $
+$Id: README.CONFIGURE 11680 2011-05-12 13:07:06Z dmorissette $
 ----------------
 
 

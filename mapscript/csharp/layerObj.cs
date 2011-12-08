@@ -288,6 +288,18 @@ public class layerObj : IDisposable {
     } 
   }
 
+  public int minfeaturesize {
+    set {
+      mapscriptPINVOKE.layerObj_minfeaturesize_set(swigCPtr, value);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      int ret = mapscriptPINVOKE.layerObj_minfeaturesize_get(swigCPtr);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
   public double labelminscaledenom {
     set {
       mapscriptPINVOKE.layerObj_labelminscaledenom_set(swigCPtr, value);
@@ -355,6 +367,18 @@ public class layerObj : IDisposable {
     } 
     get {
       int ret = mapscriptPINVOKE.layerObj_maxfeatures_get(swigCPtr);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public int startindex {
+    set {
+      mapscriptPINVOKE.layerObj_startindex_set(swigCPtr, value);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      int ret = mapscriptPINVOKE.layerObj_startindex_get(swigCPtr);
       if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
       return ret;
     } 
@@ -591,6 +615,24 @@ public class layerObj : IDisposable {
     } 
   }
 
+  public hashTableObj bindvals {
+    get {
+      IntPtr cPtr = mapscriptPINVOKE.layerObj_bindvals_get(swigCPtr);
+      hashTableObj ret = (cPtr == IntPtr.Zero) ? null : new hashTableObj(cPtr, false, ThisOwn_false());
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public clusterObj cluster {
+    get {
+      IntPtr cPtr = mapscriptPINVOKE.layerObj_cluster_get(swigCPtr);
+      clusterObj ret = (cPtr == IntPtr.Zero) ? null : new clusterObj(cPtr, false, ThisOwn_false());
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
   public int opacity {
     set {
       mapscriptPINVOKE.layerObj_opacity_set(swigCPtr, value);
@@ -719,21 +761,9 @@ public class layerObj : IDisposable {
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
   }
 
-  public shapeObj getFeature(int shapeindex, int tileindex) {
-    IntPtr cPtr = mapscriptPINVOKE.layerObj_getFeature(swigCPtr, shapeindex, tileindex);
+  public shapeObj getShape(resultObj record) {
+    IntPtr cPtr = mapscriptPINVOKE.layerObj_getShape(swigCPtr, resultObj.getCPtr(record));
     shapeObj ret = (cPtr == IntPtr.Zero) ? null : new shapeObj(cPtr, true, ThisOwn_true());
-    if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-    return ret;
-  }
-
-  public int getShape(shapeObj shape, int tileindex, int shapeindex) {
-    int ret = mapscriptPINVOKE.layerObj_getShape(swigCPtr, shapeObj.getCPtr(shape), tileindex, shapeindex);
-    if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-    return ret;
-  }
-
-  public int resultsGetShape(shapeObj shape, int shapeindex, int tileindex) {
-    int ret = mapscriptPINVOKE.layerObj_resultsGetShape(swigCPtr, shapeObj.getCPtr(shape), shapeindex, tileindex);
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
     return ret;
   }
@@ -744,9 +774,16 @@ public class layerObj : IDisposable {
     return ret;
   }
 
-  public resultCacheMemberObj getResult(int i) {
+  public rectObj getResultsBounds() {
+    IntPtr cPtr = mapscriptPINVOKE.layerObj_getResultsBounds(swigCPtr);
+    rectObj ret = (cPtr == IntPtr.Zero) ? null : new rectObj(cPtr, true, ThisOwn_true());
+    if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public resultObj getResult(int i) {
     IntPtr cPtr = mapscriptPINVOKE.layerObj_getResult(swigCPtr, i);
-    resultCacheMemberObj ret = (cPtr == IntPtr.Zero) ? null : new resultCacheMemberObj(cPtr, false, ThisOwn_false());
+    resultObj ret = (cPtr == IntPtr.Zero) ? null : new resultObj(cPtr, false, ThisOwn_false());
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
     return ret;
   }
@@ -772,6 +809,12 @@ public class layerObj : IDisposable {
 
   public int drawQuery(mapObj map, imageObj image) {
     int ret = mapscriptPINVOKE.layerObj_drawQuery(swigCPtr, mapObj.getCPtr(map), imageObj.getCPtr(image));
+    if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public int queryByFilter(mapObj map, string arg1) {
+    int ret = mapscriptPINVOKE.layerObj_queryByFilter(swigCPtr, mapObj.getCPtr(map), arg1);
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
     return ret;
   }
@@ -987,6 +1030,12 @@ public class layerObj : IDisposable {
 
   public int setConnectionType(int connectiontype, string library_str) {
     int ret = mapscriptPINVOKE.layerObj_setConnectionType(swigCPtr, connectiontype, library_str);
+    if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public int getClassIndex(mapObj map, shapeObj shape, SWIGTYPE_p_int classgroup, int numclasses) {
+    int ret = mapscriptPINVOKE.layerObj_getClassIndex(swigCPtr, mapObj.getCPtr(map), shapeObj.getCPtr(shape), SWIGTYPE_p_int.getCPtr(classgroup), numclasses);
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
     return ret;
   }

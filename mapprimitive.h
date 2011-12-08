@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapprimitive.h 9093 2009-06-07 09:52:59Z tbonfort $
+ * $Id: mapprimitive.h 11080 2011-03-05 16:41:32Z tamas $
  *
  * Project:  MapServer
  * Purpose:  Declarations for rectObj, pointObj, lineObj, shapeObj, etc.
@@ -56,7 +56,9 @@ typedef struct {
 %immutable;
 #endif
   int numpoints;
+#ifndef SWIG
   pointObj *point;
+#endif
 #ifdef SWIG
 %mutable;
 #endif
@@ -68,10 +70,9 @@ typedef struct {
 #endif
   int numlines;
   int numvalues;
+#ifndef SWIG
   lineObj *line;
   char **values;
-
-#ifndef SWIG
   void *geometry;
   void *renderer_cache;
 #endif
@@ -87,6 +88,8 @@ typedef struct {
   int classindex;
   char *text;
   
+  int scratch;
+  int resultindex; /* index within a query result set */
 } shapeObj;
 
 typedef lineObj multipointObj;

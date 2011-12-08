@@ -3,7 +3,7 @@ import edu.umn.gis.mapscript.*;
 public class QueryByAttributeUnicode {
 	public static void main(String[] args)  {
 
-		String filter="/Südliche Weinstraße/";
+		String filter="/SÃ¼dliche WeinstraÃŸe/";
 		if (args.length == 2) {
 			filter=args[1];
 		}
@@ -20,12 +20,11 @@ public class QueryByAttributeUnicode {
 			layer.queryByAttributes(map,"KREIS_NAME", filter, mapscriptConstants.MS_MULTIPLE);
 			layer.open();
 
-			resultCacheMemberObj result = layer.getResult(0);
+			resultObj result = layer.getResult(0);
 			if (result==null) {
-				System.out.println("Error: no results found, resultCacheMemberObj is null!");
+				System.out.println("Error: no results found, resultObj is null!");
 			} else {
-				shapeObj shp = new shapeObj( layer.getType().swigValue() );
-				layer.getShape(shp, result.getTileindex(), result.getShapeindex());
+				shapeObj shp = layer.getShape(result);
 				for (int z = 0; z < shp.getNumvalues(); z++) {
 					System.out.println("shp.value[" + z + "]=" + shp.getValue(z));
 				}

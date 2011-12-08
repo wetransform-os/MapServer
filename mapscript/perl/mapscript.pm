@@ -63,6 +63,7 @@ package mapscript;
 *msIO_installStdoutToBuffer = *mapscriptc::msIO_installStdoutToBuffer;
 *msIO_installStdinFromBuffer = *mapscriptc::msIO_installStdinFromBuffer;
 *msIO_stripStdoutBufferContentType = *mapscriptc::msIO_stripStdoutBufferContentType;
+*msIO_stripStdoutBufferContentHeaders = *mapscriptc::msIO_stripStdoutBufferContentHeaders;
 *msIO_getStdoutBufferString = *mapscriptc::msIO_getStdoutBufferString;
 *msIO_getStdoutBufferBytes = *mapscriptc::msIO_getStdoutBufferBytes;
 
@@ -150,6 +151,54 @@ sub ACQUIRE {
 }
 
 
+############# Class : mapscript::clusterObj ##############
+
+package mapscript::clusterObj;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( mapscript );
+%OWNER = ();
+%ITERATORS = ();
+*swig_maxdistance_get = *mapscriptc::clusterObj_maxdistance_get;
+*swig_maxdistance_set = *mapscriptc::clusterObj_maxdistance_set;
+*swig_buffer_get = *mapscriptc::clusterObj_buffer_get;
+*swig_buffer_set = *mapscriptc::clusterObj_buffer_set;
+*swig_region_get = *mapscriptc::clusterObj_region_get;
+*swig_region_set = *mapscriptc::clusterObj_region_set;
+*updateFromString = *mapscriptc::clusterObj_updateFromString;
+*setGroup = *mapscriptc::clusterObj_setGroup;
+*getGroupString = *mapscriptc::clusterObj_getGroupString;
+*setFilter = *mapscriptc::clusterObj_setFilter;
+*getFilterString = *mapscriptc::clusterObj_getFilterString;
+sub new {
+    my $pkg = shift;
+    my $self = mapscriptc::new_clusterObj(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        mapscriptc::delete_clusterObj($self);
+        delete $OWNER{$self};
+    }
+}
+
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
 ############# Class : mapscript::outputFormatObj ##############
 
 package mapscript::outputFormatObj;
@@ -181,8 +230,6 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *swig_refcount_set = *mapscriptc::outputFormatObj_refcount_set;
 *swig_inmapfile_get = *mapscriptc::outputFormatObj_inmapfile_get;
 *swig_inmapfile_set = *mapscriptc::outputFormatObj_inmapfile_set;
-*swig_vtable_get = *mapscriptc::outputFormatObj_vtable_get;
-*swig_vtable_set = *mapscriptc::outputFormatObj_vtable_set;
 sub new {
     my $pkg = shift;
     my $self = mapscriptc::new_outputFormatObj(@_);
@@ -205,6 +252,7 @@ sub DESTROY {
 *setOption = *mapscriptc::outputFormatObj_setOption;
 *validate = *mapscriptc::outputFormatObj_validate;
 *getOption = *mapscriptc::outputFormatObj_getOption;
+*attachDevice = *mapscriptc::outputFormatObj_attachDevice;
 sub DISOWN {
     my $self = shift;
     my $ptr = tied(%$self);
@@ -266,123 +314,6 @@ sub ACQUIRE {
 }
 
 
-############# Class : mapscript::labelObj ##############
-
-package mapscript::labelObj;
-use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( mapscript );
-%OWNER = ();
-%ITERATORS = ();
-*swig_font_get = *mapscriptc::labelObj_font_get;
-*swig_font_set = *mapscriptc::labelObj_font_set;
-*swig_type_get = *mapscriptc::labelObj_type_get;
-*swig_type_set = *mapscriptc::labelObj_type_set;
-*swig_color_get = *mapscriptc::labelObj_color_get;
-*swig_color_set = *mapscriptc::labelObj_color_set;
-*swig_outlinecolor_get = *mapscriptc::labelObj_outlinecolor_get;
-*swig_outlinecolor_set = *mapscriptc::labelObj_outlinecolor_set;
-*swig_outlinewidth_get = *mapscriptc::labelObj_outlinewidth_get;
-*swig_outlinewidth_set = *mapscriptc::labelObj_outlinewidth_set;
-*swig_shadowcolor_get = *mapscriptc::labelObj_shadowcolor_get;
-*swig_shadowcolor_set = *mapscriptc::labelObj_shadowcolor_set;
-*swig_shadowsizex_get = *mapscriptc::labelObj_shadowsizex_get;
-*swig_shadowsizex_set = *mapscriptc::labelObj_shadowsizex_set;
-*swig_shadowsizey_get = *mapscriptc::labelObj_shadowsizey_get;
-*swig_shadowsizey_set = *mapscriptc::labelObj_shadowsizey_set;
-*swig_backgroundcolor_get = *mapscriptc::labelObj_backgroundcolor_get;
-*swig_backgroundcolor_set = *mapscriptc::labelObj_backgroundcolor_set;
-*swig_backgroundshadowcolor_get = *mapscriptc::labelObj_backgroundshadowcolor_get;
-*swig_backgroundshadowcolor_set = *mapscriptc::labelObj_backgroundshadowcolor_set;
-*swig_backgroundshadowsizex_get = *mapscriptc::labelObj_backgroundshadowsizex_get;
-*swig_backgroundshadowsizex_set = *mapscriptc::labelObj_backgroundshadowsizex_set;
-*swig_backgroundshadowsizey_get = *mapscriptc::labelObj_backgroundshadowsizey_get;
-*swig_backgroundshadowsizey_set = *mapscriptc::labelObj_backgroundshadowsizey_set;
-*swig_size_get = *mapscriptc::labelObj_size_get;
-*swig_size_set = *mapscriptc::labelObj_size_set;
-*swig_minsize_get = *mapscriptc::labelObj_minsize_get;
-*swig_minsize_set = *mapscriptc::labelObj_minsize_set;
-*swig_maxsize_get = *mapscriptc::labelObj_maxsize_get;
-*swig_maxsize_set = *mapscriptc::labelObj_maxsize_set;
-*swig_position_get = *mapscriptc::labelObj_position_get;
-*swig_position_set = *mapscriptc::labelObj_position_set;
-*swig_offsetx_get = *mapscriptc::labelObj_offsetx_get;
-*swig_offsetx_set = *mapscriptc::labelObj_offsetx_set;
-*swig_offsety_get = *mapscriptc::labelObj_offsety_get;
-*swig_offsety_set = *mapscriptc::labelObj_offsety_set;
-*swig_angle_get = *mapscriptc::labelObj_angle_get;
-*swig_angle_set = *mapscriptc::labelObj_angle_set;
-*swig_autoangle_get = *mapscriptc::labelObj_autoangle_get;
-*swig_autoangle_set = *mapscriptc::labelObj_autoangle_set;
-*swig_autofollow_get = *mapscriptc::labelObj_autofollow_get;
-*swig_autofollow_set = *mapscriptc::labelObj_autofollow_set;
-*swig_buffer_get = *mapscriptc::labelObj_buffer_get;
-*swig_buffer_set = *mapscriptc::labelObj_buffer_set;
-*swig_antialias_get = *mapscriptc::labelObj_antialias_get;
-*swig_antialias_set = *mapscriptc::labelObj_antialias_set;
-*swig_align_get = *mapscriptc::labelObj_align_get;
-*swig_align_set = *mapscriptc::labelObj_align_set;
-*swig_wrap_get = *mapscriptc::labelObj_wrap_get;
-*swig_wrap_set = *mapscriptc::labelObj_wrap_set;
-*swig_maxlength_get = *mapscriptc::labelObj_maxlength_get;
-*swig_maxlength_set = *mapscriptc::labelObj_maxlength_set;
-*swig_minlength_get = *mapscriptc::labelObj_minlength_get;
-*swig_minlength_set = *mapscriptc::labelObj_minlength_set;
-*swig_space_size_10_get = *mapscriptc::labelObj_space_size_10_get;
-*swig_space_size_10_set = *mapscriptc::labelObj_space_size_10_set;
-*swig_minfeaturesize_get = *mapscriptc::labelObj_minfeaturesize_get;
-*swig_minfeaturesize_set = *mapscriptc::labelObj_minfeaturesize_set;
-*swig_autominfeaturesize_get = *mapscriptc::labelObj_autominfeaturesize_get;
-*swig_autominfeaturesize_set = *mapscriptc::labelObj_autominfeaturesize_set;
-*swig_minscaledenom_get = *mapscriptc::labelObj_minscaledenom_get;
-*swig_minscaledenom_set = *mapscriptc::labelObj_minscaledenom_set;
-*swig_maxscaledenom_get = *mapscriptc::labelObj_maxscaledenom_get;
-*swig_maxscaledenom_set = *mapscriptc::labelObj_maxscaledenom_set;
-*swig_mindistance_get = *mapscriptc::labelObj_mindistance_get;
-*swig_mindistance_set = *mapscriptc::labelObj_mindistance_set;
-*swig_repeatdistance_get = *mapscriptc::labelObj_repeatdistance_get;
-*swig_repeatdistance_set = *mapscriptc::labelObj_repeatdistance_set;
-*swig_partials_get = *mapscriptc::labelObj_partials_get;
-*swig_partials_set = *mapscriptc::labelObj_partials_set;
-*swig_force_get = *mapscriptc::labelObj_force_get;
-*swig_force_set = *mapscriptc::labelObj_force_set;
-*swig_encoding_get = *mapscriptc::labelObj_encoding_get;
-*swig_encoding_set = *mapscriptc::labelObj_encoding_set;
-*swig_priority_get = *mapscriptc::labelObj_priority_get;
-*swig_priority_set = *mapscriptc::labelObj_priority_set;
-*updateFromString = *mapscriptc::labelObj_updateFromString;
-*removeBinding = *mapscriptc::labelObj_removeBinding;
-*getBinding = *mapscriptc::labelObj_getBinding;
-*setBinding = *mapscriptc::labelObj_setBinding;
-sub new {
-    my $pkg = shift;
-    my $self = mapscriptc::new_labelObj(@_);
-    bless $self, $pkg if defined($self);
-}
-
-sub DESTROY {
-    return unless $_[0]->isa('HASH');
-    my $self = tied(%{$_[0]});
-    return unless defined $self;
-    delete $ITERATORS{$self};
-    if (exists $OWNER{$self}) {
-        mapscriptc::delete_labelObj($self);
-        delete $OWNER{$self};
-    }
-}
-
-sub DISOWN {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    delete $OWNER{$ptr};
-}
-
-sub ACQUIRE {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    $OWNER{$ptr} = 1;
-}
-
-
 ############# Class : mapscript::webObj ##############
 
 package mapscript::webObj;
@@ -396,6 +327,8 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *swig_imagepath_set = *mapscriptc::webObj_imagepath_set;
 *swig_imageurl_get = *mapscriptc::webObj_imageurl_get;
 *swig_imageurl_set = *mapscriptc::webObj_imageurl_set;
+*swig_temppath_get = *mapscriptc::webObj_temppath_get;
+*swig_temppath_set = *mapscriptc::webObj_temppath_set;
 *swig_map_get = *mapscriptc::webObj_map_get;
 *swig_map_set = *mapscriptc::webObj_map_set;
 *swig_template_get = *mapscriptc::webObj_template_get;
@@ -572,6 +505,117 @@ sub ACQUIRE {
 }
 
 
+############# Class : mapscript::labelObj ##############
+
+package mapscript::labelObj;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( mapscript );
+%OWNER = ();
+%ITERATORS = ();
+*swig_font_get = *mapscriptc::labelObj_font_get;
+*swig_font_set = *mapscriptc::labelObj_font_set;
+*swig_type_get = *mapscriptc::labelObj_type_get;
+*swig_type_set = *mapscriptc::labelObj_type_set;
+*swig_color_get = *mapscriptc::labelObj_color_get;
+*swig_color_set = *mapscriptc::labelObj_color_set;
+*swig_outlinecolor_get = *mapscriptc::labelObj_outlinecolor_get;
+*swig_outlinecolor_set = *mapscriptc::labelObj_outlinecolor_set;
+*swig_outlinewidth_get = *mapscriptc::labelObj_outlinewidth_get;
+*swig_outlinewidth_set = *mapscriptc::labelObj_outlinewidth_set;
+*swig_shadowcolor_get = *mapscriptc::labelObj_shadowcolor_get;
+*swig_shadowcolor_set = *mapscriptc::labelObj_shadowcolor_set;
+*swig_shadowsizex_get = *mapscriptc::labelObj_shadowsizex_get;
+*swig_shadowsizex_set = *mapscriptc::labelObj_shadowsizex_set;
+*swig_shadowsizey_get = *mapscriptc::labelObj_shadowsizey_get;
+*swig_shadowsizey_set = *mapscriptc::labelObj_shadowsizey_set;
+*swig_size_get = *mapscriptc::labelObj_size_get;
+*swig_size_set = *mapscriptc::labelObj_size_set;
+*swig_minsize_get = *mapscriptc::labelObj_minsize_get;
+*swig_minsize_set = *mapscriptc::labelObj_minsize_set;
+*swig_maxsize_get = *mapscriptc::labelObj_maxsize_get;
+*swig_maxsize_set = *mapscriptc::labelObj_maxsize_set;
+*swig_position_get = *mapscriptc::labelObj_position_get;
+*swig_position_set = *mapscriptc::labelObj_position_set;
+*swig_offsetx_get = *mapscriptc::labelObj_offsetx_get;
+*swig_offsetx_set = *mapscriptc::labelObj_offsetx_set;
+*swig_offsety_get = *mapscriptc::labelObj_offsety_get;
+*swig_offsety_set = *mapscriptc::labelObj_offsety_set;
+*swig_angle_get = *mapscriptc::labelObj_angle_get;
+*swig_angle_set = *mapscriptc::labelObj_angle_set;
+*swig_anglemode_get = *mapscriptc::labelObj_anglemode_get;
+*swig_anglemode_set = *mapscriptc::labelObj_anglemode_set;
+*swig_buffer_get = *mapscriptc::labelObj_buffer_get;
+*swig_buffer_set = *mapscriptc::labelObj_buffer_set;
+*swig_antialias_get = *mapscriptc::labelObj_antialias_get;
+*swig_antialias_set = *mapscriptc::labelObj_antialias_set;
+*swig_align_get = *mapscriptc::labelObj_align_get;
+*swig_align_set = *mapscriptc::labelObj_align_set;
+*swig_wrap_get = *mapscriptc::labelObj_wrap_get;
+*swig_wrap_set = *mapscriptc::labelObj_wrap_set;
+*swig_maxlength_get = *mapscriptc::labelObj_maxlength_get;
+*swig_maxlength_set = *mapscriptc::labelObj_maxlength_set;
+*swig_minlength_get = *mapscriptc::labelObj_minlength_get;
+*swig_minlength_set = *mapscriptc::labelObj_minlength_set;
+*swig_space_size_10_get = *mapscriptc::labelObj_space_size_10_get;
+*swig_space_size_10_set = *mapscriptc::labelObj_space_size_10_set;
+*swig_minfeaturesize_get = *mapscriptc::labelObj_minfeaturesize_get;
+*swig_minfeaturesize_set = *mapscriptc::labelObj_minfeaturesize_set;
+*swig_autominfeaturesize_get = *mapscriptc::labelObj_autominfeaturesize_get;
+*swig_autominfeaturesize_set = *mapscriptc::labelObj_autominfeaturesize_set;
+*swig_minscaledenom_get = *mapscriptc::labelObj_minscaledenom_get;
+*swig_minscaledenom_set = *mapscriptc::labelObj_minscaledenom_set;
+*swig_maxscaledenom_get = *mapscriptc::labelObj_maxscaledenom_get;
+*swig_maxscaledenom_set = *mapscriptc::labelObj_maxscaledenom_set;
+*swig_mindistance_get = *mapscriptc::labelObj_mindistance_get;
+*swig_mindistance_set = *mapscriptc::labelObj_mindistance_set;
+*swig_repeatdistance_get = *mapscriptc::labelObj_repeatdistance_get;
+*swig_repeatdistance_set = *mapscriptc::labelObj_repeatdistance_set;
+*swig_maxoverlapangle_get = *mapscriptc::labelObj_maxoverlapangle_get;
+*swig_maxoverlapangle_set = *mapscriptc::labelObj_maxoverlapangle_set;
+*swig_partials_get = *mapscriptc::labelObj_partials_get;
+*swig_partials_set = *mapscriptc::labelObj_partials_set;
+*swig_force_get = *mapscriptc::labelObj_force_get;
+*swig_force_set = *mapscriptc::labelObj_force_set;
+*swig_encoding_get = *mapscriptc::labelObj_encoding_get;
+*swig_encoding_set = *mapscriptc::labelObj_encoding_set;
+*swig_priority_get = *mapscriptc::labelObj_priority_get;
+*swig_priority_set = *mapscriptc::labelObj_priority_set;
+*swig_numstyles_get = *mapscriptc::labelObj_numstyles_get;
+*swig_numstyles_set = *mapscriptc::labelObj_numstyles_set;
+*updateFromString = *mapscriptc::labelObj_updateFromString;
+*removeBinding = *mapscriptc::labelObj_removeBinding;
+*getBinding = *mapscriptc::labelObj_getBinding;
+*setBinding = *mapscriptc::labelObj_setBinding;
+sub new {
+    my $pkg = shift;
+    my $self = mapscriptc::new_labelObj(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        mapscriptc::delete_labelObj($self);
+        delete $OWNER{$self};
+    }
+}
+
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
 ############# Class : mapscript::classObj ##############
 
 package mapscript::classObj;
@@ -601,6 +645,8 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *swig_minscaledenom_set = *mapscriptc::classObj_minscaledenom_set;
 *swig_maxscaledenom_get = *mapscriptc::classObj_maxscaledenom_get;
 *swig_maxscaledenom_set = *mapscriptc::classObj_maxscaledenom_set;
+*swig_minfeaturesize_get = *mapscriptc::classObj_minfeaturesize_get;
+*swig_minfeaturesize_set = *mapscriptc::classObj_minfeaturesize_set;
 *swig_refcount_get = *mapscriptc::classObj_refcount_get;
 *swig_refcount_set = *mapscriptc::classObj_refcount_set;
 *swig_layer_get = *mapscriptc::classObj_layer_get;
@@ -695,6 +741,8 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *swig_poly_set = *mapscriptc::labelCacheMemberObj_poly_set;
 *swig_status_get = *mapscriptc::labelCacheMemberObj_status_get;
 *swig_status_set = *mapscriptc::labelCacheMemberObj_status_set;
+*swig_markerid_get = *mapscriptc::labelCacheMemberObj_markerid_get;
+*swig_markerid_set = *mapscriptc::labelCacheMemberObj_markerid_set;
 sub new {
     my $pkg = shift;
     my $self = mapscriptc::new_labelCacheMemberObj(@_);
@@ -857,22 +905,24 @@ sub ACQUIRE {
 }
 
 
-############# Class : mapscript::resultCacheMemberObj ##############
+############# Class : mapscript::resultObj ##############
 
-package mapscript::resultCacheMemberObj;
+package mapscript::resultObj;
 use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 @ISA = qw( mapscript );
 %OWNER = ();
 %ITERATORS = ();
-*swig_shapeindex_get = *mapscriptc::resultCacheMemberObj_shapeindex_get;
-*swig_shapeindex_set = *mapscriptc::resultCacheMemberObj_shapeindex_set;
-*swig_tileindex_get = *mapscriptc::resultCacheMemberObj_tileindex_get;
-*swig_tileindex_set = *mapscriptc::resultCacheMemberObj_tileindex_set;
-*swig_classindex_get = *mapscriptc::resultCacheMemberObj_classindex_get;
-*swig_classindex_set = *mapscriptc::resultCacheMemberObj_classindex_set;
+*swig_shapeindex_get = *mapscriptc::resultObj_shapeindex_get;
+*swig_shapeindex_set = *mapscriptc::resultObj_shapeindex_set;
+*swig_tileindex_get = *mapscriptc::resultObj_tileindex_get;
+*swig_tileindex_set = *mapscriptc::resultObj_tileindex_set;
+*swig_resultindex_get = *mapscriptc::resultObj_resultindex_get;
+*swig_resultindex_set = *mapscriptc::resultObj_resultindex_set;
+*swig_classindex_get = *mapscriptc::resultObj_classindex_get;
+*swig_classindex_set = *mapscriptc::resultObj_classindex_set;
 sub new {
     my $pkg = shift;
-    my $self = mapscriptc::new_resultCacheMemberObj(@_);
+    my $self = mapscriptc::new_resultObj(@_);
     bless $self, $pkg if defined($self);
 }
 
@@ -882,7 +932,7 @@ sub DESTROY {
     return unless defined $self;
     delete $ITERATORS{$self};
     if (exists $OWNER{$self}) {
-        mapscriptc::delete_resultCacheMemberObj($self);
+        mapscriptc::delete_resultObj($self);
         delete $OWNER{$self};
     }
 }
@@ -1236,6 +1286,8 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *swig_minscaledenom_set = *mapscriptc::layerObj_minscaledenom_set;
 *swig_maxscaledenom_get = *mapscriptc::layerObj_maxscaledenom_get;
 *swig_maxscaledenom_set = *mapscriptc::layerObj_maxscaledenom_set;
+*swig_minfeaturesize_get = *mapscriptc::layerObj_minfeaturesize_get;
+*swig_minfeaturesize_set = *mapscriptc::layerObj_minfeaturesize_set;
 *swig_labelminscaledenom_get = *mapscriptc::layerObj_labelminscaledenom_get;
 *swig_labelminscaledenom_set = *mapscriptc::layerObj_labelminscaledenom_set;
 *swig_labelmaxscaledenom_get = *mapscriptc::layerObj_labelmaxscaledenom_get;
@@ -1248,6 +1300,8 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *swig_sizeunits_set = *mapscriptc::layerObj_sizeunits_set;
 *swig_maxfeatures_get = *mapscriptc::layerObj_maxfeatures_get;
 *swig_maxfeatures_set = *mapscriptc::layerObj_maxfeatures_set;
+*swig_startindex_get = *mapscriptc::layerObj_startindex_get;
+*swig_startindex_set = *mapscriptc::layerObj_startindex_set;
 *swig_offsite_get = *mapscriptc::layerObj_offsite_get;
 *swig_offsite_set = *mapscriptc::layerObj_offsite_set;
 *swig_transform_get = *mapscriptc::layerObj_transform_get;
@@ -1288,6 +1342,10 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *swig_metadata_set = *mapscriptc::layerObj_metadata_set;
 *swig_validation_get = *mapscriptc::layerObj_validation_get;
 *swig_validation_set = *mapscriptc::layerObj_validation_set;
+*swig_bindvals_get = *mapscriptc::layerObj_bindvals_get;
+*swig_bindvals_set = *mapscriptc::layerObj_bindvals_set;
+*swig_cluster_get = *mapscriptc::layerObj_cluster_get;
+*swig_cluster_set = *mapscriptc::layerObj_cluster_set;
 *swig_opacity_get = *mapscriptc::layerObj_opacity_get;
 *swig_opacity_set = *mapscriptc::layerObj_opacity_set;
 *swig_dump_get = *mapscriptc::layerObj_dump_get;
@@ -1338,10 +1396,9 @@ sub insertClass {
 *whichShapes = *mapscriptc::layerObj_whichShapes;
 *nextShape = *mapscriptc::layerObj_nextShape;
 *close = *mapscriptc::layerObj_close;
-*getFeature = *mapscriptc::layerObj_getFeature;
 *getShape = *mapscriptc::layerObj_getShape;
-*resultsGetShape = *mapscriptc::layerObj_resultsGetShape;
 *getNumResults = *mapscriptc::layerObj_getNumResults;
+*getResultsBounds = *mapscriptc::layerObj_getResultsBounds;
 *getResult = *mapscriptc::layerObj_getResult;
 sub getClass {
         my $clazz = mapscriptc::layerObj_getClass(@_);
@@ -1355,6 +1412,7 @@ sub getClass {
 *getItem = *mapscriptc::layerObj_getItem;
 *draw = *mapscriptc::layerObj_draw;
 *drawQuery = *mapscriptc::layerObj_drawQuery;
+*queryByFilter = *mapscriptc::layerObj_queryByFilter;
 *queryByAttributes = *mapscriptc::layerObj_queryByAttributes;
 *queryByPoint = *mapscriptc::layerObj_queryByPoint;
 *queryByRect = *mapscriptc::layerObj_queryByRect;
@@ -1391,6 +1449,7 @@ sub getClass {
 *getProcessingKey = *mapscriptc::layerObj_getProcessingKey;
 *clearProcessing = *mapscriptc::layerObj_clearProcessing;
 *setConnectionType = *mapscriptc::layerObj_setConnectionType;
+*getClassIndex = *mapscriptc::layerObj_getClassIndex;
 sub DISOWN {
     my $self = shift;
     my $ptr = tied(%$self);
@@ -1554,6 +1613,7 @@ sub getLayerByName {
 *drawLabelCache = *mapscriptc::mapObj_drawLabelCache;
 *getLabel = *mapscriptc::mapObj_getLabel;
 *nextLabel = *mapscriptc::mapObj_nextLabel;
+*queryByFilter = *mapscriptc::mapObj_queryByFilter;
 *queryByPoint = *mapscriptc::mapObj_queryByPoint;
 *queryByRect = *mapscriptc::mapObj_queryByRect;
 *queryByFeatures = *mapscriptc::mapObj_queryByFeatures;
@@ -1631,10 +1691,6 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *swig_imageurl_set = *mapscriptc::imageObj_imageurl_set;
 *swig_format_get = *mapscriptc::imageObj_format_get;
 *swig_format_set = *mapscriptc::imageObj_format_set;
-*swig_buffer_format_get = *mapscriptc::imageObj_buffer_format_get;
-*swig_buffer_format_set = *mapscriptc::imageObj_buffer_format_set;
-*swig_renderer_get = *mapscriptc::imageObj_renderer_get;
-*swig_renderer_set = *mapscriptc::imageObj_renderer_set;
 sub new {
     my $pkg = shift;
     my $self = mapscriptc::new_imageObj(@_);
@@ -1720,47 +1776,6 @@ sub ACQUIRE {
 }
 
 
-############# Class : mapscript::fillStyleObj ##############
-
-package mapscript::fillStyleObj;
-use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( mapscript );
-%OWNER = ();
-%ITERATORS = ();
-*swig_color_get = *mapscriptc::fillStyleObj_color_get;
-*swig_color_set = *mapscriptc::fillStyleObj_color_set;
-*swig_tile_get = *mapscriptc::fillStyleObj_tile_get;
-*swig_tile_set = *mapscriptc::fillStyleObj_tile_set;
-sub new {
-    my $pkg = shift;
-    my $self = mapscriptc::new_fillStyleObj(@_);
-    bless $self, $pkg if defined($self);
-}
-
-sub DESTROY {
-    return unless $_[0]->isa('HASH');
-    my $self = tied(%{$_[0]});
-    return unless defined $self;
-    delete $ITERATORS{$self};
-    if (exists $OWNER{$self}) {
-        mapscriptc::delete_fillStyleObj($self);
-        delete $OWNER{$self};
-    }
-}
-
-sub DISOWN {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    delete $OWNER{$ptr};
-}
-
-sub ACQUIRE {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    $OWNER{$ptr} = 1;
-}
-
-
 ############# Class : mapscript::symbolStyleObj ##############
 
 package mapscript::symbolStyleObj;
@@ -1780,6 +1795,10 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *swig_scale_set = *mapscriptc::symbolStyleObj_scale_set;
 *swig_rotation_get = *mapscriptc::symbolStyleObj_rotation_get;
 *swig_rotation_set = *mapscriptc::symbolStyleObj_rotation_set;
+*swig_gap_get = *mapscriptc::symbolStyleObj_gap_get;
+*swig_gap_set = *mapscriptc::symbolStyleObj_gap_set;
+*swig_style_get = *mapscriptc::symbolStyleObj_style_get;
+*swig_style_set = *mapscriptc::symbolStyleObj_style_set;
 sub new {
     my $pkg = shift;
     my $self = mapscriptc::new_symbolStyleObj(@_);
@@ -1810,28 +1829,38 @@ sub ACQUIRE {
 }
 
 
-############# Class : mapscript::tilecache ##############
+############# Class : mapscript::tileCacheObj ##############
 
-package mapscript::tilecache;
+package mapscript::tileCacheObj;
 use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 @ISA = qw( mapscript );
 %OWNER = ();
 %ITERATORS = ();
-*swig_symbol_get = *mapscriptc::tilecache_symbol_get;
-*swig_symbol_set = *mapscriptc::tilecache_symbol_set;
-*swig_style_get = *mapscriptc::tilecache_style_get;
-*swig_style_set = *mapscriptc::tilecache_style_set;
-*swig_width_get = *mapscriptc::tilecache_width_get;
-*swig_width_set = *mapscriptc::tilecache_width_set;
-*swig_height_get = *mapscriptc::tilecache_height_get;
-*swig_height_set = *mapscriptc::tilecache_height_set;
-*swig_data_get = *mapscriptc::tilecache_data_get;
-*swig_data_set = *mapscriptc::tilecache_data_set;
-*swig_next_get = *mapscriptc::tilecache_next_get;
-*swig_next_set = *mapscriptc::tilecache_next_set;
+*swig_symbol_get = *mapscriptc::tileCacheObj_symbol_get;
+*swig_symbol_set = *mapscriptc::tileCacheObj_symbol_set;
+*swig_width_get = *mapscriptc::tileCacheObj_width_get;
+*swig_width_set = *mapscriptc::tileCacheObj_width_set;
+*swig_height_get = *mapscriptc::tileCacheObj_height_get;
+*swig_height_set = *mapscriptc::tileCacheObj_height_set;
+*swig_color_get = *mapscriptc::tileCacheObj_color_get;
+*swig_color_set = *mapscriptc::tileCacheObj_color_set;
+*swig_outlinecolor_get = *mapscriptc::tileCacheObj_outlinecolor_get;
+*swig_outlinecolor_set = *mapscriptc::tileCacheObj_outlinecolor_set;
+*swig_backgroundcolor_get = *mapscriptc::tileCacheObj_backgroundcolor_get;
+*swig_backgroundcolor_set = *mapscriptc::tileCacheObj_backgroundcolor_set;
+*swig_outlinewidth_get = *mapscriptc::tileCacheObj_outlinewidth_get;
+*swig_outlinewidth_set = *mapscriptc::tileCacheObj_outlinewidth_set;
+*swig_rotation_get = *mapscriptc::tileCacheObj_rotation_get;
+*swig_rotation_set = *mapscriptc::tileCacheObj_rotation_set;
+*swig_scale_get = *mapscriptc::tileCacheObj_scale_get;
+*swig_scale_set = *mapscriptc::tileCacheObj_scale_set;
+*swig_image_get = *mapscriptc::tileCacheObj_image_get;
+*swig_image_set = *mapscriptc::tileCacheObj_image_set;
+*swig_next_get = *mapscriptc::tileCacheObj_next_get;
+*swig_next_set = *mapscriptc::tileCacheObj_next_set;
 sub new {
     my $pkg = shift;
-    my $self = mapscriptc::new_tilecache(@_);
+    my $self = mapscriptc::new_tileCacheObj(@_);
     bless $self, $pkg if defined($self);
 }
 
@@ -1841,7 +1870,7 @@ sub DESTROY {
     return unless defined $self;
     delete $ITERATORS{$self};
     if (exists $OWNER{$self}) {
-        mapscriptc::delete_tilecache($self);
+        mapscriptc::delete_tileCacheObj($self);
         delete $OWNER{$self};
     }
 }
@@ -1878,12 +1907,6 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *swig_outlinewidth_set = *mapscriptc::labelStyleObj_outlinewidth_set;
 *swig_outlinecolor_get = *mapscriptc::labelStyleObj_outlinecolor_get;
 *swig_outlinecolor_set = *mapscriptc::labelStyleObj_outlinecolor_set;
-*swig_shadowsizex_get = *mapscriptc::labelStyleObj_shadowsizex_get;
-*swig_shadowsizex_set = *mapscriptc::labelStyleObj_shadowsizex_set;
-*swig_shadowsizey_get = *mapscriptc::labelStyleObj_shadowsizey_get;
-*swig_shadowsizey_set = *mapscriptc::labelStyleObj_shadowsizey_set;
-*swig_shadowcolor_get = *mapscriptc::labelStyleObj_shadowcolor_get;
-*swig_shadowcolor_set = *mapscriptc::labelStyleObj_shadowcolor_set;
 sub new {
     my $pkg = shift;
     my $self = mapscriptc::new_labelStyleObj(@_);
@@ -2025,8 +2048,6 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 %ITERATORS = ();
 *swig_numpoints_get = *mapscriptc::lineObj_numpoints_get;
 *swig_numpoints_set = *mapscriptc::lineObj_numpoints_set;
-*swig_point_get = *mapscriptc::lineObj_point_get;
-*swig_point_set = *mapscriptc::lineObj_point_set;
 sub new {
     my $pkg = shift;
     my $self = mapscriptc::new_lineObj(@_);
@@ -2072,10 +2093,6 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *swig_numlines_set = *mapscriptc::shapeObj_numlines_set;
 *swig_numvalues_get = *mapscriptc::shapeObj_numvalues_get;
 *swig_numvalues_set = *mapscriptc::shapeObj_numvalues_set;
-*swig_line_get = *mapscriptc::shapeObj_line_get;
-*swig_line_set = *mapscriptc::shapeObj_line_set;
-*swig_values_get = *mapscriptc::shapeObj_values_get;
-*swig_values_set = *mapscriptc::shapeObj_values_set;
 *swig_bounds_get = *mapscriptc::shapeObj_bounds_get;
 *swig_bounds_set = *mapscriptc::shapeObj_bounds_set;
 *swig_type_get = *mapscriptc::shapeObj_type_get;
@@ -2088,6 +2105,10 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *swig_classindex_set = *mapscriptc::shapeObj_classindex_set;
 *swig_text_get = *mapscriptc::shapeObj_text_get;
 *swig_text_set = *mapscriptc::shapeObj_text_set;
+*swig_scratch_get = *mapscriptc::shapeObj_scratch_get;
+*swig_scratch_set = *mapscriptc::shapeObj_scratch_set;
+*swig_resultindex_get = *mapscriptc::shapeObj_resultindex_get;
+*swig_resultindex_set = *mapscriptc::shapeObj_resultindex_set;
 sub new {
     my $pkg = shift;
     my $self = mapscriptc::new_shapeObj(@_);
@@ -2298,6 +2319,8 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 %ITERATORS = ();
 *swig_numargs_get = *mapscriptc::projectionObj_numargs_get;
 *swig_numargs_set = *mapscriptc::projectionObj_numargs_set;
+*swig_automatic_get = *mapscriptc::projectionObj_automatic_get;
+*swig_automatic_set = *mapscriptc::projectionObj_automatic_set;
 sub new {
     my $pkg = shift;
     my $self = mapscriptc::new_projectionObj(@_);
@@ -2411,10 +2434,6 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *swig_numpoints_set = *mapscriptc::symbolObj_numpoints_set;
 *swig_filled_get = *mapscriptc::symbolObj_filled_get;
 *swig_filled_set = *mapscriptc::symbolObj_filled_set;
-*swig_patternlength_get = *mapscriptc::symbolObj_patternlength_get;
-*swig_patternlength_set = *mapscriptc::symbolObj_patternlength_set;
-*swig_pattern_get = *mapscriptc::symbolObj_pattern_get;
-*swig_pattern_set = *mapscriptc::symbolObj_pattern_set;
 *swig_imagepath_get = *mapscriptc::symbolObj_imagepath_get;
 *swig_imagepath_set = *mapscriptc::symbolObj_imagepath_set;
 *swig_transparent_get = *mapscriptc::symbolObj_transparent_get;
@@ -2427,16 +2446,8 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *swig_antialias_set = *mapscriptc::symbolObj_antialias_set;
 *swig_font_get = *mapscriptc::symbolObj_font_get;
 *swig_font_set = *mapscriptc::symbolObj_font_set;
-*swig_gap_get = *mapscriptc::symbolObj_gap_get;
-*swig_gap_set = *mapscriptc::symbolObj_gap_set;
-*swig_position_get = *mapscriptc::symbolObj_position_get;
-*swig_position_set = *mapscriptc::symbolObj_position_set;
-*swig_linecap_get = *mapscriptc::symbolObj_linecap_get;
-*swig_linecap_set = *mapscriptc::symbolObj_linecap_set;
-*swig_linejoin_get = *mapscriptc::symbolObj_linejoin_get;
-*swig_linejoin_set = *mapscriptc::symbolObj_linejoin_set;
-*swig_linejoinmaxsize_get = *mapscriptc::symbolObj_linejoinmaxsize_get;
-*swig_linejoinmaxsize_set = *mapscriptc::symbolObj_linejoinmaxsize_set;
+*swig_svg_text_get = *mapscriptc::symbolObj_svg_text_get;
+*swig_svg_text_set = *mapscriptc::symbolObj_svg_text_set;
 sub new {
     my $pkg = shift;
     my $self = mapscriptc::new_symbolObj(@_);
@@ -2457,7 +2468,6 @@ sub DESTROY {
 *setImagepath = *mapscriptc::symbolObj_setImagepath;
 *setPoints = *mapscriptc::symbolObj_setPoints;
 *getPoints = *mapscriptc::symbolObj_getPoints;
-*setPattern = *mapscriptc::symbolObj_setPattern;
 *getImage = *mapscriptc::symbolObj_getImage;
 *setImage = *mapscriptc::symbolObj_setImage;
 sub DISOWN {
@@ -2486,6 +2496,8 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *swig_routine_set = *mapscriptc::errorObj_routine_set;
 *swig_message_get = *mapscriptc::errorObj_message_get;
 *swig_message_set = *mapscriptc::errorObj_message_set;
+*swig_isreported_get = *mapscriptc::errorObj_isreported_get;
+*swig_isreported_set = *mapscriptc::errorObj_isreported_set;
 sub new {
     my $pkg = shift;
     my $self = mapscriptc::new_errorObj(@_);
@@ -2585,6 +2597,7 @@ sub new {
 }
 
 *loadParams = *mapscriptc::OWSRequest_loadParams;
+*loadParamsFromURL = *mapscriptc::OWSRequest_loadParamsFromURL;
 *setParameter = *mapscriptc::OWSRequest_setParameter;
 *getName = *mapscriptc::OWSRequest_getName;
 *getValue = *mapscriptc::OWSRequest_getValue;
@@ -2622,6 +2635,7 @@ package mapscript;
 *MS_VERSION_MINOR = *mapscriptc::MS_VERSION_MINOR;
 *MS_VERSION_REV = *mapscriptc::MS_VERSION_REV;
 *MS_VERSION_NUM = *mapscriptc::MS_VERSION_NUM;
+*__FUNCTION__ = *mapscriptc::__FUNCTION__;
 *MS_TRUE = *mapscriptc::MS_TRUE;
 *MS_FALSE = *mapscriptc::MS_FALSE;
 *MS_UNKNOWN = *mapscriptc::MS_UNKNOWN;
@@ -2638,6 +2652,19 @@ package mapscript;
 *MS_STYLE_ALLOCSIZE = *mapscriptc::MS_STYLE_ALLOCSIZE;
 *MS_MAX_LABEL_PRIORITY = *mapscriptc::MS_MAX_LABEL_PRIORITY;
 *MS_DEFAULT_LABEL_PRIORITY = *mapscriptc::MS_DEFAULT_LABEL_PRIORITY;
+*MS_RENDER_WITH_SWF = *mapscriptc::MS_RENDER_WITH_SWF;
+*MS_RENDER_WITH_RAWDATA = *mapscriptc::MS_RENDER_WITH_RAWDATA;
+*MS_RENDER_WITH_IMAGEMAP = *mapscriptc::MS_RENDER_WITH_IMAGEMAP;
+*MS_RENDER_WITH_TEMPLATE = *mapscriptc::MS_RENDER_WITH_TEMPLATE;
+*MS_RENDER_WITH_OGR = *mapscriptc::MS_RENDER_WITH_OGR;
+*MS_RENDER_WITH_PLUGIN = *mapscriptc::MS_RENDER_WITH_PLUGIN;
+*MS_RENDER_WITH_CAIRO_RASTER = *mapscriptc::MS_RENDER_WITH_CAIRO_RASTER;
+*MS_RENDER_WITH_CAIRO_PDF = *mapscriptc::MS_RENDER_WITH_CAIRO_PDF;
+*MS_RENDER_WITH_CAIRO_SVG = *mapscriptc::MS_RENDER_WITH_CAIRO_SVG;
+*MS_RENDER_WITH_OGL = *mapscriptc::MS_RENDER_WITH_OGL;
+*MS_RENDER_WITH_AGG = *mapscriptc::MS_RENDER_WITH_AGG;
+*MS_RENDER_WITH_GD = *mapscriptc::MS_RENDER_WITH_GD;
+*MS_RENDER_WITH_KML = *mapscriptc::MS_RENDER_WITH_KML;
 *MS_FILE_MAP = *mapscriptc::MS_FILE_MAP;
 *MS_FILE_SYMBOL = *mapscriptc::MS_FILE_SYMBOL;
 *MS_INCHES = *mapscriptc::MS_INCHES;
@@ -2677,6 +2704,8 @@ package mapscript;
 *MS_AUTO = *mapscriptc::MS_AUTO;
 *MS_XY = *mapscriptc::MS_XY;
 *MS_FOLLOW = *mapscriptc::MS_FOLLOW;
+*MS_NONE = *mapscriptc::MS_NONE;
+*MS_AUTO2 = *mapscriptc::MS_AUTO2;
 *MS_TINY = *mapscriptc::MS_TINY;
 *MS_SMALL = *mapscriptc::MS_SMALL;
 *MS_MEDIUM = *mapscriptc::MS_MEDIUM;
@@ -2696,9 +2725,10 @@ package mapscript;
 *MS_ORACLESPATIAL = *mapscriptc::MS_ORACLESPATIAL;
 *MS_WFS = *mapscriptc::MS_WFS;
 *MS_GRATICULE = *mapscriptc::MS_GRATICULE;
-*MS_MYGIS = *mapscriptc::MS_MYGIS;
+*MS_MYSQL = *mapscriptc::MS_MYSQL;
 *MS_RASTER = *mapscriptc::MS_RASTER;
 *MS_PLUGIN = *mapscriptc::MS_PLUGIN;
+*MS_UNION = *mapscriptc::MS_UNION;
 *MS_DB_XBASE = *mapscriptc::MS_DB_XBASE;
 *MS_DB_CSV = *mapscriptc::MS_DB_CSV;
 *MS_DB_MYSQL = *mapscriptc::MS_DB_MYSQL;
@@ -2716,7 +2746,7 @@ package mapscript;
 *MS_QUERY_BY_SHAPE = *mapscriptc::MS_QUERY_BY_SHAPE;
 *MS_QUERY_BY_ATTRIBUTE = *mapscriptc::MS_QUERY_BY_ATTRIBUTE;
 *MS_QUERY_BY_INDEX = *mapscriptc::MS_QUERY_BY_INDEX;
-*MS_QUERY_BY_OPERATOR = *mapscriptc::MS_QUERY_BY_OPERATOR;
+*MS_QUERY_BY_FILTER = *mapscriptc::MS_QUERY_BY_FILTER;
 *MS_ALIGN_LEFT = *mapscriptc::MS_ALIGN_LEFT;
 *MS_ALIGN_CENTER = *mapscriptc::MS_ALIGN_CENTER;
 *MS_ALIGN_RIGHT = *mapscriptc::MS_ALIGN_RIGHT;
@@ -2727,6 +2757,7 @@ package mapscript;
 *MS_CJC_ROUND = *mapscriptc::MS_CJC_ROUND;
 *MS_CJC_SQUARE = *mapscriptc::MS_CJC_SQUARE;
 *MS_CJC_TRIANGLE = *mapscriptc::MS_CJC_TRIANGLE;
+*MS_CJC_DEFAULT_JOIN_MAXSIZE = *mapscriptc::MS_CJC_DEFAULT_JOIN_MAXSIZE;
 *MS_SUCCESS = *mapscriptc::MS_SUCCESS;
 *MS_FAILURE = *mapscriptc::MS_FAILURE;
 *MS_DONE = *mapscriptc::MS_DONE;
@@ -2736,6 +2767,7 @@ package mapscript;
 *MS_IMAGEMODE_INT16 = *mapscriptc::MS_IMAGEMODE_INT16;
 *MS_IMAGEMODE_FLOAT32 = *mapscriptc::MS_IMAGEMODE_FLOAT32;
 *MS_IMAGEMODE_BYTE = *mapscriptc::MS_IMAGEMODE_BYTE;
+*MS_IMAGEMODE_FEATURE = *mapscriptc::MS_IMAGEMODE_FEATURE;
 *MS_IMAGEMODE_NULL = *mapscriptc::MS_IMAGEMODE_NULL;
 *MS_GEOS_EQUALS = *mapscriptc::MS_GEOS_EQUALS;
 *MS_GEOS_DISJOINT = *mapscriptc::MS_GEOS_DISJOINT;
@@ -2747,7 +2779,11 @@ package mapscript;
 *MS_GEOS_CONTAINS = *mapscriptc::MS_GEOS_CONTAINS;
 *MS_GEOS_BEYOND = *mapscriptc::MS_GEOS_BEYOND;
 *MS_GEOS_DWITHIN = *mapscriptc::MS_GEOS_DWITHIN;
-*MS_NOOVERRIDE = *mapscriptc::MS_NOOVERRIDE;
+*MS_TRANSFORM_NONE = *mapscriptc::MS_TRANSFORM_NONE;
+*MS_TRANSFORM_ROUND = *mapscriptc::MS_TRANSFORM_ROUND;
+*MS_TRANSFORM_SNAPTOGRID = *mapscriptc::MS_TRANSFORM_SNAPTOGRID;
+*MS_TRANSFORM_FULLRESOLUTION = *mapscriptc::MS_TRANSFORM_FULLRESOLUTION;
+*MS_TRANSFORM_SIMPLIFY = *mapscriptc::MS_TRANSFORM_SIMPLIFY;
 *MS_STYLE_BINDING_LENGTH = *mapscriptc::MS_STYLE_BINDING_LENGTH;
 *MS_STYLE_BINDING_SIZE = *mapscriptc::MS_STYLE_BINDING_SIZE;
 *MS_STYLE_BINDING_WIDTH = *mapscriptc::MS_STYLE_BINDING_WIDTH;
@@ -2764,6 +2800,52 @@ package mapscript;
 *MS_LABEL_BINDING_OUTLINECOLOR = *mapscriptc::MS_LABEL_BINDING_OUTLINECOLOR;
 *MS_LABEL_BINDING_FONT = *mapscriptc::MS_LABEL_BINDING_FONT;
 *MS_LABEL_BINDING_PRIORITY = *mapscriptc::MS_LABEL_BINDING_PRIORITY;
+*MS_LABEL_BINDING_POSITION = *mapscriptc::MS_LABEL_BINDING_POSITION;
+*MS_LABEL_BINDING_SHADOWSIZEX = *mapscriptc::MS_LABEL_BINDING_SHADOWSIZEX;
+*MS_LABEL_BINDING_SHADOWSIZEY = *mapscriptc::MS_LABEL_BINDING_SHADOWSIZEY;
+*MS_TOKEN_LOGICAL_AND = *mapscriptc::MS_TOKEN_LOGICAL_AND;
+*MS_TOKEN_LOGICAL_OR = *mapscriptc::MS_TOKEN_LOGICAL_OR;
+*MS_TOKEN_LOGICAL_NOT = *mapscriptc::MS_TOKEN_LOGICAL_NOT;
+*MS_TOKEN_LITERAL_NUMBER = *mapscriptc::MS_TOKEN_LITERAL_NUMBER;
+*MS_TOKEN_LITERAL_STRING = *mapscriptc::MS_TOKEN_LITERAL_STRING;
+*MS_TOKEN_LITERAL_TIME = *mapscriptc::MS_TOKEN_LITERAL_TIME;
+*MS_TOKEN_LITERAL_SHAPE = *mapscriptc::MS_TOKEN_LITERAL_SHAPE;
+*MS_TOKEN_COMPARISON_EQ = *mapscriptc::MS_TOKEN_COMPARISON_EQ;
+*MS_TOKEN_COMPARISON_NE = *mapscriptc::MS_TOKEN_COMPARISON_NE;
+*MS_TOKEN_COMPARISON_GT = *mapscriptc::MS_TOKEN_COMPARISON_GT;
+*MS_TOKEN_COMPARISON_LT = *mapscriptc::MS_TOKEN_COMPARISON_LT;
+*MS_TOKEN_COMPARISON_LE = *mapscriptc::MS_TOKEN_COMPARISON_LE;
+*MS_TOKEN_COMPARISON_GE = *mapscriptc::MS_TOKEN_COMPARISON_GE;
+*MS_TOKEN_COMPARISON_IEQ = *mapscriptc::MS_TOKEN_COMPARISON_IEQ;
+*MS_TOKEN_COMPARISON_RE = *mapscriptc::MS_TOKEN_COMPARISON_RE;
+*MS_TOKEN_COMPARISON_IRE = *mapscriptc::MS_TOKEN_COMPARISON_IRE;
+*MS_TOKEN_COMPARISON_IN = *mapscriptc::MS_TOKEN_COMPARISON_IN;
+*MS_TOKEN_COMPARISON_LIKE = *mapscriptc::MS_TOKEN_COMPARISON_LIKE;
+*MS_TOKEN_COMPARISON_INTERSECTS = *mapscriptc::MS_TOKEN_COMPARISON_INTERSECTS;
+*MS_TOKEN_COMPARISON_DISJOINT = *mapscriptc::MS_TOKEN_COMPARISON_DISJOINT;
+*MS_TOKEN_COMPARISON_TOUCHES = *mapscriptc::MS_TOKEN_COMPARISON_TOUCHES;
+*MS_TOKEN_COMPARISON_OVERLAPS = *mapscriptc::MS_TOKEN_COMPARISON_OVERLAPS;
+*MS_TOKEN_COMPARISON_CROSSES = *mapscriptc::MS_TOKEN_COMPARISON_CROSSES;
+*MS_TOKEN_COMPARISON_WITHIN = *mapscriptc::MS_TOKEN_COMPARISON_WITHIN;
+*MS_TOKEN_COMPARISON_CONTAINS = *mapscriptc::MS_TOKEN_COMPARISON_CONTAINS;
+*MS_TOKEN_COMPARISON_BEYOND = *mapscriptc::MS_TOKEN_COMPARISON_BEYOND;
+*MS_TOKEN_COMPARISON_DWITHIN = *mapscriptc::MS_TOKEN_COMPARISON_DWITHIN;
+*MS_TOKEN_FUNCTION_LENGTH = *mapscriptc::MS_TOKEN_FUNCTION_LENGTH;
+*MS_TOKEN_FUNCTION_TOSTRING = *mapscriptc::MS_TOKEN_FUNCTION_TOSTRING;
+*MS_TOKEN_FUNCTION_COMMIFY = *mapscriptc::MS_TOKEN_FUNCTION_COMMIFY;
+*MS_TOKEN_FUNCTION_AREA = *mapscriptc::MS_TOKEN_FUNCTION_AREA;
+*MS_TOKEN_FUNCTION_ROUND = *mapscriptc::MS_TOKEN_FUNCTION_ROUND;
+*MS_TOKEN_FUNCTION_FROMTEXT = *mapscriptc::MS_TOKEN_FUNCTION_FROMTEXT;
+*MS_TOKEN_FUNCTION_BUFFER = *mapscriptc::MS_TOKEN_FUNCTION_BUFFER;
+*MS_TOKEN_BINDING_DOUBLE = *mapscriptc::MS_TOKEN_BINDING_DOUBLE;
+*MS_TOKEN_BINDING_INTEGER = *mapscriptc::MS_TOKEN_BINDING_INTEGER;
+*MS_TOKEN_BINDING_STRING = *mapscriptc::MS_TOKEN_BINDING_STRING;
+*MS_TOKEN_BINDING_TIME = *mapscriptc::MS_TOKEN_BINDING_TIME;
+*MS_TOKEN_BINDING_SHAPE = *mapscriptc::MS_TOKEN_BINDING_SHAPE;
+*MS_PARSE_TYPE_BOOLEAN = *mapscriptc::MS_PARSE_TYPE_BOOLEAN;
+*MS_PARSE_TYPE_STRING = *mapscriptc::MS_PARSE_TYPE_STRING;
+*MS_PARSE_TYPE_SHAPE = *mapscriptc::MS_PARSE_TYPE_SHAPE;
+*MS_NOOVERRIDE = *mapscriptc::MS_NOOVERRIDE;
 *SHX_BUFFER_PAGE = *mapscriptc::SHX_BUFFER_PAGE;
 *MS_SHAPEFILE_POINT = *mapscriptc::MS_SHAPEFILE_POINT;
 *MS_SHAPEFILE_ARC = *mapscriptc::MS_SHAPEFILE_ARC;
@@ -2786,8 +2868,8 @@ package mapscript;
 *MS_SYMBOL_ELLIPSE = *mapscriptc::MS_SYMBOL_ELLIPSE;
 *MS_SYMBOL_PIXMAP = *mapscriptc::MS_SYMBOL_PIXMAP;
 *MS_SYMBOL_TRUETYPE = *mapscriptc::MS_SYMBOL_TRUETYPE;
-*MS_SYMBOL_CARTOLINE = *mapscriptc::MS_SYMBOL_CARTOLINE;
 *MS_SYMBOL_HATCH = *mapscriptc::MS_SYMBOL_HATCH;
+*MS_SYMBOL_SVG = *mapscriptc::MS_SYMBOL_SVG;
 *MS_SYMBOL_ALLOCSIZE = *mapscriptc::MS_SYMBOL_ALLOCSIZE;
 *MS_MAXVECTORPOINTS = *mapscriptc::MS_MAXVECTORPOINTS;
 *MS_MAXPATTERNLENGTH = *mapscriptc::MS_MAXPATTERNLENGTH;
@@ -2833,8 +2915,9 @@ package mapscript;
 *MS_NULLPARENTERR = *mapscriptc::MS_NULLPARENTERR;
 *MS_AGGERR = *mapscriptc::MS_AGGERR;
 *MS_OWSERR = *mapscriptc::MS_OWSERR;
-*MS_NUMERRORCODES = *mapscriptc::MS_NUMERRORCODES;
 *MS_OGLERR = *mapscriptc::MS_OGLERR;
+*MS_RENDERERERR = *mapscriptc::MS_RENDERERERR;
+*MS_NUMERRORCODES = *mapscriptc::MS_NUMERRORCODES;
 *MESSAGELENGTH = *mapscriptc::MESSAGELENGTH;
 *ROUTINELENGTH = *mapscriptc::ROUTINELENGTH;
 *MS_ERROR_LANGUAGE = *mapscriptc::MS_ERROR_LANGUAGE;
@@ -2845,7 +2928,7 @@ package mapscript;
 *MS_DEBUGLEVEL_VV = *mapscriptc::MS_DEBUGLEVEL_VV;
 *MS_DEBUGLEVEL_VVV = *mapscriptc::MS_DEBUGLEVEL_VVV;
 *MS_HASHSIZE = *mapscriptc::MS_HASHSIZE;
-*MS_MAX_CGI_PARAMS = *mapscriptc::MS_MAX_CGI_PARAMS;
+*MS_DEFAULT_CGI_PARAMS = *mapscriptc::MS_DEFAULT_CGI_PARAMS;
 *MS_GET_REQUEST = *mapscriptc::MS_GET_REQUEST;
 *MS_POST_REQUEST = *mapscriptc::MS_POST_REQUEST;
 

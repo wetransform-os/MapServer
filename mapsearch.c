@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapsearch.c 9514 2009-10-28 14:43:04Z sdlime $
+ * $Id: mapsearch.c 10535 2010-09-29 18:18:31Z warmerdam $
  *
  * Project:  MapServer
  * Purpose:  Various geospatial search operations.
@@ -8,7 +8,7 @@
  * Notes: For information on point in polygon function please see:
  *
  *   http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
- *                                                                                                                  
+ * 
  * The appropriate copyright notice accompanies the funtion definition.
  *
  ******************************************************************************
@@ -35,7 +35,7 @@
 
 #include "mapserver.h"
 
-MS_CVSID("$Id: mapsearch.c 9514 2009-10-28 14:43:04Z sdlime $")
+MS_CVSID("$Id: mapsearch.c 10535 2010-09-29 18:18:31Z warmerdam $")
 
 #define LASTVERT(v,n)  ((v) == 0 ? n-2 : v-1)
 #define NEXTVERT(v,n)  ((v) == n-2 ? 0 : v+1)
@@ -51,6 +51,28 @@ int msRectOverlap(rectObj *a, rectObj *b)
   if(a->maxy < b->miny) return(MS_FALSE);
   return(MS_TRUE);
 }
+
+/*
+** Computes the intersection of two rectangles, updating the first
+** to be only the intersection of the two.  Returns MS_FALSE if
+** the intersection is empty. 
+*/
+int msRectIntersect( rectObj *a, const rectObj *b )
+{
+    if( a->maxx > b->maxx )
+        a->maxx = b->maxx;
+    if( a->minx < b->minx )
+        a->minx = b->minx;
+    if( a->maxy > b->maxy )
+        a->maxy = b->maxy;
+    if( a->miny < b->miny )
+        a->miny = b->miny;
+
+    if( a->maxx < a->minx || b->maxx < b->minx )
+        return MS_FALSE;
+    else 
+        return MS_TRUE;
+}        
 
 /*
 ** Returns MS_TRUE if rectangle a is contained in rectangle b
@@ -210,7 +232,10 @@ int msIntersectPointPolygon(pointObj *point, shapeObj *poly) {
 
 int msIntersectMultipointPolygon(shapeObj *multipoint, shapeObj *poly) {
   int i,j;
-  
+
+  /* The change to loop through all the lines has been made for ticket
+   * #2443 but is no more needed since ticket #2762. PostGIS now put all
+   * points into a single line.  */
   for(i=0; i<multipoint->numlines; i++ ) {
     lineObj points = multipoint->line[i];
     for(j=0; j<points.numpoints; j++) {

@@ -1,5 +1,5 @@
 /* ===========================================================================
-   $Id: owsrequest.i 7805 2008-07-09 17:15:16Z hobu $
+   $Id: owsrequest.i 11452 2011-04-04 13:25:43Z aboudreault $
  
    Project:  MapServer
    Purpose:  SWIG interface file for manipulating OGC request stuff via
@@ -32,6 +32,19 @@
 */
 
 
+%{
+static char *msGetEnvURL( const char *key, void *thread_context )
+{
+    if( strcmp(key,"REQUEST_METHOD") == 0 )
+        return "GET";
+
+    if( strcmp(key,"QUERY_STRING") == 0 )
+        return (char *) thread_context;
+
+    return NULL;
+}
+%}
+
 %rename(OWSRequest) cgiRequestObj;
 
 %include "../../cgiutil.h"
@@ -54,12 +67,6 @@
             return NULL;
         }
         
-        request->ParamNames = (char **) malloc(MS_MAX_CGI_PARAMS*sizeof(char*));
-        request->ParamValues = (char **) malloc(MS_MAX_CGI_PARAMS*sizeof(char*));
-        if (request->ParamNames==NULL || request->ParamValues==NULL) {
-	        msSetError(MS_MEMERR, NULL, "OWSRequest()");
-            return NULL;
-        }
         return request;
     }
 
@@ -69,14 +76,18 @@
     ~cgiRequestObj(void)
 #endif
     {
-        msFreeCharArray(self->ParamNames, self->NumParams);
-        msFreeCharArray(self->ParamValues, self->NumParams);
         free(self);
     }
 
     int loadParams()
     {
-	self->NumParams = loadParams( self );
+	self->NumParams = loadParams( self, NULL, NULL, 0, NULL);
+	return self->NumParams;
+    }
+
+    int loadParamsFromURL( const char *url )
+    {
+	self->NumParams = loadParams( self, msGetEnvURL, NULL, 0, (void*)url );
 	return self->NumParams;
     }
 
@@ -84,8 +95,8 @@
     {
         int i;
         
-        if (self->NumParams == MS_MAX_CGI_PARAMS) {
-            msSetError(MS_CHILDERR, "Maximum number of items, %d, has been reached", "setItem()", MS_MAX_CGI_PARAMS);
+        if (self->NumParams == MS_DEFAULT_CGI_PARAMS) {
+            msSetError(MS_CHILDERR, "Maximum number of items, %d, has been reached", "setItem()", MS_DEFAULT_CGI_PARAMS);
         }
         
         for (i=0; i<self->NumParams; i++) {

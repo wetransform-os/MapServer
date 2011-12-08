@@ -215,31 +215,6 @@ public class symbolObj : IDisposable {
     } 
   }
 
-  public int patternlength {
-    set {
-      mapscriptPINVOKE.symbolObj_patternlength_set(swigCPtr, value);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-    } 
-    get {
-      int ret = mapscriptPINVOKE.symbolObj_patternlength_get(swigCPtr);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-      return ret;
-    } 
-  }
-
-  public SWIGTYPE_p_int pattern {
-    set {
-      mapscriptPINVOKE.symbolObj_pattern_set(swigCPtr, SWIGTYPE_p_int.getCPtr(value));
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-    } 
-    get {
-      IntPtr cPtr = mapscriptPINVOKE.symbolObj_pattern_get(swigCPtr);
-      SWIGTYPE_p_int ret = (cPtr == IntPtr.Zero) ? null : new SWIGTYPE_p_int(cPtr, false, ThisOwn_false());
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-      return ret;
-    } 
-  }
-
   public string imagepath {
     get {
       string ret = mapscriptPINVOKE.symbolObj_imagepath_get(swigCPtr);
@@ -308,61 +283,13 @@ public class symbolObj : IDisposable {
     } 
   }
 
-  public int gap {
+  public string svg_text {
     set {
-      mapscriptPINVOKE.symbolObj_gap_set(swigCPtr, value);
+      mapscriptPINVOKE.symbolObj_svg_text_set(swigCPtr, value);
       if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
     } 
     get {
-      int ret = mapscriptPINVOKE.symbolObj_gap_get(swigCPtr);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-      return ret;
-    } 
-  }
-
-  public int position {
-    set {
-      mapscriptPINVOKE.symbolObj_position_set(swigCPtr, value);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-    } 
-    get {
-      int ret = mapscriptPINVOKE.symbolObj_position_get(swigCPtr);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-      return ret;
-    } 
-  }
-
-  public int linecap {
-    set {
-      mapscriptPINVOKE.symbolObj_linecap_set(swigCPtr, value);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-    } 
-    get {
-      int ret = mapscriptPINVOKE.symbolObj_linecap_get(swigCPtr);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-      return ret;
-    } 
-  }
-
-  public int linejoin {
-    set {
-      mapscriptPINVOKE.symbolObj_linejoin_set(swigCPtr, value);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-    } 
-    get {
-      int ret = mapscriptPINVOKE.symbolObj_linejoin_get(swigCPtr);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-      return ret;
-    } 
-  }
-
-  public double linejoinmaxsize {
-    set {
-      mapscriptPINVOKE.symbolObj_linejoinmaxsize_set(swigCPtr, value);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-    } 
-    get {
-      double ret = mapscriptPINVOKE.symbolObj_linejoinmaxsize_get(swigCPtr);
+      string ret = mapscriptPINVOKE.symbolObj_svg_text_get(swigCPtr);
       if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
       return ret;
     } 
@@ -391,14 +318,8 @@ public class symbolObj : IDisposable {
     return ret;
   }
 
-  public int setPattern(int index, int value) {
-    int ret = mapscriptPINVOKE.symbolObj_setPattern(swigCPtr, index, value);
-    if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-    return ret;
-  }
-
-  public imageObj getImage(outputFormatObj format) {
-    IntPtr cPtr = mapscriptPINVOKE.symbolObj_getImage(swigCPtr, outputFormatObj.getCPtr(format));
+  public imageObj getImage(outputFormatObj input_format) {
+    IntPtr cPtr = mapscriptPINVOKE.symbolObj_getImage(swigCPtr, outputFormatObj.getCPtr(input_format));
     imageObj ret = (cPtr == IntPtr.Zero) ? null : new imageObj(cPtr, true, ThisOwn_true());
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
     return ret;

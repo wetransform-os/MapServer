@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapgdal.c 9258 2009-08-17 16:22:53Z warmerdam $
+ * $Id: mapgdal.c 11218 2011-03-18 13:41:32Z warmerdam $
  *
  * Project:  MapServer
  * Purpose:  Implementation of support for output using GDAL.
@@ -31,16 +31,18 @@
 #include "mapserver.h"
 #include "mapthread.h"
 
-MS_CVSID("$Id: mapgdal.c 9258 2009-08-17 16:22:53Z warmerdam $")
+MS_CVSID("$Id: mapgdal.c 11218 2011-03-18 13:41:32Z warmerdam $")
+
+#if defined(USE_GDAL) || defined(USE_OGR)
+#include "cpl_conv.h"
+#include "cpl_string.h"
+#include "ogr_srs_api.h"
+#endif
 
 #ifdef USE_GDAL
 
 #include "gdal.h"
-#include "ogr_srs_api.h"
-#include "cpl_conv.h"
-#include "cpl_string.h"
 
-static char *msProjectionObjToWKT( projectionObj *proj );
 static int    bGDALInitialized = 0;
 
 /************************************************************************/
@@ -72,8 +74,38 @@ void msGDALCleanup( void )
     if( bGDALInitialized )
     {
         int iRepeat = 5;
-
         msAcquireLock( TLOCK_GDAL );
+
+#if GDAL_RELEASE_DATE > 20101207
+        {
+            /* 
+            ** Cleanup any unreferenced but open datasets as will tend
+            ** to exist due to deferred close requests.  We are careful
+            ** to only close one file at a time before refecting the
+            ** list as closing some datasets may cause others to be 
+            ** closed (subdatasets in a VRT for instance).
+            */
+            GDALDatasetH *pahDSList = NULL;
+            int nDSCount = 0;
+            int bDidSomething;
+
+            do {
+                int i;
+                GDALGetOpenDatasets( &pahDSList, &nDSCount );
+                bDidSomething = FALSE;
+                for( i = 0; i < nDSCount && !bDidSomething; i++ )
+                {
+                    if( GDALReferenceDataset( pahDSList[i] ) == 1 )
+                    {
+                        GDALClose( pahDSList[i] );
+                        bDidSomething = TRUE;
+                    }
+                    else
+                        GDALDereferenceDataset( pahDSList[i] );
+                }
+            } while( bDidSomething );
+        }
+#endif
 
         while( iRepeat-- )
             CPLPopErrorHandler();
@@ -95,7 +127,7 @@ void msGDALCleanup( void )
 /*      things are clean before we start, and after we are done.        */
 /************************************************************************/
 
-static void CleanVSIDir( const char *pszDir )
+void CleanVSIDir( const char *pszDir )
 
 {
     char **papszFiles = CPLReadDir( pszDir );
@@ -128,9 +160,11 @@ int msSaveImageGDAL( mapObj *map, imageObj *image, char *filename )
     GByte       *pabyAlphaLine = NULL;
     char        **papszOptions = NULL;
     outputFormatObj *format = image->format;
+    rasterBufferObj rb;
     GDALDataType eDataType = GDT_Byte;
 
     msGDALInitialize();
+    memset(&rb,0,sizeof(rasterBufferObj));
 
 /* -------------------------------------------------------------------- */
 /*      Identify the proposed output driver.                            */
@@ -163,18 +197,14 @@ int msSaveImageGDAL( mapObj *map, imageObj *image, char *filename )
             != NULL )
         {
             CleanVSIDir( "/vsimem/msout" );
-            filename = msTmpFile( NULL, "/vsimem/msout/", pszExtension );
+            filename = msTmpFile(map, NULL, "/vsimem/msout/", pszExtension );
         }
 #endif
-        if( filename == NULL && map != NULL && map->web.imagepath != NULL )
-            filename = msTmpFile(map->mappath,map->web.imagepath,pszExtension);
+        if( filename == NULL && map != NULL)
+            filename = msTmpFile(map, map->mappath,NULL,pszExtension);
         else if( filename == NULL )
         {
-#ifndef _WIN32
-            filename = msTmpFile(NULL, "/tmp/", pszExtension );
-#else
-            filename = msTmpFile(NULL, "C:\\", pszExtension );
-#endif
+            filename = msTmpFile(map, NULL, NULL, pszExtension );
         }
             
         bFileIsTemporary = MS_TRUE;
@@ -184,16 +214,25 @@ int msSaveImageGDAL( mapObj *map, imageObj *image, char *filename )
 /*      Establish the characteristics of our memory, and final          */
 /*      dataset.                                                        */
 /* -------------------------------------------------------------------- */
+
     if( format->imagemode == MS_IMAGEMODE_RGB )
     {
         nBands = 3;
-        assert( gdImageTrueColor( image->img.gd ) );
+        assert( MS_RENDERER_PLUGIN(format) && format->vtable->supports_pixel_buffer );
+        format->vtable->getRasterBufferHandle(image,&rb);
     }
     else if( format->imagemode == MS_IMAGEMODE_RGBA )
     {
         pabyAlphaLine = (GByte *) calloc(image->width,1);
+        if (pabyAlphaLine == NULL)
+        {
+            msReleaseLock( TLOCK_GDAL );
+            msSetError( MS_MEMERR, "Out of memory allocating %u bytes.\n", "msSaveImageGDAL()", image->width);
+            return MS_FAILURE;
+        }
         nBands = 4;
-        assert( gdImageTrueColor( image->img.gd ) );
+        assert( MS_RENDERER_PLUGIN(format) && format->vtable->supports_pixel_buffer );
+        format->vtable->getRasterBufferHandle(image,&rb);
     }
     else if( format->imagemode == MS_IMAGEMODE_INT16 )
     {
@@ -213,7 +252,7 @@ int msSaveImageGDAL( mapObj *map, imageObj *image, char *filename )
     else
     {
         assert( format->imagemode == MS_IMAGEMODE_PC256
-                && !gdImageTrueColor( image->img.gd ) );
+                && format->renderer == MS_RENDER_WITH_GD );
     }
 
 /* -------------------------------------------------------------------- */
@@ -273,47 +312,74 @@ int msSaveImageGDAL( mapObj *map, imageObj *image, char *filename )
                               + iBand * image->width * image->height,
                               image->width, 1, GDT_Byte, 1, 0 );
             }
-#if GD2_VERS > 1
-            else if( nBands > 1 && iBand < 3 )
-            {
-                GByte *pabyData;
-#ifdef CPL_MSB
-
-                pabyData = ((GByte *) image->img.gd->tpixels[iLine])+iBand+1;
-#else
-                pabyData = ((GByte *) image->img.gd->tpixels[iLine])+(2-iBand);
-#endif
-                GDALRasterIO( hBand, GF_Write, 0, iLine, image->width, 1, 
-                              pabyData, image->width, 1, GDT_Byte, 4, 0 );
-            }
-            else if( nBands > 1 && iBand == 3 ) /* Alpha band */
-            {
-                int x;
-#ifdef CPL_MSB
-                GByte *pabySrc = ((GByte *) image->img.gd->tpixels[iLine]);
-#else
-                GByte *pabySrc = ((GByte *) image->img.gd->tpixels[iLine])+3;
-#endif
-
-                for( x = 0; x < image->width; x++ )
-                {
-                    if( *pabySrc == 127 )
-                        pabyAlphaLine[x] = 0;
-                    else
-                        pabyAlphaLine[x] = 255 - 2 * *pabySrc;
-
-                    pabySrc += 4;
-                }
-
-                GDALRasterIO( hBand, GF_Write, 0, iLine, image->width, 1, 
-                              pabyAlphaLine, image->width, 1, GDT_Byte, 1, 0 );
-            }
-#endif
-            else
-            {
-                GDALRasterIO( hBand, GF_Write, 0, iLine, image->width, 1, 
-                              image->img.gd->pixels[iLine], 
+            else if(format->renderer == MS_RENDER_WITH_GD) {
+               gdImagePtr img = (gdImagePtr)image->img.plugin;
+               GDALRasterIO( hBand, GF_Write, 0, iLine, image->width, 1, 
+                              img->pixels[iLine], 
                               image->width, 1, GDT_Byte, 0, 0 );
+            }
+            else {
+               GByte *pabyData;
+               unsigned char *pixptr = NULL;
+               assert( rb.type == MS_BUFFER_BYTE_RGBA );
+               switch(iBand) {
+               case 0:
+                  pixptr = rb.data.rgba.r;
+                  break;
+               case 1:
+                  pixptr = rb.data.rgba.g;
+                  break;
+               case 2:
+                  pixptr = rb.data.rgba.b;
+                  break;
+               case 3:
+                  pixptr = rb.data.rgba.a;
+                  break;
+               }
+               assert(pixptr);
+               if( pixptr == NULL )
+               {
+                   msReleaseLock( TLOCK_GDAL );
+                   msSetError( MS_MISCERR, "Missing RGB or A buffer.\n",
+                               "msSaveImageGDAL()" );
+                   return MS_FAILURE;
+               }
+
+               pabyData = (GByte *)(pixptr + iLine*rb.data.rgba.row_step);
+
+               if( rb.data.rgba.a == NULL || iBand == 3 )
+               {
+                   GDALRasterIO( hBand, GF_Write, 0, iLine, image->width, 1, 
+                                 pabyData, image->width, 1, GDT_Byte, 
+                                 rb.data.rgba.pixel_step, 0 );
+               }
+               else /* We need to un-pre-multiple RGB by alpha. */
+               {
+                   GByte *pabyUPM = (GByte*) malloc(image->width);
+                   GByte *pabyAlpha= (GByte *)(rb.data.rgba.a + iLine*rb.data.rgba.row_step);
+                   int i;
+
+                   for( i = 0; i < image->width; i++ )
+                   {
+                       int alpha = pabyAlpha[i*rb.data.rgba.pixel_step];
+
+                       if( alpha == 0 )
+                           pabyUPM[i] = 0;
+                       else
+                       {
+                           int result = (pabyData[i*rb.data.rgba.pixel_step] * 255) / alpha;
+                           
+                           if( result > 255 )
+                               result = 255;
+
+                           pabyUPM[i] = result;
+                       }
+                   }
+
+                   GDALRasterIO( hBand, GF_Write, 0, iLine, image->width, 1, 
+                                 pabyUPM, image->width, 1, GDT_Byte, 1, 0 );
+                   free( pabyUPM );
+               }
             }
         }
     }
@@ -324,24 +390,24 @@ int msSaveImageGDAL( mapObj *map, imageObj *image, char *filename )
 /* -------------------------------------------------------------------- */
 /*      Attach the palette if appropriate.                              */
 /* -------------------------------------------------------------------- */
-    if( format->imagemode == MS_IMAGEMODE_PC256 )
+    if( format->renderer == MS_RENDER_WITH_GD )
     {
         GDALColorEntry sEntry;
         int  iColor;
         GDALColorTableH hCT;
-
+        gdImagePtr img = (gdImagePtr)image->img.plugin;
         hCT = GDALCreateColorTable( GPI_RGB );
 
-        for( iColor = 0; iColor < image->img.gd->colorsTotal; iColor++ )
+        for( iColor = 0; iColor < img->colorsTotal; iColor++ )
         {
-            sEntry.c1 = image->img.gd->red[iColor];
-            sEntry.c2 = image->img.gd->green[iColor];
-            sEntry.c3 = image->img.gd->blue[iColor];
+            sEntry.c1 = img->red[iColor];
+            sEntry.c2 = img->green[iColor];
+            sEntry.c3 = img->blue[iColor];
 
-            if( iColor == gdImageGetTransparent( image->img.gd ) )
+            if( iColor == gdImageGetTransparent( img ) )
                 sEntry.c4 = 0;
             else if( iColor == 0 
-                     && gdImageGetTransparent( image->img.gd ) == -1 
+                     && gdImageGetTransparent( img ) == -1 
                      && format->transparent )
                 sEntry.c4 = 0;
             else
@@ -389,11 +455,27 @@ int msSaveImageGDAL( mapObj *map, imageObj *image, char *filename )
 
         GDALSetGeoTransform( hMemDS, map->gt.geotransform );
 
-        pszWKT = msProjectionObjToWKT( &(map->projection) );
+        pszWKT = msProjectionObj2OGCWKT( &(map->projection) );
         if( pszWKT != NULL )
         {
             GDALSetProjection( hMemDS, pszWKT );
-            CPLFree( pszWKT );
+            msFree( pszWKT );
+        }
+    }
+
+/* -------------------------------------------------------------------- */
+/*      Possibly assign a nodata value.                                 */
+/* -------------------------------------------------------------------- */
+    if( msGetOutputFormatOption(format,"NULLVALUE",NULL) != NULL )
+    {
+        int iBand;
+        const char *nullvalue = msGetOutputFormatOption(format,
+                                                        "NULLVALUE",NULL);
+
+        for( iBand = 0; iBand < nBands; iBand++ )
+        {
+            GDALRasterBandH hBand = GDALGetRasterBand( hMemDS, iBand+1 );
+            GDALSetRasterNoDataValue( hBand, atof(nullvalue) );
         }
     }
 
@@ -415,6 +497,14 @@ int msSaveImageGDAL( mapObj *map, imageObj *image, char *filename )
 /*      memory image.                                                   */
 /* -------------------------------------------------------------------- */
     papszOptions = (char**)calloc(sizeof(char *),(format->numformatoptions+1));
+    if (papszOptions == NULL)
+    {
+        msReleaseLock( TLOCK_GDAL );
+        msSetError( MS_MEMERR, "Out of memory allocating %u bytes.\n", "msSaveImageGDAL()", 
+                    sizeof(char *)*(format->numformatoptions+1));
+        return MS_FAILURE;
+    }
+
     memcpy( papszOptions, format->formatoptions, 
             sizeof(char *) * format->numformatoptions );
    
@@ -534,44 +624,59 @@ int msInitDefaultGDALOutputFormat( outputFormatObj *format )
 /*      Initialize the object.                                          */
 /* -------------------------------------------------------------------- */
     format->imagemode = MS_IMAGEMODE_RGB;
-    format->renderer = MS_RENDER_WITH_GD;
-
-    /* Eventually we should have a way of deriving the mime type and extension */
-    /* from the driver. */
+    format->renderer = MS_RENDER_WITH_AGG;
 
 #ifdef GDAL_DMD_MIMETYPE 
     if( GDALGetMetadataItem( hDriver, GDAL_DMD_MIMETYPE, NULL ) != NULL )
         format->mimetype = 
-            strdup(GDALGetMetadataItem(hDriver,GDAL_DMD_MIMETYPE,NULL));
+            msStrdup(GDALGetMetadataItem(hDriver,GDAL_DMD_MIMETYPE,NULL));
     if( GDALGetMetadataItem( hDriver, GDAL_DMD_EXTENSION, NULL ) != NULL )
         format->extension = 
-            strdup(GDALGetMetadataItem(hDriver,GDAL_DMD_EXTENSION,NULL));
+            msStrdup(GDALGetMetadataItem(hDriver,GDAL_DMD_EXTENSION,NULL));
 
 #else
     if( strcasecmp(format->driver,"GDAL/GTiff") )
     {
-        format->mimetype = strdup("image/tiff");
-        format->extension = strdup("tif");
+        format->mimetype = msStrdup("image/tiff");
+        format->extension = msStrdup("tif");
     }
 #endif
     
     return MS_SUCCESS;
 }
 
+#else
+
+void msGDALInitialize( void ) {}
+void msGDALCleanup(void) {}
+
+
+#endif /* def USE_GDAL */
+
+
 /************************************************************************/
-/*                        msProjectionObjToWKT()                        */
+/*                      msProjectionObj2OGCWKT()                        */
 /*                                                                      */
 /*      We stick to the C API for OGRSpatialReference object access     */
 /*      to allow MapServer+GDAL to be built without C++                 */
 /*      complications.                                                  */
 /*                                                                      */
 /*      Note that this function will return NULL on failure, and the    */
-/*      returned string must be freed with CPLFree(), not msFree().     */
+/*      returned string should be freed with msFree().                  */
 /************************************************************************/
 
-char *msProjectionObjToWKT( projectionObj *projection )
+char *msProjectionObj2OGCWKT( projectionObj *projection )
 
 {
+
+#if !defined(USE_GDAL) && !defined(USE_OGR)
+    msSetError(MS_OGRERR, 
+               "Not implemented since neither OGR nor GDAL is enabled.",
+               "msProjectionObj2OGCWKT()");
+    return NULL;
+
+#else /* defined USE_GDAL or USE_OGR */
+
     OGRSpatialReferenceH hSRS;
     char *pszWKT=NULL, *pszProj4;
     int  nLength = 0, i;
@@ -610,14 +715,17 @@ char *msProjectionObjToWKT( projectionObj *projection )
         eErr = OSRExportToWkt( hSRS, &pszWKT );
 
     OSRDestroySpatialReference( hSRS );
-    
-    return pszWKT;
+
+    if( pszWKT )
+    {
+        char *pszWKT2 = msStrdup(pszWKT);
+        CPLFree( pszWKT );
+
+        return pszWKT2;
+    }
+    else
+        return NULL;
+#endif /* defined USE_GDAL or USE_OGR */
 }
 
-#else
 
-void msGDALInitialize( void ) {}
-void msGDALCleanup(void) {}
-
-
-#endif /* def USE_GDAL */

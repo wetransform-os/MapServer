@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapimagemap.c 9472 2009-10-16 18:17:05Z aboudreault $
+ * $Id: mapimagemap.c 11473 2011-04-06 03:05:02Z dmorissette $
  *
  * Project:  MapServer
  * Purpose:  Implements imagemap outputformat support.
@@ -38,7 +38,7 @@
 #include <io.h>
 #endif
 
-MS_CVSID("$Id: mapimagemap.c 9472 2009-10-16 18:17:05Z aboudreault $")
+MS_CVSID("$Id: mapimagemap.c 11473 2011-04-06 03:05:02Z dmorissette $")
 
 #define MYDEBUG 0
 #define DEBUG_IF if (MYDEBUG > 2) 
@@ -124,7 +124,7 @@ static int suppressEmpty=0;
 static const char *makeFmtSafe(const char *fmt, int MAX) {
   /* format string should have exactly 'MAX' %s */
 
-  char *result = malloc(strlen(fmt)+1+3*MAX), *cp;
+  char *result = msSmallMalloc(strlen(fmt)+1+3*MAX), *cp;
   int numstr=0, saw_percent=0;
 
   strcpy(result, fmt);
@@ -186,7 +186,7 @@ static void im_iprintf(pString *ps, const char *fmt, ...) {
 			if (n>-1 && *(ps->alloc_size) <= (n + ps->string_len))
 				/* ensure at least as much as what is needed */
 				*(ps->alloc_size) = n+ps->string_len+1;
-			*(ps->string) = (char *) realloc
+			*(ps->string) = (char *) msSmallRealloc
 				(*(ps->string), *(ps->alloc_size));
 			/* if realloc doesn't work, we're screwed! */
 		}
@@ -246,9 +246,9 @@ void msImageStartLayerIM(mapObj *map, layerObj *layer, imageObj *image){
 DEBUG_IF printf("ImageStartLayerIM\n<BR>");
 	free(lname);
 	if (layer->name)
-		lname = strdup(layer->name);
+		lname = msStrdup(layer->name);
 	else
-		lname = strdup("NONE");
+		lname = msStrdup("NONE");
 	if (dxf == 2){
 		im_iprintf(&layerStr, "LAYER\n%s\n", lname);
 	} else if (dxf) {
@@ -272,10 +272,8 @@ DEBUG_IF printf("addImageCache\n<BR>");
   } else 
     *icsize += 1;
 
-  if((icp = (struct imageCacheObj *)malloc(sizeof(struct imageCacheObj))) == NULL) {
-    msSetError(MS_MEMERR, NULL, "initImageCache()");
-    return(NULL);
-  }
+  icp = (struct imageCacheObj *)malloc(sizeof(struct imageCacheObj));
+  MS_CHECK_ALLOC(icp, sizeof(struct imageCacheObj), NULL);
   
   icp->img = img;
   icp->color = style->color;
@@ -303,6 +301,7 @@ DEBUG_IF printf("msImageCreateIM<BR>\n");
     if (width > 0 && height > 0)
     {
         image = (imageObj *)calloc(1,sizeof(imageObj));
+        MS_CHECK_ALLOC(image, sizeof(imageObj), NULL);
 /*
 
         if( format->imagemode == MS_IMAGEMODE_RGB 
@@ -365,8 +364,8 @@ DEBUG_IF printf("msImageCreateIM<BR>\n");
 	      suppressEmpty=1;
 	    }
 
-	    lname = strdup("NONE");
-	    *(imgStr.string) = strdup("");
+	    lname = msStrdup("NONE");
+	    *(imgStr.string) = msStrdup("");
 	    if (*(imgStr.string)){
 		    *(imgStr.alloc_size) =
 			    imgStr.string_len = strlen(*(imgStr.string));
@@ -376,11 +375,11 @@ DEBUG_IF printf("msImageCreateIM<BR>\n");
 	    }
             if (imagepath)
             {
-                image->imagepath = strdup(imagepath);
+                image->imagepath = msStrdup(imagepath);
             }
             if (imageurl)
             {
-                image->imageurl = strdup(imageurl);
+                image->imageurl = msStrdup(imageurl);
             }
             
             return image;
@@ -627,9 +626,6 @@ void msCircleDrawLineSymbolIM(symbolSetObj *symbolset, imageObj* img, pointObj *
     break;
   case(MS_SYMBOL_TRUETYPE):
     // msImageTruetypePolyline(img, p, symbol, fc, size, symbolset->fontset);
-    return;
-    break;
-  case(MS_SYMBOL_CARTOLINE):
     return;
     break;
   case(MS_SYMBOL_ELLIPSE):   
@@ -1266,16 +1262,6 @@ DEBUG_IF printf("msDrawLineSymbolIM<BR>\n");
     msImageTruetypePolyline(symbolset, img, p, style, scalefactor);
     return;
     break;
-  case(MS_SYMBOL_CARTOLINE):
-    // Single line //
-    if (size == 1) {
-      bc = imTransparent;
-      break;
-    } else {
-      msImageCartographicPolyline(img, p, fc, size, symbol->linecap, symbol->linejoin, symbol->linejoinmaxsize);
-    }
-    return;
-    break;
   case(MS_SYMBOL_ELLIPSE):
     bc = imTransparent;
 
@@ -1845,7 +1831,7 @@ int msDrawLabelCacheIM(imageObj* img, mapObj *map)
    cacheslot = &(map->labelcache.slots[priority]);
 
    for(l=cacheslot->numlabels-1; l>=0; l--) {
-
+	double size = cachePtr->label.size*layerPtr->scalefactor;
     cachePtr = &(cacheslot->labels[l]); /* point to right spot in the label cache */
 
     layerPtr = (GET_LAYER(map, cachePtr->layerindex)); /* set a couple of other pointers, avoids nasty references */
@@ -1854,11 +1840,14 @@ int msDrawLabelCacheIM(imageObj* img, mapObj *map)
     if(!cachePtr->text || strlen(cachePtr->text) == 0)
       continue; /* not an error, just don't want to do anything */
 
-    if(cachePtr->label.type == MS_TRUETYPE)
-      cachePtr->label.size = (cachePtr->label.size*layerPtr->scalefactor);
+    if(labelPtr->type == MS_TRUETYPE) {
+    	size = MS_MAX(size, labelPtr->minsize*img->resolutionfactor);
+    	size = MS_MIN(size, labelPtr->maxsize*img->resolutionfactor);  
+    }
 
-    if(msGetLabelSize(img,cachePtr->text, labelPtr, &r, &(map->fontset), layerPtr->scalefactor, MS_TRUE,NULL) == -1)
-      return(-1);
+    if(msGetLabelSize(map,labelPtr,cachePtr->text, size,&r, NULL) != MS_SUCCESS) {
+      return MS_FAILURE;
+    }
 
     label_offset_x = labelPtr->offsetx*layerPtr->scalefactor;
     label_offset_y = labelPtr->offsety*layerPtr->scalefactor;
@@ -1873,7 +1862,7 @@ int msDrawLabelCacheIM(imageObj* img, mapObj *map)
 
       /* TO DO: at the moment only checks the bottom style, perhaps should check all of them */
       if (msGetMarkerSize(&map->symbolset, &(cachePtr->styles[0]), &marker_width, &marker_height, layerPtr->scalefactor) != MS_SUCCESS)
-	return(-1);
+	return(MS_FAILURE);
 
       marker_width = (int) (marker_width * layerPtr->scalefactor);
       marker_height = (int) (marker_height * layerPtr->scalefactor);
@@ -1977,7 +1966,7 @@ int msDrawLabelCacheIM(imageObj* img, mapObj *map)
    } /* next label in cache */
   } /* next priority */
 
-  return(0);
+  return(MS_SUCCESS);
 }
 
 /*

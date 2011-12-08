@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapio.h 6469 2007-08-06 02:57:38Z hobu $
+ * $Id: mapio.h 11163 2011-03-15 20:54:31Z schpidi $
  *
  * Project:  MapServer
  * Purpose:  Definitions for MapServer IO redirection capability.
@@ -46,6 +46,10 @@
 #ifdef USE_MAPIO
 
 #include <stdarg.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* stdio analogs */
 int MS_DLL_EXPORT msIO_printf( const char *format, ... );
@@ -111,10 +115,15 @@ void MS_DLL_EXPORT msIO_installStdoutToBuffer(void);
 void MS_DLL_EXPORT msIO_installStdinFromBuffer(void);
 void MS_DLL_EXPORT msIO_Cleanup(void);
 char MS_DLL_EXPORT *msIO_stripStdoutBufferContentType(void);
+void MS_DLL_EXPORT msIO_stripStdoutBufferContentHeaders(void);
 
 /* this is just for setting normal stdout's to binary mode on windows */
 
 int msIO_needBinaryStdout( void );
 int msIO_needBinaryStdin( void );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* nef MAPIO_H */

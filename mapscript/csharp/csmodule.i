@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: csmodule.i 7848 2008-08-14 11:03:43Z tamas $
+ * $Id: csmodule.i 11081 2011-03-05 17:44:17Z tamas $
  *
  * Project:  MapServer
  * Purpose:  C#-specific enhancements to MapScript
@@ -286,6 +286,34 @@ static SWIG_CSharpByteArrayHelperCallback SWIG_csharp_bytearray_callback = NULL;
 %}
 
 
+%csmethodmodifiers processTemplate "private";
+%csmethodmodifiers processLegendTemplate "private";
+%csmethodmodifiers processQueryTemplate "private";
+
+%typemap(cscode) mapObj %{
+  public string processTemplate(int bGenerateImages, string[] names, string[] values)
+  {
+	if (names.Length != values.Length)
+	    throw new ArgumentException("Invalid array length specified!");
+	return processTemplate(bGenerateImages, names, values, values.Length);
+  }
+  
+  public string processLegendTemplate(string[] names, string[] values)
+  {
+	if (names.Length != values.Length)
+	    throw new ArgumentException("Invalid array length specified!");
+	return processLegendTemplate(names, values, values.Length);
+  }
+  
+  public string processQueryTemplate(string[] names, string[] values)
+  {
+	if (names.Length != values.Length)
+	    throw new ArgumentException("Invalid array length specified!");
+	return processQueryTemplate(names, values, values.Length);
+  }
+%}
+
+
 %typemap(ctype) gdBuffer    %{void%}
 %typemap(imtype) gdBuffer  %{void%}
 %typemap(cstype) gdBuffer %{byte[]%}
@@ -351,6 +379,12 @@ DllExport void SWIGSTDCALL SWIGRegisterByteArrayCallback_$module(SWIG_CSharpByte
 }
 #endif
 %}
+
+/* Typemaps for device handle */
+%typemap(imtype) (void* device)  %{IntPtr%}
+%typemap(cstype) (void* device) %{IntPtr%}
+%typemap(in) (void* device) %{ $1 = ($1_ltype)$input; %}
+%typemap(csin) (void* device)  "$csinput"
 
 /******************************************************************************
  * Preventing to take ownership of the memory when constructing objects 

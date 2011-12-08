@@ -115,6 +115,18 @@ public class webObj : IDisposable {
     } 
   }
 
+  public string temppath {
+    set {
+      mapscriptPINVOKE.webObj_temppath_set(swigCPtr, value);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      string ret = mapscriptPINVOKE.webObj_temppath_get(swigCPtr);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
   public mapObj map {
     get {
       IntPtr cPtr = mapscriptPINVOKE.webObj_map_get(swigCPtr);

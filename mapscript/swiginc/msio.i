@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: msio.i 7506 2008-04-09 15:50:30Z nsavard $
+ * $Id: msio.i 11163 2011-03-15 20:54:31Z schpidi $
  *
  * Project:  MapServer
  * Purpose:  Definitions for MapServer IO redirection capability.
@@ -31,12 +31,13 @@
  ****************************************************************************/
 
 
-/* $Id: msio.i 7506 2008-04-09 15:50:30Z nsavard $ */
+/* $Id: msio.i 11163 2011-03-15 20:54:31Z schpidi $ */
 
 void msIO_resetHandlers(void);
 void msIO_installStdoutToBuffer(void);
 void msIO_installStdinFromBuffer(void);
 const char *msIO_stripStdoutBufferContentType(void);
+void msIO_stripStdoutBufferContentHeaders(void);
 
 /* mapscript only extensions */
 

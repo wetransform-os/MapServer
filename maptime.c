@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: maptime.c 7418 2008-02-29 00:02:49Z nsavard $
+ * $Id: maptime.c 10772 2010-11-29 18:27:02Z aboudreault $
  *
  * Project:  MapServer
  * Purpose:  Date/Time utility functions.
@@ -36,7 +36,7 @@
 #include "maptime.h"
 #include "maperror.h"
 
-MS_CVSID("$Id: maptime.c 7418 2008-02-29 00:02:49Z nsavard $")
+MS_CVSID("$Id: maptime.c 10772 2010-11-29 18:27:02Z aboudreault $")
 
 typedef struct {
   char pattern[64];
@@ -165,7 +165,7 @@ int msTimeMatchPattern(char *timestring, char *timeformat)
     {
         if(!ms_timeFormats[i].regex)
         {
-            ms_timeFormats[i].regex = (ms_regex_t *) malloc(sizeof(ms_regex_t));
+            ms_timeFormats[i].regex = (ms_regex_t *) msSmallMalloc(sizeof(ms_regex_t));
             ms_regcomp(ms_timeFormats[i].regex, 
                     ms_timeFormats[i].pattern, MS_REG_EXTENDED|MS_REG_NOSUB);
         }
@@ -191,7 +191,7 @@ void msSetLimitedPattersToUse(char *patternstring)
     int numpatterns=0, i=0, j=0, ntmp=0;
     char **patterns = NULL;
 
-    limitedpatternindice = (int *)malloc(sizeof(int)*MS_NUMTIMEFORMATS);
+    limitedpatternindice = (int *)msSmallMalloc(sizeof(int)*MS_NUMTIMEFORMATS);
     
     /* free previous setting */
     msUnsetLimitedPatternToUse();
@@ -221,7 +221,7 @@ void msSetLimitedPattersToUse(char *patternstring)
 
     if (numpatterns > 0)
     {
-        ms_limited_pattern = (int *)malloc(sizeof(int)*numpatterns);
+        ms_limited_pattern = (int *)msSmallMalloc(sizeof(int)*numpatterns);
         for (i=0; i<numpatterns; i++)
           ms_limited_pattern[i] = limitedpatternindice[i];
 
@@ -251,7 +251,7 @@ int msParseTime(const char *string, struct tm *tm) {
         indice = i;
 
       if(!ms_timeFormats[indice].regex) { /* compile the expression */
-      ms_timeFormats[indice].regex = (ms_regex_t *) malloc(sizeof(ms_regex_t)); 
+      ms_timeFormats[indice].regex = (ms_regex_t *) msSmallMalloc(sizeof(ms_regex_t)); 
       if(ms_regcomp(ms_timeFormats[indice].regex, ms_timeFormats[indice].pattern, MS_REG_EXTENDED|MS_REG_NOSUB) != 0) {
 	msSetError(MS_REGEXERR, "Failed to compile expression (%s).", "msParseTime()", ms_timeFormats[indice].pattern);
 	return(MS_FALSE);
@@ -284,7 +284,7 @@ int msTimeGetResolution(const char *timestring)
      {
          if(!ms_timeFormats[i].regex) 
          {
-             ms_timeFormats[i].regex = (ms_regex_t *) malloc(sizeof(ms_regex_t));                
+             ms_timeFormats[i].regex = (ms_regex_t *) msSmallMalloc(sizeof(ms_regex_t));                
              if(ms_regcomp(ms_timeFormats[i].regex, ms_timeFormats[i].pattern, 
                         MS_REG_EXTENDED|MS_REG_NOSUB) != 0) 
              {
@@ -391,6 +391,7 @@ int _msValidateTime(char *timestring,  const char *timeextent)
                 msTimeCompare(&tmend, &tmtimeend) >= 0)
             {
                 msFreeCharArray(atimerange, numranges);
+                msFreeCharArray(atimeextents, numextents);
                 return MS_TRUE;
             }
         }
@@ -402,7 +403,8 @@ int _msValidateTime(char *timestring,  const char *timeextent)
                 msTimeCompare(&tmstart, &tmtimestart) <= 0 &&
                 msTimeCompare(&tmend, &tmtimeend) >= 0)
             {
-                 msFreeCharArray(atimerange, numranges);
+                msFreeCharArray(atimerange, numranges);
+                msFreeCharArray(atimeextents, numextents);
                 return MS_TRUE;
             }
         }

@@ -178,56 +178,6 @@ public class labelObj : IDisposable {
     } 
   }
 
-  public colorObj backgroundcolor {
-    set {
-      mapscriptPINVOKE.labelObj_backgroundcolor_set(swigCPtr, colorObj.getCPtr(value));
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-    } 
-    get {
-      IntPtr cPtr = mapscriptPINVOKE.labelObj_backgroundcolor_get(swigCPtr);
-      colorObj ret = (cPtr == IntPtr.Zero) ? null : new colorObj(cPtr, false, ThisOwn_false());
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-      return ret;
-    } 
-  }
-
-  public colorObj backgroundshadowcolor {
-    set {
-      mapscriptPINVOKE.labelObj_backgroundshadowcolor_set(swigCPtr, colorObj.getCPtr(value));
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-    } 
-    get {
-      IntPtr cPtr = mapscriptPINVOKE.labelObj_backgroundshadowcolor_get(swigCPtr);
-      colorObj ret = (cPtr == IntPtr.Zero) ? null : new colorObj(cPtr, false, ThisOwn_false());
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-      return ret;
-    } 
-  }
-
-  public int backgroundshadowsizex {
-    set {
-      mapscriptPINVOKE.labelObj_backgroundshadowsizex_set(swigCPtr, value);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-    } 
-    get {
-      int ret = mapscriptPINVOKE.labelObj_backgroundshadowsizex_get(swigCPtr);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-      return ret;
-    } 
-  }
-
-  public int backgroundshadowsizey {
-    set {
-      mapscriptPINVOKE.labelObj_backgroundshadowsizey_set(swigCPtr, value);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-    } 
-    get {
-      int ret = mapscriptPINVOKE.labelObj_backgroundshadowsizey_get(swigCPtr);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-      return ret;
-    } 
-  }
-
   public double size {
     set {
       mapscriptPINVOKE.labelObj_size_set(swigCPtr, value);
@@ -312,25 +262,13 @@ public class labelObj : IDisposable {
     } 
   }
 
-  public int autoangle {
+  public int anglemode {
     set {
-      mapscriptPINVOKE.labelObj_autoangle_set(swigCPtr, value);
+      mapscriptPINVOKE.labelObj_anglemode_set(swigCPtr, value);
       if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
     } 
     get {
-      int ret = mapscriptPINVOKE.labelObj_autoangle_get(swigCPtr);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-      return ret;
-    } 
-  }
-
-  public int autofollow {
-    set {
-      mapscriptPINVOKE.labelObj_autofollow_set(swigCPtr, value);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-    } 
-    get {
-      int ret = mapscriptPINVOKE.labelObj_autofollow_get(swigCPtr);
+      int ret = mapscriptPINVOKE.labelObj_anglemode_get(swigCPtr);
       if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
       return ret;
     } 
@@ -492,6 +430,18 @@ public class labelObj : IDisposable {
     } 
   }
 
+  public double maxoverlapangle {
+    set {
+      mapscriptPINVOKE.labelObj_maxoverlapangle_set(swigCPtr, value);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      double ret = mapscriptPINVOKE.labelObj_maxoverlapangle_get(swigCPtr);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
   public int partials {
     set {
       mapscriptPINVOKE.labelObj_partials_set(swigCPtr, value);
@@ -535,6 +485,18 @@ public class labelObj : IDisposable {
     } 
     get {
       int ret = mapscriptPINVOKE.labelObj_priority_get(swigCPtr);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public int numstyles {
+    set {
+      mapscriptPINVOKE.labelObj_numstyles_set(swigCPtr, value);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      int ret = mapscriptPINVOKE.labelObj_numstyles_get(swigCPtr);
       if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
       return ret;
     } 

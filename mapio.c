@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapio.c 7694 2008-06-18 21:26:45Z dmorissette $
+ * $Id: mapio.c 11163 2011-03-15 20:54:31Z schpidi $
  *
  * Project:  MapServer
  * Purpose:  Implementations for MapServer IO redirection capability.
@@ -37,7 +37,7 @@
 #include <io.h>
 #endif
 
-MS_CVSID("$Id: mapio.c 7694 2008-06-18 21:26:45Z dmorissette $")
+MS_CVSID("$Id: mapio.c 11163 2011-03-15 20:54:31Z schpidi $")
 
 static int is_msIO_initialized = MS_FALSE;
 
@@ -919,7 +919,7 @@ char *msIO_stripStdoutBufferContentType()
 /*      Copy out content type.                                          */
 /* -------------------------------------------------------------------- */
     content_type = (char *) malloc(end_of_ct-14+2);
-    strncpy( content_type, (const char *) buf->data + 14, end_of_ct - 14 + 1);
+    strlcpy( content_type, (const char *) buf->data + 14, end_of_ct - 14 + 2);
     content_type[end_of_ct-14+1] = '\0';
 
 /* -------------------------------------------------------------------- */
@@ -931,6 +931,90 @@ char *msIO_stripStdoutBufferContentType()
     buf->data_offset -= start_of_data;
 
     return content_type;
+}
+
+/************************************************************************/
+/*                 msIO_stripStdoutBufferContentHeaders()               */
+/*                                                                      */
+/*      Strip off Content-* headers from buffer.                        */
+/************************************************************************/
+
+void msIO_stripStdoutBufferContentHeaders()
+{
+/* -------------------------------------------------------------------- */
+/*      Find stdout buffer.                                             */
+/* -------------------------------------------------------------------- */
+    msIOContext *ctx = msIO_getHandler( (FILE *) "stdout" );
+    msIOBuffer  *buf;
+    int start_of_data;
+
+    if( ctx == NULL || ctx->write_channel == MS_FALSE
+        || strcmp(ctx->label,"buffer") != 0 )
+    {
+    msSetError( MS_MISCERR, "Can't identify msIO buffer.",
+                    "msIO_stripStdoutBufferContentHeaders" );
+    return;
+    }
+
+    buf = (msIOBuffer *) ctx->cbData;
+
+/* -------------------------------------------------------------------- */
+/*      Exit if we don't have any content-* header.                     */
+/* -------------------------------------------------------------------- */
+    if( buf->data_offset < 8 
+        || strncasecmp((const char*) buf->data,"Content-",8) != 0 )
+        return;
+
+/* -------------------------------------------------------------------- */
+/*      Loop over all content-* headers.                                */
+/* -------------------------------------------------------------------- */
+    start_of_data = 0;
+    while( buf->data_offset > start_of_data
+        && strncasecmp((const char*) buf->data+start_of_data,"Content-",8) == 0 )
+    {
+/* -------------------------------------------------------------------- */
+/*      Find newline marker at end of content-* header argument.        */
+/* -------------------------------------------------------------------- */
+        start_of_data +=7;
+        while( start_of_data+1 < buf->data_offset 
+               && buf->data[start_of_data+1] != 10 )
+            start_of_data++;
+
+        if( start_of_data+1 == buf->data_offset )
+        {
+        msSetError( MS_MISCERR, "Corrupt Content-* header.",
+                        "msIO_stripStdoutBufferContentHeaders" );
+        return;
+        }
+        start_of_data +=2;
+    }
+
+/* -------------------------------------------------------------------- */
+/*      Continue on to the start of data ... skipping two newline       */
+/*      markers.                                                        */
+/* -------------------------------------------------------------------- */
+    while( start_of_data  < buf->data_offset 
+           && buf->data[start_of_data] != 10 )
+        start_of_data++;
+
+    if( start_of_data == buf->data_offset )
+    {
+    msSetError( MS_MISCERR, "Corrupt Content-* header.",
+                    "msIO_stripStdoutBufferContentHeaders" );
+    return;
+    }
+
+    start_of_data++;
+
+/* -------------------------------------------------------------------- */
+/*      Move data to front of buffer, and reset length.                 */
+/* -------------------------------------------------------------------- */
+    memmove( buf->data, buf->data+start_of_data,
+             buf->data_offset - start_of_data );
+    buf->data[buf->data_offset - start_of_data] = '\0';
+    buf->data_offset -= start_of_data;
+
+    return;
 }
 
 /************************************************************************/

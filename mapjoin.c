@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapjoin.c 7418 2008-02-29 00:02:49Z nsavard $
+ * $Id: mapjoin.c 11469 2011-04-05 19:52:41Z aboudreault $
  *
  * Project:  MapServer
  * Purpose:  Implements MapServer joins. 
@@ -29,7 +29,7 @@
 
 #include "mapserver.h"
 
-MS_CVSID("$Id: mapjoin.c 7418 2008-02-29 00:02:49Z nsavard $")
+MS_CVSID("$Id: mapjoin.c 11469 2011-04-05 19:52:41Z aboudreault $")
 
 #define ROW_ALLOCATION_SIZE 10
 
@@ -246,7 +246,7 @@ int msDBFJoinPrepare(joinObj *join, shapeObj *shape)
   joininfo->nextrecord = 0; /* starting with the first record */
 
   if(joininfo->target) free(joininfo->target); /* clear last target */
-  joininfo->target = strdup(shape->values[joininfo->fromindex]);
+  joininfo->target = msStrdup(shape->values[joininfo->fromindex]);
 
   return(MS_SUCCESS);
 }
@@ -284,7 +284,7 @@ int msDBFJoinNext(joinObj *join)
       return(MS_FAILURE);
     }
     for(i=0; i<join->numitems; i++)
-      join->values[i] = strdup("\0"); /* intialize to zero length strings */
+      join->values[i] = msStrdup("\0"); /* intialize to zero length strings */
 
     joininfo->nextrecord = n;
     return(MS_DONE);
@@ -370,7 +370,7 @@ int msCSVJoinConnect(layerObj *layer, joinObj *join)
   i = 0;
   while(fgets(buffer, MS_BUFFER_LENGTH, stream) != NULL) {  
     msStringTrimEOL(buffer);  
-    joininfo->rows[i] = msStringSplit(buffer, ',', &(join->numitems));
+    joininfo->rows[i] = msStringSplitComplex(buffer, ",", &(join->numitems), MS_ALLOWEMPTYTOKENS);
     i++;
   }
   fclose(stream);
@@ -430,7 +430,7 @@ int msCSVJoinPrepare(joinObj *join, shapeObj *shape)
   joininfo->nextrow = 0; /* starting with the first record */
 
   if(joininfo->target) free(joininfo->target); /* clear last target */
-  joininfo->target = strdup(shape->values[joininfo->fromindex]);
+  joininfo->target = msStrdup(shape->values[joininfo->fromindex]);
 
   return(MS_SUCCESS);
 }
@@ -462,14 +462,14 @@ int msCSVJoinNext(joinObj *join)
   
   if(i == joininfo->numrows) { /* unable to do the join     */
     for(j=0; j<join->numitems; j++)
-      join->values[j] = strdup("\0"); /* intialize to zero length strings */
+      join->values[j] = msStrdup("\0"); /* intialize to zero length strings */
 
     joininfo->nextrow = joininfo->numrows;
     return(MS_DONE);
   } 
 
   for(j=0; j<join->numitems; j++)
-    join->values[j] = strdup(joininfo->rows[i][j]);
+    join->values[j] = msStrdup(joininfo->rows[i][j]);
 
   joininfo->nextrow = i+1; /* so we know where to start looking next time through */
 
@@ -494,7 +494,7 @@ int msCSVJoinClose(joinObj *join)
 }
 
 
-#ifdef USE_MYGIS
+#ifdef USE_MYSQL
 
 #ifndef _mysql_h
 #include <mysql/mysql.h>
@@ -543,12 +543,13 @@ typedef struct {
 int msMySQLJoinConnect(layerObj *layer, joinObj *join) 
 {
    
-#ifndef USE_MYGIS
-  msSetError(MS_QUERYERR, "MySQL support not available (compile with --with-mygis)", "msMySQLJoinConnect()");
+#ifndef USE_MYSQL
+  msSetError(MS_QUERYERR, "MySQL support not available (compile with --with-mysql)", "msMySQLJoinConnect()");
   return(MS_FAILURE);
 #else
   int i;
   char qbuf[4000];
+  char *conn_decrypted;
   msMySQLJoinInfo *joininfo;
 
   MYDEBUG if (setvbuf(stdout, NULL, _IONBF , 0)){printf("Whoops...");};
@@ -576,11 +577,20 @@ int msMySQLJoinConnect(layerObj *layer, joinObj *join)
 
         return(MS_FAILURE);
     }
-    delim = strdup(":");
-    DB_HOST = strdup(strtok(join->connection, delim));
-    DB_USER = strdup(strtok(NULL, delim));
-    DB_PASSWD = strdup(strtok(NULL, delim));
-    DB_DATABASE = strdup(strtok(NULL, delim));
+  
+    conn_decrypted = msDecryptStringTokens(layer->map, join->connection);
+    if (conn_decrypted == NULL) {
+      msSetError(MS_QUERYERR, "Error parsing MYSQL JOIN: unable to decrypt CONNECTION statement.",
+                 "msMySQLJoinConnect()");
+      return(MS_FAILURE);
+    }
+  
+    delim = msStrdup(":");
+    DB_HOST = msStrdup(strtok(conn_decrypted, delim));
+    DB_USER = msStrdup(strtok(NULL, delim));
+    DB_PASSWD = msStrdup(strtok(NULL, delim));
+    DB_DATABASE = msStrdup(strtok(NULL, delim));
+    free(conn_decrypted);
 
     if (DB_HOST == NULL || DB_USER == NULL || DB_PASSWD == NULL || DB_DATABASE == NULL)
     {
@@ -597,26 +607,26 @@ int msMySQLJoinConnect(layerObj *layer, joinObj *join)
 #endif
     {
         char tmp[4000];
-        sprintf( tmp, "Failed to connect to SQL server: Error: %s\nHost: %s\nUsername:%s\nPassword:%s\n", mysql_error(joininfo->conn), DB_HOST, DB_USER, DB_PASSWD);
+        snprintf( tmp, sizeof(tmp), "Failed to connect to SQL server: Error: %s\nHost: %s\nUsername:%s\nPassword:%s\n", mysql_error(joininfo->conn), DB_HOST, DB_USER, DB_PASSWD);
         msSetError(MS_QUERYERR, tmp,
-           "msMYGISLayerOpen()");
+           "msMYSQLLayerOpen()");
         free(joininfo);
         return MS_FAILURE;
     }
 
-    MYDEBUG printf("msMYGISLayerOpen2 called<br>\n");
+    MYDEBUG printf("msMYSQLLayerOpen2 called<br>\n");
     if (mysql_select_db(joininfo->conn,DB_DATABASE) < 0)
     {
       mysql_close(joininfo->conn);
 		}
-    MYDEBUG printf("msMYGISLayerOpen3 called<br>\n");
+    MYDEBUG printf("msMYSQLLayerOpen3 called<br>\n");
 		if (joininfo->qresult != NULL) /* query leftover */
 		{
-    	MYDEBUG printf("msMYGISLayerOpen4 called<br>\n");
+    	MYDEBUG printf("msMYSQLLayerOpen4 called<br>\n");
 			mysql_free_result(joininfo->qresult);
 		}
-    MYDEBUG printf("msMYGISLayerOpen5 called<br>\n");
-		sprintf(qbuf, "SELECT count(%s) FROM %s", join->to, join->table);
+    MYDEBUG printf("msMYSQLLayerOpen5 called<br>\n");
+               snprintf(qbuf, sizeof(qbuf), "SELECT count(%s) FROM %s", join->to, join->table);
 		MYDEBUG printf("%s<br>\n", qbuf);
    	if ((joininfo->qresult = msMySQLQuery(qbuf, joininfo->conn))) /* There were some rows found, write 'em out for debug */
 		{
@@ -632,7 +642,7 @@ int msMySQLJoinConnect(layerObj *layer, joinObj *join)
     	msSetError(MS_DBFERR, "Item %s not found in table %s.", "msMySQLJoinConnect()", join->to, join->table); 
 	    return(MS_FAILURE);
 		}
-		sprintf(qbuf, "EXPLAIN %s", join->table);
+		snprintf(qbuf, sizeof(qbuf), "EXPLAIN %s", join->table);
    	if ((joininfo->qresult = msMySQLQuery(qbuf, joininfo->conn))) /* There were some rows found, write 'em out for debug */
 		{
 	  		join->numitems = mysql_affected_rows(joininfo->conn);
@@ -645,13 +655,13 @@ int msMySQLJoinConnect(layerObj *layer, joinObj *join)
         {
             MYSQL_ROW row = mysql_fetch_row(joininfo->qresult);
             MYDEBUG printf("(%s)<BR>\n",row[0]);
-						join->items[i] = strdup(row[0]);
+						join->items[i] = msStrdup(row[0]);
         }
 		} else {
     	msSetError(MS_DBFERR, "Item %s not found in table %s.", "msMySQLJoinConnect()", join->to, join->table); 
 	    return(MS_FAILURE);
 		}
-		joininfo->tocolumn = strdup(join->to);
+		joininfo->tocolumn = msStrdup(join->to);
 
 	
 
@@ -677,8 +687,8 @@ int msMySQLJoinConnect(layerObj *layer, joinObj *join)
 
 int msMySQLJoinPrepare(joinObj *join, shapeObj *shape) 
 {
-#ifndef USE_MYGIS
-  msSetError(MS_QUERYERR, "MySQL support not available (compile with --with-mygis)", "msMySQLJoinPrepare()");
+#ifndef USE_MYSQL
+  msSetError(MS_QUERYERR, "MySQL support not available (compile with --with-mysql)", "msMySQLJoinPrepare()");
   return(MS_FAILURE);
 #else
   msMySQLJoinInfo *joininfo = join->joininfo;  
@@ -701,7 +711,7 @@ int msMySQLJoinPrepare(joinObj *join, shapeObj *shape)
   joininfo->nextrecord = 0; /* starting with the first record */
 
   if(joininfo->target) free(joininfo->target); /* clear last target */
-  joininfo->target = strdup(shape->values[joininfo->fromindex]);
+  joininfo->target = msStrdup(shape->values[joininfo->fromindex]);
 
   return(MS_SUCCESS);
 #endif
@@ -709,8 +719,8 @@ int msMySQLJoinPrepare(joinObj *join, shapeObj *shape)
 
 int msMySQLJoinNext(joinObj *join) 
 {
-#ifndef USE_MYGIS
-  msSetError(MS_QUERYERR, "MySQL support not available (compile with --with-mygis)", "msMySQLJoinNext()");
+#ifndef USE_MYSQL
+  msSetError(MS_QUERYERR, "MySQL support not available (compile with --with-mysql)", "msMySQLJoinNext()");
   return(MS_FAILURE);
 #else
   int i, n;
@@ -738,7 +748,7 @@ int msMySQLJoinNext(joinObj *join)
 /* for(i=joininfo->nextrecord; i<n; i++) { // find a match */
 /* if(strcmp(joininfo->target, msMySQLReadStringAttribute(joininfo->conn, i, joininfo->toindex)) == 0) break; */
 /* }   */
-   	sprintf(qbuf, "SELECT * FROM %s WHERE %s = %s", join->table, joininfo->tocolumn, joininfo->target); 
+   	snprintf(qbuf, sizeof(qbuf), "SELECT * FROM %s WHERE %s = %s", join->table, joininfo->tocolumn, joininfo->target); 
 		MYDEBUG printf("%s<BR>\n", qbuf);
    	if ((joininfo->qresult = msMySQLQuery(qbuf, joininfo->conn))) /* There were some rows found, write 'em out for debug */
 		{
@@ -758,8 +768,8 @@ int msMySQLJoinNext(joinObj *join)
 							return(MS_FAILURE);
 						}
 						for(i=0; i<join->numitems; i++){
-/* join->values[i] = strdup("\0"); */ /* intialize to zero length strings */
-							join->values[i] = strdup(row[i]); /* intialize to zero length strings */
+/* join->values[i] = msStrdup("\0"); */ /* intialize to zero length strings */
+							join->values[i] = msStrdup(row[i]); /* intialize to zero length strings */
 				/* rows = atoi(row[0]); */
 						}
 				}	else {
@@ -768,7 +778,7 @@ int msMySQLJoinNext(joinObj *join)
 							return(MS_FAILURE);
 						}
 						for(i=0; i<join->numitems; i++)
-							join->values[i] = strdup("\0"); /* intialize to zero length strings  */
+							join->values[i] = msStrdup("\0"); /* intialize to zero length strings  */
 
 						return(MS_DONE);
 				} 
@@ -784,7 +794,7 @@ int msMySQLJoinNext(joinObj *join)
       return(MS_FAILURE);
     }
     for(i=0; i<join->numitems; i++)
-      join->values[i] = strdup("\0"); /* intialize to zero length strings  */
+      join->values[i] = msStrdup("\0"); /* intialize to zero length strings  */
 
     joininfo->nextrecord = n;
     return(MS_DONE);
@@ -802,8 +812,8 @@ int msMySQLJoinNext(joinObj *join)
 
 int msMySQLJoinClose(joinObj *join) 
 {
-#ifndef USE_MYGIS
-  msSetError(MS_QUERYERR, "MySQL support not available (compile with --with-mygis)", "msMySQLJoinClose()");
+#ifndef USE_MYSQL
+  msSetError(MS_QUERYERR, "MySQL support not available (compile with --with-mysql)", "msMySQLJoinClose()");
   return(MS_FAILURE);
 #else
   msMySQLJoinInfo *joininfo = join->joininfo;

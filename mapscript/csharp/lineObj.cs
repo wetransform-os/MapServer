@@ -87,15 +87,6 @@ public class lineObj : IDisposable {
     } 
   }
 
-  public pointObj point {
-    get {
-      IntPtr cPtr = mapscriptPINVOKE.lineObj_point_get(swigCPtr);
-      pointObj ret = (cPtr == IntPtr.Zero) ? null : new pointObj(cPtr, false, ThisOwn_false());
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-      return ret;
-    } 
-  }
-
   public lineObj() : this(mapscriptPINVOKE.new_lineObj(), true, null) {
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
   }

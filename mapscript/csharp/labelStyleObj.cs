@@ -153,43 +153,6 @@ public class labelStyleObj : IDisposable {
     } 
   }
 
-  public double shadowsizex {
-    set {
-      mapscriptPINVOKE.labelStyleObj_shadowsizex_set(swigCPtr, value);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-    } 
-    get {
-      double ret = mapscriptPINVOKE.labelStyleObj_shadowsizex_get(swigCPtr);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-      return ret;
-    } 
-  }
-
-  public double shadowsizey {
-    set {
-      mapscriptPINVOKE.labelStyleObj_shadowsizey_set(swigCPtr, value);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-    } 
-    get {
-      double ret = mapscriptPINVOKE.labelStyleObj_shadowsizey_get(swigCPtr);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-      return ret;
-    } 
-  }
-
-  public colorObj shadowcolor {
-    set {
-      mapscriptPINVOKE.labelStyleObj_shadowcolor_set(swigCPtr, colorObj.getCPtr(value));
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-    } 
-    get {
-      IntPtr cPtr = mapscriptPINVOKE.labelStyleObj_shadowcolor_get(swigCPtr);
-      colorObj ret = (cPtr == IntPtr.Zero) ? null : new colorObj(cPtr, false, ThisOwn_false());
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-      return ret;
-    } 
-  }
-
   public labelStyleObj() : this(mapscriptPINVOKE.new_labelStyleObj(), true, null) {
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
   }

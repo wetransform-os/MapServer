@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapsymbol.h 9655 2010-01-02 21:09:47Z tamas $
+ * $Id: mapsymbol.h 11599 2011-04-19 05:14:17Z tbonfort $
  *
  * Project:  MapServer
  * Purpose:  symbolObj related declarations.
@@ -31,8 +31,9 @@
 #define MAPSYMBOL_H
 
 #include <gd.h>
+#include <assert.h>
 
-enum MS_SYMBOL_TYPE {MS_SYMBOL_SIMPLE=1000, MS_SYMBOL_VECTOR, MS_SYMBOL_ELLIPSE, MS_SYMBOL_PIXMAP, MS_SYMBOL_TRUETYPE, MS_SYMBOL_CARTOLINE, MS_SYMBOL_HATCH};
+enum MS_SYMBOL_TYPE {MS_SYMBOL_SIMPLE=1000, MS_SYMBOL_VECTOR, MS_SYMBOL_ELLIPSE, MS_SYMBOL_PIXMAP, MS_SYMBOL_TRUETYPE, MS_SYMBOL_HATCH, MS_SYMBOL_SVG};
 
 #define MS_SYMBOL_ALLOCSIZE 64      /* number of symbolObj ptrs to allocate for a symbolset at once */
 #define MS_MAXVECTORPOINTS 100      /* shade, marker and line symbol parameters */
@@ -50,22 +51,98 @@ typedef struct {
 } colorObj;
 
 #ifndef SWIG
+enum MS_RASTER_BUFFER_TYPE { MS_BUFFER_NONE=2000, MS_BUFFER_BYTE_RGBA, MS_BUFFER_BYTE_PALETTE, MS_BUFFER_GD };
+
+typedef struct {
+	unsigned char *pixels;
+	unsigned int pixel_step, row_step;
+	unsigned char *a,*r,*g,*b;
+} rgbaArrayObj;
+
+typedef struct {
+    unsigned char b,g,r,a;
+} rgbaPixel;
+
+typedef struct {
+    unsigned char r,g,b;
+} rgbPixel;
+
+
+typedef struct {
+	unsigned char *pixels; /*stores the actual pixel indexes*/
+	rgbaPixel *palette; /*rgba palette entries*/
+	unsigned int num_entries; /*number of palette entries*/
+   unsigned int scaling_maxval;
+} paletteArrayObj;
+
+typedef struct {
+	int type;
+	unsigned int width,height;
+	union {
+		rgbaArrayObj rgba;
+		paletteArrayObj palette;
+		gdImagePtr gd_img;
+	} data;
+} rasterBufferObj;
+
+/* NOTE: RB_SET_PIXEL() will premultiply by alpha, inputs should not be 
+         premultiplied */
+
+#define RB_SET_PIXEL(rb,x,y,red,green,blue,alpha) \
+    {  \
+        int _rb_off = (x) * (rb)->data.rgba.pixel_step + (y) * (rb)->data.rgba.row_step;   \
+        if( !(rb)->data.rgba.a ) { \
+           (rb)->data.rgba.r[_rb_off] = red; \
+           (rb)->data.rgba.g[_rb_off] = green; \
+           (rb)->data.rgba.b[_rb_off] = blue; \
+        } else { \
+           double a = alpha/255.0; \
+           (rb)->data.rgba.r[_rb_off] = red * a; \
+           (rb)->data.rgba.g[_rb_off] = green * a; \
+           (rb)->data.rgba.b[_rb_off] = blue * a; \
+           (rb)->data.rgba.a[_rb_off] = alpha; \
+        } \
+    }
+
+/* This versions receives an input red/green/blue that is already
+   premultiplied with alpha */
+#define RB_SET_PIXEL_PM(rb,x,y,red,green,blue,alpha) \
+    {  \
+        int _rb_off = (x) * (rb)->data.rgba.pixel_step + (y) * (rb)->data.rgba.row_step;   \
+        (rb)->data.rgba.r[_rb_off] = red; \
+        (rb)->data.rgba.g[_rb_off] = green; \
+        (rb)->data.rgba.b[_rb_off] = blue; \
+        if( rb->data.rgba.a ) { \
+           (rb)->data.rgba.a[_rb_off] = alpha; \
+        } \
+    }
+
+/* NOTE: RB_MIX_PIXEL() will premultiply by alpha, inputs should not be 
+         premultiplied */
+
+#define RB_MIX_PIXEL(rb,x,y,red,green,blue,alpha) \
+    {  \
+        int _rb_off = (x) * (rb)->data.rgba.pixel_step + (y) * (rb)->data.rgba.row_step;   \
+        \
+        msAlphaBlend(  red, green, blue, alpha, \
+                       (rb)->data.rgba.r + _rb_off, \
+                       (rb)->data.rgba.g + _rb_off, \
+                       (rb)->data.rgba.b + _rb_off, \
+                       ((rb)->data.rgba.a == NULL ) ? NULL : (rb)->data.rgba.a + _rb_off );  \
+    }
+
+
+
 struct imageCacheObj {
   int symbol;
   int size;
   colorObj color;
   colorObj outlinecolor;
   colorObj backgroundcolor;
-  gdImagePtr img;
+  rasterBufferObj img;
   struct imageCacheObj *next;
 };
 
-typedef struct {
-    unsigned char *pixelbuffer;
-    unsigned int width,height;
-    unsigned int pixel_step, row_step;
-    unsigned char *a,*r,*g,*b;
-} rasterBufferObj;
 
 #endif /* SWIG */
 
@@ -101,20 +178,15 @@ typedef struct {
 #endif /* SWIG */
   int filled;
   
-  
-  /*deprecated, moved to styleObj*/
-  int patternlength;                      /* Number of intervals (eg. dashes) in the pattern (was style, see bug 2119) */
-  int pattern[MS_MAXPATTERNLENGTH];
-
   /*
   ** MS_SYMBOL_PIXMAP options
   */
 #ifndef SWIG
-  gdImagePtr img;
-  void *renderer_cache; /* Renderer storage */
   rendererVTableObj *renderer;
   rasterBufferObj *pixmap_buffer;
+  void *renderer_cache;
   char *full_font_path;
+  char *full_pixmap_path;
 #endif /* SWIG */
 
 #ifdef SWIG
@@ -134,14 +206,8 @@ typedef struct {
   char *character;
   int antialias;
   char *font;
-  int gap; /*deprecated, moved to styleObj*/
-  int position; /*deprecated, moved to styleObj*/
 
-  /*
-  ** MS_SYMBOL_CARTOLINE options
-  */
-  int linecap, linejoin; /*deprecated, moved to styleObj*/
-  double linejoinmaxsize;/*deprecated, moved to styleObj*/
+  char* svg_text;
 
 } symbolObj;
 

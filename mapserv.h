@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapserv.h 7549 2008-04-30 20:50:31Z dmorissette $
+ * $Id: mapserv.h 11078 2011-03-05 05:20:03Z sdlime $
  *
  * Project:  MapServer
  * Purpose:  Declarations supporting mapserv.c.
@@ -57,13 +57,11 @@ extern int enter_string;
 /*
 ** Enumerated types, keep the query modes in sequence and at the end of the enumeration (mode enumeration is in maptemplate.h).
 */
-int numModes = 29;
-static char *modeStrings[29] = {"BROWSE","ZOOMIN","ZOOMOUT","MAP","LEGEND","LEGENDICON","REFERENCE","SCALEBAR","COORDINATE",
-                                "QUERY","QUERYMAP","NQUERY","NQUERYMAP",
-			        "ITEMQUERY","ITEMQUERYMAP","ITEMNQUERY","ITEMNQUERYMAP",
-				"FEATUREQUERY","FEATUREQUERYMAP","FEATURENQUERY","FEATURENQUERYMAP",
-				"ITEMFEATUREQUERY","ITEMFEATUREQUERYMAP","ITEMFEATURENQUERY","ITEMFEATURENQUERYMAP",
-				"INDEXQUERY","INDEXQUERYMAP","TILE","OWS"};
+int numModes = 21;
+static char *modeStrings[21] = {"BROWSE","ZOOMIN","ZOOMOUT","MAP","LEGEND","LEGENDICON","REFERENCE","SCALEBAR","COORDINATE",
+                                "QUERY","NQUERY","ITEMQUERY","ITEMNQUERY",
+				"FEATUREQUERY","FEATURENQUERY","ITEMFEATUREQUERY","ITEMFEATURENQUERY",
+				"INDEXQUERY","TILE","OWS", "WFS"};
 
 /*
 ** Global variables

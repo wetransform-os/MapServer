@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: testexpr.c 7419 2008-03-02 14:41:53Z sdlime $
+ * $Id: testexpr.c 11194 2011-03-17 15:01:46Z aboudreault $
  *
  * Project:  MapServer
  * Purpose:  Commandline tester for expression evaluation
@@ -33,11 +33,11 @@
 #include "mapparser.h"
 #include "mapfile.h"
 
-MS_CVSID("$Id: testexpr.c 7419 2008-03-02 14:41:53Z sdlime $")
+MS_CVSID("$Id: testexpr.c 11194 2011-03-17 15:01:46Z aboudreault $")
 
 extern int msyyparse();
 extern int msyylex();
-extern char *msyytext;
+extern char *msyystring_buffer;
 
 extern int msyyresult; /* result of parsing, true/false */
 extern int msyystate;
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 
   status = msyyparse();
   if(status != 0) 
-    printf("Error parsing expression near %s.\n", msyytext);
+    printf("Error parsing expression near %s.\n", msyystring_buffer);
   else
     printf("Expression evalulated to: %d.\n", msyyresult);
 

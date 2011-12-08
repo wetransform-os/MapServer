@@ -1,5 +1,5 @@
 /* ===========================================================================
-   $Id: style.i 9653 2010-01-02 20:35:06Z tamas $
+   $Id: style.i 10795 2010-12-11 15:03:52Z tamas $
  
    Project:  MapServer
    Purpose:  SWIG interface file for mapscript styleObj extensions
@@ -165,7 +165,7 @@
   
   char *getGeomTransform() 
   {
-    return self->_geomtransformexpression;
+    return self->_geomtransform.string;
   }
   
   void setGeomTransform(char *transform) 

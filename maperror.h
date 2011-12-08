@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: maperror.h 9093 2009-06-07 09:52:59Z tbonfort $
+ * $Id: maperror.h 11128 2011-03-09 20:38:48Z dmorissette $
  *
  * Project:  MapServer
  * Purpose:  Declarations for Error and Debug functions.
@@ -79,8 +79,9 @@ extern "C" {
 #define MS_NULLPARENTERR 38
 #define MS_AGGERR 39
 #define MS_OWSERR 40
-#define MS_NUMERRORCODES 41
 #define MS_OGLERR 42
+#define MS_RENDERERERR 43
+#define MS_NUMERRORCODES 44
 
 #define MESSAGELENGTH 2048
 #define ROUTINELENGTH 64
@@ -97,6 +98,7 @@ typedef struct error_obj {
   int code;
   char routine[ROUTINELENGTH];
   char message[MESSAGELENGTH];
+  int isreported;
 #ifndef SWIG
   struct error_obj *next;
 #endif
@@ -157,7 +159,7 @@ typedef struct debug_info_obj
 
 
 MS_DLL_EXPORT void msDebug( const char * pszFormat, ... );
-MS_DLL_EXPORT int msSetErrorFile(const char *pszErrorFile);
+MS_DLL_EXPORT int msSetErrorFile(const char *pszErrorFile, const char *pszRelToPath);
 MS_DLL_EXPORT void msCloseErrorFile( void );
 MS_DLL_EXPORT const char *msGetErrorFile( void );
 MS_DLL_EXPORT void msSetGlobalDebugLevel(int level);

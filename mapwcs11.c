@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapwcs11.c 9498 2009-10-20 13:38:46Z aboudreault $
+ * $Id: mapwcs11.c 11503 2011-04-07 19:56:16Z dmorissette $
  *
  * Project:  MapServer
  * Purpose:  OpenGIS Web Coverage Server (WCS) 1.1.0 Implementation.  This
@@ -35,7 +35,7 @@
 #include "mapthread.h"
 #include "mapwcs.h"
 
-MS_CVSID("$Id: mapwcs11.c 9498 2009-10-20 13:38:46Z aboudreault $")
+MS_CVSID("$Id: mapwcs11.c 11503 2011-04-07 19:56:16Z dmorissette $")
 
 #if defined(USE_WCS_SVR) && defined(USE_LIBXML2)
 
@@ -114,16 +114,18 @@ int msWCSException11(mapObj *map, const char *locator,
 static char *msWCSGetFormatsList11( mapObj *map, layerObj *layer )
 
 {
-    char *format_list = strdup("");
+    char *format_list = msStrdup("");
     char **tokens = NULL, **formats = NULL;
     int  i, numtokens = 0, numformats;
     const char *value;
+
+    msApplyDefaultOutputFormats(map);
 
 /* -------------------------------------------------------------------- */
 /*      Parse from layer metadata.                                      */
 /* -------------------------------------------------------------------- */
     if( layer != NULL 
-        && (value = msOWSGetEncodeMetadata( &(layer->metadata),"COM","formats",
+        && (value = msOWSGetEncodeMetadata( &(layer->metadata),"CO","formats",
                                             "GTiff" )) != NULL ) {
         tokens = msStringSplit(value, ' ', &numtokens);
     }
@@ -143,7 +145,7 @@ static char *msWCSGetFormatsList11( mapObj *map, layerObj *layer )
               case MS_RENDER_WITH_GD:
               case MS_RENDER_WITH_AGG:
               case MS_RENDER_WITH_RAWDATA:
-                tokens[numtokens++] = strdup(map->outputformatlist[i]->name);
+                tokens[numtokens++] = msStrdup(map->outputformatlist[i]->name);
                 break;
                 
                 /* rest of formats aren't really WCS compatible */
@@ -202,7 +204,7 @@ static char *msWCSGetFormatsList11( mapObj *map, layerObj *layer )
             continue;
         }
         
-        formats[numformats++] = strdup(mimetype);
+        formats[numformats++] = msStrdup(mimetype);
     }
 
     msFreeCharArray(tokens,numtokens);
@@ -213,15 +215,11 @@ static char *msWCSGetFormatsList11( mapObj *map, layerObj *layer )
 /* -------------------------------------------------------------------- */
     for(i=0; i<numformats; i++) 
     {
-        int       new_length;
-        const char *format = formats[i];
-            
-        new_length = strlen(format_list) + strlen(format) + 2;
-        format_list = (char *) realloc(format_list,new_length);
-        
-        if( strlen(format_list) > 0 )
-            strcat( format_list, "," );
-        strcat( format_list, format );
+        if(i > 0)
+        {
+            format_list = msStringConcatenate(format_list, (char *) ",");
+        }
+        format_list = msStringConcatenate(format_list, formats[i]);
     }
     msFreeCharArray(formats,numformats);
 
@@ -258,21 +256,23 @@ static int msWCSGetCapabilities11_CoverageSummary(
 /* -------------------------------------------------------------------- */
 /*      Title (from description)                                        */
 /* -------------------------------------------------------------------- */
-    value = msOWSLookupMetadata( &(layer->metadata), "COM", "description");
+    value = msOWSLookupMetadata( &(layer->metadata), "CO", "description");
     if( value == NULL )
-        value = layer->name;
+        value = msOWSLookupMetadata( &(layer->metadata), "CO", "title");
+        if( value == NULL )
+            value = layer->name;
     xmlNewChild( psCSummary, psOwsNs, BAD_CAST "Title", BAD_CAST value );
 
 /* -------------------------------------------------------------------- */
 /*      Abstract                                                        */
 /* -------------------------------------------------------------------- */
-    value = msOWSLookupMetadata( &(layer->metadata), "COM", "abstract");
+    value = msOWSLookupMetadata( &(layer->metadata), "CO", "abstract");
     xmlNewChild( psCSummary, psOwsNs, BAD_CAST "Abstract", BAD_CAST value );
 
 /* -------------------------------------------------------------------- */
 /*      Keywords                                                        */
 /* -------------------------------------------------------------------- */
-    value = msOWSLookupMetadata(&(layer->metadata), "COM", "keywordlist");
+    value = msOWSLookupMetadata(&(layer->metadata), "CO", "keywordlist");
 
     if (value) {
         xmlNodePtr psNode;
@@ -302,12 +302,12 @@ static int msWCSGetCapabilities11_CoverageSummary(
 /* -------------------------------------------------------------------- */
     if( (owned_value = 
          msOWSGetProjURN( &(layer->projection), &(layer->metadata), 
-                          "COM", MS_FALSE)) != NULL ) {
+                          "CO", MS_FALSE)) != NULL ) {
         /* ok */
     } else if((owned_value = 
                msOWSGetProjURN( &(layer->map->projection), 
                                 &(layer->map->web.metadata), 
-                                "COM", MS_FALSE)) != NULL ) {
+                                "CO", MS_FALSE)) != NULL ) {
         /* ok */
     } else 
         msDebug( "mapwcs.c: missing required information, no SRSs defined.\n");
@@ -341,7 +341,7 @@ static int msWCSGetCapabilities11_CoverageSummary(
 /*                       msWCSGetCapabilities11()                       */
 /************************************************************************/
 int msWCSGetCapabilities11(mapObj *map, wcsParamsObj *params, 
-                                  cgiRequestObj *req)
+                           cgiRequestObj *req, owsRequestObj *ows_request)
 {
     xmlDocPtr psDoc = NULL;       /* document pointer */
     xmlNodePtr psRootNode, psMainNode, psNode;
@@ -382,7 +382,7 @@ int msWCSGetCapabilities11(mapObj *map, wcsParamsObj *params,
 /* -------------------------------------------------------------------- */
 /*      Build list of layer identifiers available.                      */
 /* -------------------------------------------------------------------- */
-    identifier_list = strdup("");
+    identifier_list = msStrdup("");
     for(i=0; i<map->numlayers; i++)
     {
         layerObj *layer = map->layers[i];
@@ -426,7 +426,7 @@ int msWCSGetCapabilities11(mapObj *map, wcsParamsObj *params,
       xmlNewProp(psRootNode, BAD_CAST "updateSequence", BAD_CAST updatesequence);
 
     schemaLocation = msEncodeHTMLEntities( msOWSGetSchemasLocation(map) );
-    xsi_schemaLocation = strdup("http://www.opengis.net/wcs/1.1");
+    xsi_schemaLocation = msStrdup("http://www.opengis.net/wcs/1.1");
     xsi_schemaLocation = msStringConcatenate(xsi_schemaLocation, " ");
     xsi_schemaLocation = msStringConcatenate(xsi_schemaLocation, schemaLocation);
     xsi_schemaLocation = msStringConcatenate(xsi_schemaLocation, "/wcs/1.1/wcsGetCapabilities.xsd ");
@@ -460,7 +460,7 @@ int msWCSGetCapabilities11(mapObj *map, wcsParamsObj *params,
 /*      Operations metadata.                                            */
 /* -------------------------------------------------------------------- */
     /*operation metadata */
-    if ((script_url=msOWSGetOnlineResource(map, "COM", "onlineresource", req)) == NULL 
+    if ((script_url=msOWSGetOnlineResource(map, "CO", "onlineresource", req)) == NULL 
         || (script_url_encoded = msEncodeHTMLEntities(script_url)) == NULL)
     {
         msSetError(MS_WCSERR, "Server URL not found", "msWCSGetCapabilities11()");
@@ -479,7 +479,7 @@ int msWCSGetCapabilities11(mapObj *map, wcsParamsObj *params,
 /* -------------------------------------------------------------------- */
         psNode = msOWSCommonOperationsMetadataOperation( 
             psOwsNs, psXLinkNs,
-            "GetCapabilities", OWS_METHOD_GET, script_url_encoded);
+            "GetCapabilities", OWS_METHOD_GETPOST, script_url_encoded);
         
         xmlAddChild(psMainNode, psNode);
         xmlAddChild(psNode, msOWSCommonOperationsMetadataDomainType(
@@ -490,46 +490,53 @@ int msWCSGetCapabilities11(mapObj *map, wcsParamsObj *params,
 /* -------------------------------------------------------------------- */
 /*      DescribeCoverage                                                */
 /* -------------------------------------------------------------------- */
-        psNode = msOWSCommonOperationsMetadataOperation(
-            psOwsNs, psXLinkNs,
-            "DescribeCoverage", OWS_METHOD_GET, script_url_encoded);
-        
-        xmlAddChild(psMainNode, psNode);
-        xmlAddChild(psNode, msOWSCommonOperationsMetadataDomainType(
-                        ows_version, psOwsNs, "Parameter", "service", "WCS"));
-        xmlAddChild(psNode, msOWSCommonOperationsMetadataDomainType(
-                        ows_version, psOwsNs, "Parameter", "version", (char *)params->version));
-        xmlAddChild(psNode, msOWSCommonOperationsMetadataDomainType(
-                        ows_version, psOwsNs, "Parameter", "identifiers", identifier_list ));
+        if (msOWSRequestIsEnabled(map, NULL, "C", "DescribeCoverage", MS_TRUE)) 
+        {
+            psNode = msOWSCommonOperationsMetadataOperation(
+                psOwsNs, psXLinkNs,
+                "DescribeCoverage", OWS_METHOD_GETPOST, script_url_encoded);
+            
+            xmlAddChild(psMainNode, psNode);
+            xmlAddChild(psNode, msOWSCommonOperationsMetadataDomainType(
+                            ows_version, psOwsNs, "Parameter", "service", "WCS"));
+            xmlAddChild(psNode, msOWSCommonOperationsMetadataDomainType(
+                            ows_version, psOwsNs, "Parameter", "version", (char *)params->version));
+            xmlAddChild(psNode, msOWSCommonOperationsMetadataDomainType(
+                            ows_version, psOwsNs, "Parameter", "identifiers", identifier_list ));
+        }
         
 /* -------------------------------------------------------------------- */
 /*      GetCoverage                                                     */
 /* -------------------------------------------------------------------- */
-        psNode = msOWSCommonOperationsMetadataOperation(
-            psOwsNs, psXLinkNs,
-            "GetCoverage", OWS_METHOD_GET, script_url_encoded);
+        if (msOWSRequestIsEnabled(map, NULL, "C", "GetCoverage", MS_TRUE)) 
+        {
+
+            psNode = msOWSCommonOperationsMetadataOperation(
+                psOwsNs, psXLinkNs,
+                "GetCoverage", OWS_METHOD_GETPOST, script_url_encoded);
+            
+            format_list = msWCSGetFormatsList11( map, NULL );
+            
+            xmlAddChild(psMainNode, psNode);
+            xmlAddChild(psNode, msOWSCommonOperationsMetadataDomainType(
+                            ows_version, psOwsNs, "Parameter", "service", "WCS"));
+            xmlAddChild(psNode, msOWSCommonOperationsMetadataDomainType(
+                            ows_version, psOwsNs, "Parameter", "version", (char *)params->version));
+            xmlAddChild(psNode, msOWSCommonOperationsMetadataDomainType(
+                            ows_version, psOwsNs, "Parameter", "Identifier", identifier_list ));
+            xmlAddChild(psNode, msOWSCommonOperationsMetadataDomainType(
+                            ows_version, psOwsNs, "Parameter", "InterpolationType", 
+                            "NEAREST_NEIGHBOUR,BILINEAR" ));
+            xmlAddChild(psNode, msOWSCommonOperationsMetadataDomainType(
+                            ows_version, psOwsNs, "Parameter", "format", format_list ));
+            xmlAddChild(psNode, msOWSCommonOperationsMetadataDomainType(
+                            ows_version, psOwsNs, "Parameter", "store", "false" ));
+            xmlAddChild(psNode, msOWSCommonOperationsMetadataDomainType(
+                            ows_version, psOwsNs, "Parameter", "GridBaseCRS", 
+                            "urn:ogc:def:crs:epsg::4326" ));
         
-        format_list = msWCSGetFormatsList11( map, NULL );
-        
-        xmlAddChild(psMainNode, psNode);
-        xmlAddChild(psNode, msOWSCommonOperationsMetadataDomainType(
-                        ows_version, psOwsNs, "Parameter", "service", "WCS"));
-        xmlAddChild(psNode, msOWSCommonOperationsMetadataDomainType(
-                        ows_version, psOwsNs, "Parameter", "version", (char *)params->version));
-        xmlAddChild(psNode, msOWSCommonOperationsMetadataDomainType(
-                        ows_version, psOwsNs, "Parameter", "Identifier", identifier_list ));
-        xmlAddChild(psNode, msOWSCommonOperationsMetadataDomainType(
-                        ows_version, psOwsNs, "Parameter", "InterpolationType", 
-                        "NEAREST_NEIGHBOUR,BILINEAR" ));
-        xmlAddChild(psNode, msOWSCommonOperationsMetadataDomainType(
-                        ows_version, psOwsNs, "Parameter", "format", format_list ));
-        xmlAddChild(psNode, msOWSCommonOperationsMetadataDomainType(
-                        ows_version, psOwsNs, "Parameter", "store", "false" ));
-        xmlAddChild(psNode, msOWSCommonOperationsMetadataDomainType(
-                        ows_version, psOwsNs, "Parameter", "GridBaseCRS", 
-                        "urn:ogc:def:crs:epsg::4326" ));
-        
-        msFree( format_list );
+            msFree( format_list );
+        }
     }    
 
 /* -------------------------------------------------------------------- */
@@ -549,6 +556,9 @@ int msWCSGetCapabilities11(mapObj *map, wcsParamsObj *params,
             if(!msWCSIsLayerSupported(layer)) 
                 continue;
             
+            if (!msIntegerInArray(layer->index, ows_request->enabled_layers, ows_request->numlayers))
+                continue;
+
             status = msWCSGetCapabilities11_CoverageSummary( 
                 map, params, req, psDoc, psMainNode, layer );
             if(status != MS_SUCCESS) return MS_FAILURE;
@@ -580,8 +590,6 @@ int msWCSGetCapabilities11(mapObj *map, wcsParamsObj *params,
     xmlCleanupParser();
 
     /* clean up */
-    msWCSFreeParams(params);
-    free(params);
     free( script_url_encoded );
     free( identifier_list );
 
@@ -629,7 +637,7 @@ msWCSDescribeCoverage_CoverageDescription11(
 /* -------------------------------------------------------------------- */
 /*      Title (from description)                                        */
 /* -------------------------------------------------------------------- */
-    value = msOWSLookupMetadata( &(layer->metadata), "COM", "description");
+    value = msOWSLookupMetadata( &(layer->metadata), "CO", "description");
     if( value == NULL )
         value = layer->name;
     xmlNewChild( psCD, psOwsNs, BAD_CAST "Title", BAD_CAST value );
@@ -637,13 +645,13 @@ msWCSDescribeCoverage_CoverageDescription11(
 /* -------------------------------------------------------------------- */
 /*      Abstract                                                        */
 /* -------------------------------------------------------------------- */
-    value = msOWSLookupMetadata( &(layer->metadata), "COM", "abstract");
+    value = msOWSLookupMetadata( &(layer->metadata), "CO", "abstract");
     xmlNewChild( psCD, psOwsNs, BAD_CAST "Abstract", BAD_CAST value );
 
 /* -------------------------------------------------------------------- */
 /*      Keywords                                                        */
 /* -------------------------------------------------------------------- */
-    value = msOWSLookupMetadata(&(layer->metadata), "COM", "keywordlist");
+    value = msOWSLookupMetadata(&(layer->metadata), "CO", "keywordlist");
 
     if (value)
         msLibXml2GenerateList( 
@@ -723,11 +731,11 @@ msWCSDescribeCoverage_CoverageDescription11(
   /* TemporalDomain */
 
   /* TODO: figure out when a temporal domain is valid, for example only tiled rasters support time as a domain, plus we need a timeitem */
-  if(msOWSLookupMetadata(&(layer->metadata), "COM", "timeposition") || msOWSLookupMetadata(&(layer->metadata), "COM", "timeperiod")) {
+  if(msOWSLookupMetadata(&(layer->metadata), "CO", "timeposition") || msOWSLookupMetadata(&(layer->metadata), "CO", "timeperiod")) {
     msIO_printf("      <temporalDomain>\n");
 
     /* TimePosition (should support a value AUTO, then we could mine positions from the timeitem) */
-    msOWSPrintEncodeMetadataList(stdout, &(layer->metadata), "COM", "timeposition", NULL, NULL, "        <gml:timePosition>%s</gml:timePosition>\n", NULL);    
+    msOWSPrintEncodeMetadataList(stdout, &(layer->metadata), "CO", "timeposition", NULL, NULL, "        <gml:timePosition>%s</gml:timePosition>\n", NULL);    
 
     /* TODO:  add TimePeriod (only one per layer)  */
 
@@ -749,14 +757,14 @@ msWCSDescribeCoverage_CoverageDescription11(
                 xmlNewChild( psCD, NULL, BAD_CAST "Range", NULL ),
                 NULL, BAD_CAST "Field", NULL );
         
-        value = msOWSGetEncodeMetadata( &(layer->metadata), "COM", 
+        value = msOWSGetEncodeMetadata( &(layer->metadata), "CO", 
                                         "rangeset_label", NULL );
         if( value )
             xmlNewChild( psField, psOwsNs, BAD_CAST "Title", BAD_CAST value );
 
         /* ows:Abstract? TODO */
 
-        value = msOWSGetEncodeMetadata( &(layer->metadata), "COM", 
+        value = msOWSGetEncodeMetadata( &(layer->metadata), "CO", 
                                         "rangeset_name", "raster" );
         xmlNewChild( psField, NULL, BAD_CAST "Identifier", BAD_CAST value );
        
@@ -764,14 +772,21 @@ msWCSDescribeCoverage_CoverageDescription11(
             xmlNewChild(
                 xmlNewChild( psField, NULL, BAD_CAST "Definition", NULL ),
                 psOwsNs, BAD_CAST "AnyValue", NULL );
- 
+
+        /* NullValue */
+        value = msOWSGetEncodeMetadata( &(layer->metadata), "CO", 
+                                        "rangeset_nullvalue", NULL);
+        if( value )
+            xmlNewChild( psField, NULL, BAD_CAST "NullValue", 
+                         BAD_CAST value );
+
+        /* InterpolationMethods */
         psInterpMethods = 
             xmlNewChild( psField, NULL, BAD_CAST "InterpolationMethods", NULL );
 
         xmlNewChild( psInterpMethods, NULL, BAD_CAST "InterpolationMethod", BAD_CAST "bilinear" );
         xmlNewChild( psInterpMethods, NULL, 
                      BAD_CAST "Default", BAD_CAST "nearest neighbor" );
-
 
 /* -------------------------------------------------------------------- */
 /*      Bands axis.                                                     */
@@ -780,7 +795,7 @@ msWCSDescribeCoverage_CoverageDescription11(
             xmlNodePtr psKeys;
             int iBand;
 
-            value = msOWSGetEncodeMetadata( &(layer->metadata), "COM", 
+            value = msOWSGetEncodeMetadata( &(layer->metadata), "CO", 
                                             "bands_name", "bands" );
             psAxis = xmlNewChild( psField, NULL, BAD_CAST "Axis", NULL );
             xmlNewProp( psAxis, BAD_CAST "identifier", BAD_CAST value );
@@ -792,7 +807,7 @@ msWCSDescribeCoverage_CoverageDescription11(
             {
                 char szBandName[32];
 
-                sprintf( szBandName, "%d", iBand+1 );
+                snprintf( szBandName, sizeof(szBandName), "%d", iBand+1 );
                 xmlNewChild( psKeys, NULL, BAD_CAST "Key", 
                              BAD_CAST szBandName );
             }
@@ -807,12 +822,12 @@ msWCSDescribeCoverage_CoverageDescription11(
         
         if( (owned_value = 
              msOWSGetProjURN( &(layer->projection), &(layer->metadata), 
-                              "COM", MS_FALSE)) != NULL ) {
+                              "CO", MS_FALSE)) != NULL ) {
             /* ok */
         } else if((owned_value = 
                    msOWSGetProjURN( &(layer->map->projection), 
                                     &(layer->map->web.metadata), 
-                                    "COM", MS_FALSE)) != NULL ) {
+                                    "CO", MS_FALSE)) != NULL ) {
             /* ok */
         } else 
             msDebug( "mapwcs.c: missing required information, no SRSs defined.\n");
@@ -846,7 +861,7 @@ msWCSDescribeCoverage_CoverageDescription11(
 /*                      msWCSDescribeCoverage11()                       */
 /************************************************************************/
 
-int msWCSDescribeCoverage11(mapObj *map, wcsParamsObj *params)
+int msWCSDescribeCoverage11(mapObj *map, wcsParamsObj *params, owsRequestObj *ows_request)
 {
     xmlDocPtr psDoc = NULL;       /* document pointer */
     xmlNodePtr psRootNode;
@@ -879,7 +894,9 @@ int msWCSDescribeCoverage11(mapObj *map, wcsParamsObj *params)
     if(params->coverages) { /* use the list */
         for( j = 0; params->coverages[j]; j++ ) {
             i = msGetLayerIndex(map, params->coverages[j]);
-            if(i == -1) {
+            if ( (i == -1) || 
+                 (!msIntegerInArray(GET_LAYER(map, i)->index, ows_request->enabled_layers, ows_request->numlayers)) )
+            {
                 msSetError( MS_WCSERR,
                             "COVERAGE %s cannot be opened / does not exist",
                             "msWCSDescribeCoverage()", params->coverages[j]);
@@ -907,7 +924,7 @@ int msWCSDescribeCoverage11(mapObj *map, wcsParamsObj *params)
     xmlNewNs(psRootNode, BAD_CAST MS_OWSCOMMON_OGC_NAMESPACE_URI, BAD_CAST MS_OWSCOMMON_OGC_NAMESPACE_PREFIX );
 
     schemaLocation = msEncodeHTMLEntities( msOWSGetSchemasLocation(map) );
-    xsi_schemaLocation = strdup("http://www.opengis.net/wcs/1.1");
+    xsi_schemaLocation = msStrdup("http://www.opengis.net/wcs/1.1");
     xsi_schemaLocation = msStringConcatenate(xsi_schemaLocation, " ");
     xsi_schemaLocation = msStringConcatenate(xsi_schemaLocation, schemaLocation);
     xsi_schemaLocation = msStringConcatenate(xsi_schemaLocation, "/wcs/1.1/wcsDescribeCoverage.xsd ");
@@ -929,10 +946,15 @@ int msWCSDescribeCoverage11(mapObj *map, wcsParamsObj *params)
                                                         psOwsNs );
         }
     } else { /* return all layers */
-        for(i=0; i<map->numlayers; i++)
+        for(i=0; i<map->numlayers; i++) {
+
+            if (!msIntegerInArray(GET_LAYER(map, i)->index, ows_request->enabled_layers, ows_request->numlayers))
+                continue;
+
             msWCSDescribeCoverage_CoverageDescription11((GET_LAYER(map, i)), 
                                                         params, psRootNode,
                                                         psOwsNs );
+        }
     }
   
 /* -------------------------------------------------------------------- */
@@ -963,9 +985,6 @@ int msWCSDescribeCoverage11(mapObj *map, wcsParamsObj *params)
 /* -------------------------------------------------------------------- */
     xmlFreeDoc(psDoc);
     xmlCleanupParser();
-    msWCSFreeParams(params);
-
-    free(params);
 
     return MS_SUCCESS;
 }
@@ -1005,20 +1024,20 @@ int msWCSGetCoverageBands11( mapObj *map, cgiRequestObj *request,
     if( value == NULL )
         return MS_SUCCESS;
 
-    rangesubset = strdup(value);
+    rangesubset = msStrdup(value);
 
 /* -------------------------------------------------------------------- */
 /*      What is the <Field identifier=...> (rangeset_name)?             */
 /* -------------------------------------------------------------------- */
-    value = msOWSLookupMetadata( &(lp->metadata), "COM", "rangeset_name" );
+    value = msOWSLookupMetadata( &(lp->metadata), "CO", "rangeset_name" );
     if( value == NULL )
         value = "raster";
-    field_id = strdup(value);
+    field_id = msStrdup(value);
 
 /* -------------------------------------------------------------------- */
 /*      What is the <Axis identifier=...> (bands_name)?                 */
 /* -------------------------------------------------------------------- */
-    axis_id = msOWSLookupMetadata( &(lp->metadata), "COM", "bands_name" );
+    axis_id = msOWSLookupMetadata( &(lp->metadata), "CO", "bands_name" );
     if( axis_id == NULL )
         axis_id = "bands";
 
@@ -1050,7 +1069,7 @@ int msWCSGetCoverageBands11( mapObj *map, cgiRequestObj *request,
     if( *value == ':' )
     {
         assert( params->interpolation == NULL );
-        params->interpolation = strdup(value+1);
+        params->interpolation = msStrdup(value+1);
         for( i = 0; params->interpolation[i] != '\0'; i++ )
         {
             if( params->interpolation[i] == '[' )
@@ -1088,7 +1107,7 @@ int msWCSGetCoverageBands11( mapObj *map, cgiRequestObj *request,
 /* -------------------------------------------------------------------- */
     value += strlen(axis_id) + 1;
 
-    *p_bandlist = strdup(value);
+    *p_bandlist = msStrdup(value);
 
     for( i = 0; (*p_bandlist)[i] != '\0'; i++ )
     {
@@ -1117,9 +1136,12 @@ int  msWCSReturnCoverage11( wcsParamsObj *params, mapObj *map,
     int status, i;
     char *filename = NULL;
     const char *encoding;
+    const char *fo_filename;
 
     encoding = msOWSLookupMetadata(&(map->web.metadata), "CO", "encoding");
 
+    fo_filename = msGetOutputFormatOption( image->format, "FILENAME", NULL );
+        
 /* -------------------------------------------------------------------- */
 /*      Fetch the driver we will be using and check if it supports      */
 /*      VSIL IO.                                                        */
@@ -1149,10 +1171,15 @@ int  msWCSReturnCoverage11( wcsParamsObj *params, mapObj *map,
         if( GDALGetMetadataItem( hDriver, GDAL_DCAP_VIRTUALIO, NULL ) 
             != NULL )
         {
-/*            CleanVSIDir( "/vsimem/wcsout" ); */
-            filename = strdup(CPLFormFilename("/vsimem/wcsout", 
-                                              "out", pszExtension ));
+            if( fo_filename )
+                filename = msStrdup(CPLFormFilename("/vsimem/wcsout",
+                                                    fo_filename,NULL));
+            else
+                filename = msStrdup(CPLFormFilename("/vsimem/wcsout", 
+                                                    "out", pszExtension ));
 
+/*            CleanVSIDir( "/vsimem/wcsout" ); */
+            
             msReleaseLock( TLOCK_GDAL );
             status = msSaveImage(map, image, filename);
             if( status != MS_SUCCESS )
@@ -1235,7 +1262,7 @@ int  msWCSReturnCoverage11( wcsParamsObj *params, mapObj *map,
             return msWCSException11(map, "mapserv", "NoApplicableCode", params->version);
         }
 
-        msIO_fprintf( stdout, "--wcs--%c%c", 10, 10 );
+        msIO_fprintf( stdout, "\n--wcs--%c%c", 10, 10 );
         return MS_SUCCESS;
     }
 
@@ -1331,10 +1358,12 @@ int  msWCSReturnCoverage11( wcsParamsObj *params, mapObj *map,
         CSLDestroy( all_files );
         msReleaseLock( TLOCK_GDAL );
 
-        msIO_fprintf( stdout, "--wcs--%c%c", 10, 10 );
+        msIO_fprintf( stdout, "\n--wcs--%c%c", 10, 10 );
         return MS_SUCCESS;
     }
-#endif /* def GDAL_DCAP_VIRTUALIO */    
+#else
+    return MS_SUCCESS;
+#endif /* def GDAL_DCAP_VIRTUALIO */
 }
 #endif /* defined(USE_WCS_SVR) && defined(USE_LIBXML2) */
 
@@ -1373,7 +1402,7 @@ int msWCSGetCapabilities11(mapObj *map, wcsParamsObj *params,
     return msWCSException11(map, "mapserv", "NoApplicableCode", params->version);
 }
 
-int msWCSException11(mapObj *map, char *locator, char *exceptionCode, const char *version) {
+int msWCSException11(mapObj *map, const char *locator, const char *exceptionCode, const char *version) {
     /* fallback to reporting using 1.0 style exceptions. */
     return msWCSException( map, locator, exceptionCode, "1.0.0" );
 }

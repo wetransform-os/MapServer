@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapproject.h 9349 2009-09-25 16:03:46Z warmerdam $
+ * $Id: mapproject.h 11376 2011-03-30 01:11:13Z dmorissette $
  *
  * Project:  MapServer
  * Purpose:  Declarations of the projectionObj and related functions.
@@ -47,6 +47,7 @@ typedef struct {
   %immutable;
 #endif
   int numargs; /* actual number of projection args */
+  int automatic; /* projection object was to fetched from the layer */ 
 #ifdef SWIG
   %mutable;
 #endif
@@ -69,6 +70,7 @@ MS_DLL_EXPORT int msProjectRect(projectionObj *in, projectionObj *out, rectObj *
 MS_DLL_EXPORT int msProjectionsDiffer(projectionObj *, projectionObj *);
 MS_DLL_EXPORT int msOGCWKT2ProjectionObj( const char *pszWKT, projectionObj *proj, int
                             debug_flag );
+MS_DLL_EXPORT char *msProjectionObj2OGCWKT( projectionObj *proj );
 
 MS_DLL_EXPORT void msFreeProjection(projectionObj *p);
 MS_DLL_EXPORT int msInitProjection(projectionObj *p);
@@ -81,7 +83,7 @@ MS_DLL_EXPORT void msAxisNormalizePoints( projectionObj *proj, int count,
 MS_DLL_EXPORT void msAxisDenormalizePoints( projectionObj *proj, int count,
                                             double *x, double *y );
 
-MS_DLL_EXPORT void msSetPROJ_LIB( const char * );
+MS_DLL_EXPORT void msSetPROJ_LIB( const char *, const char * );
 
 /* Provides compatiblity with PROJ.4 4.4.2 */
 #ifndef PJ_VERSION
