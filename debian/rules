@@ -32,7 +32,6 @@ COMMON_CONFIG=	--prefix=/usr \
 		--with-gd=/usr \
 		--with-freetype=/usr \
 		--with-fribidi-config \
-		--with-ming \
 		--with-zlib=/usr \
 		--with-png=/usr \
 		--with-xpm=/usr \
@@ -52,14 +51,15 @@ COMMON_CONFIG=	--prefix=/usr \
 		--with-geos \
 		--with-fastcgi \
 		--with-agg \
-		--with-experimental-png
+		--with-experimental-png \
+		--with-cairo
 
 rstoptions=--stylesheet=mapscript.css --link-stylesheet 
 
 MS_CFLAGS=-g -O2
 MS_CXXFLAGS=$(MS_CFLAGS)
 
-configure-stamp: 
+configure-stamp:
 	dh_testdir
 	./configure $(COMMON_CONFIG) CFLAGS="$(MS_CFLAGS)" CXXFLAGS="$(MS_CXXFLAGS)"
 
@@ -114,7 +114,7 @@ build-arch-stamp: configure-stamp
 
 build-php5-stamp: configure-php5-stamp
 	dh_testdir
-	-cd mapscript/php3 && \
+	-cd mapscript/php && \
 		$(MAKE) clean
 	# Build php_mapscript
 	$(MAKE)
@@ -147,7 +147,7 @@ clean-first-build:
 
 	# Remove some generated files 
 	-$(RM) Makefile mapscript/java/Makefile
-	-$(RM) mapscript/csharp/Makefile mapscript/php3/Makefile
+	-$(RM) mapscript/csharp/Makefile mapscript/php/Makefile
 	-$(RM) config.log config.status
 
 	-$(RM) debian/.#* .#*
@@ -212,7 +212,7 @@ install-php5-stamp: build-php5-stamp
 	-mkdir -p debian/tmp$(PHP5DIR)
 
 	# php5-mapscript
-	install -m644 mapscript/php3/php_mapscript.so \
+	install -m644 mapscript/php/php_mapscript.so \
 		debian/tmp$(PHP5DIR)
                       
 	echo 'misc:Depends=phpapi-'$(PHP5API) >> debian/php5-mapscript.substvars

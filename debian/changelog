@@ -1,3 +1,9 @@
+mapserver (6.0.1-1) unstable; urgency=low
+	
+  * New upstream release.
+
+ -- Alan Boudreault <aboudreault@mapgears.com>  Thu, 08 Dec 2011 22:09:22 -0500
+
 mapserver (5.6.6-2) unstable; urgency=low
 
   * Ack previous NMU: added libepsilon-dev as build-dep.
