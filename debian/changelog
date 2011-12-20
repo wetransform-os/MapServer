@@ -5,6 +5,7 @@ mapserver (6.0.1-1) unstable; urgency=low
 
   [ Francesco Paolo Lovergine ]
   * Debhelper level set to 8.
+  * This version still uses libpng 1.2, but is ready also for 1.5.
 
  -- Francesco Paolo Lovergine <frankie@debian.org>  Tue, 20 Dec 2011 23:21:53 +0100
 

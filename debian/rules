@@ -51,8 +51,9 @@ COMMON_CONFIG=	--prefix=/usr \
 		--with-geos \
 		--with-fastcgi \
 		--with-agg \
-		--with-experimental-png \
 		--with-cairo
+#This is required only for PNG 1.5+
+#		--with-experimental-png \
 
 rstoptions=--stylesheet=mapscript.css --link-stylesheet 
 
