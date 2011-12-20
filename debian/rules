@@ -33,7 +33,6 @@ COMMON_CONFIG=	--prefix=/usr \
 		--with-freetype=/usr \
 		--with-fribidi-config \
 		--with-zlib=/usr \
-		--with-png=/usr \
 		--with-xpm=/usr \
 		--with-jpeg=/usr \
 		--with-gdal \
@@ -50,10 +49,9 @@ COMMON_CONFIG=	--prefix=/usr \
 		--with-threads \
 		--with-geos \
 		--with-fastcgi \
-		--with-agg \
+		-with-agg \
+		--with-experimental-png \
 		--with-cairo
-#This is required only for PNG 1.5+
-#		--with-experimental-png \
 
 rstoptions=--stylesheet=mapscript.css --link-stylesheet 
 
