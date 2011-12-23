@@ -181,7 +181,7 @@ install-arch-stamp: build-arch
 
 	# Perl mapscript
 	cd $(CURDIR)/mapscript/perl && \
-        $(MAKE) install DESTDIR=$(CURDIR)/debian/perl-mapscript
+        $(MAKE) install DESTDIR=$(CURDIR)/debian/libmapscript-perl
 
 	# Python mapscript
 	cd $(CURDIR)/mapscript/python && set -e ; \
@@ -257,7 +257,7 @@ binary-arch: install-arch
 	dh_makeshlibs -a
 	dh_installdeb -a
 	dh_shlibdeps -a
-	dh_perl -pperl-mapscript 
+	dh_perl -plibmapscript-perl
 	dh_perl -pmapserver-bin
 	dh_gencontrol -a
 	dh_md5sums -a
