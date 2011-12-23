@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapresample.h 6428 2007-07-31 19:58:45Z dmorissette $
+ * $Id: mapresample.h 9873 2010-02-23 05:06:40Z warmerdam $
  *
  * Project:  CFS OGC MapServer
  * Purpose:  Definitions related to raster resampling support.
@@ -51,7 +51,7 @@ int msProjTransformer( void *pCBData, int nPoints,
                        double *x, double *y, int *panSuccess );
 #ifdef USE_GDAL
 int msResampleGDALToMap( mapObj *map, layerObj *layer, 
-                         imageObj *image,
+                         imageObj *image, rasterBufferObj *rb, 
                          GDALDatasetH hDS );
 #endif
 #endif /* ndef RESAMPLE_H */

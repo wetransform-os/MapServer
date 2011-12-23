@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: pygdioctx.c 4424 2005-02-18 20:10:01Z sean $
+ * $Id: pygdioctx.c 10743 2010-11-19 17:05:38Z tbonfort $
  *
  * Project:  MapServer
  * Purpose:  Interface Python file-like objects with GD through IOCtx
@@ -136,7 +136,7 @@ void free_PyFileIfaceObj_IOCtx(struct PyFileIfaceObj_gdIOCtx *pctx)
  * ======================================================================== */
 
 imageObj *createImageObjFromPyFile(PyObject *file, const char *driver)
-    {
+{
     imageObj *image=NULL;
     struct PyFileIfaceObj_gdIOCtx *pctx;
 
@@ -155,7 +155,7 @@ imageObj *createImageObjFromPyFile(PyObject *file, const char *driver)
     else
     {
         pctx = alloc_PyFileIfaceObj_IOCtx(file);
-        image = msImageLoadGDCtx((gdIOCtx *) pctx, driver);
+        //image = msImageLoadGDCtx((gdIOCtx *) pctx, driver);
         free_PyFileIfaceObj_IOCtx(pctx);
         return image;
     }

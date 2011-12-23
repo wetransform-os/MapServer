@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: cgiutil.h 7998 2008-10-23 03:35:48Z sdlime $
+ * $Id: cgiutil.h 10645 2010-10-22 20:42:59Z aboudreault $
  *
  * Project:  MapServer
  * Purpose:  cgiRequestObj and CGI parsing utility related declarations.
@@ -32,6 +32,7 @@
 #ifndef CGIUTIL_H
 #define CGIUTIL_H
 
+
 #if defined(_WIN32) && !defined(__CYGWIN__)
 #  define MS_DLL_EXPORT     __declspec(dllexport)
 #else
@@ -41,7 +42,7 @@
 /*
 ** Misc. defines
 */
-#define MS_MAX_CGI_PARAMS 100
+#define MS_DEFAULT_CGI_PARAMS 100
 
 enum MS_REQUEST_TYPE {MS_GET_REQUEST, MS_POST_REQUEST};
 
@@ -74,7 +75,8 @@ typedef struct
 ** Function prototypes
 */
 #ifndef SWIG
-MS_DLL_EXPORT  int loadParams(cgiRequestObj *);
+MS_DLL_EXPORT int loadParams(cgiRequestObj *request, char* (*getenv2)(const char*, void* thread_context), 
+                             char *raw_post_data, ms_uint32 raw_post_data_length, void* thread_context);
 MS_DLL_EXPORT void getword(char *, char *, char);
 MS_DLL_EXPORT char *makeword_skip(char *, char, char);
 MS_DLL_EXPORT char *makeword(char *, char);

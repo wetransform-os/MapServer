@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: shp2img.c 10764 2010-11-25 20:28:32Z aboudreault $
+ * $Id: shp2img.c 11400 2011-03-30 21:20:20Z warmerdam $
  *
  * Project:  MapServer
  * Purpose:  Commandline .map rendering utility, mostly for testing.
@@ -30,7 +30,7 @@
 #include "mapserver.h"
 #include "maptime.h"
 
-MS_CVSID("$Id: shp2img.c 10764 2010-11-25 20:28:32Z aboudreault $")
+MS_CVSID("$Id: shp2img.c 11400 2011-03-30 21:20:20Z warmerdam $")
 
 int main(int argc, char *argv[])
 {
@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
       continue;
     }
 
-    if(strcmp(argv[i], "-all_debug") == 0) /* global debug */
+    if(strcmp(argv[i], "-all_debug") == 0 && i < argc-1 ) /* global debug */
     {
         int debug_level = atoi(argv[++i]);
 
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 
         /* Send output to stderr by default */ 
         if (msGetErrorFile() == NULL)
-            msSetErrorFile("stderr");
+            msSetErrorFile("stderr", NULL);
 
         continue;
     }
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
     fprintf(stdout,"  -o image: output filename (stdout if not provided)\n");
     fprintf(stdout,"  -e minx miny maxx maxy: extents to render\n");
     fprintf(stdout,"  -s sizex sizey: output image size\n");
-    fprintf(stdout,"  -l layers: layers to enable - make sure they are quoted and space seperated if more than one listed\n" );
+    fprintf(stdout,"  -l layers: layers / groups to enable - make sure they are quoted and space seperated if more than one listed\n" );
     fprintf(stdout,"  -all_debug n: Set debug level for map and all layers\n" );
     fprintf(stdout,"  -map_debug n: Set map debug level\n" );
     fprintf(stdout,"  -layer_debug layer_name n: Set layer debug level\n" );
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
   {
       msWriteError(stderr);
       msCleanup();
-      exit(0);
+      exit(1);
   }
 
   for(i=1;i<argc;i++) { /* Step though the user arguments, 1st to find map file */
@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
       if(!map) {
 	msWriteError(stderr);
         msCleanup();
-	exit(0);
+	exit(1);
       }
       msApplyDefaultSubstitutions(map);
     }
@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
   if(!map) {
     fprintf(stderr, "Mapfile (-m) option not specified.\n");
     msCleanup();
-    exit(0);
+    exit(1);
   }
 
 
@@ -175,9 +175,10 @@ int main(int argc, char *argv[])
       else
       {
           msFree( (char *) map->imagetype );
-          map->imagetype = strdup( argv[i+1] );
-          msApplyOutputFormat( &(map->outputformat), format, MS_NOOVERRIDE,
-                               MS_NOOVERRIDE, MS_NOOVERRIDE );
+          map->imagetype = msStrdup( argv[i+1] );
+          msApplyOutputFormat( &(map->outputformat), format, 
+                               map->transparent, map->interlace, 
+                               map->imagequality );
       }
       i+=1;
     }
@@ -186,14 +187,14 @@ int main(int argc, char *argv[])
       for(j=0; j<map->numlayers; j++) {
 	 if(strcmp(GET_LAYER(map, j)->name, argv[i+1]) == 0) {
 	   free(GET_LAYER(map, j)->data);
-	   GET_LAYER(map, j)->data = strdup(argv[i+2]);
+	   GET_LAYER(map, j)->data = msStrdup(argv[i+2]);
 	   break;
 	 }
       }
       i+=2;
     }
 
-    if(strcmp(argv[i], "-all_debug") == 0) /* global debug */
+    if(strcmp(argv[i], "-all_debug") == 0 && i < argc-1 ) /* global debug */
     {
         int debug_level = atoi(argv[++i]);
 
@@ -207,16 +208,16 @@ int main(int argc, char *argv[])
 
     }
     
-    if(strcmp(argv[i], "-map_debug") == 0) /* debug */
+    if(strcmp(argv[i], "-map_debug") == 0 && i < argc-1 ) /* debug */
     {
         map->debug = atoi(argv[++i]);
 
         /* Send output to stderr by default */ 
         if (msGetErrorFile() == NULL)
-            msSetErrorFile("stderr");
+            msSetErrorFile("stderr", NULL);
     }
     
-    if(strcmp(argv[i], "-layer_debug") == 0) /* debug */
+    if(strcmp(argv[i], "-layer_debug") == 0 && i < argc-1 ) /* debug */
     {
         const char *layer_name = argv[++i];
         int debug_level = atoi(argv[++i]);
@@ -235,10 +236,16 @@ int main(int argc, char *argv[])
 
         /* Send output to stderr by default */ 
         if (msGetErrorFile() == NULL)
-            msSetErrorFile("stderr");
+            msSetErrorFile("stderr", NULL);
     }
     
     if(strcmp(argv[i],"-e") == 0) { /* change extent */
+        if( argc <= i+4 ) {
+            fprintf( stderr, 
+                     "Argument -e needs 4 space separated numbers as argument.\n" ); 
+            msCleanup();
+            exit(1);
+        }
       map->extent.minx = atof(argv[i+1]);
       map->extent.miny = atof(argv[i+2]);
       map->extent.maxx = atof(argv[i+3]);
@@ -257,7 +264,7 @@ int main(int argc, char *argv[])
       for(j=0; j<num_layers; j++) { /* loop over -l */
           layer_found=0;
           for(k=0; k<map->numlayers; k++) {
-              if(GET_LAYER(map, k)->name && strcmp(GET_LAYER(map, k)->name, layers[j]) == 0) {
+              if((GET_LAYER(map, k)->name && strcasecmp(GET_LAYER(map, k)->name, layers[j]) == 0) || (GET_LAYER(map, k)->group && strcasecmp(GET_LAYER(map, k)->group, layers[j]) == 0)) {
                   layer_found = 1;
                   break;
               }
@@ -265,7 +272,7 @@ int main(int argc, char *argv[])
           if (layer_found==0) {
               fprintf(stderr, "Layer (-l) \"%s\" not found\n", layers[j]);
               msCleanup();
-              exit(0);
+              exit(1);
           }
       }
 
@@ -275,7 +282,7 @@ int main(int argc, char *argv[])
 	else {
 	  GET_LAYER(map, j)->status = MS_OFF;
 	  for(k=0; k<num_layers; k++) {
-	    if(GET_LAYER(map, j)->name && strcmp(GET_LAYER(map, j)->name, layers[k]) == 0) {
+	    if(GET_LAYER(map, j)->name && strcasecmp(GET_LAYER(map, j)->name, layers[k]) == 0) {
 	      GET_LAYER(map, j)->status = MS_ON;
 	      break;
 	    }
@@ -296,7 +303,7 @@ int main(int argc, char *argv[])
 
     msFreeMap(map);
     msCleanup();
-    exit(0);
+    exit(1);
   }
 
   if( msSaveImage(map, image, outfile) != MS_SUCCESS ) {

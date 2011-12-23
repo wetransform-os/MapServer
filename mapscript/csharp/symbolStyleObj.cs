@@ -154,6 +154,31 @@ public class symbolStyleObj : IDisposable {
     } 
   }
 
+  public double gap {
+    set {
+      mapscriptPINVOKE.symbolStyleObj_gap_set(swigCPtr, value);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      double ret = mapscriptPINVOKE.symbolStyleObj_gap_get(swigCPtr);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public styleObj style {
+    set {
+      mapscriptPINVOKE.symbolStyleObj_style_set(swigCPtr, styleObj.getCPtr(value));
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      IntPtr cPtr = mapscriptPINVOKE.symbolStyleObj_style_get(swigCPtr);
+      styleObj ret = (cPtr == IntPtr.Zero) ? null : new styleObj(cPtr, false, ThisOwn_false());
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
   public symbolStyleObj() : this(mapscriptPINVOKE.new_symbolStyleObj(), true, null) {
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
   }

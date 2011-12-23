@@ -1,5 +1,5 @@
 /* ===========================================================================
-   $Id: shapefile.i 8015 2008-11-11 18:14:14Z pramsey $
+   $Id: shapefile.i 10791 2010-12-09 16:38:24Z tamas $
  
    Project:  MapServer
    Purpose:  SWIG interface file for mapscript shapefileObj extensions
@@ -104,7 +104,7 @@
 
         msFreeShape(shape); /* frees all lines and points before re-filling */
         msSHPReadShape(self->hSHP, i, shape);
-        msTransformShapeToPixel(shape, map->extent, map->cellsize);
+        msTransformShapeSimplify(shape, map->extent, map->cellsize);
 
         return MS_SUCCESS;
     }

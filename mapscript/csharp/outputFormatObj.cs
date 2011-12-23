@@ -233,19 +233,6 @@ public class outputFormatObj : IDisposable {
     } 
   }
 
-  public SWIGTYPE_p_rendererVTable vtable {
-    set {
-      mapscriptPINVOKE.outputFormatObj_vtable_set(swigCPtr, SWIGTYPE_p_rendererVTable.getCPtr(value));
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-    } 
-    get {
-      IntPtr cPtr = mapscriptPINVOKE.outputFormatObj_vtable_get(swigCPtr);
-      SWIGTYPE_p_rendererVTable ret = (cPtr == IntPtr.Zero) ? null : new SWIGTYPE_p_rendererVTable(cPtr, false, ThisOwn_false());
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-      return ret;
-    } 
-  }
-
   public outputFormatObj(string driver, string name) : this(mapscriptPINVOKE.new_outputFormatObj(driver, name), true, null) {
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
   }
@@ -275,6 +262,11 @@ public class outputFormatObj : IDisposable {
     string ret = mapscriptPINVOKE.outputFormatObj_getOption(swigCPtr, key, value);
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
     return ret;
+  }
+
+  public void attachDevice(IntPtr device) {
+    mapscriptPINVOKE.outputFormatObj_attachDevice(swigCPtr, device);
+    if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
   }
 
 }

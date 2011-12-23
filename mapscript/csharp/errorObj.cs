@@ -115,6 +115,18 @@ public class errorObj : IDisposable {
     } 
   }
 
+  public int isreported {
+    set {
+      mapscriptPINVOKE.errorObj_isreported_set(swigCPtr, value);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      int ret = mapscriptPINVOKE.errorObj_isreported_get(swigCPtr);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
   public errorObj() : this(mapscriptPINVOKE.new_errorObj(), true, null) {
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
   }

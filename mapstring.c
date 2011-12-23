@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapstring.c 9999 2010-03-24 15:26:31Z warmerdam $
+ * $Id: mapstring.c 11396 2011-03-30 19:57:35Z sdlime $
  *
  * Project:  MapServer
  * Purpose:  Various string handling functions.
@@ -33,7 +33,7 @@
 
 #include "mapserver.h"
 
-MS_CVSID("$Id: mapstring.c 9999 2010-03-24 15:26:31Z warmerdam $")
+MS_CVSID("$Id: mapstring.c 11396 2011-03-30 19:57:35Z sdlime $")
 
 #include <ctype.h>
 #include <string.h>
@@ -163,6 +163,66 @@ size_t strlcat(char *dst, const char *src, size_t siz)
   *d = '\0';
 
   return(dlen + (s - src));/* count does not include NUL */
+}
+#endif
+
+#ifdef NEED_STRLCPY
+/*
+ * Copyright (c) 1998 Todd C. Miller <Todd.Miller@courtesan.com>
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. The name of the author may not be used to endorse or promote products
+ *    derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+ * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL
+ * THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/*
+ * Copy src to string dst of size siz.  At most siz-1 characters
+ * will be copied.  Always NUL terminates (unless siz == 0).
+ * Returns strlen(src); if retval >= siz, truncation occurred.
+ */
+size_t
+strlcpy(char *dst, const char *src, size_t siz)
+{
+        register char *d = dst;
+        register const char *s = src;
+        register size_t n = siz;
+
+        /* Copy as many bytes as will fit */
+        if (n != 0 && --n != 0) {
+                do {
+                        if ((*d++ = *s++) == 0)
+                                break;
+                } while (--n != 0);
+        }
+
+        /* Not enough room in dst, add NUL and traverse rest of src */
+        if (n == 0) {
+                if (siz != 0)
+                        *d = '\0';              /* NUL-terminate dst */
+                while (*s++)
+                        ;
+        }
+
+        return(s - src - 1);    /* count does not include NUL */
 }
 #endif
 
@@ -299,26 +359,30 @@ int strcasecmp(const char *s1, const char *s2)
 #endif
 
 char *msLongToString(long value) {
-  char buffer[256]; /* plenty of space */
+  size_t bufferSize = 256;
+  char *buffer = (char*)msSmallMalloc(bufferSize);
 
-  sprintf(buffer, "%ld", value);
-  return(strdup(buffer));
+  snprintf(buffer, bufferSize, "%ld", value);
+  return(buffer);
 }
 
 char *msDoubleToString(double value, int force_f) {
-  char buffer[256]; /* plenty of space */
+  size_t bufferSize = 256;
+  char *buffer = (char*)msSmallMalloc(bufferSize);
 
   if (force_f == MS_TRUE)
-    sprintf(buffer, "%f", value);
+    snprintf(buffer, bufferSize, "%f", value);
   else
-    sprintf(buffer, "%g", value);
-  return(strdup(buffer));
+    snprintf(buffer, bufferSize, "%g", value);
+  return(buffer);
 }
 
 char *msIntToString(int value) {
-  char buffer[256]; /* plenty of space */
-  sprintf(buffer, "%i", value);
-  return(strdup(buffer));
+  size_t bufferSize = 256;
+  char *buffer = (char*)msSmallMalloc(bufferSize);
+
+  snprintf(buffer, bufferSize, "%i", value);
+  return(buffer);
 }
 
 void msStringToUpper(char *string) {
@@ -487,7 +551,7 @@ char *msReplaceSubstring(char *str, const char *old, const char *new)
         if (old_len < new_len) {
           tmp_offset = tmp_ptr - str;
           str_len = str_len - old_len + new_len;
-          str = (char *)realloc(str, (str_len + 1)); /* make new space for a copy */
+          str = (char *)msSmallRealloc(str, (str_len + 1)); /* make new space for a copy */
           tmp_ptr = str + tmp_offset;
         }
 
@@ -560,7 +624,7 @@ char *msGetPath(char *fn)
   int i, length;
   
   length = strlen(fn);
-  if((str = strdup(fn)) == NULL)
+  if((str = msStrdup(fn)) == NULL)
     return(NULL);
   
   for(i=length-1; i>=0; i--) { /* step backwards through the string */
@@ -574,9 +638,9 @@ char *msGetPath(char *fn)
   {
     msFree(str);
 #if defined(_WIN32) && !defined(__CYGWIN__)  
-    str = strdup(".\\");
+    str = msStrdup(".\\");
 #else
-    str= strdup("./");
+    str= msStrdup("./");
 #endif  
   }
 
@@ -616,18 +680,18 @@ char *msBuildPath(char *pszReturnPath, const char *abs_path, const char *path)
        (path[0] == '\\') || (path[0] == '/') || 
          (pathlen > 1 && (path[1] == ':')))
   {
-      strcpy(pszReturnPath, path);
+      strlcpy(pszReturnPath, path, MS_MAXPATHLEN);
       return(pszReturnPath);
   }
 
   /* else return abs_path/path */
   if((abs_path[abslen-1] == '/') || (abs_path[abslen-1] == '\\'))
   {
-      sprintf(pszReturnPath, "%s%s", abs_path, path);
+    snprintf(pszReturnPath, MS_MAXPATHLEN, "%s%s", abs_path, path);
   }
   else
   {
-      sprintf(pszReturnPath, "%s/%s", abs_path, path);
+    snprintf(pszReturnPath, MS_MAXPATHLEN, "%s/%s", abs_path, path);
   }
 
   return(pszReturnPath);
@@ -665,7 +729,7 @@ char *msTryBuildPath(char *szReturnPath, const char *abs_path, const char *path)
     fp = fopen( szReturnPath, "r" );
     if( fp == NULL )
     {
-        strcpy( szReturnPath, path );
+        strlcpy( szReturnPath, path, MS_MAXPATHLEN);
         return NULL;
     }
     else
@@ -692,8 +756,8 @@ char *msTryBuildPath3(char *szReturnPath, const char *abs_path, const char *path
     fp = fopen( szReturnPath, "r" );
     if( fp == NULL )
     {
-        strcpy( szReturnPath, path2 );
-        return NULL;
+      strlcpy( szReturnPath, path2, MS_MAXPATHLEN);
+      return NULL;
     }
     else
         fclose( fp );
@@ -719,11 +783,11 @@ char **msStringSplit(const char *string, char ch, int *num_tokens)
     last_ch = string[i];
   }
 
-  token = (char **) malloc(sizeof(char *)*n);
+  token = (char **) msSmallMalloc(sizeof(char *)*n);
   if(!token) return(NULL);
   
   k = 0;
-  token[k] = (char *)malloc(sizeof(char)*(length+1));
+  token[k] = (char *)msSmallMalloc(sizeof(char)*(length+1));
   if(!token[k]) return(NULL);
 
   j = 0;
@@ -737,7 +801,7 @@ char **msStringSplit(const char *string, char ch, int *num_tokens)
       token[k][j] = '\0'; /* terminate current token */      
       
       k++;
-      token[k] = (char *)malloc(sizeof(char)*(length+1));
+      token[k] = (char *)msSmallMalloc(sizeof(char)*(length+1));
       if(!token[k]) return(NULL);
       
       j = 0;      
@@ -756,6 +820,178 @@ char **msStringSplit(const char *string, char ch, int *num_tokens)
   return(token);
 }
 
+/*
+ This function is a copy of CSLTokenizeString2() function of the CPL component.
+ See the port/cpl_string.cpp file in gdal source for the complete documentation.
+ Available Flags:
+ * - MS_ALLOWEMPTYTOKENS: allow the return of empty tokens when two 
+ * delimiters in a row occur with no other text between them.  If not set, 
+ * empty tokens will be discarded;
+ * - MS_STRIPLEADSPACES: strip leading space characters from the token (as
+ * reported by isspace());
+ * - MS_STRIPENDSPACES: strip ending space characters from the token (as
+ * reported by isspace());
+ * - MS_HONOURSTRINGS: double quotes can be used to hold values that should 
+ * not be broken into multiple tokens; 
+ * - MS_PRESERVEQUOTES: string quotes are carried into the tokens when this
+ * is set, otherwise they are removed;
+ * - MS_PRESERVEESCAPES: if set backslash escapes (for backslash itself, 
+ * and for literal double quotes) will be preserved in the tokens, otherwise
+ * the backslashes will be removed in processing.
+ */
+char ** msStringSplitComplex( const char * pszString,
+                              const char * pszDelimiters,
+                              int *num_tokens,
+                              int nFlags )
+
+{
+    char        **papszRetList = NULL;
+    int         nRetMax = 0, nRetLen = 0;
+    char        *pszToken;
+    int         nTokenMax, nTokenLen;
+    int         bHonourStrings = (nFlags & MS_HONOURSTRINGS);
+    int         bAllowEmptyTokens = (nFlags & MS_ALLOWEMPTYTOKENS);
+    int         bStripLeadSpaces = (nFlags & MS_STRIPLEADSPACES);
+    int         bStripEndSpaces = (nFlags & MS_STRIPENDSPACES);
+
+    pszToken = (char *) msSmallMalloc(sizeof(char*)*10);;
+    nTokenMax = 10;
+    
+    while( pszString != NULL && *pszString != '\0' )
+    {
+        int     bInString = MS_FALSE;
+        int     bStartString = MS_TRUE;
+
+        nTokenLen = 0;
+        
+        /* Try to find the next delimeter, marking end of token */
+        for( ; *pszString != '\0'; pszString++ )
+        {
+
+            /* End if this is a delimeter skip it and break. */
+            if( !bInString && strchr(pszDelimiters, *pszString) != NULL )
+            {
+                pszString++;
+                break;
+            }
+            
+            /* If this is a quote, and we are honouring constant
+               strings, then process the constant strings, with out delim
+               but don't copy over the quotes */
+            if( bHonourStrings && *pszString == '"' )
+            {
+                if( nFlags & MS_PRESERVEQUOTES )
+                {
+                    pszToken[nTokenLen] = *pszString;
+                    nTokenLen++;
+                }
+
+                if( bInString )
+                {
+                    bInString = MS_FALSE;
+                    continue;
+                }
+                else
+                {
+                    bInString = MS_TRUE;
+                    continue;
+                }
+            }
+
+            /*
+             * Within string constants we allow for escaped quotes, but in
+             * processing them we will unescape the quotes and \\ sequence
+             * reduces to \
+             */
+            if( bInString && pszString[0] == '\\' )
+            {
+                if ( pszString[1] == '"' || pszString[1] == '\\' )
+                {
+                    if( nFlags & MS_PRESERVEESCAPES )
+                    {
+                        pszToken[nTokenLen] = *pszString;
+                        nTokenLen++;
+                    }
+
+                    pszString++;
+                }
+            }
+
+            /*
+             * Strip spaces at the token start if requested.
+             */
+            if ( !bInString && bStripLeadSpaces
+                 && bStartString && isspace((unsigned char)*pszString) )
+                continue;
+
+            bStartString = MS_FALSE;
+
+            /*
+             * Extend token buffer if we are running close to its end.
+             */
+            if( nTokenLen >= nTokenMax-3 )
+            {
+                nTokenMax = nTokenMax * 2 + 10;
+                pszToken = (char *) msSmallRealloc(pszToken, sizeof(char*)*nTokenMax);
+            }
+
+            pszToken[nTokenLen] = *pszString;
+            nTokenLen++;
+        }
+
+        /*
+         * Strip spaces at the token end if requested.
+         */
+        if ( !bInString && bStripEndSpaces )
+        {
+            while ( nTokenLen && isspace((unsigned char)pszToken[nTokenLen - 1]) )
+                nTokenLen--;
+        }
+
+        pszToken[nTokenLen] = '\0';
+
+        /*
+         * Add the token.
+         */
+        if( pszToken[0] != '\0' || bAllowEmptyTokens )
+        {
+            if( nRetLen >= nRetMax - 1 )
+            {
+                nRetMax = nRetMax * 2 + 10;
+                papszRetList = (char **) msSmallRealloc(papszRetList, sizeof(char*)*nRetMax);
+            }
+
+            papszRetList[nRetLen++] = msStrdup( pszToken );
+            papszRetList[nRetLen] = NULL;
+        }
+    }
+
+    /*
+     * If the last token was empty, then we need to capture
+     * it now, as the loop would skip it.
+     */
+    if( *pszString == '\0' && bAllowEmptyTokens && nRetLen > 0 
+        && strchr(pszDelimiters,*(pszString-1)) != NULL )
+    {
+        if( nRetLen >= nRetMax - 1 )
+        {
+            nRetMax = nRetMax * 2 + 10;
+            papszRetList = (char **) msSmallRealloc(papszRetList, sizeof(char*)*nRetMax);
+        }
+
+        papszRetList[nRetLen++] = msStrdup("");
+        papszRetList[nRetLen] = NULL;
+    }
+
+    if( papszRetList == NULL )
+        papszRetList = (char **) msSmallMalloc(sizeof(char *)*1);
+
+    *num_tokens = nRetLen;
+    free(pszToken);
+
+    return papszRetList;
+}
+
 /* This method is similar to msStringSplit but support quoted strings. 
    It also support multi-characters delimiter and allows to preserve quotes */
 char **msStringTokenize( const char *pszLine, const char *pszDelim, 
@@ -763,7 +999,7 @@ char **msStringTokenize( const char *pszLine, const char *pszDelim,
 {
     char **papszResult = NULL;
     int n = 1, iChar, nLength = strlen(pszLine), iTokenChar = 0, bInQuotes = MS_FALSE;
-    char *pszToken = (char *) malloc(sizeof(char*)*(nLength+1));
+    char *pszToken = (char *) msSmallMalloc(sizeof(char*)*(nLength+1));
     int nDelimLen = strlen(pszDelim);
 
     /* Compute the number of tokens */
@@ -784,7 +1020,7 @@ char **msStringTokenize( const char *pszLine, const char *pszDelim,
         }
     }
 
-    papszResult = (char **) malloc(sizeof(char *)*n);
+    papszResult = (char **) msSmallMalloc(sizeof(char *)*n);
     n = iTokenChar = bInQuotes = 0;
     for( iChar = 0; pszLine[iChar] != '\0'; iChar++ )
     {
@@ -805,7 +1041,7 @@ char **msStringTokenize( const char *pszLine, const char *pszDelim,
         {
             pszToken[iTokenChar++] = '\0';
             papszResult[n] = pszToken;
-            pszToken = (char *) malloc(sizeof(char*)*(nLength+1));
+            pszToken = (char *) msSmallMalloc(sizeof(char*)*(nLength+1));
             iChar += nDelimLen - 1;
             iTokenChar = 0;
             n++;
@@ -883,8 +1119,7 @@ char *msEncodeUrlExcept(const char *data, const char except)
     if (msEncodeChar(*i))
       inc += 2;
   
-  if (!(code = (char*)malloc(strlen(data)+inc+1)))
-    return NULL;
+  code = (char*)msSmallMalloc(strlen(data)+inc+1);
   
   for (j=code, i=data; *i!='\0'; i++, j++)
     {
@@ -931,12 +1166,8 @@ char *msEncodeHTMLEntities(const char *string)
     /* Start with 100 extra chars for replacements...  */
     /* should be good enough for most cases */
     buflen = strlen(string) + 100;
-    newstring = (char*)malloc(buflen+1*sizeof(char*));
-    if (newstring == NULL)
-    {
-        msSetError(MS_MEMERR, NULL, "msEncodeHTMLEntities()");
-        return NULL;
-    }
+    newstring = (char*)malloc(buflen+1);
+    MS_CHECK_ALLOC(newstring, buflen+1, NULL);
 
     for(i=0, c=string; *c != '\0'; c++)
     {
@@ -946,12 +1177,8 @@ char *msEncodeHTMLEntities(const char *string)
             /* If we had to realloc then this string must contain several */
             /* entities... so let's go with twice the previous buffer size */
             buflen *= 2;
-            newstring = (char*)realloc(newstring, buflen+1*sizeof(char*));
-            if (newstring == NULL)
-            {
-                msSetError(MS_MEMERR, NULL, "msEncodeHTMLEntities()");
-                return NULL;
-            }
+            newstring = (char*)realloc(newstring, buflen+1);
+            MS_CHECK_ALLOC(newstring, buflen+1, NULL);
         }
 
         switch(*c)
@@ -998,19 +1225,21 @@ void msDecodeHTMLEntities(const char *string)
 {
     char *pszAmp=NULL, *pszSemiColon=NULL, *pszReplace=NULL, *pszEnd=NULL;
     char *pszBuffer=NULL;
+    size_t bufferSize = 0;
 
     if(string == NULL)
         return;
     else
         pszBuffer = (char*)string;
 
-    pszReplace = (char*) malloc(sizeof(char) * strlen(pszBuffer));
-    pszEnd = (char*) malloc(sizeof(char) * strlen(pszBuffer));
+    bufferSize = strlen(pszBuffer);
+    pszReplace = (char*) msSmallMalloc(bufferSize);
+    pszEnd = (char*) msSmallMalloc(bufferSize);
 
     while((pszAmp = strchr(pszBuffer, '&')) != NULL)
     {
         /* Get the &...; */
-        strcpy(pszReplace, pszAmp);
+        strlcpy(pszReplace, pszAmp, bufferSize);
         pszSemiColon = strchr(pszReplace, ';');
         if(pszSemiColon == NULL)
             break;
@@ -1018,7 +1247,7 @@ void msDecodeHTMLEntities(const char *string)
             pszSemiColon++;
 
         /* Get everything after the &...; */
-        strcpy(pszEnd, pszSemiColon);
+        strlcpy(pszEnd, pszSemiColon, bufferSize);
 
         pszReplace[pszSemiColon-pszReplace] = '\0';
 
@@ -1093,7 +1322,7 @@ int msIsXMLTagValid(const char *string)
 /*
  * Concatenate pszSrc to pszDest and reallocate memory if necessary.
 */
-char *msStringConcatenate(char *pszDest, char *pszSrc)
+char *msStringConcatenate(char *pszDest, const char *pszSrc)
 {
    int nLen;
    
@@ -1102,7 +1331,7 @@ char *msStringConcatenate(char *pszDest, char *pszSrc)
 
    /* if destination is null, allocate memory */
    if (pszDest == NULL) {
-      pszDest = strdup(pszSrc);
+      pszDest = msStrdup(pszSrc);
    }
    else { /* if dest is not null, reallocate memory */
       char *pszTemp;
@@ -1139,13 +1368,14 @@ char *msJoinStrings(char **array, int arrayLength, const char *delimeter)
     stringLength += strlen(array[i]) + delimeterLength;
 
   string = (char *)calloc(stringLength+1, sizeof(char));
-  if(!string) return NULL;
+  MS_CHECK_ALLOC(string, (stringLength+1)* sizeof(char), NULL);
+  string[0] = '\0';
 
   for(i=0; i<arrayLength-1; i++) {
-    strcat(string, array[i]);
-    strcat(string, delimeter);
+    strlcat(string, array[i], stringLength);
+    strlcat(string, delimeter, stringLength);
   }
-  strcat(string, array[i]); /* add last element, no delimiter */
+  strlcat(string, array[i], stringLength); /* add last element, no delimiter */
 
   return string;
 }
@@ -1159,13 +1389,11 @@ char *msHashString(const char *pszStr)
 {
     unsigned char sums[HASH_SIZE] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     char *pszOutBuf = NULL;
+    size_t bufferSize = 0;
     int i=0;
 
-    pszOutBuf = (char*)malloc( (HASH_SIZE*2+1)*sizeof(char) );
-    if (pszOutBuf == NULL)
-    {
-        /* msSetError(MS_MEMERR, ...); */
-    }
+    bufferSize = HASH_SIZE*2+1;
+    pszOutBuf = (char*)msSmallMalloc(bufferSize);
 
     for(i=0; pszStr && pszStr[i]; i++)
     {
@@ -1174,7 +1402,7 @@ char *msHashString(const char *pszStr)
 
     for(i=0; i<HASH_SIZE; i++)
     {
-        sprintf(pszOutBuf + i*2, "%02x", sums[i]);
+      snprintf(pszOutBuf + i*2, bufferSize-(i*2), "%02x", sums[i]);
     }
 
     return pszOutBuf;
@@ -1205,7 +1433,7 @@ char *msCommifyString(char *str)
   if(num_commas < 1) return str; /* nothing to add */
 
   new_length = old_length + num_commas;
-  str = (char *) realloc(str, new_length+1);
+  str = (char *) msSmallRealloc(str, new_length+1);
   str[new_length] = '\0';
 
   j = 0;
@@ -1230,39 +1458,6 @@ char *msCommifyString(char *str)
 }
 
 
-/************************************************************************/
-/*                  case incensitive equivalent of strstr               */
-/************************************************************************/
-const char *msCaseFindSubstring(const char *haystack, const char *needle)
-{   
-    if ( !*needle )   
-    {      
-        return haystack;   
-    }   
-    for ( ; *haystack; ++haystack )   
-    {      
-        if ( toupper(*haystack) == toupper(*needle) )      
-        {         
-            /*          * Matched starting char -- loop through remaining chars.          */
-            const char *h, *n;         
-            for ( h = haystack, n = needle; *h && *n; ++h, ++n )         
-            {            
-                if ( toupper(*h) != toupper(*n) )            
-                {
-                    break;            
-                }         
-            }         
-            if ( !*n ) /* matched all of 'needle' to null termination */         
-            {            
-                return haystack; /* return the start of the match */         
-            }      
-        }   
-    }   
-    return 0;
-}
-
-
-
 /* ------------------------------------------------------------------------------- */
 /*       Replace all occurances of old with new in str.                            */
 /*       It is assumed that str was dynamically created using malloc.              */
@@ -1279,7 +1474,7 @@ char *msCaseReplaceSubstring(char *str, const char *old, const char *new)
       /*
       ** If old is not found then leave str alone
       */
-      if( (tmp_ptr = (char *) msCaseFindSubstring(str, old)) == NULL)
+      if( (tmp_ptr = (char *) strcasestr(str, old)) == NULL)
 	return(str);
 
       /*
@@ -1301,7 +1496,7 @@ char *msCaseReplaceSubstring(char *str, const char *old, const char *new)
         if (old_len < new_len) {
           tmp_offset = tmp_ptr - str;
           str_len = str_len - old_len + new_len;
-          str = (char *)realloc(str, (str_len + 1)); /* make new space for a copy */
+          str = (char *)msSmallRealloc(str, (str_len + 1)); /* make new space for a copy */
           tmp_ptr = str + tmp_offset;
         }
 
@@ -1320,7 +1515,7 @@ char *msCaseReplaceSubstring(char *str, const char *old, const char *new)
         /*
         ** And look for more matches in the rest of the string
         */
-        tmp_ptr = (char *) msCaseFindSubstring(tmp_ptr + new_len, old);
+        tmp_ptr = (char *) strcasestr(tmp_ptr + new_len, old);
       }
 
       return(str);
@@ -1398,8 +1593,9 @@ char *msGetFriBidiEncodedString(const char *string, const char *encoding)
     FriBidiLevel *levels;
     FriBidiStrIndex new_len;
     fribidi_boolean log2vis;
+    int i, j;
 
-    visual = (FriBidiChar *) malloc (sizeof (FriBidiChar) * (len + 1));
+    visual = (FriBidiChar *) msSmallMalloc (sizeof (FriBidiChar) * (len + 1));
     ltov = NULL;
     vtol = NULL;
     levels = NULL;
@@ -1431,8 +1627,24 @@ char *msGetFriBidiEncodedString(const char *string, const char *encoding)
      new_len =
        fribidi_unicode_to_charset (from_char_set_num,
            visual, len, outstring);
+
+    /* scan str and compress out FRIBIDI_CHAR_FILL UTF8 characters */
+
+    for (i=0, j=0; i<new_len; i++, j++)
+    {
+      if (outstring[i] == '\xef' && outstring[i+1] == '\xbb' && outstring[i+2] == '\xbf')
+      {
+         i += 3;
+      }
+      if (i != j)
+      {
+        outstring[j] = outstring[i];
+      }
+    }
+    outstring[j] = '\0';
+
 #endif
-     return strdup(outstring);
+     return msStrdup(outstring);
   }
 }
 #endif
@@ -1456,7 +1668,7 @@ char *msGetEncodedString(const char *string, const char *encoding)
   len = strlen(string);
 
   if (len == 0 || (encoding && strcasecmp(encoding, "UTF-8")==0))
-      return strdup(string);    /* Nothing to do: string already in UTF-8 */
+      return msStrdup(string);    /* Nothing to do: string already in UTF-8 */
 
   cd = iconv_open("UTF-8", encoding);
   if(cd == (iconv_t)-1) {
@@ -1473,7 +1685,7 @@ char *msGetEncodedString(const char *string, const char *encoding)
     iconv_close(cd);
     return NULL;
   }
-  strcpy(out, string);
+  strlcpy(out, string, bufsize);
   outp = out;
 
   bufleft = bufsize;
@@ -1484,7 +1696,7 @@ char *msGetEncodedString(const char *string, const char *encoding)
     if(iconv_status == -1){
       msFree(out);
       iconv_close(cd);
-      return strdup(string);
+      return msStrdup(string);
     }
   }
   out[bufsize - bufleft] = '\0';
@@ -1494,7 +1706,7 @@ char *msGetEncodedString(const char *string, const char *encoding)
   return out;
 #else
   if (*string == '\0' || (encoding && strcasecmp(encoding, "UTF-8")==0))
-      return strdup(string);    /* Nothing to do: string already in UTF-8 */
+      return msStrdup(string);    /* Nothing to do: string already in UTF-8 */
 
   msSetError(MS_MISCERR, "Not implemeted since Iconv is not enabled.", "msGetEncodedString()");
   return NULL;
@@ -1521,11 +1733,8 @@ char* msConvertWideStringToUTF8 (const wchar_t* string, const char* encoding) {
     {   
         nStr = wcslen (string);
         nBufferSize = ((nStr * 6) + 1);
-        output = (char*) malloc (nBufferSize);
-        if (output == NULL) {
-            msSetError(MS_MEMERR, NULL, "msConvertWideStringToUTF8()");
-            return NULL;
-        }
+        output = (char*) msSmallMalloc (nBufferSize);
+
         if (nStr == 0) {
             /* return an empty 8 byte string */
             output[0] = '\0';
@@ -1876,7 +2085,7 @@ char* msGetFirstLine(char* text) {
     /*loop through glyphs in text*/
     while((glyphLength=msGetNextGlyph(&textptr,glyph))) {
         if(glyphLength==1 && *glyph=='\n') { /*we've hit the first \n char*/
-            firstLineCur = firstLine = malloc(firstLineLength+1);
+            firstLineCur = firstLine = msSmallMalloc(firstLineLength+1);
             
             /*copy the first line into the return array*/
             while(firstLineLength--) {
@@ -1889,5 +2098,74 @@ char* msGetFirstLine(char* text) {
         firstLineLength+=glyphLength;
     }
     /*no newline found in text*/
-    return strdup(text);
+    return msStrdup(text);
+}
+
+/************************************************************************/
+/*                             msStrdup()                               */
+/************************************************************************/
+
+/* Safe version of msStrdup(). This function is taken from gdal/cpl. */
+
+char *msStrdup( const char * pszString )
+{
+    char        *pszReturn;
+
+    if( pszString == NULL )
+        pszString = "";
+
+    pszReturn = strdup( pszString );
+
+    if( pszReturn == NULL )
+    {
+        fprintf(stderr, "msSmallMsStrdup(): Out of memory allocating %ld bytes.\n",
+                (long) strlen(pszString) );
+        exit(1);
+    }
+
+    return( pszReturn );
+}
+
+
+/************************************************************************/
+/*                             msStringEscape()                         */
+/************************************************************************/
+
+/* Checks if a string contains single or double quotes and escape them.
+   NOTE: the user have to free the returned char */
+
+char* msStringEscape( const char * pszString )
+{
+    char *string_tmp, *string_ptr;
+    int i;
+    
+    if (pszString ==  NULL || strlen(pszString) == 0)
+        return msStrdup("");
+
+    string_tmp = (char*)msSmallMalloc((strlen(pszString)*2)+1);
+    for (string_ptr=(char*)pszString,i=0; *string_ptr!='\0'; ++string_ptr,++i) {
+        if ( (*string_ptr == '\"') || (*string_ptr == '\'') ) {
+            string_tmp[i] = '\\';
+            ++i;
+        }
+        string_tmp[i] = *string_ptr;
+    }
+
+    string_tmp[i] = '\0';
+    return string_tmp;
+}
+
+/************************************************************************/
+/*                             msStringInArray()                        */
+/************************************************************************/
+
+/* Check if a string is in a array */
+int msStringInArray( const char * pszString, char **array, int numelements)
+{
+    int i;
+    for (i=0;i<numelements;++i) {
+        if (strcasecmp(pszString, array[i])==0)
+            return MS_TRUE;
+    }
+    return MS_FALSE;
 }

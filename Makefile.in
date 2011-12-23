@@ -72,6 +72,7 @@ GD_STATIC = @GD_STATIC@
 AGG=     @AGG_ENABLED@
 AGG_INC=  @AGG_INC@
 AGG_OBJ=  @AGG_OBJ@
+AGG_LIB= @AGG_LIB@
 
 #
 # Optional Opengl Support.
@@ -80,6 +81,10 @@ FTGL=     @FTGL_ENABLED@
 FTGL_LIB=  @FTGL_LIB@
 FTGL_INC=  @FTGL_INC@
 
+#Freetype support
+FT_ENABLE=     @FT_ENABLED@
+FT_LIB=  @FT_LIB@
+FT_INC=  @FT_INC@
 
 #
 # Optional Opengl Support.
@@ -92,6 +97,13 @@ OGL_INC=  @OGL_INC@
 PNG_INC= @PNG_INC@
 PNG_LIB= @PNG_LIB@
 
+#
+# Giflib support
+#
+GIF_INC= @GIF_INC@
+GIF_LIB= @GIF_LIB@
+GIF=	 @GIF_ENABLED@
+
 # 
 # ZLIB option (compressed SVG)
 #
@@ -99,27 +111,10 @@ ZLIB_INC=  @ZLIB_INC@
 ZLIB_LIB=  @ZLIB_LIB@
 ZLIB=      @ZLIB_ENABLED@
 
-#
-# PDFlib distribution (PDF library w/ PDF support). (EXPERIMENTAL)
-#
-PDF_INC=  @PDF_INC@
-PDF_LIB=  @PDF_LIB@
-PDF=      @PDF_ENABLED@
-
-# TIFF distribution (raster support for TIFF and GEOTIFF imagery). (RECOMMENDED)
-TIFF_INC= @TIFF_INC@
-TIFF_LIB= @TIFF_LIB@
-TIFF=     @TIFF_ENABLED@
-
 # JPEG distribution (raster support for grayscale JPEG images, INPUT ONLY).
 JPEG_INC= @JPEG_INC@
 JPEG_LIB= @JPEG_LIB@
 JPEG=     @JPEG_ENABLED@
-
-# EPPL7 Support (this activates ERDAS as well) Included in the distribution. Probably the best raster alternative if
-# you've got EPPL7 laying around. See http://www.lmic.state.mn.us/ for more information. (RECOMMENDED)
-EPPL=     @EPPL_ENABLED@
-EPPL_OBJ= @EPPL_OBJ@
 
 # ESRI SDE Support. You MUST have the SDE Client libraries and include files
 # on your system someplace. The actual SDE server you wish to connect to can
@@ -150,20 +145,15 @@ POSTGIS=      @POSTGIS_ENABLED@
 POSTGIS_LIB=  @POSTGIS_LIB@
 POSTGIS_INC=  @POSTGIS_INC@
 
-# Optional MyGIS Support. 
-MYGIS=      @MYGIS_ENABLED@
-MYGIS_LIB=  @MYGIS_LIB@
-MYGIS_INC=  @MYGIS_INC@
+# Optional Mysql Support. 
+MYSQL=      @MYSQL_ENABLED@
+MYSQL_LIB=  @MYSQL_LIB@
+MYSQL_INC=  @MYSQL_INC@
 
 # Optional ORACLESPATIAL Support. Contact: cabral@cttmar.univali.br
 ORACLESPATIAL=@ORACLESPATIAL_ENABLED@
 ORACLESPATIAL_LIB=@ORACLESPATIAL_LIB@
 ORACLESPATIAL_INC=@ORACLESPATIAL_INC@
-
-# Optional MING/SWF/FLASH Support. Contact: assefa@dmsolutions.ca
-MING=@MING_ENABLED@
-MING_LIB=@MING_LIB@
-MING_INC=@MING_INC@
 
 # libcurl ... required for WMS/WFS Client Connections
 CURL_INC=@CURL_INC@
@@ -178,6 +168,16 @@ FRIBIDI_LIB=@FRIBIDI_LIB@
 # libxml2 ... required for OGC SOS Server
 XML2_INC=@XML2_INC@
 XML2_LIB=@XML2_LIB@
+
+# libxslt ... required for xml mapfile
+XSLT_INC=@XSLT_INC@
+XSLT_LIB=@XSLT_LIB@
+
+# libexslt ... required for xml mapfile
+EXSLT_INC=@EXSLT_INC@
+EXSLT_LIB=@EXSLT_LIB@
+
+
 
 # Optional FastCGI
 FASTCGI=@FASTCGI_ENABLED@
@@ -241,11 +241,12 @@ LD_SONAME_LIBMAP = -W1,@SO_COMMAND_NAME@,$(LIBMAP_SH_VER)
 XTRALIBS= @XTRALIBS@
 RUNPATHS= @RPATHS@
 
-DEFINES = $(IGNORE_MISSING_DATA) $(USE_POINT_Z_M) $(STRINGS) @ALL_ENABLED@ $(FRIBIDI)
+DEFINES = $(IGNORE_MISSING_DATA) $(USE_POINT_Z_M) $(STRINGS) @ALL_ENABLED@ $(FRIBIDI) -DDISABLE_CVSID
 
-INCLUDES = $(REGEX_INC) $(PNG_INC) $(GD_INC) $(AGG_INC) $(OGL_INC) $(FTGL_INC) $(PDF_INC) $(PROJ_INC) $(TIFF_INC) $(JPEG_INC) $(EGIS_INC) \
-        $(SDE_INC) $(GDAL_INC) $(POSTGIS_INC) $(MYGIS_INC) \
-        $(CURL_INC) $(MING_INC) $(ORACLESPATIAL_INC) $(GEOS_INC) $(ICONV_INC) \
+INCLUDES = $(FT_INC) $(REGEX_INC) $(PNG_INC) $(GIF_INC) $(JPEG_INC) $(GD_INC) \
+        $(AGG_INC) $(OGL_INC) $(FTGL_INC) $(PROJ_INC) $(EGIS_INC) \
+        $(SDE_INC) $(GDAL_INC) $(POSTGIS_INC) $(MYSQL_INC) \
+        $(CURL_INC) $(ORACLESPATIAL_INC) $(GEOS_INC) $(ICONV_INC) \
         $(FASTCGI_INC) $(ZLIB_INC) $(XML2_INC) $(FRIBIDI_INC) $(CAIRO_INC)
 
 FLAGS = @DEBUG_FLAGS@ $(DEFINES) $(INCLUDES)
@@ -254,10 +255,10 @@ CFLAGS   = @CFLAGS@ $(FLAGS)
 CXXFLAGS = @CXXFLAGS@ $(FLAGS)
 
 # Link flags and shared libs only
-SUP_LIBS =  $(GD_LIB) $(AGG_LIB) $(OGL_LIB) $(FTGL_LIB) $(PDF_LIB) $(TIFF_LIB) $(PROJ_LIBS) \
-          $(JPEG_LIB) $(PNG_LIB) $(SDE_LIB) $(GDAL_LIB) $(MING_LIB) $(POSTGIS_LIB) \
-	  $(MYGIS_LIB) $(CURL_LIB) $(ORACLESPATIAL_LIB) $(GEOS_LIB) \
-	  $(THREAD_LIB) $(ICONV_LIB) $(FASTCGI_LIB) \
+SUP_LIBS =  $(FT_LIB) $(GD_LIB) $(AGG_LIB) $(OGL_LIB) $(FTGL_LIB) $(PROJ_LIBS) \
+          $(JPEG_LIB) $(PNG_LIB) $(GIF_LIB) $(SDE_LIB) $(GDAL_LIB) $(POSTGIS_LIB) \
+	  $(MYSQL_LIB) $(CURL_LIB) $(ORACLESPATIAL_LIB) $(GEOS_LIB) \
+	  $(THREAD_LIB) $(ICONV_LIB) $(FASTCGI_LIB) $(XSLT_LIB) $(EXSLT_LIB) \
 	  $(ZLIB_LIB) $(XML2_LIB) $(FRIBIDI_LIB) $(XTRALIBS)  $(CAIRO_LIB)
 
 # STATIC_LIBS is full filename with path of libs that will be statically linked
@@ -267,9 +268,22 @@ EXE_LDFLAGS =	$(RUNPATHS) -L. -lmapserver $(SUP_LIBS) $(STATIC_LIBS)
 
 RM= /bin/rm -f
 
-OBJS= $(AGG_OBJ) mapogl.o mapoglrenderer.o mapoglcontext.o mapimageio.o mapcairo.o maprendering.o mapgeomtransform.o maprgbapng.o maptemplate.o mapbits.o maphash.o mapshape.o mapxbase.o mapparser.o maplexer.o maptree.o mapsearch.o mapstring.o mapsymbol.o mapfile.o maplegend.o maputil.o mapscale.o mapquery.o maplabel.o maperror.o mapprimitive.o mapproject.o mapraster.o mapsde.o mapogr.o mappostgis.o mapmygis.o maplayer.o mapresample.o mapwms.o mapwmslayer.o maporaclespatial.o mapgml.o mapprojhack.o mapthread.o mapdraw.o mapgd.o mapagg.o mapoutput.o mapgdal.o mapswf.o mapimagemap.o mapows.o mapwfs.o  mapwfs11.o mapwfslayer.o mapcontext.o maphttp.o mapdrawgdal.o mappdf.o mapjoin.o mapgraticule.o mapcopy.o mapogcfilter.o mapogcsld.o maptime.o mapwcs.o mapwcs11.o mapcpl.o cgiutil.o maprasterquery.o mapobject.o mapgeos.o classobject.o layerobject.o mapio.o mappool.o mapsvg.o mapregex.o mappluginlayer.o mapogcsos.o mappostgresql.o mapcrypto.o mapowscommon.o maplibxml2.o mapdebug.o mapchart.o maptclutf.o $(EPPL_OBJ) 
+OBJS= $(AGG_OBJ) mapgeomutil.o mapdummyrenderer.o mapogl.o mapoglrenderer.o mapoglcontext.o \
+				mapimageio.o mapcairo.o maprendering.o mapgeomtransform.o mapquantization.o \
+				maptemplate.o mapbits.o maphash.o mapshape.o mapxbase.o mapparser.o maplexer.o \
+				maptree.o mapsearch.o mapstring.o mapsymbol.o mapfile.o maplegend.o maputil.o \
+				mapscale.o mapquery.o maplabel.o maperror.o mapprimitive.o mapproject.o mapraster.o \
+				mapsde.o mapogr.o mappostgis.o maplayer.o mapresample.o mapwms.o \
+				mapwmslayer.o maporaclespatial.o mapgml.o mapprojhack.o mapthread.o mapdraw.o \
+				mapgd.o mapagg.o mapoutput.o mapgdal.o mapimagemap.o mapows.o mapwfs.o \
+				mapwfs11.o mapwfslayer.o mapcontext.o maphttp.o mapdrawgdal.o mapjoin.o mapgraticule.o \
+				mapcopy.o mapogcfilter.o mapogcsld.o maptime.o mapwcs.o mapwcs11.o mapcpl.o cgiutil.o \
+				maprasterquery.o mapobject.o mapgeos.o classobject.o layerobject.o mapio.o mappool.o \
+				mapregex.o mappluginlayer.o mapogcsos.o mappostgresql.o mapcrypto.o mapowscommon.o \
+				maplibxml2.o mapdebug.o mapchart.o maptclutf.o mapxml.o mapkml.o mapkmlrenderer.o \
+				mapogroutput.o mapwcs20.o  mapogcfiltercommon.o mapunion.o mapcluster.o
 
-EXE_LIST = 	shp2img shp2pdf legend mapserv shptree shptreevis \
+EXE_LIST = 	shp2img legend mapserv shptree shptreevis \
 		shptreetst scalebar sortshp mapscriptvars tile4ms \
 		msencrypt mapserver-config
 
@@ -277,6 +291,17 @@ EXE_LIST = 	shp2img shp2pdf legend mapserv shptree shptreevis \
 # --- You shouldn't have to edit anything else. ---
 #
 all: $(MAKE_GD) libmapserver.a $(EXTRA_DEFAULT) $(EXE_LIST) @MAKE_PHPMS@ 
+
+# Explicitly invoke this rule when maplexer.l is altered.  We don't do
+# it automatically for the reasons listed in #2310
+
+lexer:
+	$(LEX) --nounistd -Pmsyy -i -omaplexer.c maplexer.l
+
+maplexer.c:	maplexer.l
+	@echo '----------------------------------------------------------------'
+	@echo '--  Please run "make lexer" if you have altered maplexer.l     -'
+	@echo '----------------------------------------------------------------'
 
 #
 # Non-gnumake's don't seem to use this pattern rule, 
@@ -298,22 +323,15 @@ mapoglcontext.o: mapoglcontext.cpp mapoglcontext.h
 mapogr.o:	mapogr.cpp
 	$(CXX) -c $(CXXFLAGS) mapogr.cpp -o mapogr.o
 
-# use -Wno-uninitialized as the compiler produces incorrect warning messages
-mapagg.o: mapagg.cpp mapagg.h
-	$(CXX) -c $(CXXFLAGS) -Wno-uninitialized mapagg.cpp -o mapagg.o
-
-php3_mapscript:: $(LIBMAP_STATIC)
-	cd mapscript/php3; $(MAKE); cd ../..
+php_mapscript:: $(LIBMAP_STATIC)
+	cd mapscript/php; $(MAKE); cd ../..
 
 maplexer.o: maplexer.c mapserver.h mapfile.h
-
-maplexer.c: maplexer.l
-	$(LEX) --nounistd -Pmsyy -i -omaplexer.c maplexer.l
 
 mapparser.o: mapparser.c mapserver.h
 
 mapparser.c: mapparser.y
-	$(YACC) -p msyy -d -omapparser.c mapparser.y
+	$(YACC) -d -omapparser.c mapparser.y
 
 lib:    $(LIBMAP_STATIC)
 libmapserver: $(LIBMAP_STATIC)
@@ -362,29 +380,29 @@ shptreevis: $(LIBMAP_STATIC) shptreevis.o mapserver.h
 shptreetst: $(LIBMAP_STATIC) shptreetst.o mapserver.h
 	$(LD) $(CFLAGS) shptreetst.o $(EXE_LDFLAGS) -o shptreetst
 
-sortshp: sortshp.o
+sortshp: $(LIBMAP_STATIC) sortshp.o mapserver.h
 	$(LD) $(CFLAGS) sortshp.o $(EXE_LDFLAGS) -o sortshp
 
-tile4ms: tile4ms.o
+tile4ms: $(LIBMAP_STATIC) tile4ms.o mapserver.h
 	$(LD) $(CFLAGS) tile4ms.o $(EXE_LDFLAGS) -o tile4ms
 
 msencrypt: $(LIBMAP_STATIC) msencrypt.o mapserver.h
 	$(LD) $(CFLAGS) msencrypt.o $(EXE_LDFLAGS) -o msencrypt
 
-testexpr: testexpr.o mapparser.o maplexer.o
+testexpr: $(LIBMAP_STATIC) testexpr.o mapparser.o maplexer.o mapserver.h
 	$(LD) $(CFLAGS) testexpr.o $(EXE_LDFLAGS) -o testexpr
 
 testcopy: $(LIBMAP_STATIC) testcopy.o mapcopy.o mapserver.h
 	$(LD) $(CFLAGS) testcopy.o $(EXE_LDFLAGS) -o testcopy
 
-test_mapcrypto: $(LIBMAP_STATIC) mapcrypto.c
+test_mapcrypto: $(LIBMAP_STATIC) mapcrypto.c mapserver.h
 	$(CC) $(CFLAGS) mapcrypto.c -DTEST_MAPCRYPTO $(EXE_LDFLAGS) -o test_mapcrypto
 
 mapscriptvars:	Makefile
 	touch mapscriptvars
 	pwd > mapscriptvars
 	echo $(IGNORE_MISSING_DATA) $(USE_POINT_Z_M) $(STRINGS) @ALL_ENABLED@ >> mapscriptvars
-	echo -I. $(PROJ_INC) $(GD_INC) $(TTF_INC) $(TIFF_INC) $(JPEG_INC) $(SDE_INC) $(OGR_INC) $(GDAL_INC) $(GEOS_INC) >> mapscriptvars
+	echo -I. $(PROJ_INC) $(GD_INC) $(TTF_INC) $(JPEG_INC) $(SDE_INC) $(OGR_INC) $(GDAL_INC) $(GEOS_INC) >> mapscriptvars
 	echo $(EXE_LDFLAGS) >> mapscriptvars
 	echo $(STATIC_LIBS) >> mapscriptvars
 	grep '#define MS_VERSION ' mapserver.h >> mapscriptvars
@@ -401,8 +419,8 @@ mapserver-config: Makefile
 	cat mapserver-config.in >> mapserver-config
 	chmod a+x mapserver-config
 
-php3_mapscript_clean::
-	cd mapscript/php3; $(MAKE) clean; cd ../..
+php_mapscript_clean::
+	cd mapscript/php; $(MAKE) clean; cd ../..
 
 install:
 	@echo ""

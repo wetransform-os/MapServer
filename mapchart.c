@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapchart.c 9382 2009-10-06 16:19:09Z tbonfort $
+ * $Id: mapchart.c 11881 2011-07-07 19:55:43Z sdlime $
  *
  * Project:  MapServer
  * Purpose:  Implementation of dynamic charting (MS-RFC-29)
@@ -30,7 +30,7 @@
 
 #include "mapserver.h"
 
-MS_CVSID("$Id: mapchart.c 9382 2009-10-06 16:19:09Z tbonfort $")
+MS_CVSID("$Id: mapchart.c 11881 2011-07-07 19:55:43Z sdlime $")
 
 #define MS_CHART_TYPE_PIE 1
 #define MS_CHART_TYPE_BAR 2
@@ -49,21 +49,11 @@ MS_CVSID("$Id: mapchart.c 9382 2009-10-06 16:19:09Z tbonfort $")
 */
 int findChartPoint(mapObj *map, shapeObj *shape, int width, int height, pointObj *center) {
     int middle,numpoints,idx,offset;
-    #ifdef USE_AGG
     double invcellsize = 1.0/map->cellsize; /*speed up MAP2IMAGE_X/Y_IC_DBL*/
-    #endif
     switch(shape->type) {
         case MS_SHAPE_POINT:
-            if( MS_RENDERER_GD(map->outputformat) ) {
-                center->x=MS_MAP2IMAGE_X(shape->line[0].point[0].x, map->extent.minx, map->cellsize);
-                center->y=MS_MAP2IMAGE_Y(shape->line[0].point[0].y, map->extent.maxy, map->cellsize);
-            }
-            #ifdef USE_AGG
-            else if( MS_RENDERER_AGG(map->outputformat) ) {
-                center->x=MS_MAP2IMAGE_X_IC_DBL(shape->line[0].point[0].x, map->extent.minx, invcellsize);
-                center->y=MS_MAP2IMAGE_Y_IC_DBL(shape->line[0].point[0].y, map->extent.maxy, invcellsize);
-            }
-            #endif
+            center->x=MS_MAP2IMAGE_X_IC_DBL(shape->line[0].point[0].x, map->extent.minx, invcellsize);
+            center->y=MS_MAP2IMAGE_Y_IC_DBL(shape->line[0].point[0].y, map->extent.maxy, invcellsize);
             
             if(MS_CHART_FITS(center->x,center->y,width,height,map->width,map->height))
                 return MS_SUCCESS;
@@ -81,16 +71,9 @@ int findChartPoint(mapObj *map, shapeObj *shape, int width, int height, pointObj
                 if(idx<numpoints) {
                     center->x=(shape->line[0].point[idx-1].x+shape->line[0].point[idx].x)/2.;
                     center->y=(shape->line[0].point[idx-1].y+shape->line[0].point[idx].y)/2.;
-                    if( MS_RENDERER_GD(map->outputformat) ) {
-                        center->x=MS_MAP2IMAGE_X(center->x, map->extent.minx, map->cellsize);
-                        center->y=MS_MAP2IMAGE_Y(center->y, map->extent.maxy, map->cellsize);
-                    }
-                    #ifdef USE_AGG
-                    else if( MS_RENDERER_AGG(map->outputformat) ) {
-                        center->x=MS_MAP2IMAGE_X_IC_DBL(center->x, map->extent.minx, invcellsize);
-                        center->y=MS_MAP2IMAGE_Y_IC_DBL(center->y, map->extent.maxy, invcellsize);
-                    }
-                    #endif
+                    center->x=MS_MAP2IMAGE_X_IC_DBL(center->x, map->extent.minx, invcellsize);
+                    center->y=MS_MAP2IMAGE_Y_IC_DBL(center->y, map->extent.maxy, invcellsize);
+
                     if(MS_CHART_FITS(center->x,center->y,width,height,map->width,map->height))
                         return MS_SUCCESS;
                     
@@ -100,16 +83,9 @@ int findChartPoint(mapObj *map, shapeObj *shape, int width, int height, pointObj
                 if(idx>=0) {
                     center->x=(shape->line[0].point[idx].x+shape->line[0].point[idx+1].x)/2;
                     center->y=(shape->line[0].point[idx].y+shape->line[0].point[idx+1].y)/2;
-                    if( MS_RENDERER_GD(map->outputformat) ) {
-                        center->x=MS_MAP2IMAGE_X(center->x, map->extent.minx, map->cellsize);
-                        center->y=MS_MAP2IMAGE_Y(center->y, map->extent.maxy, map->cellsize);
-                    }
-                    #ifdef USE_AGG
-                    else if( MS_RENDERER_AGG(map->outputformat) ) {
-                        center->x=MS_MAP2IMAGE_X_IC_DBL(center->x, map->extent.minx, invcellsize);
-                        center->y=MS_MAP2IMAGE_Y_IC_DBL(center->y, map->extent.maxy, invcellsize);
-                    }
-                    #endif
+                    center->x=MS_MAP2IMAGE_X_IC_DBL(center->x, map->extent.minx, invcellsize);
+                    center->y=MS_MAP2IMAGE_Y_IC_DBL(center->y, map->extent.maxy, invcellsize);
+                    
                     if(MS_CHART_FITS(center->x,center->y,width,height,map->width,map->height))
                         return MS_SUCCESS;
                     break;
@@ -119,16 +95,9 @@ int findChartPoint(mapObj *map, shapeObj *shape, int width, int height, pointObj
         break;
         case MS_SHAPE_POLYGON:
             msPolygonLabelPoint(shape, center, -1);
-            if( MS_RENDERER_GD(map->outputformat) ) {
-                center->x=MS_MAP2IMAGE_X(center->x, map->extent.minx, map->cellsize);
-                center->y=MS_MAP2IMAGE_Y(center->y, map->extent.maxy, map->cellsize);
-            }
-            #ifdef USE_AGG
-            else if( MS_RENDERER_AGG(map->outputformat) ) {
-                center->x=MS_MAP2IMAGE_X_IC_DBL(center->x, map->extent.minx, invcellsize);
-                center->y=MS_MAP2IMAGE_Y_IC_DBL(center->y, map->extent.maxy, invcellsize);
-            }
-            #endif
+            center->x=MS_MAP2IMAGE_X_IC_DBL(center->x, map->extent.minx, invcellsize);
+            center->y=MS_MAP2IMAGE_Y_IC_DBL(center->y, map->extent.maxy, invcellsize);
+            
             if(MS_CHART_FITS(center->x,center->y,width,height,map->width,map->height))
                 return MS_SUCCESS;
             else
@@ -141,32 +110,20 @@ int findChartPoint(mapObj *map, shapeObj *shape, int width, int height, pointObj
 
 void drawRectangle(mapObj *map, imageObj *image, float mx, float my, float Mx, float My,
         styleObj *style) {
-#ifdef USE_AGG
-    if(MS_RENDERER_AGG(map->outputformat)) {
-        msFilledRectangleAGG(image, style, mx, my, Mx, My);
-    }
-    else
-#endif
-    if(MS_RENDERER_GD(map->outputformat)) {
-        int color = gdImageColorResolve(image->img.gd, 
-                style->color.red,
-                style->color.green,
-                style->color.blue);
-        int outlinecolor=-1;
-        if(MS_VALID_COLOR(style->outlinecolor)) {
-            outlinecolor = gdImageColorResolve(image->img.gd, 
-                    style->outlinecolor.red,
-                    style->outlinecolor.green,
-                    style->outlinecolor.blue);
-        }
-        if(outlinecolor==-1) {
-            gdImageFilledRectangle(image->img.gd,mx,my,Mx,My,color);
-        } else {
-            int outlinewidth = style->width;
-            gdImageFilledRectangle(image->img.gd, mx, my, Mx, My, outlinecolor);
-            gdImageFilledRectangle(image->img.gd, mx+outlinewidth, my+outlinewidth, Mx-outlinewidth , My-outlinewidth,color);
-        }
-    }
+	shapeObj shape;
+	lineObj line;
+	pointObj point[5];
+	line.point = point;
+	line.numpoints = 5;
+	shape.line = &line;
+	shape.numlines = 1;
+	
+	point[0].x = point[4].x = point[3].x = mx;
+	point[0].y = point[4].y = point[1].y = my;
+	point[1].x = point[2].x = Mx;
+	point[2].y = point[3].y = My;
+	
+	msDrawShadeSymbol(&map->symbolset,image,&shape,style,1.0);
 }
 
 int msDrawVBarChart(mapObj *map, imageObj *image, pointObj *center,
@@ -227,6 +184,11 @@ int msDrawBarChart(mapObj *map, imageObj *image, pointObj *center,
      */
     upperLimit = (maxVal!=NULL)? *maxVal : MS_MAX(shapeMaxVal,0);
     lowerLimit = (minVal!=NULL)? *minVal : MS_MIN(shapeMinVal,0);
+    if(upperLimit==lowerLimit) {
+      /* treat the case where we would have an unspecified behavior */
+      upperLimit+=0.5;
+      lowerLimit-=0.5;
+    }
     
     pixperval=(float)height/(upperLimit-lowerLimit);
     vertOrigin=bottom+lowerLimit*pixperval;
@@ -258,8 +220,8 @@ int msDrawPieChart(mapObj *map, imageObj *image,
         pointObj *center, float diameter,
         float *values, styleObj **styles, int numvalues)
 {
-    int i,color,outlinecolor,outlinewidth;
-    float dTotal=0.,start=0,center_x,center_y;
+    int i;
+    double dTotal=0.,start=0;
 
     for(i=0;i<numvalues;i++)
     {
@@ -275,50 +237,8 @@ int msDrawPieChart(mapObj *map, imageObj *image,
         float angle = values[i];
         if(angle==0) continue; /*no need to draw. causes artifacts with outlines*/
         angle*=360.0/dTotal;
-        if( MS_RENDERER_GD(map->outputformat) )
-        {
-            color = gdImageColorResolve(image->img.gd, styles[i]->color.red,
-                                                styles[i]->color.green,
-                                                styles[i]->color.blue);
-            outlinecolor=-1;outlinewidth=1;
-            if(MS_VALID_COLOR(styles[i]->outlinecolor)) {
-                outlinecolor = gdImageColorResolve(image->img.gd, 
-                        styles[i]->outlinecolor.red,
-                        styles[i]->outlinecolor.green,
-                        styles[i]->outlinecolor.blue);
-            }
-            if(styles[i]->width!=-1)
-                outlinewidth=styles[i]->width;
-            /* 
-             * offset the center of the slice
-             * NOTE: angles are anti-trigonometric
-             * 
-             */
-            if(styles[i]->offsetx>0) {
-                center_x=center->x+styles[i]->offsetx*cos(((-start-angle/2)*MS_PI/180.));
-                center_y=center->y-styles[i]->offsetx*sin(((-start-angle/2)*MS_PI/180.));
-            } else {
-                center_x=center->x;
-                center_y=center->y;
-            }
-            
-            if(outlinecolor==-1) {
-                gdImageFilledArc(image->img.gd, center_x, center_y, diameter, diameter, (int)start, (int)(start+angle), color, gdPie);               
-            }
-            else {
-                gdImageFilledArc(image->img.gd, center_x, center_y, diameter, diameter, (int)start, (int)(start+angle), color, gdPie);
-                gdImageSetThickness(image->img.gd, outlinewidth);
-                gdImageFilledArc(image->img.gd, center_x, center_y, diameter, diameter, (int)start, (int)(start+angle), outlinecolor,gdNoFill|gdEdged);
-                gdImageSetThickness(image->img.gd, 1);                              
-            }
-        }
-        #ifdef USE_AGG
-        else if( MS_RENDERER_AGG(map->outputformat) )
-        {
-            msPieSliceAGG(image, styles[i], center->x, center->y, diameter/2., start, start+angle);
-        }
-        #endif
-
+        msDrawPieSlice(&map->symbolset,image, center, styles[i], diameter/2., start, start+angle);
+        
         start+=angle;
     }
     return MS_SUCCESS;
@@ -361,7 +281,7 @@ int pieLayerProcessDynamicDiameter(layerObj *layer) {
     chartRangeProcessingKey=msLayerGetProcessingKey( layer,"CHART_SIZE_RANGE" );
     if(chartRangeProcessingKey==NULL)
         return MS_FALSE;
-    attrib = malloc(strlen(chartRangeProcessingKey)+1);
+    attrib = msSmallMalloc(strlen(chartRangeProcessingKey)+1);
     switch(sscanf(chartRangeProcessingKey,"%s %f %f %f %f",attrib,
                 &mindiameter,&maxdiameter,&minvalue,&maxvalue))
     {
@@ -393,8 +313,8 @@ int pieLayerProcessDynamicDiameter(layerObj *layer) {
     }
     initStyle(newstyle);
     newclass->numstyles++;
-    newclass->name=strdup("__MS_SIZE_ATTRIBUTE_");
-    newstyle->bindings[MS_STYLE_BINDING_SIZE].item=strdup(attrib);
+    newclass->name=(char*)msStrdup("__MS_SIZE_ATTRIBUTE_");
+    newstyle->bindings[MS_STYLE_BINDING_SIZE].item=msStrdup(attrib);
     newstyle->numbindings++;
     free(attrib);
 
@@ -427,14 +347,24 @@ int msDrawPieChartLayer(mapObj *map, layerObj *layer, imageObj *image)
     else
     {
         if(sscanf(chartSizeProcessingKey ,"%f",&diameter)!=1) {
-            msSetError(MS_MISCERR, "msDrawChart format error for processing key \"CHART_SIZE\"", "msDrawChartLayer()");
+            msSetError(MS_MISCERR, "msDrawChart format error for processing key \"CHART_SIZE\"", "msDrawPieChartLayer()");
             return MS_FAILURE;
         }
     }
     /* step through the target shapes */
     msInitShape(&shape);
+
     values=(float*)calloc(numvalues,sizeof(float));
+    MS_CHECK_ALLOC(values, numvalues*sizeof(float), MS_FAILURE);
     styles = (styleObj**)malloc((numvalues)*sizeof(styleObj*));
+    if (styles == NULL)
+    {
+        msSetError(MS_MEMERR, "%s: %d: Out of memory allocating %u bytes.\n", "msDrawPieChartLayer()",
+                   __FILE__, __LINE__, numvalues*sizeof(styleObj*)); 
+        free(values);
+        return MS_FAILURE;
+    }
+
     if(chartRangeProcessingKey!=NULL) 
         numvalues--;
     while(MS_SUCCESS == getNextShape(map,layer,values,styles,&shape)) {
@@ -485,20 +415,30 @@ int msDrawVBarChartLayer(mapObj *map, layerObj *layer, imageObj *image)
     else
     {
         if(sscanf(chartSizeProcessingKey ,"%f",&barWidth) != 1) {
-            msSetError(MS_MISCERR, "msDrawChart format error for processing key \"CHART_SIZE\"", "msDrawChartLayer()");
+            msSetError(MS_MISCERR, "msDrawChart format error for processing key \"CHART_SIZE\"", "msDrawVBarChartLayer()");
             return MS_FAILURE;
         }
     }
 
     if(chartScaleProcessingKey){
         if(sscanf(chartScaleProcessingKey,"%f",&scale)!=1) {
-            msSetError(MS_MISCERR, "Error reading value for processing key \"CHART_SCALE\"", "msDrawBarChartLayerGD()");
+            msSetError(MS_MISCERR, "Error reading value for processing key \"CHART_SCALE\"", "msDrawVBarChartLayer()");
             return MS_FAILURE;
         }
     }
     msInitShape(&shape);
+
     values=(float*)calloc(numvalues,sizeof(float));
+    MS_CHECK_ALLOC(values, numvalues*sizeof(float), MS_FAILURE);
     styles = (styleObj**)malloc(numvalues*sizeof(styleObj*));
+    if (styles == NULL)
+    {
+        msSetError(MS_MEMERR, "%s: %d: Out of memory allocating %u bytes.\n", "msDrawVBarChartLayer()",
+                   __FILE__, __LINE__, numvalues*sizeof(styleObj*)); 
+        free(values);
+        return MS_FAILURE;
+    }
+
     while(MS_SUCCESS == getNextShape(map,layer,values,styles,&shape)) {
         int i;
         double h=0;
@@ -516,6 +456,8 @@ int msDrawVBarChartLayer(mapObj *map, layerObj *layer, imageObj *image)
         msDrawEndShape(map,layer,image,&shape);
         msFreeShape(&shape);
     }
+    free(values);
+    free(styles);
     return status;
 }
 
@@ -547,37 +489,47 @@ int msDrawBarChartLayer(mapObj *map, layerObj *layer, imageObj *image)
                 height = width;
                 break;
             default:
-                msSetError(MS_MISCERR, "msDrawChart format error for processing key \"CHART_SIZE\"", "msDrawChartLayer()");
+                msSetError(MS_MISCERR, "msDrawChart format error for processing key \"CHART_SIZE\"", "msDrawBarChartLayer()");
                 return MS_FAILURE;
         }
     }
 
     if(barMax){
         if(sscanf(barMax,"%f",&barMaxVal)!=1) {
-            msSetError(MS_MISCERR, "Error reading value for processing key \"CHART_BAR_MAXVAL\"", "msDrawBarChartLayerGD()");
+            msSetError(MS_MISCERR, "Error reading value for processing key \"CHART_BAR_MAXVAL\"", "msDrawBarChartLayer()");
             return MS_FAILURE;
         }
     }
     if(barMin) {
         if(sscanf(barMin,"%f",&barMinVal)!=1) {
-            msSetError(MS_MISCERR, "Error reading value for processing key \"CHART_BAR_MINVAL\"", "msDrawBarChartLayerGD()");
+            msSetError(MS_MISCERR, "Error reading value for processing key \"CHART_BAR_MINVAL\"", "msDrawBarChartLayer()");
             return MS_FAILURE;
         }
     }
     if(barMin && barMax && barMinVal>=barMaxVal) {
-        msSetError(MS_MISCERR, "\"CHART_BAR_MINVAL\" must be less than \"CHART_BAR_MAXVAL\"", "msDrawBarChartLayerGD()");
+        msSetError(MS_MISCERR, "\"CHART_BAR_MINVAL\" must be less than \"CHART_BAR_MAXVAL\"", "msDrawBarChartLayer()");
         return MS_FAILURE;
     }
     barWidth=(float)width/(float)layer->numclasses;
     if(!barWidth)
     {
-        msSetError(MS_MISCERR, "Specified width of chart too small to fit given number of classes", "msDrawBarChartLayerGD()");
+        msSetError(MS_MISCERR, "Specified width of chart too small to fit given number of classes", "msDrawBarChartLayer()");
         return MS_FAILURE;
     }
 
     msInitShape(&shape);
+
     values=(float*)calloc(numvalues,sizeof(float));
+    MS_CHECK_ALLOC(values, numvalues*sizeof(float), MS_FAILURE);
     styles = (styleObj**)malloc(numvalues*sizeof(styleObj*));
+    if (styles == NULL)
+    {
+        msSetError(MS_MEMERR, "%s: %d: Out of memory allocating %u bytes.\n", "msDrawBarChartLayer()",
+                   __FILE__, __LINE__, numvalues*sizeof(styleObj*)); 
+        free(values);
+        return MS_FAILURE;
+    }
+
     while(MS_SUCCESS == getNextShape(map,layer,values,styles,&shape)) {
         msDrawStartShape(map, layer, image, &shape);
         if(findChartPoint(map, &shape, width,height, &center)==MS_SUCCESS) {
@@ -592,6 +544,8 @@ int msDrawBarChartLayer(mapObj *map, layerObj *layer, imageObj *image)
         msDrawEndShape(map,layer,image,&shape);
         msFreeShape(&shape);
     }
+    free(values);
+    free(styles);
     return status;
 }
 
@@ -608,7 +562,7 @@ int msDrawChartLayer(mapObj *map, layerObj *layer, imageObj *image)
     
     if (image && map && layer)
     {
-        if( !(MS_RENDERER_GD(image->format) || MS_RENDERER_AGG(image->format) )) {
+        if( !(MS_RENDERER_PLUGIN(image->format) )) {
             msSetError(MS_MISCERR, "chart drawing currently only supports GD and AGG renderers", "msDrawChartLayer()");
             return MS_FAILURE;
         }
@@ -660,7 +614,7 @@ int msDrawChartLayer(mapObj *map, layerObj *layer, imageObj *image)
             msProjectRect(&map->projection, &layer->projection, &searchrect); /* project the searchrect to source coords */
     #endif
         
-        status = msLayerWhichShapes(layer, searchrect);
+        status = msLayerWhichShapes(layer, searchrect, MS_FALSE);
         if(status == MS_DONE) { /* no overlap */
             msLayerClose(layer);
             return MS_SUCCESS;

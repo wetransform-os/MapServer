@@ -1,5 +1,5 @@
 /* ===========================================================================
-   $Id: color.i 6373 2007-07-24 02:37:18Z dmorissette $
+   $Id: color.i 11208 2011-03-17 19:44:08Z tbonfort $
  
    Project:  MapServer
    Purpose:  SWIG interface file for mapscript colorObj extensions
@@ -50,7 +50,7 @@
         if (!color)
             return(NULL);
     
-        MS_INIT_COLOR(*color, red, green, blue);
+        MS_INIT_COLOR(*color, red, green, blue, 255);
 
         return(color);    	
     }
@@ -68,7 +68,7 @@
             return MS_FAILURE;
         }
     
-        MS_INIT_COLOR(*self, red, green, blue);
+        MS_INIT_COLOR(*self, red, green, blue, 255);
         return MS_SUCCESS;
     }
 
@@ -84,7 +84,7 @@
                 return MS_FAILURE;
             }
 
-            MS_INIT_COLOR(*self, red, green, blue);
+            MS_INIT_COLOR(*self, red, green, blue, 255);
             return MS_SUCCESS;
         }
         else {

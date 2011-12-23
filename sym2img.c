@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: sym2img.c 7418 2008-02-29 00:02:49Z nsavard $
+ * $Id: sym2img.c 11397 2011-03-30 20:09:01Z sdlime $
  *
  * Project:  MapServer
  * Purpose:  Commandline utility to render symbols to a raster.
@@ -32,7 +32,7 @@
 
 #include "mapserver.h"
 
-MS_CVSID("$Id: sym2img.c 7418 2008-02-29 00:02:49Z nsavard $")
+MS_CVSID("$Id: sym2img.c 11397 2011-03-30 20:09:01Z sdlime $")
 
 #define MAXCOLORS 256
 #define CELLSIZE 100
@@ -66,14 +66,14 @@ int main(int argc, char *argv[])
   p.line[0].numpoints = 4;
 
   /* Initialize the symbol and font sets */
-  symbolSet.filename = strdup(argv[1]);
+  symbolSet.filename = msStrdup(argv[1]);
 
   /* 
   ** load the symbol file
   */
   if(msLoadSymbolSet(&symbolSet) == -1) { 
     msWriteError(stderr);
-    exit(0);
+    exit(1);
   }
   
   ns = symbolSet.numsymbols;
@@ -151,9 +151,9 @@ int main(int argc, char *argv[])
       }
 
       if(symbolSet.symbol[n]->name)
-	sprintf(buffer, "%d - %s", n, symbolSet.symbol[n]->name);
+        snprintf(buffer, sizeof(buffer), "%d - %s", n, symbolSet.symbol[n]->name);
       else
-	sprintf(buffer, "%d", n);
+        snprintf(buffer, sizeof(buffer), "%d", n);
       gdImageString(img, gdFontTiny, j+1, i+1, buffer, black);
 
       n++;
@@ -162,7 +162,7 @@ int main(int argc, char *argv[])
 
  if((stream = fopen(argv[2],"wb")) == NULL) { /* open the file */
     fprintf(stderr, "Unable to open output file: %s\n", argv[2]);
-    exit(0);
+    exit(1);
   }
 #ifndef USE_GD_1_6
   gdImageGif(img, stream);

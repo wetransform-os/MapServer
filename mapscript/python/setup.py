@@ -1,4 +1,4 @@
-# $Id: setup.py 9510 2009-10-25 03:55:11Z hobu $
+# $Id: setup.py 10457 2010-08-14 16:41:44Z hobu $
 #
 # setup.py file for MapScript
 #
@@ -58,6 +58,13 @@ extra_compile_args = []
 # might need to tweak for Python 2.4 on OSX to be these
 #extra_compile_args = ['-g', '-arch', 'i386', '-isysroot','/']
 
+
+save_init_posix = sysconfig._init_posix
+def ms_init_posix():
+    save_init_posix()
+    if 'LDCXXSHARED' in sysconfig._config_vars:
+        sysconfig._config_vars['LDSHARED'] = sysconfig._config_vars['LDCXXSHARED']
+sysconfig._init_posix = ms_init_posix
 
 
 

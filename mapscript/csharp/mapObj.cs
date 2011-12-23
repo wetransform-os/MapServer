@@ -67,16 +67,25 @@ public class mapObj : IDisposable {
     }
   }
 
-  public override bool Equals(object obj) {
-    if (obj == null)
-        return false;
-    if (this.GetType() != obj.GetType())
-        return false;
-    return swigCPtr.Handle.Equals(mapObj.getCPtr((mapObj)obj).Handle);
+  public string processTemplate(int bGenerateImages, string[] names, string[] values)
+  {
+	if (names.Length != values.Length)
+	    throw new ArgumentException("Invalid array length specified!");
+	return processTemplate(bGenerateImages, names, values, values.Length);
   }
-
-  public override int GetHashCode() {
-    return swigCPtr.Handle.GetHashCode();
+  
+  public string processLegendTemplate(string[] names, string[] values)
+  {
+	if (names.Length != values.Length)
+	    throw new ArgumentException("Invalid array length specified!");
+	return processLegendTemplate(names, values, values.Length);
+  }
+  
+  public string processQueryTemplate(string[] names, string[] values)
+  {
+	if (names.Length != values.Length)
+	    throw new ArgumentException("Invalid array length specified!");
+	return processQueryTemplate(names, values, values.Length);
   }
 
   public string name {
@@ -654,6 +663,12 @@ public class mapObj : IDisposable {
     return ret;
   }
 
+  public int queryByFilter(string arg0) {
+    int ret = mapscriptPINVOKE.mapObj_queryByFilter(swigCPtr, arg0);
+    if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
   public int queryByPoint(pointObj point, int mode, double buffer) {
     int ret = mapscriptPINVOKE.mapObj_queryByPoint(swigCPtr, pointObj.getCPtr(point), mode, buffer);
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
@@ -702,8 +717,8 @@ public class mapObj : IDisposable {
     return ret;
   }
 
-  public int saveQuery(string filename) {
-    int ret = mapscriptPINVOKE.mapObj_saveQuery(swigCPtr, filename);
+  public int saveQuery(string filename, int results) {
+    int ret = mapscriptPINVOKE.mapObj_saveQuery(swigCPtr, filename, results);
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
     return ret;
   }
@@ -844,19 +859,19 @@ public class mapObj : IDisposable {
     return ret;
   }
 
-  public string processTemplate(int bGenerateImages, string[] names, string[] values, int numentries) {
+  private string processTemplate(int bGenerateImages, string[] names, string[] values, int numentries) {
     string ret = mapscriptPINVOKE.mapObj_processTemplate(swigCPtr, bGenerateImages, new mapscriptPINVOKE.StringArrayMarshal(names)._ar, new mapscriptPINVOKE.StringArrayMarshal(values)._ar, numentries);
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
     return ret;
   }
 
-  public string processLegendTemplate(string[] names, string[] values, int numentries) {
+  private string processLegendTemplate(string[] names, string[] values, int numentries) {
     string ret = mapscriptPINVOKE.mapObj_processLegendTemplate(swigCPtr, new mapscriptPINVOKE.StringArrayMarshal(names)._ar, new mapscriptPINVOKE.StringArrayMarshal(values)._ar, numentries);
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
     return ret;
   }
 
-  public string processQueryTemplate(string[] names, string[] values, int numentries) {
+  private string processQueryTemplate(string[] names, string[] values, int numentries) {
     string ret = mapscriptPINVOKE.mapObj_processQueryTemplate(swigCPtr, new mapscriptPINVOKE.StringArrayMarshal(names)._ar, new mapscriptPINVOKE.StringArrayMarshal(values)._ar, numentries);
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
     return ret;

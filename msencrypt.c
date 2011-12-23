@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: msencrypt.c 7544 2008-04-29 18:16:05Z pramsey $
+ * $Id: msencrypt.c 10772 2010-11-29 18:27:02Z aboudreault $
  *
  * Project:  MapServer
  * Purpose:  Command-line encryption utility (see MS-RFC-18)
@@ -29,7 +29,7 @@
 
 #include "mapserver.h"
 
-MS_CVSID("$Id: msencrypt.c 7544 2008-04-29 18:16:05Z pramsey $")
+MS_CVSID("$Id: msencrypt.c 10772 2010-11-29 18:27:02Z aboudreault $")
 
 void PrintUsage()
 {
@@ -72,11 +72,8 @@ int main(int argc, char *argv[])
         }
 
         pszBuf = (char*)malloc((strlen(argv[3])*2+17)*sizeof(char));
-        if (pszBuf == NULL)
-        {
-            printf("ERROR: Memory Allocation failed!\n");
-            return -1;
-        }
+        MS_CHECK_ALLOC(pszBuf, (strlen(argv[3])*2+17)*sizeof(char), -1);
+
         msEncryptStringWithKey(key, argv[3], pszBuf);
 
         printf("%s\n", pszBuf);

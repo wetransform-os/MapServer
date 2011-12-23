@@ -1,5 +1,5 @@
 /*****************************************************************************
- * $Id: mapwmslayer.c 10138 2010-05-06 15:09:22Z pramsey $
+ * $Id: mapwmslayer.c 10883 2011-01-21 19:38:21Z aboudreault $
  *
  * Project:  MapServer
  * Purpose:  Implementation of WMS CONNECTIONTYPE - client to WMS servers
@@ -39,6 +39,11 @@
 #include <stdio.h>
 #endif
 
+#ifdef USE_GDAL
+#  include "cpl_vsi.h"
+#endif
+
+void CleanVSIDir( const char *pszDir );
 
 /**********************************************************************
  *                          msInitWmsParamsObj()
@@ -136,7 +141,7 @@ static int msSetWMSParamInt(wmsParamsObj *wmsparams,
 {
     char szBuf[100];
 
-    snprintf(szBuf, 100, "%d", value);
+    snprintf(szBuf, sizeof(szBuf), "%d", value);
     msInsertHashTable(wmsparams->params, name, szBuf);
     wmsparams->numparams++;
 
@@ -151,6 +156,7 @@ static int msSetWMSParamInt(wmsParamsObj *wmsparams,
 static char *msBuildURLFromWMSParams(wmsParamsObj *wmsparams) 
 {
     const char *key, *value;
+    size_t bufferSize = 0;
     int nLen;
     char *pszURL;
 
@@ -167,7 +173,8 @@ static char *msBuildURLFromWMSParams(wmsParamsObj *wmsparams)
         key = msNextKeyFromHashTable(wmsparams->params, key);
     }
 
-    pszURL = (char*)malloc((nLen+1)*sizeof(char*));
+    bufferSize = nLen+1;
+    pszURL = (char*)msSmallMalloc(bufferSize);
 
     /* Start with the onlineresource value and append trailing '?' or '&' 
      * if missing.
@@ -190,7 +197,7 @@ static char *msBuildURLFromWMSParams(wmsParamsObj *wmsparams)
     while (key != NULL)
     {
         value = msLookupHashTable(wmsparams->params, key);
-        sprintf(pszURL+nLen, "%s=%s&", key, value);
+        snprintf(pszURL+nLen, bufferSize-nLen, "%s=%s&", key, value);
         nLen += strlen(key) + strlen(value) + 2;
         key = msNextKeyFromHashTable(wmsparams->params, key);
     }
@@ -260,7 +267,7 @@ static int msBuildWMSLayerURLBase(mapObj *map, layerObj *lp,
         return MS_FAILURE;
     }
 
-    psWMSParams->onlineresource = strdup(pszOnlineResource);
+    psWMSParams->onlineresource = msStrdup(pszOnlineResource);
 
     if (strncmp(pszVersion, "1.0.7", 5) < 0) 
         pszVersionKeyword = "WMTVER";
@@ -345,9 +352,9 @@ static int msBuildWMSLayerURLBase(mapObj *map, layerObj *lp,
     {
         /* Was a wms_style_..._sld URL provided? */
         char szBuf[100];
-        sprintf(szBuf, "style_%.80s_sld", pszStyle);
+        snprintf(szBuf, sizeof(szBuf), "style_%.80s_sld", pszStyle);
         pszSLD = msOWSLookupMetadata(&(lp->metadata), "MO", szBuf);
-        sprintf(szBuf, "style_%.80s_sld_body", pszStyle);
+        snprintf(szBuf, sizeof(szBuf), "style_%.80s_sld_body", pszStyle);
         pszStyleSLDBody = msOWSLookupMetadata(&(lp->metadata), "MO", szBuf);
 
         if (pszSLD || pszStyleSLDBody)
@@ -450,15 +457,18 @@ static int msBuildWMSLayerURLBase(mapObj *map, layerObj *lp,
 #define WMS_GETMAP         1
 #define WMS_GETFEATUREINFO 2
 
-int msBuildWMSLayerURL(mapObj *map, layerObj *lp, int nRequestType,
-                       int nClickX, int nClickY, int nFeatureCount,
-                       const char *pszInfoFormat, rectObj *bbox_ret,
-                       wmsParamsObj *psWMSParams)
+static int
+msBuildWMSLayerURL(mapObj *map, layerObj *lp, int nRequestType,
+                   int nClickX, int nClickY, int nFeatureCount,
+                   const char *pszInfoFormat, rectObj *bbox_ret,
+                   int *width_ret, int *height_ret,
+                   wmsParamsObj *psWMSParams)
 {
 #ifdef USE_WMS_LYR
     char *pszEPSG = NULL;
     const char *pszVersion, *pszTmp, *pszRequestParam, *pszExceptionsParam, *pszQueryLayers=NULL;
     rectObj bbox;
+    int bbox_width = map->width, bbox_height = map->height;
     int nVersion=OWS_VERSION_NOTSET;
     
     if (lp->connectiontype != MS_WMS)
@@ -467,7 +477,6 @@ int msBuildWMSLayerURL(mapObj *map, layerObj *lp, int nRequestType,
                    "msBuildWMSLayerURL()");
         return MS_FAILURE;
     }
-
 
 /* ------------------------------------------------------------------
  * Find out request version
@@ -493,7 +502,7 @@ int msBuildWMSLayerURL(mapObj *map, layerObj *lp, int nRequestType,
     {
         /* CONNECTION string seems complete, start with that. */
         char *pszDelimiter;
-        psWMSParams->onlineresource = strdup(lp->connection);
+        psWMSParams->onlineresource = msStrdup(lp->connection);
 
         /* Fetch version info */
         pszVersion = strchr(pszVersion, '=')+1;
@@ -539,8 +548,6 @@ int msBuildWMSLayerURL(mapObj *map, layerObj *lp, int nRequestType,
         }
     }
 
-
-
 /* ------------------------------------------------------------------
  * Figure the SRS we'll use for the request.
  * - Fetch the map SRS (if it's EPSG)
@@ -550,7 +557,7 @@ int msBuildWMSLayerURL(mapObj *map, layerObj *lp, int nRequestType,
  * ------------------------------------------------------------------ */
     if ((pszEPSG = (char*)msOWSGetEPSGProj(&(map->projection), 
                                            NULL, NULL, MS_TRUE)) != NULL &&
-        (pszEPSG = strdup(pszEPSG)) != NULL &&
+        (pszEPSG = msStrdup(pszEPSG)) != NULL &&
         (strncasecmp(pszEPSG, "EPSG:", 5) == 0 ||
          strncasecmp(pszEPSG, "AUTO:", 5) == 0) )
     {
@@ -586,7 +593,7 @@ int msBuildWMSLayerURL(mapObj *map, layerObj *lp, int nRequestType,
     if (pszEPSG == NULL &&
         ((pszEPSG = (char*)msOWSGetEPSGProj(&(lp->projection), &(lp->metadata),
                                             "MO", MS_TRUE)) == NULL ||
-         (pszEPSG = strdup(pszEPSG)) == NULL ||
+         (pszEPSG = msStrdup(pszEPSG)) == NULL ||
          (strncasecmp(pszEPSG, "EPSG:", 5) != 0 &&
           strncasecmp(pszEPSG, "AUTO:", 5) != 0 ) ) )
     {
@@ -609,7 +616,7 @@ int msBuildWMSLayerURL(mapObj *map, layerObj *lp, int nRequestType,
         oPoint.y = (map->extent.miny + map->extent.maxy)/2.0;
         msProjectPoint(&(map->projection), &(map->latlon), &oPoint);
 
-        pszNewEPSG = (char*)malloc(101*sizeof(char));
+        pszNewEPSG = (char*)msSmallMalloc(101*sizeof(char));
 
         snprintf(pszNewEPSG, 100, "%s,9001,%.16g,%.16g", 
                  pszEPSG, oPoint.x, oPoint.y);
@@ -619,29 +626,41 @@ int msBuildWMSLayerURL(mapObj *map, layerObj *lp, int nRequestType,
     }
 
 /* ------------------------------------------------------------------
- * Set layer SRS and reproject map extents to the layer's SRS
+ * Set layer SRS.
  * ------------------------------------------------------------------ */
     /* No need to set lp->proj if it's already set to the right EPSG code */
     if ((pszTmp = msOWSGetEPSGProj(&(lp->projection), NULL, "MO", MS_TRUE)) == NULL ||
         strcasecmp(pszEPSG, pszTmp) != 0)
     {
-        if (strncasecmp(pszEPSG, "EPSG:", 5) == 0)
+        const char *ows_srs;
+
+        /* no need to set lp->proj if it is already set and there is only 
+           one item in the _srs metadata for this layer - we will assume
+           the projection block matches the _srs metadata (the search for ' '
+           in ows_srs is a test to see if there are multiple EPSG: codes) */
+        if( lp->projection.numargs == 0 
+            || (ows_srs = msOWSGetEPSGProj(NULL,&(lp->metadata), "MO", MS_FALSE)) == NULL
+            || (strchr(ows_srs,' ') != NULL) )
         {
-            char szProj[20];
-            sprintf(szProj, "init=epsg:%s", pszEPSG+5);
-            if (msLoadProjectionString(&(lp->projection), szProj) != 0)
-                return MS_FAILURE;
-        }
-        else
-        {
-            if (msLoadProjectionString(&(lp->projection), pszEPSG) != 0)
-                return MS_FAILURE;
+            if (strncasecmp(pszEPSG, "EPSG:", 5) == 0)
+            {
+                char szProj[20];
+                snprintf(szProj, sizeof(szProj), "init=epsg:%s", pszEPSG+5);
+
+                if (msLoadProjectionString(&(lp->projection), szProj) != 0)
+                    return MS_FAILURE;
+            }
+            else
+            {
+                if (msLoadProjectionString(&(lp->projection), pszEPSG) != 0)
+                    return MS_FAILURE;
+            }
         }
     }
 
 /* ------------------------------------------------------------------
  * Adjust for MapServer EXTENT being center of pixel and WMS BBOX being 
- * edge of pixel (#2843), and then reproject if needed.
+ * edge of pixel (#2843).
  * ------------------------------------------------------------------ */
     bbox = map->extent;
 
@@ -650,13 +669,118 @@ int msBuildWMSLayerURL(mapObj *map, layerObj *lp, int nRequestType,
     bbox.miny -= map->cellsize * 0.5;
     bbox.maxy += map->cellsize * 0.5;
 
+/* -------------------------------------------------------------------- */
+/*      Reproject if needed.                                            */
+/* -------------------------------------------------------------------- */
     if (msProjectionsDiffer(&(map->projection), &(lp->projection)))
     {
         msProjectRect(&(map->projection), &(lp->projection), &bbox);
+
+/* -------------------------------------------------------------------- */
+/*      Sometimes our remote WMS only accepts square pixel              */
+/*      requests.  If this is the case adjust adjust the number of      */
+/*      pixels or lines in the request so that the pixels are           */
+/*      square.                                                         */
+/* -------------------------------------------------------------------- */
+        {
+            const char *nonsquare_ok = 
+                msOWSLookupMetadata(&(lp->metadata), 
+                                    "MO", "nonsquare_ok");
+            
+            /* assume nonsquare_ok is false */
+            if( nonsquare_ok != NULL 
+                && (strcasecmp(nonsquare_ok,"no") == 0 
+                    || strcasecmp(nonsquare_ok,"false") == 0) )
+            {
+                double cellsize_x = (bbox.maxx-bbox.minx) / bbox_width;
+                double cellsize_y = (bbox.maxy-bbox.miny) / bbox_height;
+
+                if( cellsize_x < cellsize_y * 0.999999 )
+                {
+                    int new_bbox_height = 
+                        ceil((cellsize_y/cellsize_x) * bbox_height);
+
+                    if (lp->debug)
+                        msDebug("NONSQUARE_OK=%s, adjusted HEIGHT from %d to %d to equalize cellsize at %g.\n",
+                                nonsquare_ok, 
+                                bbox_height, new_bbox_height, cellsize_x );
+                    bbox_height = new_bbox_height;
+                }
+                else if( cellsize_y < cellsize_x * 0.999999 )
+                {
+                    int new_bbox_width = 
+                        ceil((cellsize_x/cellsize_y) * bbox_width);
+
+                    if (lp->debug)
+                        msDebug("NONSQUARE_OK=%s, adjusted WIDTH from %d to %d to equalize cellsize at %g.\n",
+                                nonsquare_ok,
+                                bbox_width, new_bbox_width, cellsize_y );
+                    bbox_width = new_bbox_width;
+                }
+                else
+                {
+                    if (lp->debug)
+                        msDebug("NONSQUARE_OK=%s, but cellsize was already square - no change.\n",
+                                nonsquare_ok );
+                }
+            }
+        }
     }
 
+/* -------------------------------------------------------------------- */
+/*      If the layer has predefined extents, and a predefined           */
+/*      projection that matches the request projection, then            */
+/*      consider restricting the BBOX to match the limits.              */
+/* -------------------------------------------------------------------- */
+    if( bbox_width != 0 )
+    {
+        const char *ows_srs;
+        rectObj  layer_rect;
+
+        ows_srs = msOWSGetEPSGProj(&(lp->projection), &(lp->metadata), 
+                                   "MO", MS_FALSE);
+
+        if( ows_srs && strchr(ows_srs,' ') == NULL 
+            && msOWSGetLayerExtent( map, lp, "MO", &layer_rect) == MS_SUCCESS )
+        {
+            /* fulloverlap */
+            if( msRectContained( &bbox, &layer_rect ) )
+            {
+                /* no changes */
+            }
+           
+            /* no overlap */
+            else if( !msRectOverlap( &layer_rect, &bbox ) )
+            {
+                bbox_width = 0;
+                bbox_height = 0;
+            }
+
+            else
+            {
+                double cellsize_x = (bbox.maxx-bbox.minx) / bbox_width;
+                double cellsize_y = (bbox.maxy-bbox.miny) / bbox_height;
+                double cellsize = MIN(cellsize_x,cellsize_y);
+                
+                msRectIntersect( &bbox, &layer_rect );
+                
+                bbox_width = ceil((bbox.maxx - bbox.minx) / cellsize);
+                bbox_height = ceil((bbox.maxy - bbox.miny) / cellsize);
+            }
+        }
+    }
+
+/* -------------------------------------------------------------------- */
+/*      Potentially return the bbox.                                    */
+/* -------------------------------------------------------------------- */
     if (bbox_ret != NULL)
         *bbox_ret = bbox;
+
+    if( width_ret != NULL )
+        *width_ret = bbox_width;
+
+    if( height_ret != NULL )
+        *height_ret = bbox_height;
 
 /* ------------------------------------------------------------------
  * Build the request URL.
@@ -698,11 +822,11 @@ int msBuildWMSLayerURL(mapObj *map, layerObj *lp, int nRequestType,
             pszExceptionsParam = "WMS_XML";
 
         msSetWMSParamString(psWMSParams, "REQUEST", pszRequestParam, MS_FALSE);
-        msSetWMSParamInt(   psWMSParams, "WIDTH",   map->width);
-        msSetWMSParamInt(   psWMSParams, "HEIGHT",  map->height);
+        msSetWMSParamInt(   psWMSParams, "WIDTH",   bbox_width);
+        msSetWMSParamInt(   psWMSParams, "HEIGHT",  bbox_height);
         msSetWMSParamString(psWMSParams, "SRS",     pszEPSG, MS_FALSE);
 
-        snprintf(szBuf, 100, "%.15g,%.15g,%.15g,%.15g", 
+        snprintf(szBuf, sizeof(szBuf), "%.15g,%.15g,%.15g,%.15g", 
                  bbox.minx, bbox.miny, bbox.maxx, bbox.maxy);
         msSetWMSParamString(psWMSParams, "BBOX",    szBuf, MS_TRUE);
  
@@ -745,11 +869,11 @@ int msBuildWMSLayerURL(mapObj *map, layerObj *lp, int nRequestType,
         }
 
         msSetWMSParamString(psWMSParams, "REQUEST", pszRequestParam, MS_FALSE);
-        msSetWMSParamInt(   psWMSParams, "WIDTH",   map->width);
-        msSetWMSParamInt(   psWMSParams, "HEIGHT",  map->height);
+        msSetWMSParamInt(   psWMSParams, "WIDTH",   bbox_width);
+        msSetWMSParamInt(   psWMSParams, "HEIGHT",  bbox_height);
         msSetWMSParamString(psWMSParams, "SRS",     pszEPSG, MS_FALSE);
 
-        snprintf(szBuf, 100, "%.15g,%.15g,%.15g,%.15g", 
+        snprintf(szBuf, sizeof(szBuf), "%.15g,%.15g,%.15g,%.15g", 
                  bbox.minx, bbox.miny, bbox.maxx, bbox.maxy);
         msSetWMSParamString(psWMSParams, "BBOX",    szBuf, MS_TRUE);
         msSetWMSParamString(psWMSParams, "EXCEPTIONS",  pszExceptionsParam, MS_FALSE);
@@ -791,7 +915,8 @@ char *msWMSGetFeatureInfoURL(mapObj *map, layerObj *lp,
 
     if (msBuildWMSLayerURL(map, lp, WMS_GETFEATUREINFO,
                            nClickX, nClickY, nFeatureCount,
-                           pszInfoFormat, NULL, &sThisWMSParams)!= MS_SUCCESS)
+                           pszInfoFormat, NULL, NULL, NULL,
+                           &sThisWMSParams)!= MS_SUCCESS)
     {
         return NULL;
     }
@@ -817,7 +942,8 @@ int msPrepareWMSLayerRequest(int nLayerId, mapObj *map, layerObj *lp,
     char *pszURL = NULL, *pszHTTPCookieData = NULL;
     const char *pszTmp;
     rectObj bbox;
-    int nTimeout, bOkToMerge, bForceSeparateRequest;
+    int bbox_width, bbox_height;
+    int nTimeout, bOkToMerge, bForceSeparateRequest, bCacheToDisk;
     wmsParamsObj sThisWMSParams;
     
     char    *pszProxyHost=NULL;
@@ -838,12 +964,22 @@ int msPrepareWMSLayerRequest(int nLayerId, mapObj *map, layerObj *lp,
  * compute BBOX in that projection.
  * ------------------------------------------------------------------ */
     if ( msBuildWMSLayerURL(map, lp, WMS_GETMAP,
-                            0, 0, 0, NULL, &bbox, 
+                            0, 0, 0, NULL, &bbox, &bbox_width, &bbox_height,
                             &sThisWMSParams) != MS_SUCCESS)
     {
         /* an error was already reported. */
         msFreeWmsParamsObj(&sThisWMSParams);
         return MS_FAILURE;
+    }
+
+/* ------------------------------------------------------------------
+ * Check if the request is empty, perhaps due to reprojection problems
+ * or wms_extents restrictions.
+ * ------------------------------------------------------------------ */
+    if( bbox_width == 0 || bbox_height == 0 )
+    {
+        msFreeWmsParamsObj(&sThisWMSParams);
+        return MS_SUCCESS;  /* No overlap. */
     }
 
 /* ------------------------------------------------------------------
@@ -908,7 +1044,7 @@ int msPrepareWMSLayerRequest(int nLayerId, mapObj *map, layerObj *lp,
     if ((pszTmp = msOWSLookupMetadata2(&(lp->metadata), &(map->web.metadata),
                                        "MO", "proxy_host")) != NULL)
     {
-        pszProxyHost = strdup(pszTmp);
+        pszProxyHost = msStrdup(pszTmp);
     }
     
     if ((pszTmp = msOWSLookupMetadata2(&(lp->metadata), &(map->web.metadata),
@@ -958,7 +1094,7 @@ int msPrepareWMSLayerRequest(int nLayerId, mapObj *map, layerObj *lp,
     if ((pszTmp = msOWSLookupMetadata2(&(lp->metadata), &(map->web.metadata),
                                        "MO", "proxy_username")) != NULL)
     {
-        pszProxyUsername = strdup(pszTmp);
+        pszProxyUsername = msStrdup(pszTmp);
     }
     
     if ((pszTmp = msOWSLookupMetadata2(&(lp->metadata), &(map->web.metadata),
@@ -994,7 +1130,7 @@ int msPrepareWMSLayerRequest(int nLayerId, mapObj *map, layerObj *lp,
     if ((pszTmp = msOWSLookupMetadata2(&(lp->metadata), &(map->web.metadata),
                                        "MO", "auth_username")) != NULL)
     {
-        pszHttpAuthUsername = strdup(pszTmp);
+        pszHttpAuthUsername = msStrdup(pszTmp);
     }
     
     if ((pszTmp = msOWSLookupMetadata2(&(lp->metadata), &(map->web.metadata),
@@ -1005,7 +1141,34 @@ int msPrepareWMSLayerRequest(int nLayerId, mapObj *map, layerObj *lp,
             return(MS_FAILURE);  /* An error should already have been produced */
         }
     }
-    
+
+/* ------------------------------------------------------------------
+ * Check if we want to use in memory images instead of writing to disk.
+ * ------------------------------------------------------------------ */
+    if ((pszTmp = msOWSLookupMetadata(&(lp->metadata), 
+                                      "MO", "cache_to_disk")) != NULL)
+    {
+        if( strcasecmp(pszTmp,"true") == 0
+            || strcasecmp(pszTmp,"on") == 0
+            || strcasecmp(pszTmp,"yes") == 0 )
+            bCacheToDisk = MS_TRUE;
+        else
+            bCacheToDisk = atoi(pszTmp);
+    }
+    else
+        bCacheToDisk = MS_FALSE;
+
+    if( bCacheToDisk )
+    {
+        /* We'll store the remote server's response to a tmp file. */
+        if (map->web.imagepath == NULL || strlen(map->web.imagepath) == 0)
+        {
+            msSetError(MS_WMSERR, 
+                       "WEB.IMAGEPATH must be set to use WMS client connections.",
+                       "msPrepareWMSLayerRequest()");
+            return MS_FAILURE;
+        }
+    }
 
 /* ------------------------------------------------------------------
  * Check if layer can be merged with previous WMS layer requests
@@ -1064,12 +1227,12 @@ int msPrepareWMSLayerRequest(int nLayerId, mapObj *map, layerObj *lp,
             pszTmp= msLookupHashTable(&(map->web.metadata),"http_cookie_data");
             if(pszTmp != NULL)
             {
-                pszHTTPCookieData = strdup(pszTmp);
+                pszHTTPCookieData = msStrdup(pszTmp);
             }
         }
         else
         {
-            pszHTTPCookieData = strdup(pszTmp);
+            pszHTTPCookieData = msStrdup(pszTmp);
         }
     }
     else if ((pszTmp = msOWSLookupMetadata(&(map->web.metadata), 
@@ -1080,12 +1243,12 @@ int msPrepareWMSLayerRequest(int nLayerId, mapObj *map, layerObj *lp,
             pszTmp= msLookupHashTable(&(map->web.metadata),"http_cookie_data");
             if(pszTmp != NULL)
             {
-                pszHTTPCookieData = strdup(pszTmp);
+                pszHTTPCookieData = msStrdup(pszTmp);
             }
         }
         else
         {
-            pszHTTPCookieData = strdup(pszTmp);
+            pszHTTPCookieData = msStrdup(pszTmp);
         }
     }
 
@@ -1119,14 +1282,10 @@ int msPrepareWMSLayerRequest(int nLayerId, mapObj *map, layerObj *lp,
                 int nLen;
 
                 nLen = strlen(value1) + strlen(value2) +2;
-                pszBuf = malloc(nLen * sizeof(char));
-                if (pszBuf == NULL)
-                {
-                    msSetError(MS_MEMERR, NULL, "msPrepareWMSLayerRequest()");
-                    return MS_FAILURE;
-                }
+                pszBuf = malloc(nLen);
+                MS_CHECK_ALLOC(pszBuf, nLen, MS_FAILURE);
 
-                sprintf(pszBuf, "%s,%s", value1, value2);
+                snprintf(pszBuf, nLen, "%s,%s", value1, value2);
                 msSetWMSParamString(&sThisWMSParams, keys[i], pszBuf,MS_FALSE);
 
                 /* This key existed already, we don't want it counted twice */
@@ -1163,22 +1322,18 @@ int msPrepareWMSLayerRequest(int nLayerId, mapObj *map, layerObj *lp,
         pasReqInfo[(*numRequests)].nLayerId = nLayerId;
         pasReqInfo[(*numRequests)].pszGetUrl = pszURL;
         pszURL = NULL;
-        /* We'll store the remote server's response to a tmp file. */
-        if (map->web.imagepath == NULL || strlen(map->web.imagepath) == 0)
-        {
-            msSetError(MS_WMSERR, 
-                  "WEB.IMAGEPATH must be set to use WMS client connections.",
-                       "msPrepareWMSLayerRequest()");
-            return MS_FAILURE;
-        }
         pasReqInfo[(*numRequests)].pszHTTPCookieData = pszHTTPCookieData;
         pszHTTPCookieData = NULL;
-        pasReqInfo[(*numRequests)].pszOutputFile =msTmpFile(map->mappath,
-                                                            map->web.imagepath,
-                                                            "img.tmp");
+        if( bCacheToDisk )
+            pasReqInfo[(*numRequests)].pszOutputFile =
+                msTmpFile(map, map->mappath, NULL, "img.tmp");
+        else
+            pasReqInfo[(*numRequests)].pszOutputFile = NULL;
         pasReqInfo[(*numRequests)].nStatus = 0;
         pasReqInfo[(*numRequests)].nTimeout = nTimeout;
-        pasReqInfo[(*numRequests)].bbox = bbox;
+        pasReqInfo[(*numRequests)].bbox   = bbox;
+        pasReqInfo[(*numRequests)].width  = bbox_width;
+        pasReqInfo[(*numRequests)].height = bbox_height;
         pasReqInfo[(*numRequests)].debug = lp->debug;
         
         pasReqInfo[(*numRequests)].pszProxyAddress  = pszProxyHost;
@@ -1242,6 +1397,7 @@ int msDrawWMSLayerLow(int nLayerId, httpRequestObj *pasReqInfo,
     int currenttype;
     int currentconnectiontype;
     int numclasses;
+    char *mem_filename = NULL;
 
 /* ------------------------------------------------------------------
  * Find the request info for this layer in the array, based on nLayerId
@@ -1288,31 +1444,40 @@ int msDrawWMSLayerLow(int nLayerId, httpRequestObj *pasReqInfo,
     {
         FILE *fp;
         char szBuf[MS_BUFFER_LENGTH];
-
-        fp = fopen(pasReqInfo[iReq].pszOutputFile, "r");
-        if (fp)
+        
+        if( pasReqInfo[iReq].pszOutputFile )
         {
-            /* TODO: For now we'll only read the first chunk and return it
-             * via msSetError()... we should really try to parse the XML
-             * and extract the exception code/message though
-             */
-             size_t nSize;
-
-            nSize = fread(szBuf, sizeof(char), MS_BUFFER_LENGTH-1, fp);
-            if (nSize >= 0 && nSize < MS_BUFFER_LENGTH)
-                szBuf[nSize] = '\0';
+            fp = fopen(pasReqInfo[iReq].pszOutputFile, "r");
+            if (fp)
+            {
+                /* TODO: For now we'll only read the first chunk and return it
+                 * via msSetError()... we should really try to parse the XML
+                 * and extract the exception code/message though
+                 */
+                size_t nSize;
+                
+                nSize = fread(szBuf, sizeof(char), MS_BUFFER_LENGTH-1, fp);
+                if (nSize >= 0 && nSize < MS_BUFFER_LENGTH)
+                    szBuf[nSize] = '\0';
+                else
+                {
+                    strlcpy(szBuf, "(!!!)", sizeof(szBuf)); /* This should never happen */
+                }
+                
+                fclose(fp);
+                
+                /* We're done with the remote server's response... delete it. */
+                if (!lp->debug)
+                    unlink(pasReqInfo[iReq].pszOutputFile);
+            }
             else
-                strcpy(szBuf, "(!!!)"); /* This should never happen */
-
-            fclose(fp);
-
-            /* We're done with the remote server's response... delete it. */
-            if (!lp->debug)
-                unlink(pasReqInfo[iReq].pszOutputFile);
+            {
+                strlcpy(szBuf, "(Failed to open exception response)", sizeof(szBuf));
+            }
         }
         else
         {
-            strcpy(szBuf, "(Failed to open exception response)");
+            strlcpy( szBuf, pasReqInfo[iReq].result_data, MS_BUFFER_LENGTH );
         }
 
         if (lp->debug)
@@ -1326,7 +1491,22 @@ int msDrawWMSLayerLow(int nLayerId, httpRequestObj *pasReqInfo,
 
         return MS_SUCCESS;
     }
+
+/* ------------------------------------------------------------------
+ * If the output was written to a memory buffer, then we will need
+ * to attach a "VSI" name to this buffer.
+ * ------------------------------------------------------------------ */
+    if( pasReqInfo[iReq].pszOutputFile == NULL )
+    {
+        CleanVSIDir( "/vsimem/msout" );
+        mem_filename = msTmpFile(map, NULL, "/vsimem/msout/", "img.tmp" );
         
+        VSIFCloseL( 
+            VSIFileFromMemBuffer( mem_filename, 
+                                  (GByte*) pasReqInfo[iReq].result_data,
+                                  (vsi_l_offset) pasReqInfo[iReq].result_size,
+                                  FALSE ) );
+    }
 
 /* ------------------------------------------------------------------
  * Prepare layer for drawing, reprojecting the image received from the
@@ -1342,18 +1522,24 @@ int msDrawWMSLayerLow(int nLayerId, httpRequestObj *pasReqInfo,
     /* set the classes to 0 so that It won't do client side */
     /* classification if an sld was set. */
     numclasses = lp->numclasses;
-    if (msOWSLookupMetadata(&(lp->metadata), "MO", "sld_body") ||
-        msOWSLookupMetadata(&(lp->metadata), "MO", "sld_url"))        
-      lp->numclasses = 0;
 
     /* ensure the file connection is closed right away after the layer */ 
     /* is rendered */ 
     msLayerSetProcessingKey( lp, "CLOSE_CONNECTION", "NORMAL");
 
-    if (lp->data) free(lp->data);
-    lp->data =  strdup(pasReqInfo[iReq].pszOutputFile);
+    if (msOWSLookupMetadata(&(lp->metadata), "MO", "sld_body") ||
+        msOWSLookupMetadata(&(lp->metadata), "MO", "sld_url"))        
+      lp->numclasses = 0;
 
-    if (!msProjectionsDiffer(&(map->projection), &(lp->projection)))
+    if (lp->data) free(lp->data);
+    if( mem_filename != NULL )
+        lp->data = mem_filename;
+    else
+        lp->data =  msStrdup(pasReqInfo[iReq].pszOutputFile);
+
+    /* #3138 If PROCESSING "RESAMPLE=..." is set we cannot use the simple case */
+    if (!msProjectionsDiffer(&(map->projection), &(lp->projection)) && 
+         (msLayerGetProcessingKey(lp, "RESAMPLE") == NULL) )
     {
         /* The simple case... no reprojection needed... render layer directly. */
         lp->transform = MS_FALSE;
@@ -1373,33 +1559,33 @@ int msDrawWMSLayerLow(int nLayerId, httpRequestObj *pasReqInfo,
         /* Create a world file with raster extents */
         /* One line per value, in this order: cx, 0, 0, cy, ulx, uly */
         wldfile = msBuildPath(szPath, lp->map->mappath, lp->data);
-        if (wldfile)    
+        if (wldfile && (strlen(wldfile)>=3))    
             strcpy(wldfile+strlen(wldfile)-3, "wld");
-        if (wldfile && (fp = fopen(wldfile, "wt")) != NULL)
+        if (wldfile && (fp = VSIFOpenL(wldfile, "wt")) != NULL)
         {
             double dfCellSizeX = MS_CELLSIZE(pasReqInfo[iReq].bbox.minx,
                                              pasReqInfo[iReq].bbox.maxx, 
-                                             map->width);
+                                             pasReqInfo[iReq].width);	
             double dfCellSizeY = MS_CELLSIZE(pasReqInfo[iReq].bbox.maxy,
                                              pasReqInfo[iReq].bbox.miny, 
-                                             map->height);
-                
-            fprintf(fp, "%.12f\n", dfCellSizeX );
-            fprintf(fp, "0\n");
-            fprintf(fp, "0\n");
-            fprintf(fp, "%.12f\n", dfCellSizeY );
-            fprintf(fp, "%.12f\n", 
-                    pasReqInfo[iReq].bbox.minx + dfCellSizeX * 0.5 );
-            fprintf(fp, "%.12f\n", 
-                    pasReqInfo[iReq].bbox.maxy + dfCellSizeY * 0.5 );
-            fclose(fp);
+                                             pasReqInfo[iReq].height);
+            char world_text[5000];
+
+            sprintf( world_text, "%.12f\n0\n0\n%.12f\n%.12f\n%.12f\n",
+                     dfCellSizeX, 
+                     dfCellSizeY,
+                     pasReqInfo[iReq].bbox.minx + dfCellSizeX * 0.5,
+                     pasReqInfo[iReq].bbox.maxy + dfCellSizeY * 0.5 );
+
+            VSIFWriteL( world_text, 1, strlen(world_text), fp );
+            VSIFCloseL( fp );
 
             /* GDAL should be called to reproject automatically. */
             if (msDrawLayer(map, lp, img) != 0)
                 status = MS_FAILURE;
 
             if (!lp->debug)
-                unlink(wldfile);
+                VSIUnlink( wldfile );
         }
         else
         {
@@ -1413,7 +1599,7 @@ int msDrawWMSLayerLow(int nLayerId, httpRequestObj *pasReqInfo,
 
     /* We're done with the remote server's response... delete it. */
     if (!lp->debug)
-      unlink(lp->data);
+        VSIUnlink(lp->data);
 
     /* restore prveious type */
     lp->type = currenttype;

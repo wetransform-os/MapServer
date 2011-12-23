@@ -1,5 +1,5 @@
 /* ===========================================================================
-   $Id: image.i 9499 2009-10-20 15:18:09Z aboudreault $
+   $Id: image.i 11232 2011-03-18 15:47:40Z tbonfort $
  
    Project:  MapServer
    Purpose:  SWIG interface file for mapscript imageObj extensions
@@ -35,32 +35,54 @@
      * instead use the one in python/pymodule.i. */
 #ifndef SWIGPYTHON
     imageObj(int width, int height, outputFormatObj *input_format=NULL,
-             const char *file=NULL)
+             const char *file=NULL,
+             double resolution=MS_DEFAULT_RESOLUTION, double defresolution=MS_DEFAULT_RESOLUTION)
     {
         imageObj *image=NULL;
         outputFormatObj *format;
+        rendererVTableObj *renderer = NULL;
+        rasterBufferObj *rb = NULL;
 
-        if (file) {
-            return (imageObj *) msImageLoadGD(file);
-        }
         if (input_format) {
             format = input_format;
         }
         else {
-            format = msCreateDefaultOutputFormat(NULL, "GD/GIF");
+            format = msCreateDefaultOutputFormat(NULL, "GD/GIF", "gdgif");
             if (format == NULL)
-                format = msCreateDefaultOutputFormat(NULL, "GD/PNG");
+                format = msCreateDefaultOutputFormat(NULL, "GD/PNG", "gdpng");
             if (format == NULL)
-                format = msCreateDefaultOutputFormat(NULL, "GD/JPEG");
-            if (format == NULL)
-                format = msCreateDefaultOutputFormat(NULL, "GD/WBMP");
+
+            if (format)
+                msInitializeRendererVTable(format);
         }
         if (format == NULL) {
             msSetError(MS_IMGERR, "Could not create output format",
                        "imageObj()");
             return NULL;
         }
-        image = msImageCreate(width, height, format, NULL, NULL, NULL);
+
+        if (file) {
+            
+            renderer = format->vtable;
+            rb = (rasterBufferObj*) malloc(sizeof(rasterBufferObj));
+            if (!rb) {
+                msSetError(MS_MEMERR, NULL, "imageObj()");
+                return NULL;
+            }
+            if ( (renderer->loadImageFromFile(file, rb)) == MS_FAILURE)
+                return NULL;
+
+            image = msImageCreate(rb->width, rb->height, format, NULL, NULL, 
+                                  resolution, defresolution, NULL);
+            renderer->mergeRasterBuffer(image, rb, 1.0, 0, 0, 0, 0, rb->width, rb->height);
+
+            msFreeRasterBuffer(rb);
+            free(rb);
+
+            return image;
+        }
+
+        image = msImageCreate(width, height, format, NULL, NULL, resolution, defresolution, NULL);
         return image;
     }
 #endif
@@ -86,26 +108,20 @@
 #ifndef SWIGPYTHON
     int write( FILE *file=NULL )
     {
-        gdIOCtx *ctx=NULL;
         int retval=MS_FAILURE;
-        
-        if ( MS_DRIVER_GD(self->format) )
+        rendererVTableObj *renderer = NULL;
+
+        if (MS_RENDERER_PLUGIN(self->format))
         {
             if (file)
             {
-                /* gdNewFileCtx is a semi-documented function from 
-                   gd_io_file.c */
-                ctx = msNewGDFileCtx(file);
+                renderer = self->format->vtable;
+                retval = renderer->saveImage(self, file, self->format);
             }
-            else /* create a gdIOCtx interface to stdout */
+            else
             {
-                ctx = msNewGDFileCtx(stdout);
+                retval = msSaveImage(NULL, self, NULL);
             }
-            
-            /* we wrap msSaveImageGDCtx in the same way that 
-               gdImageJpeg() wraps gdImageJpegCtx()  (bug 1047). */
-            retval = msSaveImageGDCtx(self, ctx, self->format);
-            ctx->gd_free(ctx);
         }
         else
         {

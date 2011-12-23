@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapshape.h 8741 2009-03-09 21:04:52Z jlacroix $
+ * $Id: mapshape.h 10497 2010-09-02 16:23:37Z warmerdam $
  *
  * Project:  MapServer
  * Purpose:  Shapefile access API
@@ -117,7 +117,7 @@ typedef	struct
 
     int		nRecords;
 
-    int		nRecordLength;
+    unsigned int nRecordLength;
     int		nHeaderLength;
     int		nFields;
     int		*panFieldOffset;

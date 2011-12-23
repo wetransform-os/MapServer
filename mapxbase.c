@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapxbase.c 7418 2008-02-29 00:02:49Z nsavard $
+ * $Id: mapxbase.c 10772 2010-11-29 18:27:02Z aboudreault $
  *
  * Project:  MapServer
  * Purpose:  .dbf access API.  Derived from shapelib, and relicensed with 
@@ -28,11 +28,22 @@
  * DEALINGS IN THE SOFTWARE.
  ****************************************************************************/
 
+#define _FILE_OFFSET_BITS 64
+
 #include "mapserver.h"
 #include <stdlib.h> /* for atof() and atoi() */
 #include <math.h>
 
-MS_CVSID("$Id: mapxbase.c 7418 2008-02-29 00:02:49Z nsavard $")
+MS_CVSID("$Id: mapxbase.c 10772 2010-11-29 18:27:02Z aboudreault $")
+
+/* try to use a large file version of fseek for files up to 4GB (#3514) */
+#if _MSC_VER > 1310
+#  define safe_fseek _fseeki64
+#elif defined(fseeko)
+#  define safe_fseek fseeko
+#else
+#  define safe_fseek fseek
+#endif
 
 /************************************************************************/
 /*                             SfRealloc()                              */
@@ -112,7 +123,7 @@ static void writeHeader(DBFHandle psDBF)
 static void flushRecord( DBFHandle psDBF )
 
 {
-    int		nRecordOffset;
+    unsigned int nRecordOffset;
 
     if( psDBF->bCurrentRecordModified && psDBF->nCurrentRecord > -1 )
     {
@@ -121,7 +132,7 @@ static void flushRecord( DBFHandle psDBF )
 	nRecordOffset = psDBF->nRecordLength * psDBF->nCurrentRecord 
 	                                             + psDBF->nHeaderLength;
 
-	fseek( psDBF->fp, nRecordOffset, 0 );
+	safe_fseek( psDBF->fp, nRecordOffset, 0 );
 	fwrite( psDBF->pszCurrentRecord, psDBF->nRecordLength, 1, psDBF->fp );
     }
 }
@@ -150,7 +161,7 @@ DBFHandle msDBFOpen( const char * pszFilename, const char * pszAccess )
     /*	Ensure the extension is converted to dbf or DBF if it is 	    */
     /*	currently .shp or .shx.						    */
     /* -------------------------------------------------------------------- */
-    pszDBFFilename = (char *) malloc(strlen(pszFilename)+1);
+    pszDBFFilename = (char *) msSmallMalloc(strlen(pszFilename)+1);
     strcpy( pszDBFFilename, pszFilename );
     
     if( strcmp(pszFilename+strlen(pszFilename)-4,".shp") 
@@ -168,6 +179,7 @@ DBFHandle msDBFOpen( const char * pszFilename, const char * pszAccess )
     /*      Open the file.                                                  */
     /* -------------------------------------------------------------------- */
     psDBF = (DBFHandle) calloc( 1, sizeof(DBFInfo) );
+    MS_CHECK_ALLOC(psDBF, sizeof(DBFInfo), NULL);
     psDBF->fp = fopen( pszDBFFilename, pszAccess );
     if( psDBF->fp == NULL )
         return( NULL );
@@ -184,7 +196,7 @@ DBFHandle msDBFOpen( const char * pszFilename, const char * pszAccess )
     /* -------------------------------------------------------------------- */
     /*  Read Table Header info                                              */
     /* -------------------------------------------------------------------- */
-    pabyBuf = (uchar *) malloc(500);
+    pabyBuf = (uchar *) msSmallMalloc(500);
     fread( pabyBuf, 32, 1, psDBF->fp );
 
     psDBF->nRecords = nRecords = 
@@ -195,7 +207,7 @@ DBFHandle msDBFOpen( const char * pszFilename, const char * pszAccess )
     
     psDBF->nFields = nFields = (nHeadLen - 32) / 32;
 
-    psDBF->pszCurrentRecord = (char *) malloc(nRecLen);
+    psDBF->pszCurrentRecord = (char *) msSmallMalloc(nRecLen);
 
     /* -------------------------------------------------------------------- */
     /*  Read in Field Definitions                                           */
@@ -206,10 +218,10 @@ DBFHandle msDBFOpen( const char * pszFilename, const char * pszAccess )
     fseek( psDBF->fp, 32, 0 );
     fread( pabyBuf, nHeadLen, 1, psDBF->fp );
 
-    psDBF->panFieldOffset = (int *) malloc(sizeof(int) * nFields);
-    psDBF->panFieldSize = (int *) malloc(sizeof(int) * nFields);
-    psDBF->panFieldDecimals = (int *) malloc(sizeof(int) * nFields);
-    psDBF->pachFieldType = (char *) malloc(sizeof(char) * nFields);
+    psDBF->panFieldOffset = (int *) msSmallMalloc(sizeof(int) * nFields);
+    psDBF->panFieldSize = (int *) msSmallMalloc(sizeof(int) * nFields);
+    psDBF->panFieldDecimals = (int *) msSmallMalloc(sizeof(int) * nFields);
+    psDBF->pachFieldType = (char *) msSmallMalloc(sizeof(char) * nFields);
 
     for( iField = 0; iField < nFields; iField++ )
     {
@@ -327,6 +339,13 @@ DBFHandle msDBFCreate( const char * pszFilename )
     /*	Create the info structure.			  		    */
     /* -------------------------------------------------------------------- */
     psDBF = (DBFHandle) malloc(sizeof(DBFInfo));
+    if (psDBF == NULL)
+    {
+        msSetError(MS_MEMERR, "%s: %d: Out of memory allocating %u bytes.\n", "msDBFCreate()",
+                   __FILE__, __LINE__, sizeof(DBFInfo));
+        fclose(fp);
+        return NULL;
+    }
 
     psDBF->fp = fp;
     psDBF->nRecords = 0;
@@ -487,10 +506,11 @@ int DBFIsValueNULL( const char* pszValue, char type )
 static char *msDBFReadAttribute(DBFHandle psDBF, int hEntity, int iField )
 
 {
-    int	       	nRecordOffset, i;
+    int	       	i;
+    unsigned int nRecordOffset;
     uchar	*pabyRec;
     char	*pReturnField = NULL;
-
+    
     /* -------------------------------------------------------------------- */
     /*	Is the request valid?                  				    */
     /* -------------------------------------------------------------------- */
@@ -515,7 +535,7 @@ static char *msDBFReadAttribute(DBFHandle psDBF, int hEntity, int iField )
 
 	nRecordOffset = psDBF->nRecordLength * hEntity + psDBF->nHeaderLength;
 
-	fseek( psDBF->fp, nRecordOffset, 0 );
+	safe_fseek( psDBF->fp, nRecordOffset, 0 );
 	fread( psDBF->pszCurrentRecord, psDBF->nRecordLength, 1, psDBF->fp );
 
 	psDBF->nCurrentRecord = hEntity;
@@ -672,7 +692,8 @@ DBFFieldType msDBFGetFieldInfo( DBFHandle psDBF, int iField, char * pszFieldName
 /************************************************************************/
 static int msDBFWriteAttribute(DBFHandle psDBF, int hEntity, int iField, void * pValue )
 {
-  int	       	nRecordOffset, i, j;
+  unsigned int	       	nRecordOffset;
+  int  i, j;
   uchar	*pabyRec;
   char	szSField[40], szFormat[12];
   
@@ -709,7 +730,7 @@ static int msDBFWriteAttribute(DBFHandle psDBF, int hEntity, int iField, void * 
       
       nRecordOffset = psDBF->nRecordLength * hEntity + psDBF->nHeaderLength;
       
-      fseek( psDBF->fp, nRecordOffset, 0 );
+      safe_fseek( psDBF->fp, nRecordOffset, 0 );
       fread( psDBF->pszCurrentRecord, psDBF->nRecordLength, 1, psDBF->fp );
 
       psDBF->nCurrentRecord = hEntity;
@@ -725,14 +746,14 @@ static int msDBFWriteAttribute(DBFHandle psDBF, int hEntity, int iField, void * 
   case 'N':
   case 'F':
     if( psDBF->panFieldDecimals[iField] == 0 ) {
-      sprintf( szFormat, "%%%dd", psDBF->panFieldSize[iField] );
-      sprintf(szSField, szFormat, (int) *((double *) pValue) );
+      snprintf( szFormat, sizeof(szFormat), "%%%dd", psDBF->panFieldSize[iField] );
+      snprintf(szSField, sizeof(szSField), szFormat, (int) *((double *) pValue) );
       if( (int) strlen(szSField) > psDBF->panFieldSize[iField] )
 	szSField[psDBF->panFieldSize[iField]] = '\0';
       strncpy((char *) (pabyRec+psDBF->panFieldOffset[iField]), szSField, strlen(szSField) );
     } else {
-      sprintf( szFormat, "%%%d.%df", psDBF->panFieldSize[iField], psDBF->panFieldDecimals[iField] );
-      sprintf(szSField, szFormat, *((double *) pValue) );
+      snprintf( szFormat, sizeof(szFormat), "%%%d.%df", psDBF->panFieldSize[iField], psDBF->panFieldDecimals[iField] );
+      snprintf(szSField, sizeof(szSField), szFormat, *((double *) pValue) );
       if( (int) strlen(szSField) > psDBF->panFieldSize[iField] )
 	szSField[psDBF->panFieldSize[iField]] = '\0';
       strncpy((char *) (pabyRec+psDBF->panFieldOffset[iField]),  szSField, strlen(szSField) );
@@ -828,14 +849,12 @@ char **msDBFGetItems(DBFHandle dbffile)
     return(NULL);
   }
 
-  if((items = (char **)malloc(sizeof(char *)*nFields)) == NULL) {
-    msSetError(MS_MEMERR, NULL, "msGetDBFItems()");
-    return(NULL);
-  }
+  items = (char **)malloc(sizeof(char *)*nFields);
+  MS_CHECK_ALLOC(items, sizeof(char *)*nFields, NULL);
 
   for(i=0;i<nFields;i++) {
     msDBFGetFieldInfo(dbffile, i, fName, NULL, NULL);
-    items[i] = strdup(fName);
+    items[i] = msStrdup(fName);
   }
 
   return(items);
@@ -854,13 +873,11 @@ char **msDBFGetValues(DBFHandle dbffile, int record)
     return(NULL);
   }
 
-  if((values = (char **)malloc(sizeof(char *)*nFields)) == NULL) {
-    msSetError(MS_MEMERR, NULL, "msGetAllDBFValues()");
-    return(NULL);
-  }
+  values = (char **)malloc(sizeof(char *)*nFields);
+  MS_CHECK_ALLOC(values, sizeof(char *)*nFields, NULL);
 
   for(i=0;i<nFields;i++)
-    values[i] = strdup(msDBFReadStringAttribute(dbffile, record, i));
+    values[i] = msStrdup(msDBFReadStringAttribute(dbffile, record, i));
 
   return(values);
 }
@@ -870,13 +887,10 @@ int *msDBFGetItemIndexes(DBFHandle dbffile, char **items, int numitems)
   int *itemindexes=NULL, i;
 
   if(numitems == 0) return(NULL);
-
+  
   itemindexes = (int *)malloc(sizeof(int)*numitems);
-  if(!itemindexes) {
-    msSetError(MS_MEMERR, NULL, "msGetItemIndexes()");
-    return(NULL);
-  }
-
+  MS_CHECK_ALLOC(itemindexes, sizeof(int)*numitems, NULL);
+  
   for(i=0;i<numitems;i++) {
     itemindexes[i] = msDBFGetItemIndex(dbffile, items[i]);
     if(itemindexes[i] == -1) { 
@@ -896,16 +910,14 @@ char **msDBFGetValueList(DBFHandle dbffile, int record, int *itemindexes, int nu
 
   if(numitems == 0) return(NULL);
 
-  if((values = (char **)malloc(sizeof(char *)*numitems)) == NULL) {
-    msSetError(MS_MEMERR, NULL, "msGetSomeDBFValues()");
-    return(NULL);
-  }
+  values = (char **)malloc(sizeof(char *)*numitems);
+  MS_CHECK_ALLOC(values, sizeof(char *)*numitems, NULL);
 
   for(i=0;i<numitems;i++) {
     value = msDBFReadStringAttribute(dbffile, record, itemindexes[i]);
     if (value == NULL)
       return NULL; /* Error already reported by msDBFReadStringAttribute() */
-    values[i] = strdup(value);
+    values[i] = msStrdup(value);
   }
 
   return(values);

@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: maplibxml2.c 7685 2008-06-17 16:01:49Z tomkralidis $
+ * $Id: maplibxml2.c 11503 2011-04-07 19:56:16Z dmorissette $
  *
  * Project:  MapServer
  * Purpose:  libxml2 convenience wrapper functions
@@ -36,7 +36,7 @@
 #include<libxml/xpath.h>
 #include<libxml/xpathInternals.h>
 
-MS_CVSID("$Id: maplibxml2.c 7685 2008-06-17 16:01:49Z tomkralidis $")
+MS_CVSID("$Id: maplibxml2.c 11503 2011-04-07 19:56:16Z dmorissette $")
 
 /**
  * msLibXml2GenerateList()
@@ -112,7 +112,7 @@ const char *msLibXml2GetXPathTree(xmlDocPtr doc, xmlXPathObjectPtr xpath) {
     if (xmlNodeDump(xbuf, doc, xpath->nodesetval->nodeTab[0], 0, 0) == -1) {
       return NULL;
     }
-    result = strdup((char *)xbuf->content);
+    result = msStrdup((char *)xbuf->content);
   }
   xmlBufferFree(xbuf);
   return result;

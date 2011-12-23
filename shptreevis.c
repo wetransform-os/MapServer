@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: shptreevis.c 7418 2008-02-29 00:02:49Z nsavard $
+ * $Id: shptreevis.c 10772 2010-11-29 18:27:02Z aboudreault $
  *
  * Project:  MapServer
  * Purpose:  Utility program to visualize a quadtree
@@ -35,7 +35,7 @@
 #endif
 #include <stdlib.h>
 
-MS_CVSID("$Id: shptreevis.c 7418 2008-02-29 00:02:49Z nsavard $")
+MS_CVSID("$Id: shptreevis.c 10772 2010-11-29 18:27:02Z aboudreault $")
 
 #ifdef SHPT_POLYGON
    #undef MAPSERVER
@@ -52,7 +52,7 @@ char* AddFileSuffix ( const char * Filename, const char * Suffix ) {
   /*	Compute the base (layer) name.  If there is any extension	    */
   /*	on the passed in filename we will strip it off.			    */
   /* -------------------------------------------------------------------- */
-    pszBasename = (char *) malloc(strlen(Filename)+5);
+    pszBasename = (char *) msSmallMalloc(strlen(Filename)+5);
     strcpy( pszBasename, Filename );
     for( i = strlen(pszBasename)-1; 
        i > 0 && pszBasename[i] != '.' && pszBasename[i] != '/'
@@ -66,7 +66,7 @@ char* AddFileSuffix ( const char * Filename, const char * Suffix ) {
   /*	Open the .shp and .shx files.  Note that files pulled from	    */
   /*	a PC to Unix with upper case filenames won't work!		    */
   /* -------------------------------------------------------------------- */
-    pszFullname = (char *) malloc(strlen(pszBasename) + 5);
+    pszFullname = (char *) msSmallMalloc(strlen(pszBasename) + 5);
     sprintf( pszFullname, "%s%s", pszBasename, Suffix); 
       
     return (pszFullname);
@@ -80,7 +80,7 @@ int main( int argc, char ** argv )
     DBFHandle   hDBF;
     SHPTreeHandle	qix;
     
-    int		i, j;
+    int		i;
     char	*myfile = NULL;
 
     treeNodeObj *node;    
@@ -93,7 +93,7 @@ int main( int argc, char ** argv )
     SHPObject	*shape;
     double	X[6], Y[6];
 #endif   
-    int		pos, result;
+    int		result;
     char	mBigEndian;
 
     int		this_rec, factor;
@@ -167,13 +167,8 @@ int main( int argc, char ** argv )
 /*	Skim over the list of shapes, printing all the vertices.	*/
 /* -------------------------------------------------------------------- */
 
-    pos = ftell (qix->fp);
-    j = 0;
-
-    while( pos && (j < qix->nShapes) )
+    while( 1 )
     {
-      j ++;
-
       node = readTreeNode (qix);
       if (node )
       {
@@ -230,7 +225,7 @@ int main( int argc, char ** argv )
 #endif
         }
         else 
-        { pos = 0; }
+            break;
     }
 
 #ifdef MAPSERVER   

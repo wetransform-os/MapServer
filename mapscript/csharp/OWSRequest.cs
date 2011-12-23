@@ -145,6 +145,12 @@ public class OWSRequest : IDisposable {
     return ret;
   }
 
+  public int loadParamsFromURL(string url) {
+    int ret = mapscriptPINVOKE.OWSRequest_loadParamsFromURL(swigCPtr, url);
+    if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
   public void setParameter(string name, string value) {
     mapscriptPINVOKE.OWSRequest_setParameter(swigCPtr, name, value);
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();

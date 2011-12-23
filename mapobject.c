@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapobject.c 10868 2011-01-14 15:08:26Z assefa $
+ * $Id: mapobject.c 11376 2011-03-30 01:11:13Z dmorissette $
  *
  * Project:  MapServer
  * Purpose:  Functions for operating on a mapObj that don't belong in a
@@ -35,7 +35,7 @@
 #  include "cpl_conv.h"
 #endif
 
-MS_CVSID("$Id: mapobject.c 10868 2011-01-14 15:08:26Z assefa $")
+MS_CVSID("$Id: mapobject.c 11376 2011-03-30 01:11:13Z dmorissette $")
 
 void freeWeb(webObj *web);
 void freeScalebar(scalebarObj *scalebar);
@@ -158,13 +158,18 @@ int msSetConfigOption( mapObj *map, const char *key, const char *value)
     /* We have special "early" handling of this so that it will be */
     /* in effect when the projection blocks are parsed and pj_init is called. */
     if( strcasecmp(key,"PROJ_LIB") == 0 )
-        msSetPROJ_LIB( value );
+    {
+        /* value may be relative to map path */
+        msSetPROJ_LIB( value, map->mappath );
+    }
 
     /* Same for MS_ERRORFILE, we want it to kick in as early as possible
-     * to catch parsing errors */
+     * to catch parsing errors.
+     * Value can be relative to mapfile, unless it's already absolute 
+     */
     if( strcasecmp(key,"MS_ERRORFILE") == 0 )
     {
-        if (msSetErrorFile( value ) != MS_SUCCESS)
+        if (msSetErrorFile( value, map->mappath ) != MS_SUCCESS)
             return MS_FAILURE;
     }
 
@@ -211,11 +216,11 @@ void msApplyMapConfigOptions( mapObj *map )
         const char *value = msLookupHashTable( &(map->configoptions), key );
         if( strcasecmp(key,"PROJ_LIB") == 0 )
         {
-            msSetPROJ_LIB( value );
+            msSetPROJ_LIB( value, map->mappath );
         }
         else if( strcasecmp(key,"MS_ERRORFILE") == 0 )
         {
-            msSetErrorFile( value );
+            msSetErrorFile( value, map->mappath );
         }
         else 
         {
@@ -775,16 +780,29 @@ int msMapLoadOWSParameters(mapObj *map, cgiRequestObj *request,
 #ifdef USE_WMS_SVR
     int version;
     char *wms_exception_format = NULL;
+    const char *wms_request= NULL;
     int i =0;
+    owsRequestObj ows_request;
+
+    ows_request.numlayers = 0;
+    ows_request.enabled_layers = NULL;
+
 
     version = msOWSParseVersionString(wmtver);
-    for(i=0; i<request->NumParams; i++) 
-    {
+     for(i=0; i<request->NumParams; i++) 
+     {
          if (strcasecmp(request->ParamNames[i], "EXCEPTIONS") == 0)
            wms_exception_format = request->ParamValues[i];
-    }
-    return msWMSLoadGetMapParams(map, version, request->ParamNames,
-                                 request->ParamValues, request->NumParams,  wms_exception_format);
+         else if (strcasecmp(request->ParamNames[i], "REQUEST") == 0)
+             wms_request = request->ParamValues[i];
+
+     }
+
+     msOWSRequestLayersEnabled(map, "M", wms_request, &ows_request);
+
+     return msWMSLoadGetMapParams(map, version, request->ParamNames,
+                                  request->ParamValues, request->NumParams,  wms_exception_format, 
+                                  wms_request, &ows_request);
 #else
     msSetError(MS_WMSERR, "WMS server support is not available.",
                "msMapLoadOWSParameters()");

@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapfile.h 9194 2009-07-21 15:49:45Z aboudreault $
+ * $Id: mapfile.h 11177 2011-03-16 19:29:01Z sdlime $
  *
  * Project:  MapServer
  * Purpose:  Keyword definitions for the mapfiles and symbolfiles.
@@ -141,9 +141,6 @@ enum MS_TOKEN_SOURCES {MS_FILE_TOKENS=0, MS_STRING_TOKENS, MS_URL_TOKENS};
 #define CONNECTION 1101
 #define CONNECTIONTYPE 1102
 
-#define BACKGROUNDSHADOWCOLOR 1103
-#define BACKGROUNDSHADOWSIZE 1104
-
 #define SYMBOLSET 1105
 
 #define OVERLAYBACKGROUNDCOLOR 1106
@@ -205,7 +202,6 @@ enum MS_TOKEN_SOURCES {MS_FILE_TOKENS=0, MS_STRING_TOKENS, MS_URL_TOKENS};
 #define MAXSUBDIVIDE 1146
 #define MINSUBDIVIDE  1147
 #define LABELFORMAT  1148
-#define ALPHACOLOR	1149
 
 #define DATAPATTERN 1150
 #define FILEPATTERN 1151
@@ -240,7 +236,6 @@ enum MS_TOKEN_SOURCES {MS_FILE_TOKENS=0, MS_STRING_TOKENS, MS_URL_TOKENS};
 
  /* Color Range support (was Gradient Support)*/
 #define COLORRANGE 1170
-#define ALPHACOLORRANGE 1171
 #define DATARANGE 1172
 #define RANGEITEM 1173
 
@@ -287,5 +282,22 @@ enum MS_TOKEN_SOURCES {MS_FILE_TOKENS=0, MS_STRING_TOKENS, MS_URL_TOKENS};
 
 /* label repeat enhancement */
 #define REPEATDISTANCE 1222
+
+/* rfc60 label collision detection */
+#define MAXOVERLAPANGLE 1223
+
+/* rfc66 temporary path */
+#define TEMPPATH 1224
+
+/* rfc68 union connection type */
+#define UNION 1225
+
+/* rfc69 cluster */
+#define CLUSTER 1226
+#define MAXDISTANCE 1227
+#define REGION 1228
+
+/* rfc59 bindvals objects */
+#define BINDVALS 2000
 
 #endif /* MAPFILE_H */

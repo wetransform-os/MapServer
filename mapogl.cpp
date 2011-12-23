@@ -1,248 +1,267 @@
-/*
- * mapogl.c
+/******************************************************************************
+ * $id: mapogl.cpp 7725 2011-04-09 15:56:58Z toby $
  *
- *  Created on: 12/01/2009
- *      Author: toby
- */
+ * Project:  MapServer
+ * Purpose:  Various template processing functions.
+ * Author:   Steve Lime and the MapServer team.
+ *
+ ******************************************************************************
+ * Copyright (c) 1996-2008 Regents of the University of Minnesota.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies of this Software or works derived from this Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ ****************************************************************************/
 
 #include "mapserver.h"
 
 #ifdef USE_OGL
+#include <stdio.h>
 #include <assert.h>
 #include "mapoglrenderer.h"
 #include "mapoglcontext.h"
 
+MS_CVSID("$Id: mapogl.cpp 11529 2011-04-11 18:57:05Z tbonfort $")
+
+imageObj* createImageObjOgl(OglRenderer* renderer)
+{    
+    if (!renderer->isValid()) return NULL;
+    imageObj* pNewImage = (imageObj*)calloc(1, sizeof(imageObj));
+    if (!pNewImage)
+        return pNewImage;    
+    pNewImage->img.plugin = (void *) renderer;    
+    return pNewImage;
+}
+
 OglRenderer* getOglRenderer(imageObj* img)
 {
-	return (OglRenderer*) img->img.plugin;
+    return (OglRenderer*) img->img.plugin;
 }
 
-void msDrawLineOgl(imageObj *img, shapeObj *p, colorObj *c, double width,
-		int patternlength, double* pattern)
+int msSaveImageOgl(imageObj *img, FILE *fp, outputFormatObj *format)
 {
-	OglRenderer* renderer = getOglRenderer(img);
-	renderer->renderPolyline(p, c, width, patternlength, pattern);
+    rasterBufferObj data;
+    OglRenderer* renderer = getOglRenderer(img);
+    renderer->readRasterBuffer(&data);        
+    return msSaveRasterBuffer(NULL,&data,fp,img->format );
 }
 
-void msDrawPolygonOgl(imageObj *img, shapeObj *p, colorObj *c, colorObj *oc,
-		double outlineWidth)
+int msDrawLineOgl(imageObj *img, shapeObj *p, strokeStyleObj *style)
 {
-	OglRenderer* renderer = getOglRenderer(img);
-	renderer->renderPolygon(p, c, oc, outlineWidth);
+    OglRenderer* renderer = getOglRenderer(img);
+    renderer->renderPolyline(p, style->color, style->width, style->patternlength, style->pattern);
+    return MS_SUCCESS;
 }
 
-void msFreeTileOgl(void *tile)
+int msDrawPolygonOgl(imageObj *img, shapeObj *p, colorObj *color)
 {
-	delete (OglCache*)tile;
+    OglRenderer* renderer = getOglRenderer(img);
+    renderer->renderPolygon(p, color, NULL, 0);
+    return MS_SUCCESS;
 }
 
-void msDrawLineTiledOgl(imageObj *img, shapeObj *p, void* tile)
-{
-	OglRenderer* renderer = getOglRenderer(img);
-	renderer->renderPolylineTile(p, (OglCache*)tile);}
+//void msFreeTileOgl(imageObj *tile)
+//{
+//    delete (OglCache*)tile;
+//}
 
-void msDrawPolygonTiledOgl(imageObj *img, shapeObj *p, colorObj *oc, double outlineWidth, void *tile)
+int msDrawLineTiledOgl(imageObj *img, shapeObj *p, imageObj *tile)
 {
-	OglRenderer* renderer = getOglRenderer(img);
-	renderer->renderPolygon(p, NULL, oc, outlineWidth, (OglCache*)tile);
+    OglRenderer* renderer = getOglRenderer(img);
+    renderer->renderPolylineTile(p, getOglRenderer(tile)->getTexture());
+    return MS_SUCCESS;
 }
 
-void msRenderPixmapOgl(imageObj *img, double x, double y, symbolObj *symbol,
-		double scale, double angle)
+int msDrawPolygonTiledOgl(imageObj *img, shapeObj *p, imageObj *tile)
 {
-	OglRenderer* renderer = getOglRenderer(img);
-	renderer->renderPixmap(symbol, x, y, angle, scale);
+    OglRenderer* renderer = getOglRenderer(img);
+    renderer->renderPolygon(p, NULL, NULL, 0.0, getOglRenderer(tile)->getTexture());
+    return MS_SUCCESS;
 }
 
-void msRenderVectorSymbolOgl(imageObj *img, double x, double y,
-		symbolObj *symbol, double scale, double angle, colorObj *c,
-		colorObj *oc, double ow)
+int msRenderPixmapOgl(imageObj *img, double x, double y,
+            symbolObj *symbol, symbolStyleObj *style)
 {
-	OglRenderer* renderer = getOglRenderer(img);
-	renderer->renderVectorSymbol(x, y, symbol, scale, angle, c, oc, ow);
+    OglRenderer* renderer = getOglRenderer(img);
+    renderer->renderPixmap(symbol, x, y, style->rotation, style->scale);    
+    return MS_SUCCESS;
 }
 
-void* msCreateTilePixmapOgl(symbolObj *symbol, double scale, double angle, colorObj *bc)
+int msRenderVectorSymbolOgl
+    (imageObj *img, double x, double y,
+            symbolObj *symbol, symbolStyleObj *style)
 {
-	double canvasWidth = symbol->sizex*scale;
-	double canvasHeight = symbol->sizey*scale;
-	OglTexture* renderer = new OglTexture(canvasWidth, canvasHeight, bc);
-	renderer->renderPixmap(symbol, 0, 0, angle, scale);
-	OglCache* tile = renderer->renderToTile();
-	delete renderer;
-	return tile;
+    OglRenderer* renderer = getOglRenderer(img);
+    renderer->renderVectorSymbol(x, y, symbol, style->scale, style->rotation, style->color, style->outlinecolor, style->outlinewidth);        
+    return MS_SUCCESS;
 }
 
-void *msCreateTileEllipseOgl(double width, double height, double angle,
-		colorObj *c, colorObj *bc, colorObj *oc, double ow)
+int msRenderTruetypeSymbolOgl(imageObj *img, double x, double y,
+        symbolObj *symbol, symbolStyleObj * style)
 {
-	double canvasWidth = angle == 0.0 ? width : MS_MAX(height, width);
-	double canvasHeight = angle == 0.0 ? height : MS_MAX(height, width);
-	OglTexture* renderer = new OglTexture(canvasWidth, canvasHeight, bc);
-	renderer->renderEllipse(ceil(canvasWidth/2), ceil(canvasHeight/2), angle, width, height, c, NULL, ow);
-	OglCache* tile = renderer->renderToTile();
-	delete renderer;
-	return tile;
+    OglRenderer* renderer = getOglRenderer(img);
+    double size = style->scale*72.0;    
+    renderer->renderGlyphs(0, 0, style->color, style->outlinecolor, size, symbol->font, symbol->character, style->rotation, NULL, 0, 0);    
+    return MS_SUCCESS;
 }
 
-void* msCreateTileVectorOgl(symbolObj *symbol, double scale, double angle,
-		colorObj *c, colorObj *bc, colorObj *oc, double ow)
+int msRenderTileOgl(imageObj *img, imageObj *tile, double x, double y)
 {
-	OglTexture* renderer = new OglTexture(symbol->sizex*scale, symbol->sizey*scale, bc);
-	renderer->renderVectorSymbol(0,0, symbol, scale, angle, c, bc, ow);
-	OglCache* tile = renderer->renderToTile();
-	delete renderer;
-	return tile;
+    OglRenderer* renderer = getOglRenderer(img);    
+    renderer->renderTile(getOglRenderer(tile)->getTexture(), x, y, 0.0);
+    return MS_SUCCESS;
 }
 
-void* msCreateTileTruetypeOgl(imageObj *img, char *text, char *font,
-		double size, double angle, colorObj *c, colorObj *bc, colorObj *oc,
-		double ow)
-{
-	OglTexture* renderer = new OglTexture(size, size, bc);
-	renderer->renderGlyphs(0, 0, c, oc, size, font, text, angle, NULL, 0, 0);
-	OglCache* tile = renderer->renderToTile();
-	delete renderer;
-	return tile;
+int msGetTruetypeTextBBoxOgl(rendererVTableObj *renderer, char *font, double size, char *string, rectObj *rect, double **advances)
+{    
+    if (OglRenderer::getStringBBox(font, size, string, rect, advances))
+    {
+        return MS_SUCCESS;
+    }
+    else
+    {
+        return MS_FAILURE;
+    }
 }
 
-void msRenderTileOgl(imageObj *img, void *tile, double x, double y, double angle)
+int msRenderGlyphsOgl(imageObj *img, double x, double y,
+            labelStyleObj *style, char *text)        
 {
-	OglRenderer* renderer = getOglRenderer(img);
-	renderer->renderTile((OglCache*)tile, x, y, angle);
+    OglRenderer* renderer = getOglRenderer(img);
+    renderer->renderGlyphs(x, y, style->color, style->outlinecolor, style->size, style->font, text, style->rotation, NULL, 0.0, 0.0);
+    return MS_SUCCESS;
 }
 
-int msGetTruetypeTextBBoxOgl(imageObj *img, char *font, double size, char *string, rectObj *rect, double **advances)
+int msMergeRasterBufferOgl(imageObj *dest, rasterBufferObj *overlay, double opacity, int srcX, int srcY, int dstX, int dstY, int width, int height)
 {
-	OglRenderer* renderer = getOglRenderer(img);
-	renderer->getStringBBox(font, size, string, rect, advances);
-	return 0;
-}
-
-void msRenderGlyphsOgl(imageObj *img, double x, double y, colorObj *c,
-		colorObj *outlinecolor, double size, char *font, char *thechars,
-		double angle, colorObj *shadowcolor, double shdx, double shdy,
-		int outlinewidth)
-{
-	OglRenderer* renderer = getOglRenderer(img);
-	renderer->renderGlyphs(x, y, c, outlinecolor, size, font, thechars, angle, shadowcolor, shdx, shdy);
-}
-
-void msMergeImagesOgl(imageObj *dest, imageObj *overlay, int opacity, int dstX,
-		int dstY)
-{
-	//	cairo_renderer *rd = getCairoRenderer(dest);
-	//	cairo_renderer *ro = getCairoRenderer(overlay);
-	//	cairo_set_source_surface (rd->cr,ro->surface,dstX,dstY);
-	//	cairo_paint_with_alpha(rd->cr,opacity*0.01);
+    OglRenderer* renderer = getOglRenderer(dest);
+    renderer->drawRasterBuffer(overlay, opacity, srcX, srcY, dstX, dstY, width, height);
+    return MS_SUCCESS;
 }
 
 imageObj* msImageCreateOgl(int width, int height, outputFormatObj *format, colorObj* bg)
 {
-	imageObj *pNewImage = NULL;
+    imageObj *pNewImage = NULL;
 
-	if (format->imagemode != MS_IMAGEMODE_RGB && format->imagemode
-			!= MS_IMAGEMODE_RGBA)
-	{
-		msSetError(
-				MS_OGLERR, "OpenGL driver only supports RGB or RGBA pixel models.",
-				"msImageCreateOGL()");
-		return NULL;
-	}
-
-	pNewImage = (imageObj*)calloc(1, sizeof(imageObj));
-	if (!pNewImage)
-		return pNewImage;
-
-	OglRenderer *ren = new OglRenderer(width, height, bg);
-	pNewImage->img.plugin = (void *) ren;
-	return pNewImage;
+    if (format->imagemode != MS_IMAGEMODE_RGB && format->imagemode
+            != MS_IMAGEMODE_RGBA)
+    {
+        msSetError(
+                MS_OGLERR, "OpenGL driver only supports RGB or RGBA pixel models.",
+                "msImageCreateOGL()");
+        return NULL;
+    }
+    return createImageObjOgl(new OglRenderer(width, height, bg));
 }
 
-int msSaveImageOgl(imageObj *img, char *filename, outputFormatObj *format)
+int msRenderEllipseOgl(imageObj *image, double x, double y, 
+            symbolObj *symbol, symbolStyleObj *style)        
 {
-        imageObj* gdImg = msImageCreateGD(img->width, img->height, format, filename, NULL, 72, 72);
-
-	OglRenderer* ogl = getOglRenderer(img);
-	ogl->attach(gdImg);
-	char *pFormatBuffer;
-	char cGDFormat[128];
-	int iReturn = 0;
-
-	pFormatBuffer = format->driver;
-
-	strcpy(cGDFormat, "gd/");
-	strcat(cGDFormat, &(format->driver[4]));
-
-	format->driver = &cGDFormat[0];
-
-	iReturn = msSaveImageGD(gdImg, filename, format);
-
-	format->driver = pFormatBuffer;
-
-	return 1;
+    
+    OglRenderer* renderer = getOglRenderer(image);
+    renderer->renderEllipse(x, y, style->rotation, symbol->sizex, symbol->sizey, style->color, style->outlinecolor, style->outlinewidth);
+    return MS_SUCCESS;
 }
 
-void msRenderEllipseOgl(imageObj *img, double x, double y, double width,
-		double height, double angle, colorObj *color, colorObj *outlinecolor,
-		double outlinewidth)
+int msFreeImageOgl(imageObj *img)
 {
-	OglRenderer* renderer = getOglRenderer(img);
-	renderer->renderEllipse(x, y, angle, width, height, color, outlinecolor, outlinewidth);
+    OglRenderer* renderer = getOglRenderer(img);
+    if (renderer)
+    {
+        delete renderer;
+    }
+    img->img.plugin=NULL;
+    return MS_SUCCESS;
 }
 
-void msFreeImageOgl(imageObj *img)
+int msStartLayerOgl(imageObj *img, mapObj *map, layerObj *layer)
 {
-	OglRenderer* renderer = getOglRenderer(img);
-	if (renderer)
-	{
-		delete renderer;
-	}
-	img->img.plugin=NULL;
+    getOglRenderer(img)->setTransparency((double)layer->opacity/100);
+    return MS_SUCCESS;
 }
 
-void msStartNewLayerOgl(imageObj *img, double opacity)
+int msEndLayerOgl(imageObj *img, mapObj *map, layerObj *layer)
 {
-	getOglRenderer(img)->setTransparency(opacity/100);
+    getOglRenderer(img)->setTransparency(1.0);
+    return MS_SUCCESS;
 }
 
-void msCloseNewLayerOgl(imageObj *img, double opacity)
+int msFreeSymbolOgl(symbolObj *s)
 {
-	getOglRenderer(img)->setTransparency(1.0);
+    return MS_SUCCESS;
 }
 
-void msFreeSymbolOgl(symbolObj *s)
-{
-	
+int msGetRasterBufferCopyOgl(imageObj *img, rasterBufferObj *rb) {
+    getOglRenderer(img)->readRasterBuffer(rb);
+    return MS_SUCCESS;
 }
+
+int msGetRasterBufferHandleOgl(imageObj *img, rasterBufferObj * rb)
+{
+    getOglRenderer(img)->readRasterBuffer(rb);
+    return MS_SUCCESS;
+}
+
+int msInitializeRasterBufferOgl(rasterBufferObj *rb, int width, int height, int mode) 
+{
+    OglRenderer::initializeRasterBuffer(rb, width, height, mode==MS_IMAGEMODE_RGBA);
+    return MS_SUCCESS;
+}
+
 #endif /* USE_OGL */
 
 int msPopulateRendererVTableOGL(rendererVTableObj *renderer) {
 #ifdef USE_OGL
-    	renderer->supports_transparent_layers = 1;
-    	renderer->startNewLayer = msStartNewLayerOgl;
-    	renderer->closeNewLayer = msCloseNewLayerOgl;
-        renderer->renderLine=&msDrawLineOgl;
+        renderer->supports_transparent_layers = 1;
+        renderer->supports_pixel_buffer = 1;
+        renderer->supports_clipping = 0;
+        renderer->use_imagecache = 0;
+        renderer->supports_bitmap_fonts = 0;
+        renderer->default_transform_mode = MS_TRANSFORM_SIMPLIFY;
+        renderer->startLayer = msStartLayerOgl;
+        renderer->endLayer = msEndLayerOgl;        
+        
         renderer->createImage=&msImageCreateOgl;
         renderer->saveImage=&msSaveImageOgl;
-        renderer->transformShape=&msTransformShapeAGG;
+        
+        
+        renderer->renderLine=&msDrawLineOgl;
         renderer->renderPolygon=&msDrawPolygonOgl;
         renderer->renderGlyphs=&msRenderGlyphsOgl;
         renderer->renderEllipseSymbol = &msRenderEllipseOgl;
         renderer->renderVectorSymbol = &msRenderVectorSymbolOgl;
-        renderer->renderPixmapSymbol = &msRenderPixmapOgl;
-        renderer->mergeRasterBuffer = &msMergeImagesOgl;
-        renderer->getTruetypeTextBBox = &msGetTruetypeTextBBoxOgl;
-        renderer->createPixmapSymbolTile = &msCreateTilePixmapOgl;
-        renderer->createVectorSymbolTile = &msCreateTileVectorOgl;
-        renderer->createEllipseSymbolTile = &msCreateTileEllipseOgl;
-        renderer->createTruetypeSymbolTile = &msCreateTileTruetypeOgl;
+        renderer->renderPixmapSymbol = &msRenderPixmapOgl;        
+        renderer->renderTruetypeSymbol = &msRenderTruetypeSymbolOgl;
+
         renderer->renderTile = &msRenderTileOgl;
         renderer->renderPolygonTiled = &msDrawPolygonTiledOgl;
         renderer->renderLineTiled = &msDrawLineTiledOgl;
-        renderer->freeTile = &msFreeTileOgl;
+        
+        renderer->getTruetypeTextBBox = &msGetTruetypeTextBBoxOgl;
+        
+        renderer->getRasterBufferHandle = msGetRasterBufferHandleOgl;
+        renderer->getRasterBufferCopy = msGetRasterBufferCopyOgl;
+        renderer->initializeRasterBuffer = msInitializeRasterBufferOgl;
+        renderer->mergeRasterBuffer = msMergeRasterBufferOgl;        
+        renderer->loadImageFromFile = msLoadMSRasterBufferFromFile;                            
+
         renderer->freeSymbol = &msFreeSymbolOgl;
         renderer->freeImage=&msFreeImageOgl;
+
         return MS_SUCCESS;
     #else
         msSetError(MS_MISCERR,"OGL driver requested but it is not compiled in this release",

@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: cgiutil.c 9171 2009-07-13 20:22:01Z dmorissette $
+ * $Id: cgiutil.c 11452 2011-04-04 13:25:43Z aboudreault $
  *
  * Project:  MapServer
  * Purpose:  cgiRequestObj and CGI parameter parsing. 
@@ -32,11 +32,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
-#include "cgiutil.h"
+#include <ctype.h> 
 #include "mapserver.h"
+#include "cgiutil.h"
 
-MS_CVSID("$Id: cgiutil.c 9171 2009-07-13 20:22:01Z dmorissette $")
+MS_CVSID("$Id: cgiutil.c 11452 2011-04-04 13:25:43Z aboudreault $")
 
 #define LF 10
 #define CR 13
@@ -76,7 +76,6 @@ static char *readPostBody( cgiRequestObj *request )
     data[data_max] = '\0';
     return data;
   }
-
   /* -------------------------------------------------------------------- */
   /*      Otherwise read in chunks to the end.                            */
   /* -------------------------------------------------------------------- */
@@ -85,6 +84,11 @@ static char *readPostBody( cgiRequestObj *request )
   data_max = DATA_ALLOC_SIZE;
   data_len = 0;
   data = (char *) malloc(data_max+1);
+  if (data == NULL) {
+    msIO_printf("Content-type: text/html%c%c",10,10);
+    msIO_printf("Out of memory allocating %u bytes.\n", data_max+1);
+    exit(1);
+  }
 
   while( (chunk_size = msIO_fread( data + data_len, 1, data_max-data_len, stdin )) > 0 ) {
     data_len += chunk_size;
@@ -112,12 +116,25 @@ static char *readPostBody( cgiRequestObj *request )
   return data;
 }
 
-int loadParams(cgiRequestObj *request) {
-  register int x,m=0;
-  char *s;
-  int debuglevel;
+static char* msGetEnv(const char *name, void* thread_context)
+{
+    return getenv(name);
+}
 
-  if(getenv("REQUEST_METHOD")==NULL) {
+int loadParams(cgiRequestObj *request, 
+               char* (*getenv2)(const char*, void* thread_context),
+               char *raw_post_data,
+               ms_uint32 raw_post_data_length,
+               void* thread_context) {
+  register int x,m=0;
+  char *s, *queryString = NULL, *httpCookie = NULL;
+  int debuglevel;
+  int maxParams = MS_DEFAULT_CGI_PARAMS;
+  
+  if (getenv2==NULL)
+      getenv2 = &msGetEnv;
+
+  if(getenv2("REQUEST_METHOD", thread_context)==NULL) {
     msIO_printf("This script can only be used to decode form results and \n");
     msIO_printf("should be initiated as a CGI process via a httpd server.\n");
     exit(0);
@@ -125,33 +142,49 @@ int loadParams(cgiRequestObj *request) {
 
   debuglevel = (int)msGetGlobalDebugLevel();
 
-  if(strcmp(getenv("REQUEST_METHOD"),"POST") == 0) { /* we've got a post from a form */     
+  if(strcmp(getenv2("REQUEST_METHOD", thread_context),"POST") == 0) { /* we've got a post from a form */     
     char *post_data;
-
+    int data_len;
     request->type = MS_POST_REQUEST;
 
-    s = getenv("CONTENT_TYPE"); 
+    s = getenv2("CONTENT_TYPE", thread_context); 
     if (s != NULL)
-      request->contenttype = strdup(s);
+      request->contenttype = msStrdup(s);
      /* we've to set default content-type which is
       * application/octet-stream according to
       * W3 RFC 2626 section 7.2.1 */
-    else request->contenttype = strdup("application/octet-stream");
+    else request->contenttype = msStrdup("application/octet-stream");
 
-    post_data = readPostBody( request );
-    if(strcmp(request->contenttype, "application/x-www-form-urlencoded")) 
-      request->postrequest = post_data;
+    if (raw_post_data) {
+        post_data = msStrdup(raw_post_data);
+        data_len = raw_post_data_length;
+    }
     else {
-      int data_len = strlen(post_data);
+        post_data = readPostBody( request );
+        data_len = strlen(post_data);
+    }
+
+    /* if the content_type is application/x-www-form-urlencoded, 
+       we have to parse it like the QUERY_STRING variable */
+    if(strcmp(request->contenttype, "application/x-www-form-urlencoded") == 0)   
+    {
       while( data_len > 0 && isspace(post_data[data_len-1]) )
         post_data[--data_len] = '\0';
 
       while( post_data[0] ) {
-        if(m >= MS_MAX_CGI_PARAMS) {
-          msIO_printf("Too many name/value pairs, aborting.\n");
-          exit(0);
+        if(m >= maxParams) {
+          maxParams *= 2;
+          request->ParamNames = (char **) realloc(request->ParamNames,sizeof(char *) * maxParams);
+          if (request->ParamNames == NULL) {
+              msIO_printf("Out of memory trying to allocate name/value pairs.\n");
+              exit(1);
+          }
+          request->ParamValues = (char **) realloc(request->ParamValues,sizeof(char *) * maxParams);
+          if (request->ParamValues ==  NULL) {
+              msIO_printf("Out of memory trying to allocate name/value pairs.\n");
+              exit(1);
+          }
         }
-
         request->ParamValues[m] = makeword(post_data,'&');
         plustospace(request->ParamValues[m]);
         unescape_url(request->ParamValues[m]);
@@ -160,20 +193,32 @@ int loadParams(cgiRequestObj *request) {
       }
       free( post_data );
     }
+    else 
+        request->postrequest = post_data;
 
     /* check the QUERY_STRING even in the post request since it can contain 
        information. Eg a wfs request with  */
-    s = getenv("QUERY_STRING");
+    s = getenv2("QUERY_STRING", thread_context);
     if(s) {
       if (debuglevel >= MS_DEBUGLEVEL_DEBUG)
 		  msDebug("loadParams() QUERY_STRING: %s\n", s);
 
-      for(x=0;s[0] != '\0';x++) {       
-        if(m >= MS_MAX_CGI_PARAMS) {
-          msIO_printf("Too many name/value pairs, aborting.\n");
-          exit(0);
-        }
-        request->ParamValues[m] = makeword(s,'&');
+      queryString = msStrdup(s);
+      for(x=0;queryString[0] != '\0';x++) {       
+        if(m >= maxParams) {
+          maxParams *= 2;
+          request->ParamNames = (char **) realloc(request->ParamNames,sizeof(char *) * maxParams);
+          if (request->ParamNames == NULL) {
+              msIO_printf("Out of memory trying to allocate name/value pairs.\n");
+              exit(1);
+          }
+          request->ParamValues = (char **) realloc(request->ParamValues,sizeof(char *) * maxParams);
+          if (request->ParamValues ==  NULL) {
+              msIO_printf("Out of memory trying to allocate name/value pairs.\n");
+              exit(1);
+          }
+        } 
+        request->ParamValues[m] = makeword(queryString,'&'); 
         plustospace(request->ParamValues[m]);
         unescape_url(request->ParamValues[m]);
         request->ParamNames[m] = makeword(request->ParamValues[m],'=');
@@ -181,35 +226,46 @@ int loadParams(cgiRequestObj *request) {
       }
     }     
   } else { 
-    if(strcmp(getenv("REQUEST_METHOD"),"GET") == 0) { /* we've got a get request */
+    if(strcmp(getenv2("REQUEST_METHOD", thread_context),"GET") == 0) { /* we've got a get request */
       request->type = MS_GET_REQUEST;
 
-      s = getenv("QUERY_STRING");
+      s = getenv2("QUERY_STRING", thread_context);
       if(s == NULL) {
         msIO_printf("Content-type: text/html%c%c",10,10);
         msIO_printf("No query information to decode. QUERY_STRING not set.\n");	
         exit(1);
       }
-
-	  if (debuglevel >= MS_DEBUGLEVEL_DEBUG)
-		  msDebug("loadParams() QUERY_STRING: %s\n", s);
+            
+      if (debuglevel >= MS_DEBUGLEVEL_DEBUG)
+          msDebug("loadParams() QUERY_STRING: %s\n", s);
 
       if(strlen(s)==0) {
         msIO_printf("Content-type: text/html%c%c",10,10);
         msIO_printf("No query information to decode. QUERY_STRING is set, but empty.\n");
         exit(1);
       }
-
-      for(x=0;s[0] != '\0';x++) {       
-        if(m >= MS_MAX_CGI_PARAMS) {
-          msIO_printf("Too many name/value pairs, aborting.\n");
-          exit(0);
-        }
-        request->ParamValues[m] = makeword(s,'&');
-        plustospace(request->ParamValues[m]);
-        unescape_url(request->ParamValues[m]);
-        request->ParamNames[m] = makeword(request->ParamValues[m],'=');
-        m++;
+      
+      /* don't modify the string returned by getenv2 */
+      queryString = msStrdup(s);
+      for(x=0;queryString[0] != '\0';x++) {
+          if(m >= maxParams) {
+            maxParams *= 2;
+            request->ParamNames = (char **) realloc(request->ParamNames,sizeof(char *) * maxParams);
+            if (request->ParamNames == NULL) {
+                msIO_printf("Out of memory trying to allocate name/value pairs.\n");
+                exit(1);
+            }
+            request->ParamValues = (char **) realloc(request->ParamValues,sizeof(char *) * maxParams);
+            if (request->ParamValues ==  NULL) {
+                msIO_printf("Out of memory trying to allocate name/value pairs.\n");
+                exit(1);
+            }
+          } 
+          request->ParamValues[m] = makeword(queryString,'&');
+          plustospace(request->ParamValues[m]);
+          unescape_url(request->ParamValues[m]);
+          request->ParamNames[m] = makeword(request->ParamValues[m],'=');
+          m++; 
       }
     } else {
       msIO_printf("Content-type: text/html%c%c",10,10);
@@ -219,21 +275,36 @@ int loadParams(cgiRequestObj *request) {
   }
 
   /* check for any available cookies */
-  s = getenv("HTTP_COOKIE");
+  s = getenv2("HTTP_COOKIE", thread_context);
   if(s != NULL) {
-    request->httpcookiedata = strdup(s);
-    for(x=0;s[0] != '\0';x++) {
-      if(m >= MS_MAX_CGI_PARAMS) {
-        msIO_printf("Too many name/value pairs, aborting.\n");
-        exit(0);
+    httpCookie = msStrdup(s);
+    request->httpcookiedata = msStrdup(s);
+    for(x=0;httpCookie[0] != '\0';x++) {
+        if(m >= maxParams) {
+          maxParams *= 2;
+          request->ParamNames = (char **) realloc(request->ParamNames,sizeof(char *) * maxParams);
+          if (request->ParamNames == NULL) {
+              msIO_printf("Out of memory trying to allocate name/value pairs.\n");
+              exit(1);
+          }
+          request->ParamValues = (char **) realloc(request->ParamValues,sizeof(char *) * maxParams);
+          if (request->ParamValues ==  NULL) {
+              msIO_printf("Out of memory trying to allocate name/value pairs.\n");
+              exit(1);
+          }
       }
-      request->ParamValues[m] = makeword(s,';');
+      request->ParamValues[m] = makeword(httpCookie,';');
       plustospace(request->ParamValues[m]);
       unescape_url(request->ParamValues[m]);
       request->ParamNames[m] = makeword_skip(request->ParamValues[m],'=',' ');
       m++;
     }
   }
+  
+  if (queryString)
+      free(queryString);
+  if (httpCookie)
+      free(httpCookie);
 
   return(m);
 }
@@ -253,7 +324,7 @@ void getword(char *word, char *line, char stop) {
 
 char *makeword_skip(char *line, char stop, char skip) {
   int x = 0,y,offset=0;
-  char *word = (char *) malloc(sizeof(char) * (strlen(line) + 1));
+  char *word = (char *) msSmallMalloc(sizeof(char) * (strlen(line) + 1));
 
   for(x=0;((line[x]) && (line[x] == skip));x++);
   offset = x;
@@ -270,12 +341,12 @@ char *makeword_skip(char *line, char stop, char skip) {
 }
 
 char *makeword(char *line, char stop) {
-  int x = 0,y;
-  char *word = (char *) malloc(sizeof(char) * (strlen(line) + 1));
-
+    int x = 0,y;
+  char *word = (char *) msSmallMalloc(sizeof(char) * (strlen(line) + 1));
+  
   for(x=0;((line[x]) && (line[x] != stop));x++)
     word[x] = line[x];
-
+  
   word[x] = '\0';
   if(line[x]) ++x;
   y=0;
@@ -291,20 +362,20 @@ char *fmakeword(FILE *f, char stop, int *cl) {
 
   wsize = 102400;
   ll=0;
-  word = (char *) malloc(sizeof(char) * (wsize + 1));
+  word = (char *) msSmallMalloc(sizeof(char) * (wsize + 1));
 
   while(1) {
     word[ll] = (char)fgetc(f);
     if(ll==wsize) {
       word[ll+1] = '\0';
       wsize+=102400;
-      word = (char *)realloc(word,sizeof(char)*(wsize+1));
+      word = (char *)msSmallRealloc(word,sizeof(char)*(wsize+1));
     }
     --(*cl);
     if((word[ll] == stop) || (feof(f)) || (!(*cl))) {
       if(word[ll] != stop) ll++;
       word[ll] = '\0';
-	    word = (char *) realloc(word, ll+1);
+      word = (char *) msSmallRealloc(word, ll+1);
       return word;
     }
     ++ll;
@@ -409,8 +480,8 @@ cgiRequestObj *msAllocCgiObj() {
   if(!request)
     return NULL;
 
-  request->ParamNames = NULL;
-  request->ParamValues = NULL;
+  request->ParamNames = (char **) msSmallMalloc(MS_DEFAULT_CGI_PARAMS*sizeof(char*));
+  request->ParamValues = (char **) msSmallMalloc(MS_DEFAULT_CGI_PARAMS*sizeof(char*));
   request->NumParams = 0;
   request->type = -1;
   request->contenttype = NULL;

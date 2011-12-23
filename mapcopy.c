@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapcopy.c 9395 2009-10-07 08:47:37Z tbonfort $
+ * $Id: mapcopy.c 11084 2011-03-06 12:15:20Z rouault $
  *
  * Project: MapServer
  * Purpose: Functions to allow copying/cloning of maps
@@ -45,7 +45,7 @@
 #include "mapserver.h"
 #include "mapsymbol.h"
 
-MS_CVSID("$Id: mapcopy.c 9395 2009-10-07 08:47:37Z tbonfort $")
+MS_CVSID("$Id: mapcopy.c 11084 2011-03-06 12:15:20Z rouault $")
 
 #include "mapcopy.h"
 
@@ -64,7 +64,7 @@ int msCopyProjection(projectionObj *dst, projectionObj *src) {
 
     for (i = 0; i < dst->numargs; i++) {
         /* Our destination consists of unallocated pointers */
-        dst->args[i] = strdup(src->args[i]);
+        dst->args[i] = msStrdup(src->args[i]);
     }
     if (dst->numargs != 0) {
         if (msProcessProjection(dst) != MS_SUCCESS)
@@ -247,7 +247,7 @@ int msCopyQueryMap(queryMapObj *dst, queryMapObj *src)
 /***********************************************************************
  * msCopyLabel()                                                       *
  *                                                                     *
- * Copy a labelObj, using msCopyColor()                                *
+ * Copy a labelObj, using msCopyColor() and msCopyStyle()              *
  **********************************************************************/
 
 int msCopyLabel(labelObj *dst, labelObj *src) 
@@ -260,52 +260,74 @@ int msCopyLabel(labelObj *dst, labelObj *src)
   }
   MS_COPYSTELEM(numbindings);
 
-    MS_COPYSTRING(dst->font, src->font);
-    MS_COPYSTELEM(type);
+  MS_COPYSTRING(dst->font, src->font);
+  MS_COPYSTELEM(type);
 
-    MS_COPYCOLOR(&(dst->color), &(src->color));
-    MS_COPYCOLOR(&(dst->outlinecolor), &(src->outlinecolor));
-    MS_COPYCOLOR(&(dst->shadowcolor), &(src->shadowcolor));
+  MS_COPYCOLOR(&(dst->color), &(src->color));
+  MS_COPYCOLOR(&(dst->outlinecolor), &(src->outlinecolor));
+  MS_COPYCOLOR(&(dst->shadowcolor), &(src->shadowcolor));
 
-    MS_COPYSTELEM(shadowsizex);
-    MS_COPYSTELEM(shadowsizey);
+  MS_COPYSTELEM(shadowsizex);
+  MS_COPYSTELEM(shadowsizey);
 
-    MS_COPYCOLOR(&(dst->backgroundcolor), &(src->backgroundcolor));
-    MS_COPYCOLOR(&(dst->backgroundshadowcolor), &(src->backgroundshadowcolor));
-
-    MS_COPYSTELEM(backgroundshadowsizex);
-    MS_COPYSTELEM(backgroundshadowsizey);
-    MS_COPYSTELEM(size);
-    MS_COPYSTELEM(minsize);
-    MS_COPYSTELEM(maxsize);
-    MS_COPYSTELEM(position);
-    MS_COPYSTELEM(offsetx);
-    MS_COPYSTELEM(offsety);
-    MS_COPYSTELEM(angle);
-    MS_COPYSTELEM(autoangle);    
-    MS_COPYSTELEM(autofollow);
-    MS_COPYSTELEM(buffer);
-    MS_COPYSTELEM(antialias);
-    MS_COPYSTELEM(wrap);
-    MS_COPYSTELEM(align);
-    MS_COPYSTELEM(maxlength);
-    MS_COPYSTELEM(minfeaturesize);
+  MS_COPYSTELEM(size);
+  MS_COPYSTELEM(minsize);
+  MS_COPYSTELEM(maxsize);
+  MS_COPYSTELEM(position);
+  MS_COPYSTELEM(offsetx);
+  MS_COPYSTELEM(offsety);
+  MS_COPYSTELEM(angle);
+  MS_COPYSTELEM(anglemode);    
+  MS_COPYSTELEM(buffer);
+  MS_COPYSTELEM(antialias);
+  MS_COPYSTELEM(wrap);
+  MS_COPYSTELEM(align);
+  MS_COPYSTELEM(maxlength);
+  MS_COPYSTELEM(minfeaturesize);
     
-    MS_COPYSTELEM(minscaledenom);
-    MS_COPYSTELEM(maxscaledenom);
+  MS_COPYSTELEM(minscaledenom);
+  MS_COPYSTELEM(maxscaledenom);
 
-    MS_COPYSTELEM(autominfeaturesize);
+  MS_COPYSTELEM(autominfeaturesize);
 
-    MS_COPYSTELEM(mindistance);
-    MS_COPYSTELEM(partials);
-    MS_COPYSTELEM(force);
-    MS_COPYSTELEM(priority);
+  MS_COPYSTELEM(mindistance);
+  MS_COPYSTELEM(partials);
+  MS_COPYSTELEM(force);
+  MS_COPYSTELEM(priority);
 
-    MS_COPYSTRING(dst->encoding, src->encoding);
+  MS_COPYSTRING(dst->encoding, src->encoding);
 
-    MS_COPYSTELEM(outlinewidth);
+  MS_COPYSTELEM(outlinewidth);
 
-    return MS_SUCCESS;
+  /* 
+  ** now the styles 
+  */
+
+  /* free any previous styles on the dst label */
+  for(i=0;i<dst->numstyles;i++) { /* each style */
+    if (dst->styles[i]!=NULL) {
+      if( freeStyle(dst->styles[i]) == MS_SUCCESS ) msFree(dst->styles[i]);
+    }
+  }
+  msFree(dst->styles);
+  dst->numstyles = 0;
+
+  for (i = 0; i < src->numstyles; i++) {
+    if (msGrowLabelStyles(dst) == NULL)
+      return MS_FAILURE;
+    if (initStyle(dst->styles[i]) != MS_SUCCESS) {
+      msSetError(MS_MEMERR, "Failed to init style.", "msCopyLabel()");
+      return MS_FAILURE;
+    }
+    if (msCopyStyle(dst->styles[i], src->styles[i]) != MS_SUCCESS) {
+      msSetError(MS_MEMERR, "Failed to copy style.", "msCopyLabel()");
+      return MS_FAILURE;
+    }
+    dst->numstyles++;
+  }
+
+
+  return MS_SUCCESS;
 }
 
 /***********************************************************************
@@ -397,8 +419,8 @@ int msCopyStyle(styleObj *dst, styleObj *src)
     MS_COPYSTELEM(minvalue);
     MS_COPYSTELEM(maxvalue);
     MS_COPYSTELEM(opacity);
-    MS_COPYSTRING(dst->_geomtransformexpression,src->_geomtransformexpression);
-    MS_COPYSTELEM(_geomtransform);
+    MS_COPYSTRING(dst->_geomtransform.string, src->_geomtransform.string);
+    MS_COPYSTELEM(_geomtransform.type);
     MS_COPYSTRING(dst->rangeitem, src->rangeitem);
     MS_COPYSTELEM(rangeitemindex);
     MS_COPYSTELEM(outlinewidth);
@@ -428,8 +450,8 @@ int msCopyClass(classObj *dst, classObj *src, layerObj *layer)
 
     MS_COPYSTELEM(status);
 
-    /* free any previous styles on the dst layer*/
-    for(i=0;i<dst->numstyles;i++) { /* each style     */
+    /* free any previous styles on the dst layer */
+    for(i=0;i<dst->numstyles;i++) { /* each style */
       if (dst->styles[i]!=NULL) {
     	if( freeStyle(dst->styles[i]) == MS_SUCCESS ) {
           msFree(dst->styles[i]);
@@ -485,6 +507,29 @@ int msCopyClass(classObj *dst, classObj *src, layerObj *layer)
     MS_COPYSTELEM(maxscaledenom);
     MS_COPYSTELEM(layer);
     MS_COPYSTELEM(debug);
+
+    return MS_SUCCESS;
+}
+
+int msCopyCluster(clusterObj *dst, clusterObj *src) 
+{
+    int return_value;
+
+    MS_COPYSTELEM(maxdistance);
+    MS_COPYSTELEM(buffer);
+    MS_COPYSTRING(dst->region, src->region);
+    
+    return_value = msCopyExpression(&(dst->group),&(src->group));
+    if (return_value != MS_SUCCESS) {
+        msSetError(MS_MEMERR, "Failed to copy cluster group.", "msCopyCluster()");
+        return MS_FAILURE;
+    }
+
+    return_value = msCopyExpression(&(dst->filter),&(src->filter));
+    if (return_value != MS_SUCCESS) {
+        msSetError(MS_MEMERR, "Failed to copy cluster filter.", "msCopyCluster()");
+        return MS_FAILURE;
+    }
 
     return MS_SUCCESS;
 }
@@ -576,17 +621,15 @@ int msCopyLabelCache(labelCacheObj *dst, labelCacheObj *src)
 }
 
 /***********************************************************************
- * msCopyMarkerCacheMember()                                           *
- *                                                                     *
- * Copy a markerCacheMemberObj                                         *
+ * msCopyResult()                                                      *
  **********************************************************************/
 
-int msCopyResultCacheMember(resultCacheMemberObj *dst,
-                            resultCacheMemberObj *src)
+int msCopyResult(resultObj *dst, resultObj *src)
 {
     MS_COPYSTELEM(shapeindex);
     MS_COPYSTELEM(tileindex);
     MS_COPYSTELEM(classindex);
+    MS_COPYSTELEM(resultindex);
 
     return MS_SUCCESS;
 }
@@ -601,7 +644,7 @@ int msCopyResultCache(resultCacheObj *dst, resultCacheObj *src)
     MS_COPYSTELEM(cachesize);
     MS_COPYSTELEM(numresults);
     for (i = 0; i < dst->numresults; i++) {
-        msCopyResultCacheMember(&(dst->results[i]), &(src->results[i]));
+        msCopyResult(&(dst->results[i]), &(src->results[i]));
     }
     MS_COPYRECT(&(dst->bounds), &(src->bounds));
 
@@ -808,6 +851,11 @@ int msCopyLayer(layerObj *dst, layerObj *src)
     return_value = msCopyProjection(&(dst->projection),&(src->projection));
     if (return_value != MS_SUCCESS) {
         msSetError(MS_MEMERR, "Failed to copy projection.", "msCopyLayer()");
+        return MS_FAILURE;
+    }
+
+    return_value = msCopyCluster(&(dst->cluster),&(src->cluster));
+    if (return_value != MS_SUCCESS) {
         return MS_FAILURE;
     }
 

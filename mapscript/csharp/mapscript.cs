@@ -109,6 +109,11 @@ public class mapscript {
     return ret;
   }
 
+  public static void msIO_stripStdoutBufferContentHeaders() {
+    mapscriptPINVOKE.msIO_stripStdoutBufferContentHeaders();
+    if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+  }
+
   public static string msIO_getStdoutBufferString() {
     string ret = mapscriptPINVOKE.msIO_getStdoutBufferString();
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
@@ -127,6 +132,7 @@ public class mapscript {
   public static readonly int MS_VERSION_MINOR = mapscriptPINVOKE.MS_VERSION_MINOR_get();
   public static readonly int MS_VERSION_REV = mapscriptPINVOKE.MS_VERSION_REV_get();
   public static readonly int MS_VERSION_NUM = mapscriptPINVOKE.MS_VERSION_NUM_get();
+  public static readonly string __FUNCTION__ = mapscriptPINVOKE.__FUNCTION___get();
   public static readonly int MS_TRUE = mapscriptPINVOKE.MS_TRUE_get();
   public static readonly int MS_FALSE = mapscriptPINVOKE.MS_FALSE_get();
   public static readonly int MS_UNKNOWN = mapscriptPINVOKE.MS_UNKNOWN_get();
@@ -143,12 +149,26 @@ public class mapscript {
   public static readonly int MS_STYLE_ALLOCSIZE = mapscriptPINVOKE.MS_STYLE_ALLOCSIZE_get();
   public static readonly int MS_MAX_LABEL_PRIORITY = mapscriptPINVOKE.MS_MAX_LABEL_PRIORITY_get();
   public static readonly int MS_DEFAULT_LABEL_PRIORITY = mapscriptPINVOKE.MS_DEFAULT_LABEL_PRIORITY_get();
+  public static readonly int MS_RENDER_WITH_SWF = mapscriptPINVOKE.MS_RENDER_WITH_SWF_get();
+  public static readonly int MS_RENDER_WITH_RAWDATA = mapscriptPINVOKE.MS_RENDER_WITH_RAWDATA_get();
+  public static readonly int MS_RENDER_WITH_IMAGEMAP = mapscriptPINVOKE.MS_RENDER_WITH_IMAGEMAP_get();
+  public static readonly int MS_RENDER_WITH_TEMPLATE = mapscriptPINVOKE.MS_RENDER_WITH_TEMPLATE_get();
+  public static readonly int MS_RENDER_WITH_OGR = mapscriptPINVOKE.MS_RENDER_WITH_OGR_get();
+  public static readonly int MS_RENDER_WITH_PLUGIN = mapscriptPINVOKE.MS_RENDER_WITH_PLUGIN_get();
+  public static readonly int MS_RENDER_WITH_CAIRO_RASTER = mapscriptPINVOKE.MS_RENDER_WITH_CAIRO_RASTER_get();
+  public static readonly int MS_RENDER_WITH_CAIRO_PDF = mapscriptPINVOKE.MS_RENDER_WITH_CAIRO_PDF_get();
+  public static readonly int MS_RENDER_WITH_CAIRO_SVG = mapscriptPINVOKE.MS_RENDER_WITH_CAIRO_SVG_get();
+  public static readonly int MS_RENDER_WITH_OGL = mapscriptPINVOKE.MS_RENDER_WITH_OGL_get();
+  public static readonly int MS_RENDER_WITH_AGG = mapscriptPINVOKE.MS_RENDER_WITH_AGG_get();
+  public static readonly int MS_RENDER_WITH_GD = mapscriptPINVOKE.MS_RENDER_WITH_GD_get();
+  public static readonly int MS_RENDER_WITH_KML = mapscriptPINVOKE.MS_RENDER_WITH_KML_get();
   public static readonly int MS_POSITIONS_LENGTH = mapscriptPINVOKE.MS_POSITIONS_LENGTH_get();
   public static readonly int MS_SINGLE = mapscriptPINVOKE.MS_SINGLE_get();
   public static readonly int MS_MULTIPLE = mapscriptPINVOKE.MS_MULTIPLE_get();
-  public static readonly int MS_NOOVERRIDE = mapscriptPINVOKE.MS_NOOVERRIDE_get();
+  public static readonly int MS_CJC_DEFAULT_JOIN_MAXSIZE = mapscriptPINVOKE.MS_CJC_DEFAULT_JOIN_MAXSIZE_get();
   public static readonly int MS_STYLE_BINDING_LENGTH = mapscriptPINVOKE.MS_STYLE_BINDING_LENGTH_get();
   public static readonly int MS_LABEL_BINDING_LENGTH = mapscriptPINVOKE.MS_LABEL_BINDING_LENGTH_get();
+  public static readonly int MS_NOOVERRIDE = mapscriptPINVOKE.MS_NOOVERRIDE_get();
   public static readonly int SHX_BUFFER_PAGE = mapscriptPINVOKE.SHX_BUFFER_PAGE_get();
   public static readonly int MS_SHAPEFILE_POINT = mapscriptPINVOKE.MS_SHAPEFILE_POINT_get();
   public static readonly int MS_SHAPEFILE_ARC = mapscriptPINVOKE.MS_SHAPEFILE_ARC_get();
@@ -207,11 +227,12 @@ public class mapscript {
   public static readonly int MS_NULLPARENTERR = mapscriptPINVOKE.MS_NULLPARENTERR_get();
   public static readonly int MS_AGGERR = mapscriptPINVOKE.MS_AGGERR_get();
   public static readonly int MS_OWSERR = mapscriptPINVOKE.MS_OWSERR_get();
-  public static readonly int MS_NUMERRORCODES = mapscriptPINVOKE.MS_NUMERRORCODES_get();
   public static readonly int MS_OGLERR = mapscriptPINVOKE.MS_OGLERR_get();
+  public static readonly int MS_RENDERERERR = mapscriptPINVOKE.MS_RENDERERERR_get();
+  public static readonly int MS_NUMERRORCODES = mapscriptPINVOKE.MS_NUMERRORCODES_get();
   public static readonly int MESSAGELENGTH = mapscriptPINVOKE.MESSAGELENGTH_get();
   public static readonly int ROUTINELENGTH = mapscriptPINVOKE.ROUTINELENGTH_get();
   public static readonly string MS_ERROR_LANGUAGE = mapscriptPINVOKE.MS_ERROR_LANGUAGE_get();
   public static readonly int MS_HASHSIZE = mapscriptPINVOKE.MS_HASHSIZE_get();
-  public static readonly int MS_MAX_CGI_PARAMS = mapscriptPINVOKE.MS_MAX_CGI_PARAMS_get();
+  public static readonly int MS_DEFAULT_CGI_PARAMS = mapscriptPINVOKE.MS_DEFAULT_CGI_PARAMS_get();
 }

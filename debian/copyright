@@ -43,7 +43,7 @@ tests/vera:
 Copyright (c) 2003 by Bitstream, Inc. All Rights Reserved. Bitstream
 Vera is a trademark of Bitstream, Inc.
 
-mapscript/php3/Makefile.in:
+mapscript/php/Makefile.in:
 
 # | Copyright (c) 1997,1998 PHP Development Team (See Credits file)      |
 
@@ -169,7 +169,7 @@ Software without prior written authorization from the Gnome Foundation
 or Bitstream Inc., respectively. For further information, contact:
 fonts at gnome dot org.
 
-mapscript/php3/Makefile.in:
+mapscript/php/Makefile.in:
 
 # | This program is free software; you can redistribute it and/or modify |
 # | it under the terms of one of the following licenses:                 |

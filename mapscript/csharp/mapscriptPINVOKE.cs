@@ -284,6 +284,9 @@ class mapscriptPINVOKE {
   [DllImport("mapscript", EntryPoint="CSharp_MS_VERSION_NUM_get")]
   public static extern int MS_VERSION_NUM_get();
 
+  [DllImport("mapscript", EntryPoint="CSharp___FUNCTION___get")]
+  public static extern string __FUNCTION___get();
+
   [DllImport("mapscript", EntryPoint="CSharp_MS_TRUE_get")]
   public static extern int MS_TRUE_get();
 
@@ -332,6 +335,45 @@ class mapscriptPINVOKE {
   [DllImport("mapscript", EntryPoint="CSharp_MS_DEFAULT_LABEL_PRIORITY_get")]
   public static extern int MS_DEFAULT_LABEL_PRIORITY_get();
 
+  [DllImport("mapscript", EntryPoint="CSharp_MS_RENDER_WITH_SWF_get")]
+  public static extern int MS_RENDER_WITH_SWF_get();
+
+  [DllImport("mapscript", EntryPoint="CSharp_MS_RENDER_WITH_RAWDATA_get")]
+  public static extern int MS_RENDER_WITH_RAWDATA_get();
+
+  [DllImport("mapscript", EntryPoint="CSharp_MS_RENDER_WITH_IMAGEMAP_get")]
+  public static extern int MS_RENDER_WITH_IMAGEMAP_get();
+
+  [DllImport("mapscript", EntryPoint="CSharp_MS_RENDER_WITH_TEMPLATE_get")]
+  public static extern int MS_RENDER_WITH_TEMPLATE_get();
+
+  [DllImport("mapscript", EntryPoint="CSharp_MS_RENDER_WITH_OGR_get")]
+  public static extern int MS_RENDER_WITH_OGR_get();
+
+  [DllImport("mapscript", EntryPoint="CSharp_MS_RENDER_WITH_PLUGIN_get")]
+  public static extern int MS_RENDER_WITH_PLUGIN_get();
+
+  [DllImport("mapscript", EntryPoint="CSharp_MS_RENDER_WITH_CAIRO_RASTER_get")]
+  public static extern int MS_RENDER_WITH_CAIRO_RASTER_get();
+
+  [DllImport("mapscript", EntryPoint="CSharp_MS_RENDER_WITH_CAIRO_PDF_get")]
+  public static extern int MS_RENDER_WITH_CAIRO_PDF_get();
+
+  [DllImport("mapscript", EntryPoint="CSharp_MS_RENDER_WITH_CAIRO_SVG_get")]
+  public static extern int MS_RENDER_WITH_CAIRO_SVG_get();
+
+  [DllImport("mapscript", EntryPoint="CSharp_MS_RENDER_WITH_OGL_get")]
+  public static extern int MS_RENDER_WITH_OGL_get();
+
+  [DllImport("mapscript", EntryPoint="CSharp_MS_RENDER_WITH_AGG_get")]
+  public static extern int MS_RENDER_WITH_AGG_get();
+
+  [DllImport("mapscript", EntryPoint="CSharp_MS_RENDER_WITH_GD_get")]
+  public static extern int MS_RENDER_WITH_GD_get();
+
+  [DllImport("mapscript", EntryPoint="CSharp_MS_RENDER_WITH_KML_get")]
+  public static extern int MS_RENDER_WITH_KML_get();
+
   [DllImport("mapscript", EntryPoint="CSharp_MS_POSITIONS_LENGTH_get")]
   public static extern int MS_POSITIONS_LENGTH_get();
 
@@ -340,6 +382,15 @@ class mapscriptPINVOKE {
 
   [DllImport("mapscript", EntryPoint="CSharp_MS_MULTIPLE_get")]
   public static extern int MS_MULTIPLE_get();
+
+  [DllImport("mapscript", EntryPoint="CSharp_MS_CJC_DEFAULT_JOIN_MAXSIZE_get")]
+  public static extern int MS_CJC_DEFAULT_JOIN_MAXSIZE_get();
+
+  [DllImport("mapscript", EntryPoint="CSharp_MS_STYLE_BINDING_LENGTH_get")]
+  public static extern int MS_STYLE_BINDING_LENGTH_get();
+
+  [DllImport("mapscript", EntryPoint="CSharp_MS_LABEL_BINDING_LENGTH_get")]
+  public static extern int MS_LABEL_BINDING_LENGTH_get();
 
   [DllImport("mapscript", EntryPoint="CSharp_fontSetObj_filename_get")]
   public static extern string fontSetObj_filename_get(HandleRef jarg1);
@@ -355,6 +406,45 @@ class mapscriptPINVOKE {
 
   [DllImport("mapscript", EntryPoint="CSharp_delete_fontSetObj")]
   public static extern void delete_fontSetObj(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_clusterObj_maxdistance_set")]
+  public static extern void clusterObj_maxdistance_set(HandleRef jarg1, double jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_clusterObj_maxdistance_get")]
+  public static extern double clusterObj_maxdistance_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_clusterObj_buffer_set")]
+  public static extern void clusterObj_buffer_set(HandleRef jarg1, double jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_clusterObj_buffer_get")]
+  public static extern double clusterObj_buffer_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_clusterObj_region_set")]
+  public static extern void clusterObj_region_set(HandleRef jarg1, string jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_clusterObj_region_get")]
+  public static extern string clusterObj_region_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_clusterObj_updateFromString")]
+  public static extern int clusterObj_updateFromString(HandleRef jarg1, string jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_clusterObj_setGroup")]
+  public static extern int clusterObj_setGroup(HandleRef jarg1, string jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_clusterObj_getGroupString")]
+  public static extern string clusterObj_getGroupString(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_clusterObj_setFilter")]
+  public static extern int clusterObj_setFilter(HandleRef jarg1, string jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_clusterObj_getFilterString")]
+  public static extern string clusterObj_getFilterString(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_new_clusterObj")]
+  public static extern IntPtr new_clusterObj();
+
+  [DllImport("mapscript", EntryPoint="CSharp_delete_clusterObj")]
+  public static extern void delete_clusterObj(HandleRef jarg1);
 
   [DllImport("mapscript", EntryPoint="CSharp_outputFormatObj_name_set")]
   public static extern void outputFormatObj_name_set(HandleRef jarg1, string jarg2);
@@ -428,12 +518,6 @@ class mapscriptPINVOKE {
   [DllImport("mapscript", EntryPoint="CSharp_outputFormatObj_inmapfile_get")]
   public static extern int outputFormatObj_inmapfile_get(HandleRef jarg1);
 
-  [DllImport("mapscript", EntryPoint="CSharp_outputFormatObj_vtable_set")]
-  public static extern void outputFormatObj_vtable_set(HandleRef jarg1, HandleRef jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_outputFormatObj_vtable_get")]
-  public static extern IntPtr outputFormatObj_vtable_get(HandleRef jarg1);
-
   [DllImport("mapscript", EntryPoint="CSharp_new_outputFormatObj")]
   public static extern IntPtr new_outputFormatObj(string jarg1, string jarg2);
 
@@ -454,6 +538,9 @@ class mapscriptPINVOKE {
 
   [DllImport("mapscript", EntryPoint="CSharp_outputFormatObj_getOption")]
   public static extern string outputFormatObj_getOption(HandleRef jarg1, string jarg2, string jarg3);
+
+  [DllImport("mapscript", EntryPoint="CSharp_outputFormatObj_attachDevice")]
+  public static extern void outputFormatObj_attachDevice(HandleRef jarg1, IntPtr jarg2);
 
   [DllImport("mapscript", EntryPoint="CSharp_MS_NOOVERRIDE_get")]
   public static extern int MS_NOOVERRIDE_get();
@@ -497,258 +584,6 @@ class mapscriptPINVOKE {
   [DllImport("mapscript", EntryPoint="CSharp_delete_queryMapObj")]
   public static extern void delete_queryMapObj(HandleRef jarg1);
 
-  [DllImport("mapscript", EntryPoint="CSharp_MS_STYLE_BINDING_LENGTH_get")]
-  public static extern int MS_STYLE_BINDING_LENGTH_get();
-
-  [DllImport("mapscript", EntryPoint="CSharp_MS_LABEL_BINDING_LENGTH_get")]
-  public static extern int MS_LABEL_BINDING_LENGTH_get();
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_font_set")]
-  public static extern void labelObj_font_set(HandleRef jarg1, string jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_font_get")]
-  public static extern string labelObj_font_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_type_set")]
-  public static extern void labelObj_type_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_type_get")]
-  public static extern int labelObj_type_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_color_set")]
-  public static extern void labelObj_color_set(HandleRef jarg1, HandleRef jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_color_get")]
-  public static extern IntPtr labelObj_color_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_outlinecolor_set")]
-  public static extern void labelObj_outlinecolor_set(HandleRef jarg1, HandleRef jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_outlinecolor_get")]
-  public static extern IntPtr labelObj_outlinecolor_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_outlinewidth_set")]
-  public static extern void labelObj_outlinewidth_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_outlinewidth_get")]
-  public static extern int labelObj_outlinewidth_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_shadowcolor_set")]
-  public static extern void labelObj_shadowcolor_set(HandleRef jarg1, HandleRef jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_shadowcolor_get")]
-  public static extern IntPtr labelObj_shadowcolor_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_shadowsizex_set")]
-  public static extern void labelObj_shadowsizex_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_shadowsizex_get")]
-  public static extern int labelObj_shadowsizex_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_shadowsizey_set")]
-  public static extern void labelObj_shadowsizey_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_shadowsizey_get")]
-  public static extern int labelObj_shadowsizey_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_backgroundcolor_set")]
-  public static extern void labelObj_backgroundcolor_set(HandleRef jarg1, HandleRef jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_backgroundcolor_get")]
-  public static extern IntPtr labelObj_backgroundcolor_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_backgroundshadowcolor_set")]
-  public static extern void labelObj_backgroundshadowcolor_set(HandleRef jarg1, HandleRef jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_backgroundshadowcolor_get")]
-  public static extern IntPtr labelObj_backgroundshadowcolor_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_backgroundshadowsizex_set")]
-  public static extern void labelObj_backgroundshadowsizex_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_backgroundshadowsizex_get")]
-  public static extern int labelObj_backgroundshadowsizex_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_backgroundshadowsizey_set")]
-  public static extern void labelObj_backgroundshadowsizey_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_backgroundshadowsizey_get")]
-  public static extern int labelObj_backgroundshadowsizey_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_size_set")]
-  public static extern void labelObj_size_set(HandleRef jarg1, double jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_size_get")]
-  public static extern double labelObj_size_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_minsize_set")]
-  public static extern void labelObj_minsize_set(HandleRef jarg1, double jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_minsize_get")]
-  public static extern double labelObj_minsize_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_maxsize_set")]
-  public static extern void labelObj_maxsize_set(HandleRef jarg1, double jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_maxsize_get")]
-  public static extern double labelObj_maxsize_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_position_set")]
-  public static extern void labelObj_position_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_position_get")]
-  public static extern int labelObj_position_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_offsetx_set")]
-  public static extern void labelObj_offsetx_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_offsetx_get")]
-  public static extern int labelObj_offsetx_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_offsety_set")]
-  public static extern void labelObj_offsety_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_offsety_get")]
-  public static extern int labelObj_offsety_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_angle_set")]
-  public static extern void labelObj_angle_set(HandleRef jarg1, double jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_angle_get")]
-  public static extern double labelObj_angle_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_autoangle_set")]
-  public static extern void labelObj_autoangle_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_autoangle_get")]
-  public static extern int labelObj_autoangle_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_autofollow_set")]
-  public static extern void labelObj_autofollow_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_autofollow_get")]
-  public static extern int labelObj_autofollow_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_buffer_set")]
-  public static extern void labelObj_buffer_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_buffer_get")]
-  public static extern int labelObj_buffer_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_antialias_set")]
-  public static extern void labelObj_antialias_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_antialias_get")]
-  public static extern int labelObj_antialias_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_align_set")]
-  public static extern void labelObj_align_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_align_get")]
-  public static extern int labelObj_align_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_wrap_set")]
-  public static extern void labelObj_wrap_set(HandleRef jarg1, char jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_wrap_get")]
-  public static extern char labelObj_wrap_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_maxlength_set")]
-  public static extern void labelObj_maxlength_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_maxlength_get")]
-  public static extern int labelObj_maxlength_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_minlength_set")]
-  public static extern void labelObj_minlength_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_minlength_get")]
-  public static extern int labelObj_minlength_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_space_size_10_set")]
-  public static extern void labelObj_space_size_10_set(HandleRef jarg1, double jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_space_size_10_get")]
-  public static extern double labelObj_space_size_10_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_minfeaturesize_set")]
-  public static extern void labelObj_minfeaturesize_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_minfeaturesize_get")]
-  public static extern int labelObj_minfeaturesize_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_autominfeaturesize_set")]
-  public static extern void labelObj_autominfeaturesize_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_autominfeaturesize_get")]
-  public static extern int labelObj_autominfeaturesize_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_minscaledenom_set")]
-  public static extern void labelObj_minscaledenom_set(HandleRef jarg1, double jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_minscaledenom_get")]
-  public static extern double labelObj_minscaledenom_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_maxscaledenom_set")]
-  public static extern void labelObj_maxscaledenom_set(HandleRef jarg1, double jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_maxscaledenom_get")]
-  public static extern double labelObj_maxscaledenom_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_mindistance_set")]
-  public static extern void labelObj_mindistance_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_mindistance_get")]
-  public static extern int labelObj_mindistance_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_repeatdistance_set")]
-  public static extern void labelObj_repeatdistance_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_repeatdistance_get")]
-  public static extern int labelObj_repeatdistance_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_partials_set")]
-  public static extern void labelObj_partials_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_partials_get")]
-  public static extern int labelObj_partials_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_force_set")]
-  public static extern void labelObj_force_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_force_get")]
-  public static extern int labelObj_force_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_encoding_set")]
-  public static extern void labelObj_encoding_set(HandleRef jarg1, string jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_encoding_get")]
-  public static extern string labelObj_encoding_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_priority_set")]
-  public static extern void labelObj_priority_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_priority_get")]
-  public static extern int labelObj_priority_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_updateFromString")]
-  public static extern int labelObj_updateFromString(HandleRef jarg1, string jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_removeBinding")]
-  public static extern int labelObj_removeBinding(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_getBinding")]
-  public static extern string labelObj_getBinding(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelObj_setBinding")]
-  public static extern int labelObj_setBinding(HandleRef jarg1, int jarg2, string jarg3);
-
-  [DllImport("mapscript", EntryPoint="CSharp_new_labelObj")]
-  public static extern IntPtr new_labelObj();
-
-  [DllImport("mapscript", EntryPoint="CSharp_delete_labelObj")]
-  public static extern void delete_labelObj(HandleRef jarg1);
-
   [DllImport("mapscript", EntryPoint="CSharp_webObj_log_set")]
   public static extern void webObj_log_set(HandleRef jarg1, string jarg2);
 
@@ -766,6 +601,12 @@ class mapscriptPINVOKE {
 
   [DllImport("mapscript", EntryPoint="CSharp_webObj_imageurl_get")]
   public static extern string webObj_imageurl_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_webObj_temppath_set")]
+  public static extern void webObj_temppath_set(HandleRef jarg1, string jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_webObj_temppath_get")]
+  public static extern string webObj_temppath_get(HandleRef jarg1);
 
   [DllImport("mapscript", EntryPoint="CSharp_webObj_map_get")]
   public static extern IntPtr webObj_map_get(HandleRef jarg1);
@@ -1094,6 +935,234 @@ class mapscriptPINVOKE {
   [DllImport("mapscript", EntryPoint="CSharp_styleObj_setGeomTransform")]
   public static extern void styleObj_setGeomTransform(HandleRef jarg1, string jarg2);
 
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_font_set")]
+  public static extern void labelObj_font_set(HandleRef jarg1, string jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_font_get")]
+  public static extern string labelObj_font_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_type_set")]
+  public static extern void labelObj_type_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_type_get")]
+  public static extern int labelObj_type_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_color_set")]
+  public static extern void labelObj_color_set(HandleRef jarg1, HandleRef jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_color_get")]
+  public static extern IntPtr labelObj_color_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_outlinecolor_set")]
+  public static extern void labelObj_outlinecolor_set(HandleRef jarg1, HandleRef jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_outlinecolor_get")]
+  public static extern IntPtr labelObj_outlinecolor_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_outlinewidth_set")]
+  public static extern void labelObj_outlinewidth_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_outlinewidth_get")]
+  public static extern int labelObj_outlinewidth_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_shadowcolor_set")]
+  public static extern void labelObj_shadowcolor_set(HandleRef jarg1, HandleRef jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_shadowcolor_get")]
+  public static extern IntPtr labelObj_shadowcolor_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_shadowsizex_set")]
+  public static extern void labelObj_shadowsizex_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_shadowsizex_get")]
+  public static extern int labelObj_shadowsizex_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_shadowsizey_set")]
+  public static extern void labelObj_shadowsizey_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_shadowsizey_get")]
+  public static extern int labelObj_shadowsizey_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_size_set")]
+  public static extern void labelObj_size_set(HandleRef jarg1, double jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_size_get")]
+  public static extern double labelObj_size_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_minsize_set")]
+  public static extern void labelObj_minsize_set(HandleRef jarg1, double jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_minsize_get")]
+  public static extern double labelObj_minsize_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_maxsize_set")]
+  public static extern void labelObj_maxsize_set(HandleRef jarg1, double jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_maxsize_get")]
+  public static extern double labelObj_maxsize_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_position_set")]
+  public static extern void labelObj_position_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_position_get")]
+  public static extern int labelObj_position_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_offsetx_set")]
+  public static extern void labelObj_offsetx_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_offsetx_get")]
+  public static extern int labelObj_offsetx_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_offsety_set")]
+  public static extern void labelObj_offsety_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_offsety_get")]
+  public static extern int labelObj_offsety_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_angle_set")]
+  public static extern void labelObj_angle_set(HandleRef jarg1, double jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_angle_get")]
+  public static extern double labelObj_angle_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_anglemode_set")]
+  public static extern void labelObj_anglemode_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_anglemode_get")]
+  public static extern int labelObj_anglemode_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_buffer_set")]
+  public static extern void labelObj_buffer_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_buffer_get")]
+  public static extern int labelObj_buffer_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_antialias_set")]
+  public static extern void labelObj_antialias_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_antialias_get")]
+  public static extern int labelObj_antialias_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_align_set")]
+  public static extern void labelObj_align_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_align_get")]
+  public static extern int labelObj_align_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_wrap_set")]
+  public static extern void labelObj_wrap_set(HandleRef jarg1, char jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_wrap_get")]
+  public static extern char labelObj_wrap_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_maxlength_set")]
+  public static extern void labelObj_maxlength_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_maxlength_get")]
+  public static extern int labelObj_maxlength_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_minlength_set")]
+  public static extern void labelObj_minlength_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_minlength_get")]
+  public static extern int labelObj_minlength_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_space_size_10_set")]
+  public static extern void labelObj_space_size_10_set(HandleRef jarg1, double jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_space_size_10_get")]
+  public static extern double labelObj_space_size_10_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_minfeaturesize_set")]
+  public static extern void labelObj_minfeaturesize_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_minfeaturesize_get")]
+  public static extern int labelObj_minfeaturesize_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_autominfeaturesize_set")]
+  public static extern void labelObj_autominfeaturesize_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_autominfeaturesize_get")]
+  public static extern int labelObj_autominfeaturesize_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_minscaledenom_set")]
+  public static extern void labelObj_minscaledenom_set(HandleRef jarg1, double jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_minscaledenom_get")]
+  public static extern double labelObj_minscaledenom_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_maxscaledenom_set")]
+  public static extern void labelObj_maxscaledenom_set(HandleRef jarg1, double jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_maxscaledenom_get")]
+  public static extern double labelObj_maxscaledenom_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_mindistance_set")]
+  public static extern void labelObj_mindistance_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_mindistance_get")]
+  public static extern int labelObj_mindistance_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_repeatdistance_set")]
+  public static extern void labelObj_repeatdistance_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_repeatdistance_get")]
+  public static extern int labelObj_repeatdistance_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_maxoverlapangle_set")]
+  public static extern void labelObj_maxoverlapangle_set(HandleRef jarg1, double jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_maxoverlapangle_get")]
+  public static extern double labelObj_maxoverlapangle_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_partials_set")]
+  public static extern void labelObj_partials_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_partials_get")]
+  public static extern int labelObj_partials_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_force_set")]
+  public static extern void labelObj_force_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_force_get")]
+  public static extern int labelObj_force_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_encoding_set")]
+  public static extern void labelObj_encoding_set(HandleRef jarg1, string jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_encoding_get")]
+  public static extern string labelObj_encoding_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_priority_set")]
+  public static extern void labelObj_priority_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_priority_get")]
+  public static extern int labelObj_priority_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_numstyles_set")]
+  public static extern void labelObj_numstyles_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_numstyles_get")]
+  public static extern int labelObj_numstyles_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_updateFromString")]
+  public static extern int labelObj_updateFromString(HandleRef jarg1, string jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_removeBinding")]
+  public static extern int labelObj_removeBinding(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_getBinding")]
+  public static extern string labelObj_getBinding(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_labelObj_setBinding")]
+  public static extern int labelObj_setBinding(HandleRef jarg1, int jarg2, string jarg3);
+
+  [DllImport("mapscript", EntryPoint="CSharp_new_labelObj")]
+  public static extern IntPtr new_labelObj();
+
+  [DllImport("mapscript", EntryPoint="CSharp_delete_labelObj")]
+  public static extern void delete_labelObj(HandleRef jarg1);
+
   [DllImport("mapscript", EntryPoint="CSharp_classObj_status_set")]
   public static extern void classObj_status_set(HandleRef jarg1, int jarg2);
 
@@ -1150,6 +1219,12 @@ class mapscriptPINVOKE {
 
   [DllImport("mapscript", EntryPoint="CSharp_classObj_maxscaledenom_get")]
   public static extern double classObj_maxscaledenom_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_classObj_minfeaturesize_set")]
+  public static extern void classObj_minfeaturesize_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_classObj_minfeaturesize_get")]
+  public static extern int classObj_minfeaturesize_get(HandleRef jarg1);
 
   [DllImport("mapscript", EntryPoint="CSharp_classObj_refcount_get")]
   public static extern int classObj_refcount_get(HandleRef jarg1);
@@ -1271,6 +1346,9 @@ class mapscriptPINVOKE {
   [DllImport("mapscript", EntryPoint="CSharp_labelCacheMemberObj_status_get")]
   public static extern int labelCacheMemberObj_status_get(HandleRef jarg1);
 
+  [DllImport("mapscript", EntryPoint="CSharp_labelCacheMemberObj_markerid_get")]
+  public static extern int labelCacheMemberObj_markerid_get(HandleRef jarg1);
+
   [DllImport("mapscript", EntryPoint="CSharp_new_labelCacheMemberObj")]
   public static extern IntPtr new_labelCacheMemberObj();
 
@@ -1328,20 +1406,23 @@ class mapscriptPINVOKE {
   [DllImport("mapscript", EntryPoint="CSharp_delete_labelCacheObj")]
   public static extern void delete_labelCacheObj(HandleRef jarg1);
 
-  [DllImport("mapscript", EntryPoint="CSharp_resultCacheMemberObj_shapeindex_get")]
-  public static extern int resultCacheMemberObj_shapeindex_get(HandleRef jarg1);
+  [DllImport("mapscript", EntryPoint="CSharp_resultObj_shapeindex_get")]
+  public static extern int resultObj_shapeindex_get(HandleRef jarg1);
 
-  [DllImport("mapscript", EntryPoint="CSharp_resultCacheMemberObj_tileindex_get")]
-  public static extern int resultCacheMemberObj_tileindex_get(HandleRef jarg1);
+  [DllImport("mapscript", EntryPoint="CSharp_resultObj_tileindex_get")]
+  public static extern int resultObj_tileindex_get(HandleRef jarg1);
 
-  [DllImport("mapscript", EntryPoint="CSharp_resultCacheMemberObj_classindex_get")]
-  public static extern int resultCacheMemberObj_classindex_get(HandleRef jarg1);
+  [DllImport("mapscript", EntryPoint="CSharp_resultObj_resultindex_get")]
+  public static extern int resultObj_resultindex_get(HandleRef jarg1);
 
-  [DllImport("mapscript", EntryPoint="CSharp_new_resultCacheMemberObj")]
-  public static extern IntPtr new_resultCacheMemberObj();
+  [DllImport("mapscript", EntryPoint="CSharp_resultObj_classindex_get")]
+  public static extern int resultObj_classindex_get(HandleRef jarg1);
 
-  [DllImport("mapscript", EntryPoint="CSharp_delete_resultCacheMemberObj")]
-  public static extern void delete_resultCacheMemberObj(HandleRef jarg1);
+  [DllImport("mapscript", EntryPoint="CSharp_new_resultObj")]
+  public static extern IntPtr new_resultObj(int jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_delete_resultObj")]
+  public static extern void delete_resultObj(HandleRef jarg1);
 
   [DllImport("mapscript", EntryPoint="CSharp_resultCacheObj_numresults_get")]
   public static extern int resultCacheObj_numresults_get(HandleRef jarg1);
@@ -1769,6 +1850,12 @@ class mapscriptPINVOKE {
   [DllImport("mapscript", EntryPoint="CSharp_layerObj_maxscaledenom_get")]
   public static extern double layerObj_maxscaledenom_get(HandleRef jarg1);
 
+  [DllImport("mapscript", EntryPoint="CSharp_layerObj_minfeaturesize_set")]
+  public static extern void layerObj_minfeaturesize_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_layerObj_minfeaturesize_get")]
+  public static extern int layerObj_minfeaturesize_get(HandleRef jarg1);
+
   [DllImport("mapscript", EntryPoint="CSharp_layerObj_labelminscaledenom_set")]
   public static extern void layerObj_labelminscaledenom_set(HandleRef jarg1, double jarg2);
 
@@ -1804,6 +1891,12 @@ class mapscriptPINVOKE {
 
   [DllImport("mapscript", EntryPoint="CSharp_layerObj_maxfeatures_get")]
   public static extern int layerObj_maxfeatures_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_layerObj_startindex_set")]
+  public static extern void layerObj_startindex_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_layerObj_startindex_get")]
+  public static extern int layerObj_startindex_get(HandleRef jarg1);
 
   [DllImport("mapscript", EntryPoint="CSharp_layerObj_offsite_set")]
   public static extern void layerObj_offsite_set(HandleRef jarg1, HandleRef jarg2);
@@ -1916,6 +2009,12 @@ class mapscriptPINVOKE {
   [DllImport("mapscript", EntryPoint="CSharp_layerObj_validation_get")]
   public static extern IntPtr layerObj_validation_get(HandleRef jarg1);
 
+  [DllImport("mapscript", EntryPoint="CSharp_layerObj_bindvals_get")]
+  public static extern IntPtr layerObj_bindvals_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_layerObj_cluster_get")]
+  public static extern IntPtr layerObj_cluster_get(HandleRef jarg1);
+
   [DllImport("mapscript", EntryPoint="CSharp_layerObj_opacity_set")]
   public static extern void layerObj_opacity_set(HandleRef jarg1, int jarg2);
 
@@ -1979,17 +2078,14 @@ class mapscriptPINVOKE {
   [DllImport("mapscript", EntryPoint="CSharp_layerObj_close")]
   public static extern void layerObj_close(HandleRef jarg1);
 
-  [DllImport("mapscript", EntryPoint="CSharp_layerObj_getFeature")]
-  public static extern IntPtr layerObj_getFeature(HandleRef jarg1, int jarg2, int jarg3);
-
   [DllImport("mapscript", EntryPoint="CSharp_layerObj_getShape")]
-  public static extern int layerObj_getShape(HandleRef jarg1, HandleRef jarg2, int jarg3, int jarg4);
-
-  [DllImport("mapscript", EntryPoint="CSharp_layerObj_resultsGetShape")]
-  public static extern int layerObj_resultsGetShape(HandleRef jarg1, HandleRef jarg2, int jarg3, int jarg4);
+  public static extern IntPtr layerObj_getShape(HandleRef jarg1, HandleRef jarg2);
 
   [DllImport("mapscript", EntryPoint="CSharp_layerObj_getNumResults")]
   public static extern int layerObj_getNumResults(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_layerObj_getResultsBounds")]
+  public static extern IntPtr layerObj_getResultsBounds(HandleRef jarg1);
 
   [DllImport("mapscript", EntryPoint="CSharp_layerObj_getResult")]
   public static extern IntPtr layerObj_getResult(HandleRef jarg1, int jarg2);
@@ -2005,6 +2101,9 @@ class mapscriptPINVOKE {
 
   [DllImport("mapscript", EntryPoint="CSharp_layerObj_drawQuery")]
   public static extern int layerObj_drawQuery(HandleRef jarg1, HandleRef jarg2, HandleRef jarg3);
+
+  [DllImport("mapscript", EntryPoint="CSharp_layerObj_queryByFilter")]
+  public static extern int layerObj_queryByFilter(HandleRef jarg1, HandleRef jarg2, string jarg3);
 
   [DllImport("mapscript", EntryPoint="CSharp_layerObj_queryByAttributes")]
   public static extern int layerObj_queryByAttributes(HandleRef jarg1, HandleRef jarg2, string jarg3, string jarg4, int jarg5);
@@ -2113,6 +2212,9 @@ class mapscriptPINVOKE {
 
   [DllImport("mapscript", EntryPoint="CSharp_layerObj_setConnectionType")]
   public static extern int layerObj_setConnectionType(HandleRef jarg1, int jarg2, string jarg3);
+
+  [DllImport("mapscript", EntryPoint="CSharp_layerObj_getClassIndex")]
+  public static extern int layerObj_getClassIndex(HandleRef jarg1, HandleRef jarg2, HandleRef jarg3, HandleRef jarg4, int jarg5);
 
   [DllImport("mapscript", EntryPoint="CSharp_mapObj_name_set")]
   public static extern void mapObj_name_set(HandleRef jarg1, string jarg2);
@@ -2375,6 +2477,9 @@ class mapscriptPINVOKE {
   [DllImport("mapscript", EntryPoint="CSharp_mapObj_nextLabel")]
   public static extern IntPtr mapObj_nextLabel(HandleRef jarg1);
 
+  [DllImport("mapscript", EntryPoint="CSharp_mapObj_queryByFilter")]
+  public static extern int mapObj_queryByFilter(HandleRef jarg1, string jarg2);
+
   [DllImport("mapscript", EntryPoint="CSharp_mapObj_queryByPoint")]
   public static extern int mapObj_queryByPoint(HandleRef jarg1, HandleRef jarg2, int jarg3, double jarg4);
 
@@ -2400,7 +2505,7 @@ class mapscriptPINVOKE {
   public static extern int mapObj_save(HandleRef jarg1, string jarg2);
 
   [DllImport("mapscript", EntryPoint="CSharp_mapObj_saveQuery")]
-  public static extern int mapObj_saveQuery(HandleRef jarg1, string jarg2);
+  public static extern int mapObj_saveQuery(HandleRef jarg1, string jarg2, int jarg3);
 
   [DllImport("mapscript", EntryPoint="CSharp_mapObj_loadQuery")]
   public static extern int mapObj_loadQuery(HandleRef jarg1, string jarg2);
@@ -2528,17 +2633,8 @@ class mapscriptPINVOKE {
   [DllImport("mapscript", EntryPoint="CSharp_imageObj_format_get")]
   public static extern IntPtr imageObj_format_get(HandleRef jarg1);
 
-  [DllImport("mapscript", EntryPoint="CSharp_imageObj_buffer_format_get")]
-  public static extern int imageObj_buffer_format_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_imageObj_renderer_set")]
-  public static extern void imageObj_renderer_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_imageObj_renderer_get")]
-  public static extern int imageObj_renderer_get(HandleRef jarg1);
-
   [DllImport("mapscript", EntryPoint="CSharp_new_imageObj")]
-  public static extern IntPtr new_imageObj(int jarg1, int jarg2, HandleRef jarg3, string jarg4);
+  public static extern IntPtr new_imageObj(int jarg1, int jarg2, HandleRef jarg3, string jarg4, double jarg5, double jarg6);
 
   [DllImport("mapscript", EntryPoint="CSharp_delete_imageObj")]
   public static extern void delete_imageObj(HandleRef jarg1);
@@ -2612,24 +2708,6 @@ class mapscriptPINVOKE {
   [DllImport("mapscript", EntryPoint="CSharp_delete_strokeStyleObj")]
   public static extern void delete_strokeStyleObj(HandleRef jarg1);
 
-  [DllImport("mapscript", EntryPoint="CSharp_fillStyleObj_color_set")]
-  public static extern void fillStyleObj_color_set(HandleRef jarg1, HandleRef jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_fillStyleObj_color_get")]
-  public static extern IntPtr fillStyleObj_color_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_fillStyleObj_tile_set")]
-  public static extern void fillStyleObj_tile_set(HandleRef jarg1, HandleRef jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_fillStyleObj_tile_get")]
-  public static extern IntPtr fillStyleObj_tile_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_new_fillStyleObj")]
-  public static extern IntPtr new_fillStyleObj();
-
-  [DllImport("mapscript", EntryPoint="CSharp_delete_fillStyleObj")]
-  public static extern void delete_fillStyleObj(HandleRef jarg1);
-
   [DllImport("mapscript", EntryPoint="CSharp_symbolStyleObj_color_set")]
   public static extern void symbolStyleObj_color_set(HandleRef jarg1, HandleRef jarg2);
 
@@ -2666,53 +2744,95 @@ class mapscriptPINVOKE {
   [DllImport("mapscript", EntryPoint="CSharp_symbolStyleObj_rotation_get")]
   public static extern double symbolStyleObj_rotation_get(HandleRef jarg1);
 
+  [DllImport("mapscript", EntryPoint="CSharp_symbolStyleObj_gap_set")]
+  public static extern void symbolStyleObj_gap_set(HandleRef jarg1, double jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_symbolStyleObj_gap_get")]
+  public static extern double symbolStyleObj_gap_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_symbolStyleObj_style_set")]
+  public static extern void symbolStyleObj_style_set(HandleRef jarg1, HandleRef jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_symbolStyleObj_style_get")]
+  public static extern IntPtr symbolStyleObj_style_get(HandleRef jarg1);
+
   [DllImport("mapscript", EntryPoint="CSharp_new_symbolStyleObj")]
   public static extern IntPtr new_symbolStyleObj();
 
   [DllImport("mapscript", EntryPoint="CSharp_delete_symbolStyleObj")]
   public static extern void delete_symbolStyleObj(HandleRef jarg1);
 
-  [DllImport("mapscript", EntryPoint="CSharp_tilecache_symbol_set")]
-  public static extern void tilecache_symbol_set(HandleRef jarg1, HandleRef jarg2);
+  [DllImport("mapscript", EntryPoint="CSharp_tileCacheObj_symbol_set")]
+  public static extern void tileCacheObj_symbol_set(HandleRef jarg1, HandleRef jarg2);
 
-  [DllImport("mapscript", EntryPoint="CSharp_tilecache_symbol_get")]
-  public static extern IntPtr tilecache_symbol_get(HandleRef jarg1);
+  [DllImport("mapscript", EntryPoint="CSharp_tileCacheObj_symbol_get")]
+  public static extern IntPtr tileCacheObj_symbol_get(HandleRef jarg1);
 
-  [DllImport("mapscript", EntryPoint="CSharp_tilecache_style_set")]
-  public static extern void tilecache_style_set(HandleRef jarg1, HandleRef jarg2);
+  [DllImport("mapscript", EntryPoint="CSharp_tileCacheObj_width_set")]
+  public static extern void tileCacheObj_width_set(HandleRef jarg1, int jarg2);
 
-  [DllImport("mapscript", EntryPoint="CSharp_tilecache_style_get")]
-  public static extern IntPtr tilecache_style_get(HandleRef jarg1);
+  [DllImport("mapscript", EntryPoint="CSharp_tileCacheObj_width_get")]
+  public static extern int tileCacheObj_width_get(HandleRef jarg1);
 
-  [DllImport("mapscript", EntryPoint="CSharp_tilecache_width_set")]
-  public static extern void tilecache_width_set(HandleRef jarg1, int jarg2);
+  [DllImport("mapscript", EntryPoint="CSharp_tileCacheObj_height_set")]
+  public static extern void tileCacheObj_height_set(HandleRef jarg1, int jarg2);
 
-  [DllImport("mapscript", EntryPoint="CSharp_tilecache_width_get")]
-  public static extern int tilecache_width_get(HandleRef jarg1);
+  [DllImport("mapscript", EntryPoint="CSharp_tileCacheObj_height_get")]
+  public static extern int tileCacheObj_height_get(HandleRef jarg1);
 
-  [DllImport("mapscript", EntryPoint="CSharp_tilecache_height_set")]
-  public static extern void tilecache_height_set(HandleRef jarg1, int jarg2);
+  [DllImport("mapscript", EntryPoint="CSharp_tileCacheObj_color_set")]
+  public static extern void tileCacheObj_color_set(HandleRef jarg1, HandleRef jarg2);
 
-  [DllImport("mapscript", EntryPoint="CSharp_tilecache_height_get")]
-  public static extern int tilecache_height_get(HandleRef jarg1);
+  [DllImport("mapscript", EntryPoint="CSharp_tileCacheObj_color_get")]
+  public static extern IntPtr tileCacheObj_color_get(HandleRef jarg1);
 
-  [DllImport("mapscript", EntryPoint="CSharp_tilecache_data_set")]
-  public static extern void tilecache_data_set(HandleRef jarg1, HandleRef jarg2);
+  [DllImport("mapscript", EntryPoint="CSharp_tileCacheObj_outlinecolor_set")]
+  public static extern void tileCacheObj_outlinecolor_set(HandleRef jarg1, HandleRef jarg2);
 
-  [DllImport("mapscript", EntryPoint="CSharp_tilecache_data_get")]
-  public static extern IntPtr tilecache_data_get(HandleRef jarg1);
+  [DllImport("mapscript", EntryPoint="CSharp_tileCacheObj_outlinecolor_get")]
+  public static extern IntPtr tileCacheObj_outlinecolor_get(HandleRef jarg1);
 
-  [DllImport("mapscript", EntryPoint="CSharp_tilecache_next_set")]
-  public static extern void tilecache_next_set(HandleRef jarg1, HandleRef jarg2);
+  [DllImport("mapscript", EntryPoint="CSharp_tileCacheObj_backgroundcolor_set")]
+  public static extern void tileCacheObj_backgroundcolor_set(HandleRef jarg1, HandleRef jarg2);
 
-  [DllImport("mapscript", EntryPoint="CSharp_tilecache_next_get")]
-  public static extern IntPtr tilecache_next_get(HandleRef jarg1);
+  [DllImport("mapscript", EntryPoint="CSharp_tileCacheObj_backgroundcolor_get")]
+  public static extern IntPtr tileCacheObj_backgroundcolor_get(HandleRef jarg1);
 
-  [DllImport("mapscript", EntryPoint="CSharp_new_tilecache")]
-  public static extern IntPtr new_tilecache();
+  [DllImport("mapscript", EntryPoint="CSharp_tileCacheObj_outlinewidth_set")]
+  public static extern void tileCacheObj_outlinewidth_set(HandleRef jarg1, double jarg2);
 
-  [DllImport("mapscript", EntryPoint="CSharp_delete_tilecache")]
-  public static extern void delete_tilecache(HandleRef jarg1);
+  [DllImport("mapscript", EntryPoint="CSharp_tileCacheObj_outlinewidth_get")]
+  public static extern double tileCacheObj_outlinewidth_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_tileCacheObj_rotation_set")]
+  public static extern void tileCacheObj_rotation_set(HandleRef jarg1, double jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_tileCacheObj_rotation_get")]
+  public static extern double tileCacheObj_rotation_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_tileCacheObj_scale_set")]
+  public static extern void tileCacheObj_scale_set(HandleRef jarg1, double jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_tileCacheObj_scale_get")]
+  public static extern double tileCacheObj_scale_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_tileCacheObj_image_set")]
+  public static extern void tileCacheObj_image_set(HandleRef jarg1, HandleRef jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_tileCacheObj_image_get")]
+  public static extern IntPtr tileCacheObj_image_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_tileCacheObj_next_set")]
+  public static extern void tileCacheObj_next_set(HandleRef jarg1, HandleRef jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_tileCacheObj_next_get")]
+  public static extern IntPtr tileCacheObj_next_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_new_tileCacheObj")]
+  public static extern IntPtr new_tileCacheObj();
+
+  [DllImport("mapscript", EntryPoint="CSharp_delete_tileCacheObj")]
+  public static extern void delete_tileCacheObj(HandleRef jarg1);
 
   [DllImport("mapscript", EntryPoint="CSharp_labelStyleObj_font_set")]
   public static extern void labelStyleObj_font_set(HandleRef jarg1, string jarg2);
@@ -2749,24 +2869,6 @@ class mapscriptPINVOKE {
 
   [DllImport("mapscript", EntryPoint="CSharp_labelStyleObj_outlinecolor_get")]
   public static extern IntPtr labelStyleObj_outlinecolor_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelStyleObj_shadowsizex_set")]
-  public static extern void labelStyleObj_shadowsizex_set(HandleRef jarg1, double jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelStyleObj_shadowsizex_get")]
-  public static extern double labelStyleObj_shadowsizex_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelStyleObj_shadowsizey_set")]
-  public static extern void labelStyleObj_shadowsizey_set(HandleRef jarg1, double jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelStyleObj_shadowsizey_get")]
-  public static extern double labelStyleObj_shadowsizey_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelStyleObj_shadowcolor_set")]
-  public static extern void labelStyleObj_shadowcolor_set(HandleRef jarg1, HandleRef jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_labelStyleObj_shadowcolor_get")]
-  public static extern IntPtr labelStyleObj_shadowcolor_get(HandleRef jarg1);
 
   [DllImport("mapscript", EntryPoint="CSharp_new_labelStyleObj")]
   public static extern IntPtr new_labelStyleObj();
@@ -2873,9 +2975,6 @@ class mapscriptPINVOKE {
   [DllImport("mapscript", EntryPoint="CSharp_lineObj_numpoints_get")]
   public static extern int lineObj_numpoints_get(HandleRef jarg1);
 
-  [DllImport("mapscript", EntryPoint="CSharp_lineObj_point_get")]
-  public static extern IntPtr lineObj_point_get(HandleRef jarg1);
-
   [DllImport("mapscript", EntryPoint="CSharp_new_lineObj")]
   public static extern IntPtr new_lineObj();
 
@@ -2899,12 +2998,6 @@ class mapscriptPINVOKE {
 
   [DllImport("mapscript", EntryPoint="CSharp_shapeObj_numvalues_get")]
   public static extern int shapeObj_numvalues_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_shapeObj_line_get")]
-  public static extern IntPtr shapeObj_line_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_shapeObj_values_get")]
-  public static extern IntPtr shapeObj_values_get(HandleRef jarg1);
 
   [DllImport("mapscript", EntryPoint="CSharp_shapeObj_bounds_set")]
   public static extern void shapeObj_bounds_set(HandleRef jarg1, HandleRef jarg2);
@@ -2941,6 +3034,18 @@ class mapscriptPINVOKE {
 
   [DllImport("mapscript", EntryPoint="CSharp_shapeObj_text_get")]
   public static extern string shapeObj_text_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_shapeObj_scratch_set")]
+  public static extern void shapeObj_scratch_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_shapeObj_scratch_get")]
+  public static extern int shapeObj_scratch_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_shapeObj_resultindex_set")]
+  public static extern void shapeObj_resultindex_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_shapeObj_resultindex_get")]
+  public static extern int shapeObj_resultindex_get(HandleRef jarg1);
 
   [DllImport("mapscript", EntryPoint="CSharp_new_shapeObj")]
   public static extern IntPtr new_shapeObj(int jarg1);
@@ -3099,7 +3204,7 @@ class mapscriptPINVOKE {
   public static extern int DBFInfo_nRecords_get(HandleRef jarg1);
 
   [DllImport("mapscript", EntryPoint="CSharp_DBFInfo_nRecordLength_get")]
-  public static extern int DBFInfo_nRecordLength_get(HandleRef jarg1);
+  public static extern uint DBFInfo_nRecordLength_get(HandleRef jarg1);
 
   [DllImport("mapscript", EntryPoint="CSharp_DBFInfo_nHeaderLength_get")]
   public static extern int DBFInfo_nHeaderLength_get(HandleRef jarg1);
@@ -3217,6 +3322,9 @@ class mapscriptPINVOKE {
 
   [DllImport("mapscript", EntryPoint="CSharp_projectionObj_numargs_get")]
   public static extern int projectionObj_numargs_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_projectionObj_automatic_get")]
+  public static extern int projectionObj_automatic_get(HandleRef jarg1);
 
   [DllImport("mapscript", EntryPoint="CSharp_new_projectionObj")]
   public static extern IntPtr new_projectionObj(string jarg1);
@@ -3353,18 +3461,6 @@ class mapscriptPINVOKE {
   [DllImport("mapscript", EntryPoint="CSharp_symbolObj_filled_get")]
   public static extern int symbolObj_filled_get(HandleRef jarg1);
 
-  [DllImport("mapscript", EntryPoint="CSharp_symbolObj_patternlength_set")]
-  public static extern void symbolObj_patternlength_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_symbolObj_patternlength_get")]
-  public static extern int symbolObj_patternlength_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_symbolObj_pattern_set")]
-  public static extern void symbolObj_pattern_set(HandleRef jarg1, HandleRef jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_symbolObj_pattern_get")]
-  public static extern IntPtr symbolObj_pattern_get(HandleRef jarg1);
-
   [DllImport("mapscript", EntryPoint="CSharp_symbolObj_imagepath_get")]
   public static extern string symbolObj_imagepath_get(HandleRef jarg1);
 
@@ -3398,35 +3494,11 @@ class mapscriptPINVOKE {
   [DllImport("mapscript", EntryPoint="CSharp_symbolObj_font_get")]
   public static extern string symbolObj_font_get(HandleRef jarg1);
 
-  [DllImport("mapscript", EntryPoint="CSharp_symbolObj_gap_set")]
-  public static extern void symbolObj_gap_set(HandleRef jarg1, int jarg2);
+  [DllImport("mapscript", EntryPoint="CSharp_symbolObj_svg_text_set")]
+  public static extern void symbolObj_svg_text_set(HandleRef jarg1, string jarg2);
 
-  [DllImport("mapscript", EntryPoint="CSharp_symbolObj_gap_get")]
-  public static extern int symbolObj_gap_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_symbolObj_position_set")]
-  public static extern void symbolObj_position_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_symbolObj_position_get")]
-  public static extern int symbolObj_position_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_symbolObj_linecap_set")]
-  public static extern void symbolObj_linecap_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_symbolObj_linecap_get")]
-  public static extern int symbolObj_linecap_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_symbolObj_linejoin_set")]
-  public static extern void symbolObj_linejoin_set(HandleRef jarg1, int jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_symbolObj_linejoin_get")]
-  public static extern int symbolObj_linejoin_get(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_symbolObj_linejoinmaxsize_set")]
-  public static extern void symbolObj_linejoinmaxsize_set(HandleRef jarg1, double jarg2);
-
-  [DllImport("mapscript", EntryPoint="CSharp_symbolObj_linejoinmaxsize_get")]
-  public static extern double symbolObj_linejoinmaxsize_get(HandleRef jarg1);
+  [DllImport("mapscript", EntryPoint="CSharp_symbolObj_svg_text_get")]
+  public static extern string symbolObj_svg_text_get(HandleRef jarg1);
 
   [DllImport("mapscript", EntryPoint="CSharp_new_symbolObj")]
   public static extern IntPtr new_symbolObj(string jarg1, string jarg2);
@@ -3442,9 +3514,6 @@ class mapscriptPINVOKE {
 
   [DllImport("mapscript", EntryPoint="CSharp_symbolObj_getPoints")]
   public static extern IntPtr symbolObj_getPoints(HandleRef jarg1);
-
-  [DllImport("mapscript", EntryPoint="CSharp_symbolObj_setPattern")]
-  public static extern int symbolObj_setPattern(HandleRef jarg1, int jarg2, int jarg3);
 
   [DllImport("mapscript", EntryPoint="CSharp_symbolObj_getImage")]
   public static extern IntPtr symbolObj_getImage(HandleRef jarg1, HandleRef jarg2);
@@ -3575,11 +3644,14 @@ class mapscriptPINVOKE {
   [DllImport("mapscript", EntryPoint="CSharp_MS_OWSERR_get")]
   public static extern int MS_OWSERR_get();
 
-  [DllImport("mapscript", EntryPoint="CSharp_MS_NUMERRORCODES_get")]
-  public static extern int MS_NUMERRORCODES_get();
-
   [DllImport("mapscript", EntryPoint="CSharp_MS_OGLERR_get")]
   public static extern int MS_OGLERR_get();
+
+  [DllImport("mapscript", EntryPoint="CSharp_MS_RENDERERERR_get")]
+  public static extern int MS_RENDERERERR_get();
+
+  [DllImport("mapscript", EntryPoint="CSharp_MS_NUMERRORCODES_get")]
+  public static extern int MS_NUMERRORCODES_get();
 
   [DllImport("mapscript", EntryPoint="CSharp_MESSAGELENGTH_get")]
   public static extern int MESSAGELENGTH_get();
@@ -3607,6 +3679,12 @@ class mapscriptPINVOKE {
 
   [DllImport("mapscript", EntryPoint="CSharp_errorObj_message_get")]
   public static extern string errorObj_message_get(HandleRef jarg1);
+
+  [DllImport("mapscript", EntryPoint="CSharp_errorObj_isreported_set")]
+  public static extern void errorObj_isreported_set(HandleRef jarg1, int jarg2);
+
+  [DllImport("mapscript", EntryPoint="CSharp_errorObj_isreported_get")]
+  public static extern int errorObj_isreported_get(HandleRef jarg1);
 
   [DllImport("mapscript", EntryPoint="CSharp_new_errorObj")]
   public static extern IntPtr new_errorObj();
@@ -3659,8 +3737,8 @@ class mapscriptPINVOKE {
   [DllImport("mapscript", EntryPoint="CSharp_hashTableObj_nextKey")]
   public static extern string hashTableObj_nextKey(HandleRef jarg1, string jarg2);
 
-  [DllImport("mapscript", EntryPoint="CSharp_MS_MAX_CGI_PARAMS_get")]
-  public static extern int MS_MAX_CGI_PARAMS_get();
+  [DllImport("mapscript", EntryPoint="CSharp_MS_DEFAULT_CGI_PARAMS_get")]
+  public static extern int MS_DEFAULT_CGI_PARAMS_get();
 
   [DllImport("mapscript", EntryPoint="CSharp_OWSRequest_NumParams_get")]
   public static extern int OWSRequest_NumParams_get(HandleRef jarg1);
@@ -3698,6 +3776,9 @@ class mapscriptPINVOKE {
   [DllImport("mapscript", EntryPoint="CSharp_OWSRequest_loadParams")]
   public static extern int OWSRequest_loadParams(HandleRef jarg1);
 
+  [DllImport("mapscript", EntryPoint="CSharp_OWSRequest_loadParamsFromURL")]
+  public static extern int OWSRequest_loadParamsFromURL(HandleRef jarg1, string jarg2);
+
   [DllImport("mapscript", EntryPoint="CSharp_OWSRequest_setParameter")]
   public static extern void OWSRequest_setParameter(HandleRef jarg1, string jarg2, string jarg3);
 
@@ -3724,6 +3805,9 @@ class mapscriptPINVOKE {
 
   [DllImport("mapscript", EntryPoint="CSharp_msIO_stripStdoutBufferContentType")]
   public static extern string msIO_stripStdoutBufferContentType();
+
+  [DllImport("mapscript", EntryPoint="CSharp_msIO_stripStdoutBufferContentHeaders")]
+  public static extern void msIO_stripStdoutBufferContentHeaders();
 
   [DllImport("mapscript", EntryPoint="CSharp_msIO_getStdoutBufferString")]
   public static extern string msIO_getStdoutBufferString();

@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: maphash.c 9376 2009-10-05 14:09:14Z aboudreault $
+ * $Id: maphash.c 10772 2010-11-29 18:27:02Z aboudreault $
  *
  * Project:  MapServer
  * Purpose:  Implement hashTableObj class.
@@ -32,7 +32,7 @@
 #include "mapserver.h"
 #include "maphash.h"
 
-MS_CVSID("$Id: maphash.c 9376 2009-10-05 14:09:14Z aboudreault $")
+MS_CVSID("$Id: maphash.c 10772 2010-11-29 18:27:02Z aboudreault $")
 
 static unsigned hash(const char *key)
 {
@@ -49,8 +49,8 @@ hashTableObj *msCreateHashTable()
     int i;
     hashTableObj *table;
     
-    table = (hashTableObj *) malloc(sizeof(hashTableObj));
-    table->items = (struct hashObj **) malloc(sizeof(struct hashObj *)*MS_HASHSIZE);
+    table = (hashTableObj *) msSmallMalloc(sizeof(hashTableObj));
+    table->items = (struct hashObj **) msSmallMalloc(sizeof(struct hashObj *)*MS_HASHSIZE);
     
     for (i=0; i<MS_HASHSIZE; i++)
         table->items[i] = NULL;
@@ -64,10 +64,8 @@ int initHashTable( hashTableObj *table )
     int i;
 
     table->items = (struct hashObj **) malloc(sizeof(struct hashObj *)*MS_HASHSIZE);
-    if (!table->items) {
-        msSetError(MS_MEMERR, "Failed to allocate memory for items", "initHashTable");
-        return MS_FAILURE;
-    }
+    MS_CHECK_ALLOC(table->items, sizeof(struct hashObj *)*MS_HASHSIZE, MS_FAILURE);
+
     for (i=0; i<MS_HASHSIZE; i++)
         table->items[i] = NULL;
     table->numitems = 0;
@@ -138,10 +136,8 @@ struct hashObj *msInsertHashTable(hashTableObj *table,
 
     if (tp == NULL) { /* not found */
         tp = (struct hashObj *) malloc(sizeof(*tp));
-        if ((tp == NULL) || (tp->key = strdup(key)) == NULL) {
-            msSetError(MS_HASHERR, "No such hash entry", "msInsertHashTable");
-            return NULL;
-        }
+        MS_CHECK_ALLOC(tp, sizeof(*tp), NULL);
+        tp->key = msStrdup(key);
         hashval = hash(key);
         tp->next = table->items[hashval];
         table->items[hashval] = tp;
@@ -150,7 +146,7 @@ struct hashObj *msInsertHashTable(hashTableObj *table,
         free(tp->data);
     }
 
-    if ((tp->data = strdup(value)) == NULL)
+    if ((tp->data = msStrdup(value)) == NULL)
         return NULL;
 
     return tp;
@@ -175,7 +171,7 @@ int msRemoveHashTable(hashTableObj *table, const char *key)
 { 
     struct hashObj *tp;
     struct hashObj *prev_tp=NULL;
-    int success = 0;
+    int status = MS_FAILURE;
 
     if (!table || !key) {
         msSetError(MS_HASHERR, "No hash table", "msRemoveHashTable");
@@ -191,6 +187,7 @@ int msRemoveHashTable(hashTableObj *table, const char *key)
     prev_tp = NULL;
     while (tp != NULL) {
         if (strcasecmp(key, tp->key) == 0) {
+            status = MS_SUCCESS;
             if (prev_tp) {     
                 prev_tp->next = tp->next;
                 free(tp);
@@ -201,18 +198,15 @@ int msRemoveHashTable(hashTableObj *table, const char *key)
                 free(tp);
                 break;
             }
-            success =1;
         }
         prev_tp = tp;
         tp = tp->next;
     }
 
-    if (success) {
+    if (status == MS_SUCCESS)
         table->numitems--;
-        return MS_SUCCESS;
-    }
 
-    return MS_FAILURE;
+    return status;
 }
       
 const char *msFirstKeyFromHashTable( hashTableObj *table )

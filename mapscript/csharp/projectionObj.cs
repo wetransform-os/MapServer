@@ -87,6 +87,14 @@ public class projectionObj : IDisposable {
     } 
   }
 
+  public int automatic {
+    get {
+      int ret = mapscriptPINVOKE.projectionObj_automatic_get(swigCPtr);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
   public projectionObj(string proj4) : this(mapscriptPINVOKE.new_projectionObj(proj4), true, null) {
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
   }

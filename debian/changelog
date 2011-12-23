@@ -1,5 +1,14 @@
-mapserver (5.6.6-3) unstable; urgency=low
+mapserver (6.0.1-1) unstable; urgency=low
+	
+  [ Alan Boudreault ]
+  * New upstream release.
 
+  [ Francesco Paolo Lovergine ]
+  * Debhelper level set to 8.
+  * This version still uses libpng 1.2, but is ready also for 1.5.
+  * Removed explicit settings of png dir, it collids with multi-arch support. 
+  * Now mapscript/php3 moved finally to mapscript/php. Install file changed as
+    due.
   * Removed obsolete python-docutils build-dep. Thanks Jakub Wilk.
     (closes: #635256)
   * Renamed perl-mapscript to libmapscript-perl to adhere the Perl naming
@@ -7,7 +16,7 @@ mapserver (5.6.6-3) unstable; urgency=low
     (closes: #575934)
   * Revised description of Perl mapscript.
 
- -- Francesco Paolo Lovergine <frankie@debian.org>  Tue, 27 Sep 2011 15:43:19 +0200
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Fri, 23 Dec 2011 10:26:04 +0100
 
 mapserver (5.6.6-2) unstable; urgency=low
 
