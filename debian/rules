@@ -49,7 +49,7 @@ COMMON_CONFIG=	--prefix=/usr \
 		--with-threads \
 		--with-geos \
 		--with-fastcgi \
-		-with-agg \
+		--with-agg \
 		--with-experimental-png \
 		--with-cairo
 
