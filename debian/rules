@@ -34,7 +34,6 @@ COMMON_CONFIG=	--prefix=/usr \
 		--with-fribidi-config \
 		--with-zlib=/usr \
 		--with-xpm=/usr \
-		--with-jpeg=/usr \
 		--with-gdal \
 		--with-ogr \
 		--with-proj \
