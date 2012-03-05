@@ -4,6 +4,7 @@ mapserver (6.0.1-3) unstable; urgency=low
     (closes: #661914)
   * Added fixgeos patch to use correcly the geos-config script.
   * Minimum version for geos set to 3.3.1.
+  * Added patch php54 to work with PHP 5.4 too, and reflect changes in the API.
 
  -- Francesco Paolo Lovergine <frankie@debian.org>  Mon, 05 Mar 2012 12:43:32 +0100
 
