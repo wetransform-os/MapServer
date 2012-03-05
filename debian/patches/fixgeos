@@ -1,0 +1,26 @@
+Index: mapserver/configure
+===================================================================
+--- mapserver.orig/configure	2012-03-05 11:50:29.000000000 +0100
++++ mapserver/configure	2012-03-05 12:41:30.000000000 +0100
+@@ -11567,7 +11567,7 @@
+ 
+   GEOS_INCDIR=`$GEOS_CONFIG --includes`
+   GEOS_INC="-I$GEOS_INCDIR"
+-  GEOS_LIB="`$GEOS_CONFIG --libs`_c"
++  GEOS_LIB=`$GEOS_CONFIG --clibs`
+ 
+   GEOS_ENABLED=$GEOS_ENABLED
+ 
+Index: mapserver/configure.in
+===================================================================
+--- mapserver.orig/configure.in	2012-03-05 11:50:29.000000000 +0100
++++ mapserver/configure.in	2012-03-05 12:41:00.000000000 +0100
+@@ -1342,7 +1342,7 @@
+ 
+   GEOS_INCDIR=`$GEOS_CONFIG --includes`
+   GEOS_INC="-I$GEOS_INCDIR"
+-  GEOS_LIB="`$GEOS_CONFIG --libs`_c"
++  GEOS_LIB=`$GEOS_CONFIG --clibs`
+ 
+   AC_SUBST(GEOS_ENABLED,$GEOS_ENABLED)
+   AC_SUBST(GEOS_INC,    $GEOS_INC)
