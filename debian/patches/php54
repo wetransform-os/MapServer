@@ -1,7 +1,7 @@
 Index: mapserver/mapscript/php/php_mapscript_util.c
 ===================================================================
---- mapserver.orig/mapscript/php/php_mapscript_util.c	2012-03-05 13:20:27.000000000 +0100
-+++ mapserver/mapscript/php/php_mapscript_util.c	2012-03-05 14:55:46.000000000 +0100
+--- mapserver.orig/mapscript/php/php_mapscript_util.c	2012-03-05 15:05:16.000000000 +0100
++++ mapserver/mapscript/php/php_mapscript_util.c	2012-03-05 15:36:06.000000000 +0100
 @@ -37,12 +37,18 @@
                                         void (*zend_objects_free_object) TSRMLS_DC)
  {
@@ -42,8 +42,8 @@ Index: mapserver/mapscript/php/php_mapscript_util.c
      return retval;
 Index: mapserver/mapscript/php/image.c
 ===================================================================
---- mapserver.orig/mapscript/php/image.c	2011-12-23 11:16:03.000000000 +0100
-+++ mapserver/mapscript/php/image.c	2012-03-05 15:05:06.000000000 +0100
+--- mapserver.orig/mapscript/php/image.c	2012-03-05 15:05:16.000000000 +0100
++++ mapserver/mapscript/php/image.c	2012-03-05 15:36:06.000000000 +0100
 @@ -303,7 +303,7 @@
      /* no filename - read stdout */
  
@@ -53,3 +53,16 @@ Index: mapserver/mapscript/php/image.c
      {
          php_header(TSRMLS_C);
      }
+Index: mapserver/mapscript/php/php_mapscript.c
+===================================================================
+--- mapserver.orig/mapscript/php/php_mapscript.c	2011-12-23 11:16:03.000000000 +0100
++++ mapserver/mapscript/php/php_mapscript.c	2012-03-05 15:41:11.000000000 +0100
+@@ -899,7 +899,7 @@
+ 
+ }
+ 
+-function_entry mapscript_functions[] = {
++zend_function_entry mapscript_functions[] = {
+     PHP_FE(ms_GetVersion, NULL)
+     PHP_FE(ms_GetVersionInt,  NULL)
+     PHP_FE(ms_newLineObj, NULL)
