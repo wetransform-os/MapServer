@@ -49,7 +49,7 @@ Index: mapserver/mapscript/php/image.c
  
      /* if there is no output buffer active, set the header */
 -    if (OG(ob_nesting_level)<=0)
-+    if (php_output_get_level(TSRMLS_D)<=0)
++    if (php_output_get_level()<=0)
      {
          php_header(TSRMLS_C);
      }
