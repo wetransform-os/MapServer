@@ -3,6 +3,7 @@ mapserver (6.0.1-4) unstable; urgency=low
   * Fixed typo that prevented AGG use in debian/rules.
     (closes: #663875)
   * Now using libpng-dev as b-d.
+  * Migrated to debhelper level 9 and policy bumped to 3.9.3. 
 
  -- Francesco Paolo Lovergine <frankie@debian.org>  Wed, 14 Mar 2012 21:43:53 +0100
 
