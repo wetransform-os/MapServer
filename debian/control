@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Debian GIS Project <pkg-grass-devel@lists.alioth.debian.org>
 Uploaders: Francesco Paolo Lovergine <frankie@debian.org>, Alan Boudreault <aboudreault@mapgears.com>
 Standards-Version: 3.9.2
-Build-Depends: debhelper (>= 8), libcurl4-gnutls-dev, libpng12-dev, zlib1g-dev (>= 1.1.4),
+Build-Depends: debhelper (>= 8), libcurl4-gnutls-dev, libpng-dev, zlib1g-dev (>= 1.1.4),
  libgd2-xpm-dev (>= 2.0.1-10), libfreetype6-dev (>= 2.0.9), libjpeg-dev, libgdal1-dev (>=1.4.0), libproj-dev,
  libpq-dev, php5-dev, swig, python-all (>= 2.6.6-3~), python-all-dev (>= 2.6.6-3~), libgeos-dev (>= 3.3.1-1~),
  ruby1.8, ruby1.8-dev, ruby1.9.1, ruby1.9.1-dev,
