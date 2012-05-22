@@ -36,7 +36,7 @@
 #include "maperror.h"
 #include "mapoglrenderer.h"
 
-MS_CVSID("$Id: mapoglrenderer.cpp 11512 2011-04-09 08:46:51Z toby $")
+MS_CVSID("$Id$")
 
 using namespace std;
 

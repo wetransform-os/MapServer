@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: maplayer.c 11890 2011-07-12 13:06:14Z assefa $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Implementation of most layerObj functions.
@@ -36,7 +36,7 @@
 #include "mapparser.h"
 
 #include <assert.h>
-MS_CVSID("$Id: maplayer.c 11890 2011-07-12 13:06:14Z assefa $")
+MS_CVSID("$Id$")
 
 static int populateVirtualTable(layerVTableObj *vtable);
 

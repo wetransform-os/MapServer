@@ -1,6 +1,6 @@
 /* 
 ===========================================================================
- $Id: mserror.i 6016 2007-04-17 10:36:55Z umberto $
+ $Id$
  
  Project:  MapServer
  Purpose:  MapScript exceptions

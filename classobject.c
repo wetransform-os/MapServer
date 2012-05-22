@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: classobject.c 7347 2008-02-06 16:55:30Z nsavard $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Functions for operating on a classObj that don't belong in a
@@ -36,7 +36,7 @@
 #  include "cpl_conv.h"
 #endif
 
-MS_CVSID("$Id: classobject.c 7347 2008-02-06 16:55:30Z nsavard $")
+MS_CVSID("$Id$")
 
 /**
  * Move the style up inside the array of styles.

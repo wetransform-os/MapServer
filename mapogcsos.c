@@ -1,5 +1,5 @@
 /**********************************************************************
- * $Id: mapogcsos.c 11890 2011-07-12 13:06:14Z assefa $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  OGC SOS implementation
@@ -32,7 +32,7 @@
 #include "mapserver.h"
 
 
-MS_CVSID("$Id: mapogcsos.c 11890 2011-07-12 13:06:14Z assefa $")
+MS_CVSID("$Id$")
 
 #if defined(USE_SOS_SVR) && defined(USE_LIBXML2)
 

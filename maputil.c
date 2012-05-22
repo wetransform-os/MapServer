@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: maputil.c 11521 2011-04-11 12:09:16Z tbonfort $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Various utility functions ... a real hodgepodge.
@@ -46,7 +46,7 @@
 #include <process.h>
 #endif
 
-MS_CVSID("$Id: maputil.c 11521 2011-04-11 12:09:16Z tbonfort $")
+MS_CVSID("$Id$")
 
 extern char *msyystring_buffer;
 extern int msyylex_destroy(void);

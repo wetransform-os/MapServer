@@ -1,4 +1,4 @@
-# $Id: owstest.py 6559 2007-08-12 02:14:18Z hobu $
+# $Id$
 #
 # Project:  MapServer
 # Purpose:  xUnit style Python mapscript tests of OWS Requests

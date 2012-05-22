@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapmssql2008.c 11884 2011-07-09 13:01:00Z sdlime $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  MS SQL 2008 (Katmai) Layer Connector
@@ -34,7 +34,7 @@
 
 #define _CRT_SECURE_NO_WARNINGS 1
 
-/* $Id: mapmssql2008.c 11884 2011-07-09 13:01:00Z sdlime $ */
+/* $Id$ */
 #include <assert.h>
 #include "mapserver.h"
 #include "maptime.h"
@@ -49,7 +49,7 @@
 #include <string.h>
 #include <ctype.h> /* tolower() */
 
-MS_CVSID("$Id: mapmssql2008.c 11884 2011-07-09 13:01:00Z sdlime $")
+MS_CVSID("$Id$")
 
 /* Structure for connection to an ODBC database (Microsoft preferred way to connect to SQL Server 2005 from c/c++) */
 typedef struct msODBCconn_t

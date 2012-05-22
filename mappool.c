@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mappool.c 11072 2011-03-04 19:57:16Z dmorissette $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Implement new style connection pooling.
@@ -134,7 +134,7 @@ o The connection pooling API will let a connection be used/referenced multiple
 #include "mapserver.h"
 #include "mapthread.h"
 
-MS_CVSID("$Id: mappool.c 11072 2011-03-04 19:57:16Z dmorissette $")
+MS_CVSID("$Id$")
 
 /* defines for lifetime.  
    A positive number is a time-from-last use in seconds */

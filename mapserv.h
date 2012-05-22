@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapserv.h 11078 2011-03-05 05:20:03Z sdlime $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Declarations supporting mapserv.c.

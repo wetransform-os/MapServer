@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mappostgis.c 11910 2011-07-12 18:09:25Z dmorissette $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  PostGIS CONNECTIONTYPE support.
@@ -84,7 +84,7 @@
  
 #ifdef USE_POSTGIS
   
-MS_CVSID("$Id: mappostgis.c 11910 2011-07-12 18:09:25Z dmorissette $")
+MS_CVSID("$Id$")
 
 /*
 ** msPostGISCloseConnection()
@@ -1533,7 +1533,7 @@ char *msPostGISBuildSQLBox(layerObj *layer, rectObj *rect, char *strSRID) {
     }
 
     if ( strSRID ) {
-        static char *strBoxTemplate = "GeomFromText('POLYGON((%.15g %.15g,%.15g %.15g,%.15g %.15g,%.15g %.15g,%.15g %.15g))',%s)";
+        static char *strBoxTemplate = "ST_GeomFromText('POLYGON((%.15g %.15g,%.15g %.15g,%.15g %.15g,%.15g %.15g,%.15g %.15g))',%s)";
         /* 10 doubles + 1 integer + template characters */
         sz = 10 * 22 + strlen(strSRID) + strlen(strBoxTemplate);
         strBox = (char*)msSmallMalloc(sz+1); /* add space for terminating NULL */
@@ -1549,7 +1549,7 @@ char *msPostGISBuildSQLBox(layerObj *layer, rectObj *rect, char *strSRID) {
                 return NULL;
             }
         } else {
-            static char *strBoxTemplate = "GeomFromText('POLYGON((%.15g %.15g,%.15g %.15g,%.15g %.15g,%.15g %.15g,%.15g %.15g))')";
+            static char *strBoxTemplate = "ST_GeomFromText('POLYGON((%.15g %.15g,%.15g %.15g,%.15g %.15g,%.15g %.15g,%.15g %.15g))')";
             /* 10 doubles + template characters */
             sz = 10 * 22 + strlen(strBoxTemplate);
             strBox = (char*)msSmallMalloc(sz+1); /* add space for terminating NULL */
@@ -2468,7 +2468,10 @@ int msPostGISLayerWhichShapes(layerObj *layer, rectObj rect, int isQuery) {
 
     /* Something went wrong. */
     if (!pgresult || PQresultStatus(pgresult) != PGRES_TUPLES_OK) {
-        msSetError(MS_QUERYERR, "Error (%s) executing query: %s", "msPostGISLayerWhichShapes()", PQerrorMessage(layerinfo->pgconn), strSQL);
+        if ( layer->debug ) {
+	    msDebug("Error (%s) executing query: %s", "msPostGISLayerWhichShapes()\n", PQerrorMessage(layerinfo->pgconn), strSQL);
+	}
+        msSetError(MS_QUERYERR, "Error executing query: %s ", "msPostGISLayerWhichShapes()", PQerrorMessage(layerinfo->pgconn));
         free(strSQL);
         if (pgresult) {
             PQclear(pgresult);
@@ -2649,7 +2652,10 @@ int msPostGISLayerGetShape(layerObj *layer, shapeObj *shape, resultObj *record) 
 
         /* Something went wrong. */
         if ( (!pgresult) || (PQresultStatus(pgresult) != PGRES_TUPLES_OK) ) {
-            msSetError(MS_QUERYERR, "Error (%s) executing SQL: %s", "msPostGISLayerGetShape()", PQerrorMessage(layerinfo->pgconn), strSQL );
+	    if ( layer->debug ) {
+	        msDebug("Error (%s) executing SQL: %s", "msPostGISLayerGetShape()\n", PQerrorMessage(layerinfo->pgconn), strSQL );
+	    }            
+            msSetError(MS_QUERYERR, "Error executing SQL: %s", "msPostGISLayerGetShape()", PQerrorMessage(layerinfo->pgconn));
 
             if (pgresult) {
                 PQclear(pgresult);
@@ -2872,7 +2878,10 @@ int msPostGISLayerGetItems(layerObj *layer) {
     pgresult = PQexecParams(layerinfo->pgconn, sql,0, NULL, NULL, NULL, NULL, 0);
     
     if ( (!pgresult) || (PQresultStatus(pgresult) != PGRES_TUPLES_OK) ) {
-        msSetError(MS_QUERYERR, "Error (%s) executing SQL: %s", "msPostGISLayerGetItems()", PQerrorMessage(layerinfo->pgconn), sql);
+        if ( layer->debug ) {
+	  msDebug("Error (%s) executing SQL: %s", "msPostGISLayerGetItems()\n", PQerrorMessage(layerinfo->pgconn), sql);
+	}
+        msSetError(MS_QUERYERR, "Error executing SQL: %s", "msPostGISLayerGetItems()", PQerrorMessage(layerinfo->pgconn));
         if (pgresult) {
             PQclear(pgresult);
         }

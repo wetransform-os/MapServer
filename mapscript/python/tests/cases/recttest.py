@@ -1,4 +1,4 @@
-# $Id: recttest.py 4083 2004-11-12 20:52:14Z sean $
+# $Id$
 #
 # Project:  MapServer
 # Purpose:  xUnit style Python mapscript tests of rectObj

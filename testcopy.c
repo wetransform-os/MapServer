@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: testcopy.c 7418 2008-02-29 00:02:49Z nsavard $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Test of msCopyMap()
@@ -29,7 +29,7 @@
 
 #include "mapserver.h"
 
-MS_CVSID("$Id: testcopy.c 7418 2008-02-29 00:02:49Z nsavard $")
+MS_CVSID("$Id$")
 
 void printAtts(mapObj*, const char*);
 

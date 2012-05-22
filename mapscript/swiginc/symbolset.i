@@ -1,5 +1,5 @@
 /* ===========================================================================
-   $Id: symbolset.i 6308 2007-07-16 10:55:28Z unicoletti $
+   $Id$
  
    Project:  MapServer
    Purpose:  SWIG interface file for mapscript symbolSetObj extensions

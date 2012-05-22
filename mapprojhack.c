@@ -1,5 +1,5 @@
 /**********************************************************************
- * $Id: mapprojhack.c 11832 2011-06-17 19:06:58Z warmerdam $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Implementation of utility functions related to the PROJ4 library

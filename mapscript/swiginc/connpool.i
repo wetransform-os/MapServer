@@ -1,5 +1,5 @@
 /* ===========================================================================
-   $Id: connpool.i 5196 2006-02-15 16:33:20Z umberto $
+   $Id$
    
    Project:  MapServer
    Purpose:  SWIG interface file for connection pool management

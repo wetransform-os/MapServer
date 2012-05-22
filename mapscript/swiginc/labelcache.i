@@ -1,5 +1,5 @@
 /* ===========================================================================
-   $Id: labelcache.i 3473 2004-08-23 17:36:48Z sean $
+   $Id$
  
    Project:  MapServer
    Purpose:  SWIG interface file for mapscript labelCacheObj extensions

@@ -1,4 +1,4 @@
-# $Id: outputformattest.py 4482 2005-03-10 22:57:25Z sean $
+# $Id$
 #
 # Project:  MapServer
 # Purpose:  xUnit style Python mapscript tests of outputFormatObj

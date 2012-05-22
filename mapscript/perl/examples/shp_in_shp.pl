@@ -4,7 +4,7 @@
 #
 # Purpose: Tests whether a shape is within another shape
 #
-# $Id: shp_in_shp.pl 5817 2006-10-30 17:42:52Z tkralidi $
+# $Id$
 #
 
 use strict;

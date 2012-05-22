@@ -1,4 +1,4 @@
-.. $Id: README.txt 6844 2007-09-05 22:50:39Z hobu $
+.. $Id$
 
 MapServer Mapscript Modules
 ===========================

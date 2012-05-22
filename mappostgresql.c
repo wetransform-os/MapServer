@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mappostgresql.c 10772 2010-11-29 18:27:02Z aboudreault $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Postgres CONNECTIONTYPE support.
@@ -28,7 +28,7 @@
  ****************************************************************************/
 
 
-/* $Id: mappostgresql.c 10772 2010-11-29 18:27:02Z aboudreault $ */
+/* $Id$ */
 #include <assert.h>
 #include "mapserver.h"
 #include "maptime.h"
@@ -50,7 +50,7 @@
 #include <string.h>
 #include <ctype.h> /* tolower() */
 
-MS_CVSID("$Id: mappostgresql.c 10772 2010-11-29 18:27:02Z aboudreault $")
+MS_CVSID("$Id$")
 
 
 typedef struct {
@@ -326,7 +326,7 @@ int msPOSTGRESQLJoinNext(joinObj *join) {
         }
 
         /* Create the query string. */
-        sql = (char *)malloc(24 + strlen(columns) + strlen(join->table) + 
+        sql = (char *)malloc(26 + strlen(columns) + strlen(join->table) + 
                 strlen(join->to) + strlen(joininfo->from_value));
         if(!sql) {
             msSetError(MS_MEMERR, "Failure to malloc.\n", 

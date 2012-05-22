@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapowscommon.h 10713 2010-11-09 14:14:57Z sdlime $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  OGC OWS Common Implementation include file

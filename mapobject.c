@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapobject.c 11376 2011-03-30 01:11:13Z dmorissette $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Functions for operating on a mapObj that don't belong in a
@@ -35,7 +35,7 @@
 #  include "cpl_conv.h"
 #endif
 
-MS_CVSID("$Id: mapobject.c 11376 2011-03-30 01:11:13Z dmorissette $")
+MS_CVSID("$Id$")
 
 void freeWeb(webObj *web);
 void freeScalebar(scalebarObj *scalebar);
@@ -781,7 +781,7 @@ int msMapLoadOWSParameters(mapObj *map, cgiRequestObj *request,
     int version;
     char *wms_exception_format = NULL;
     const char *wms_request= NULL;
-    int i =0;
+    int result, i = 0;
     owsRequestObj ows_request;
 
     ows_request.numlayers = 0;
@@ -800,9 +800,15 @@ int msMapLoadOWSParameters(mapObj *map, cgiRequestObj *request,
 
      msOWSRequestLayersEnabled(map, "M", wms_request, &ows_request);
 
-     return msWMSLoadGetMapParams(map, version, request->ParamNames,
-                                  request->ParamValues, request->NumParams,  wms_exception_format, 
-                                  wms_request, &ows_request);
+     result = msWMSLoadGetMapParams(map, version, request->ParamNames,
+				    request->ParamValues, request->NumParams,  wms_exception_format, 
+				    wms_request, &ows_request);
+
+     if (ows_request.numlayers > 0)
+       msFree(ows_request.enabled_layers);
+
+     return result;
+
 #else
     msSetError(MS_WMSERR, "WMS server support is not available.",
                "msMapLoadOWSParameters()");

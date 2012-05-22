@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: cgiutil.c 11452 2011-04-04 13:25:43Z aboudreault $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  cgiRequestObj and CGI parameter parsing. 
@@ -36,7 +36,7 @@
 #include "mapserver.h"
 #include "cgiutil.h"
 
-MS_CVSID("$Id: cgiutil.c 11452 2011-04-04 13:25:43Z aboudreault $")
+MS_CVSID("$Id$")
 
 #define LF 10
 #define CR 13

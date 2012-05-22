@@ -1,4 +1,4 @@
-# $Id: linetest.py 3632 2004-09-28 15:14:08Z sean $
+# $Id$
 #
 # Project:  MapServer
 # Purpose:  xUnit style Python mapscript tests of Map "zooming"

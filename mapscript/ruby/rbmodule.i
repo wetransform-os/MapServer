@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: rbmodule.i 11185 2011-03-17 13:27:56Z jimk $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Ruby-specific enhancements to MapScript

@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: drawquery.cs 7418 2008-02-29 00:02:49Z nsavard $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  A C# based mapscript example to use the atribute query and 

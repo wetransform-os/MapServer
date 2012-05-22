@@ -92,5 +92,5 @@ included in the list of extensions in the phpinfo() report.
 
 
 --------------------------
-$Id: README.WIN32 11148 2011-03-11 03:42:53Z dmorissette $
+$Id$
 --------------------------

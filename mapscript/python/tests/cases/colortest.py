@@ -1,4 +1,4 @@
-# $Id: colortest.py 3880 2004-10-26 15:43:54Z sean $
+# $Id$
 #
 # Project:  MapServer
 # Purpose:  xUnit style Python mapscript tests of colorObj

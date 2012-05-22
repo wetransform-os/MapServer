@@ -1,4 +1,4 @@
-# $Id: pointtest.py 4533 2005-04-14 18:33:56Z sean $
+# $Id$
 #
 # Project:  MapServer
 # Purpose:  xUnit style Python mapscript tests of Point

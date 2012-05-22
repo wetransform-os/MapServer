@@ -1,4 +1,4 @@
-# $Id: shapefiletest.py 6190 2007-06-10 15:33:30Z unicoletti $
+# $Id$
 #
 # Project:  MapServer
 # Purpose:  xUnit style Python mapscript tests of shapefileObj

@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: maphash.h 6458 2007-08-04 02:49:10Z hobu $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Declarations for the hashTableObj and related stuff.

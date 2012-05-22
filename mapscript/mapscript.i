@@ -1,6 +1,6 @@
 /* 
 ===========================================================================
- $Id: mapscript.i 11324 2011-03-24 08:59:58Z unicoletti $
+ $Id$
  
  Project:  MapServer
  Purpose:  SWIG interface file for the MapServer mapscript module

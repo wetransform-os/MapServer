@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapaxisorder.h 11646 2011-05-04 18:46:39Z assefa $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Axis lookup table

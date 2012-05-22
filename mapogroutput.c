@@ -1,5 +1,5 @@
 /**********************************************************************
- * $Id: mapogroutput.c 11503 2011-04-07 19:56:16Z dmorissette $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  OGR Output (for WFS)
@@ -41,7 +41,7 @@
 #  include "cpl_string.h"
 #endif
 
-MS_CVSID("$Id: mapogroutput.c 11503 2011-04-07 19:56:16Z dmorissette $")
+MS_CVSID("$Id$")
 
 #ifdef USE_OGR
 

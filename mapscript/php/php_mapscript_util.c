@@ -1,5 +1,5 @@
 /**********************************************************************
- * $Id: php_mapscript_util.c 11456 2011-04-04 17:50:20Z aboudreault $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  PHP/MapScript extension for MapServer : Utility functions
@@ -95,7 +95,7 @@ int mapscript_extract_associative_array(HashTable *php, char **array)
    otherwise it creates it */
 void mapscript_fetch_object(zend_class_entry *ce, zval* zval_parent, php_layer_object* layer, 
                             void *internal_object, 
-                            zval **php_object_storage, zval ***return_value_ptr TSRMLS_DC)
+                            zval **php_object_storage TSRMLS_DC)
 {
     parent_object p;
 
@@ -150,14 +150,5 @@ void mapscript_fetch_object(zend_class_entry *ce, zval* zval_parent, php_layer_o
         mapscript_create_layer((layerObj*)internal_object, p, *php_object_storage TSRMLS_CC);
     else if (ce == mapscript_ce_cluster)
         mapscript_create_cluster((clusterObj*)internal_object, p, *php_object_storage TSRMLS_CC);
-        
-    MAPSCRIPT_ADDREF(*php_object_storage);
-
-    // return a reference to the object
-    if (return_value_ptr) {
-        zval_ptr_dtor(*return_value_ptr);
-        zval_set_isref_p(*php_object_storage);
-        **return_value_ptr = *php_object_storage;
-    }
 }
 

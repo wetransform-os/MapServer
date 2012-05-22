@@ -4,7 +4,7 @@
 #
 # Purpose: Returns distance between a shape and a point
 #
-# $Id: distanceToPoint.pl 5820 2006-10-30 18:28:14Z tkralidi $
+# $Id$
 #
 
 use strict;

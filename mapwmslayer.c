@@ -1,5 +1,5 @@
 /*****************************************************************************
- * $Id: mapwmslayer.c 10883 2011-01-21 19:38:21Z aboudreault $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Implementation of WMS CONNECTIONTYPE - client to WMS servers

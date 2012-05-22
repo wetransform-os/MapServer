@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapgeomutil.cpp 11592 2011-04-18 10:15:18Z tbonfort $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Rendering utility functions

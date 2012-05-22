@@ -1,5 +1,5 @@
 /* ===========================================================================
-   $Id: symbol.i 11472 2011-04-06 02:48:18Z dmorissette $
+   $Id$
  
    Project:  MapServer
    Purpose:  SWIG interface file for mapscript symbolObj extensions
@@ -67,8 +67,12 @@
 
     int setPoints(lineObj *line) {
         int i;
+	self->sizex = 0;
+	self->sizey = 0;
         for (i=0; i<line->numpoints; i++) {
             MS_COPYPOINT(&(self->points[i]), &(line->point[i]));
+	    self->sizex = MS_MAX(self->sizex, self->points[i].x);
+	    self->sizey = MS_MAX(self->sizey, self->points[i].y);
         }
         self->numpoints = line->numpoints;
         return self->numpoints;

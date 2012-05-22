@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: javaextend.i 4558 2005-04-21 15:09:30Z julien $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Java-specific extensions to MapScript objects

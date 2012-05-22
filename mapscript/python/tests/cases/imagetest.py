@@ -1,4 +1,4 @@
-# $Id: imagetest.py 6192 2007-06-11 01:40:25Z hobu $
+# $Id$
 #
 # Project:  MapServer
 # Purpose:  xUnit style Python mapscript tests of map cloning

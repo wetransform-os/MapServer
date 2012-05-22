@@ -8,7 +8,7 @@
 #  - Run the VCVARS32.BAT script to initialize the VC++ environment variables
 #  - Start the build with:  nmake /f makefile.vc
 #
-# $Id: Makefile.vc 10747 2010-11-20 23:39:58Z tamas $
+# $Id$
 #
 
 

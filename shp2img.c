@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: shp2img.c 11400 2011-03-30 21:20:20Z warmerdam $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Commandline .map rendering utility, mostly for testing.
@@ -30,7 +30,7 @@
 #include "mapserver.h"
 #include "maptime.h"
 
-MS_CVSID("$Id: shp2img.c 11400 2011-03-30 21:20:20Z warmerdam $")
+MS_CVSID("$Id$")
 
 int main(int argc, char *argv[])
 {

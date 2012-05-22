@@ -1,5 +1,5 @@
 /**********************************************************************
- * $Id: php_mapscript.h 11619 2011-04-27 15:23:07Z aboudreault $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  PHP/MapScript extension for MapServer. Header file 
@@ -58,7 +58,7 @@
 #include "maptemplate.h"
 #include "mapogcsld.h"
 
-#define MAPSCRIPT_VERSION "($Revision: 11619 $ $Date: 2011-04-27 11:23:07 -0400 (Wed, 27 Apr 2011) $)"
+#define MAPSCRIPT_VERSION "($Revision$ $Date$)"
 
 extern zend_module_entry mapscript_module_entry;
 #define phpext_mapscript_ptr &mapscript_module_entry
@@ -68,16 +68,9 @@ extern zend_module_entry mapscript_module_entry;
 	zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "")
 #endif
 
-#ifndef Z_ADDREF_P
-#define Z_ADDREF_P(pz)                (pz)->refcount++
-#endif
-
-#ifndef Z_DELREF_P
-#define Z_DELREF_P(pz)                (pz)->refcount--
-#endif
-
-#ifndef Z_SET_REFCOUNT_P
-#define Z_SET_REFCOUNT_P(pz, rc)      (pz)->refcount = rc
+/* it looks like that macro is not always defined: ticket #3926 */
+#ifndef TRUE
+#define TRUE 1
 #endif
 
 /* Taken from the CAIRO php extension */
@@ -221,6 +214,8 @@ typedef struct _php_style_object {
     zval *color;
     zval *outlinecolor;
     zval *backgroundcolor;
+    zval *mincolor;
+    zval *maxcolor;
     styleObj *style;
 } php_style_object;
 
@@ -443,8 +438,7 @@ extern zend_object_value mapscript_object_new_ex(zend_object *zobj, zend_class_e
                                                  void (*zend_objects_free_object),
                                                  zend_object_handlers *object_handlers TSRMLS_DC);
 extern void mapscript_fetch_object(zend_class_entry *ce, zval* zval_parent, php_layer_object* layer, 
-                                   void *internal_object, zval **php_object_storage, 
-                                   zval ***return_value_ptr TSRMLS_DC);
+                                   void *internal_object, zval **php_object_storage TSRMLS_DC);
 extern void mapscript_create_color(colorObj *color, parent_object parent, zval *return_value TSRMLS_DC);
 extern void mapscript_create_rect(rectObj *rect, parent_object php_parent, zval *return_value TSRMLS_DC);
 extern void mapscript_create_hashtable(hashTableObj *hashtable, parent_object parent, zval *return_value TSRMLS_DC);
@@ -616,6 +610,9 @@ int             layerObj_setConnectionType(layerObj *self, int connectiontype,
                                            const char *library_str) ;
 
 int             labelObj_updateFromString(labelObj *self, char *snippet);
+int             labelObj_moveStyleUp(labelObj *self, int index);
+int             labelObj_moveStyleDown(labelObj *self, int index);
+int             labelObj_deleteStyle(labelObj *self, int index);
 
 int             legendObj_updateFromString(legendObj *self, char *snippet);
 
@@ -747,6 +744,7 @@ int             DBFInfo_getFieldDecimals(DBFInfo *self, int iField);
 DBFFieldType    DBFInfo_getFieldType(DBFInfo *self, int iField);
 
 styleObj       *styleObj_new(classObj *class, styleObj *style);
+styleObj       *styleObj_label_new(labelObj *label, styleObj *style);
 int             styleObj_updateFromString(styleObj *self, char *snippet);
 int             styleObj_setSymbolByName(styleObj *self, mapObj *map, 
                                          char* pszSymbolName);

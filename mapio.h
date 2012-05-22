@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapio.h 11163 2011-03-15 20:54:31Z schpidi $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Definitions for MapServer IO redirection capability.

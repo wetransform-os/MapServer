@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: msencrypt.c 10772 2010-11-29 18:27:02Z aboudreault $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Command-line encryption utility (see MS-RFC-18)
@@ -29,7 +29,7 @@
 
 #include "mapserver.h"
 
-MS_CVSID("$Id: msencrypt.c 10772 2010-11-29 18:27:02Z aboudreault $")
+MS_CVSID("$Id$")
 
 void PrintUsage()
 {

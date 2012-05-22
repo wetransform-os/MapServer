@@ -1,5 +1,5 @@
 /**********************************************************************
- * $Id: mapogcsld.h 11472 2011-04-06 02:48:18Z dmorissette $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  OGC SLD implementation

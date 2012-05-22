@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: HTMLtemplate.cs 11081 2011-03-05 17:44:17Z tamas $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  A C# based mapscript example to show the usage of HTML templates.

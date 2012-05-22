@@ -1,5 +1,5 @@
 /* ===========================================================================
-   $Id: error.i 4424 2005-02-18 20:10:01Z sean $
+   $Id$
  
    Project:  MapServer
    Purpose:  SWIG interface file for mapscript errorObj extensions

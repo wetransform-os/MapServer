@@ -1,4 +1,4 @@
-# $Id: labeltest.py 8000 2008-10-24 15:42:15Z aboudreault $
+# $Id$
 #
 # Project:  MapServer
 # Purpose:  xUnit style Python mapscript tests of Map

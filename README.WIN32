@@ -191,4 +191,4 @@ The best option is to download the zip file containing the source code and build
   - uncomment in the nmake.opt the flags related to PDF
 
 
-$Id: README.WIN32 6833 2007-09-05 22:08:13Z hobu $
+$Id$

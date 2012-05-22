@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: sortshp.c 11397 2011-03-30 20:09:01Z sdlime $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Command line utility to sort a shapefile based on a single 
@@ -36,7 +36,7 @@
 
 #include "mapserver.h"
 
-MS_CVSID("$Id: sortshp.c 11397 2011-03-30 20:09:01Z sdlime $")
+MS_CVSID("$Id$")
 
 typedef struct {
   double number;

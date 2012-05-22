@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: rbextend.i 2696 2004-02-02 23:37:24Z sean $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Ruby-specific extensions to MapScript objects

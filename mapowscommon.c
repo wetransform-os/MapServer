@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapowscommon.c 10772 2010-11-29 18:27:02Z aboudreault $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  OGC OWS Common Implementation for use by MapServer OGC code
@@ -42,7 +42,7 @@
 #include "mapowscommon.h"
 #include "maplibxml2.h"
 
-MS_CVSID("$Id: mapowscommon.c 10772 2010-11-29 18:27:02Z aboudreault $")
+MS_CVSID("$Id$")
 
 
 
@@ -410,7 +410,7 @@ xmlNodePtr msOWSCommonOperationsMetadataDomainType(int version, xmlNsPtr psNsOws
   if (version == OWS_1_0_0) {
     msLibXml2GenerateList(psRootNode, psNsOws, "Value", values, ',');
   }
-  if (version == OWS_1_1_0) {
+  if (version == OWS_1_1_0 || version == OWS_2_0_0) {
     psNode = xmlNewChild(psRootNode, psNsOws, BAD_CAST "AllowedValues", NULL);
     msLibXml2GenerateList(psNode, psNsOws, "Value", values, ',');
   }

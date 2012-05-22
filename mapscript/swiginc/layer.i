@@ -1,6 +1,6 @@
 
 /* ===========================================================================
-   $Id: layer.i 11881 2011-07-07 19:55:43Z sdlime $
+   $Id$
  
    Project:  MapServer
    Purpose:  SWIG interface file for mapscript layerObj extensions

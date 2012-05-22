@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapgml.h 7504 2008-04-08 21:13:45Z nsavard $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Headers for mapgml.c.  shapeObj to GML output via MapServer 

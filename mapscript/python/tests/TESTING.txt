@@ -1,4 +1,4 @@
-.. $Id: TESTING.txt 4196 2004-11-29 21:08:49Z sean $
+.. $Id$
 
 Python MapScript Unit Tests
 ========================================

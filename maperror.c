@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: maperror.c 11415 2011-03-31 08:50:39Z tbonfort $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Implementation of msSetError(), msDebug() and related functions.
@@ -41,7 +41,7 @@
 #endif
 #include <stdarg.h>
 
-MS_CVSID("$Id: maperror.c 11415 2011-03-31 08:50:39Z tbonfort $")
+MS_CVSID("$Id$")
 
 static char *ms_errorCodes[MS_NUMERRORCODES] = {"",
 						"Unable to access file.",

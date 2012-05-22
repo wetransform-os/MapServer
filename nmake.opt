@@ -11,7 +11,7 @@
 #  - Run the VCVARS32.BAT script to initialize the VC++ environment variables
 #  - Start the build with:  nmake /f makefile.vc
 #
-# $Id: nmake.opt 11228 2011-03-18 14:57:22Z tbonfort $
+# $Id$
 #
 # Contents:
 #   Section I:   Mapserver Compilation Options

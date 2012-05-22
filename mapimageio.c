@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapimageio.c 11599 2011-04-19 05:14:17Z tbonfort $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Low level PNG/JPEG/GIF image io native functions
@@ -38,7 +38,7 @@
 #include "gif_lib.h"
 #endif
 
-MS_CVSID("$Id: mapimageio.c 11599 2011-04-19 05:14:17Z tbonfort $")
+MS_CVSID("$Id$")
 
 typedef struct _streamInfo {
     FILE *fp;

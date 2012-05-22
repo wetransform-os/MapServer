@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapwcs11.c 11503 2011-04-07 19:56:16Z dmorissette $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  OpenGIS Web Coverage Server (WCS) 1.1.0 Implementation.  This
@@ -35,7 +35,7 @@
 #include "mapthread.h"
 #include "mapwcs.h"
 
-MS_CVSID("$Id: mapwcs11.c 11503 2011-04-07 19:56:16Z dmorissette $")
+MS_CVSID("$Id$")
 
 #if defined(USE_WCS_SVR) && defined(USE_LIBXML2)
 
@@ -285,6 +285,30 @@ static int msWCSGetCapabilities11_CoverageSummary(
                 xmlNewChild(psNode, NULL, BAD_CAST "Keyword", BAD_CAST tokens[i] );
             }
             msFreeCharArray(tokens, n);
+        }
+    }
+
+/* -------------------------------------------------------------------- */
+/*      Metadata Link                                                   */
+/* -------------------------------------------------------------------- */
+    value = msOWSLookupMetadata(&(layer->metadata), "CO", "metadatalink_href");
+
+    if (value)
+    {
+        xmlNodePtr psMetadata = xmlNewChild(psCSummary, psOwsNs, BAD_CAST "Metadata", NULL);
+        xmlNsPtr psXlinkNs = xmlSearchNs( doc, xmlDocGetRootElement(doc), BAD_CAST "xlink" );
+        const char *metadatalink_type = msOWSLookupMetadata(&(layer->metadata), "CO", "metadatalink_type");
+        const char *metadatalink_format = msOWSLookupMetadata(&(layer->metadata), "CO", "metadatalink_format");
+
+        xmlNewNsProp(psMetadata, psXlinkNs, BAD_CAST "type", BAD_CAST "simple");
+        xmlNewNsProp(psMetadata, psXlinkNs, BAD_CAST "href", BAD_CAST value);
+        if (metadatalink_type != NULL)
+        {
+            xmlNewProp(psMetadata, BAD_CAST "about", BAD_CAST metadatalink_type);
+        }
+        if (metadatalink_format != NULL)
+        {
+            xmlNewNsProp(psMetadata, psXlinkNs, BAD_CAST "role", BAD_CAST metadatalink_format);
         }
     }
 
@@ -1207,7 +1231,7 @@ int  msWCSReturnCoverage11( wcsParamsObj *params, mapObj *map,
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
             "<Coverages\n"
             "     xmlns=\"http://www.opengis.net/wcs/1.1\"\n"
-            "     xmlns:ows=\"http://www.opengis.net/ows\"\n"
+            "     xmlns:ows=\"http://www.opengis.net/ows/1.1\"\n"
             "     xmlns:xlink=\"http://www.w3.org/1999/xlink\"\n"
             "     xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
             "     xsi:schemaLocation=\"http://www.opengis.net/ows/1.1 ../owsCoverages.xsd\">\n"
@@ -1225,7 +1249,7 @@ int  msWCSReturnCoverage11( wcsParamsObj *params, mapObj *map,
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
             "<Coverages\n"
             "     xmlns=\"http://www.opengis.net/wcs/1.1\"\n"
-            "     xmlns:ows=\"http://www.opengis.net/ows\"\n"
+            "     xmlns:ows=\"http://www.opengis.net/ows/1.1\"\n"
             "     xmlns:xlink=\"http://www.w3.org/1999/xlink\"\n"
             "     xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
             "     xsi:schemaLocation=\"http://www.opengis.net/ows/1.1 ../owsCoverages.xsd\">\n"
@@ -1241,7 +1265,7 @@ int  msWCSReturnCoverage11( wcsParamsObj *params, mapObj *map,
     {
         msIO_fprintf( 
             stdout,
-            "    <Reference xlink:href=\"cid:coverage/wcs.%s\"/>\n"
+            "    <ows:Reference xlink:href=\"cid:coverage/wcs.%s\"/>\n"
             "  </Coverage>\n"
             "</Coverages>\n"
             "--wcs\n"
@@ -1300,7 +1324,7 @@ int  msWCSReturnCoverage11( wcsParamsObj *params, mapObj *map,
         
         msIO_fprintf( 
             stdout,
-            "    <Reference xlink:href=\"cid:coverage/%s\"/>\n"
+            "    <ows:Reference xlink:href=\"cid:coverage/%s\"/>\n"
             "  </Coverage>\n"
             "</Coverages>\n",
             CPLGetFilename(filename) );

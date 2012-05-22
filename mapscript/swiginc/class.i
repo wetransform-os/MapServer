@@ -1,5 +1,5 @@
 /* ===========================================================================
-   $Id: class.i 7210 2007-12-23 20:41:38Z tamas $
+   $Id$
  
    Project:  MapServer
    Purpose:  SWIG interface file for mapscript classObj extensions

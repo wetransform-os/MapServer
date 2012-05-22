@@ -1,5 +1,5 @@
 /* ===========================================================================
-   $Id: rect.i 7922 2008-09-23 15:51:45Z aboudreault $
+   $Id$
 
    Project:  MapServer
    Purpose:  SWIG interface file for mapscript rectObj extensions

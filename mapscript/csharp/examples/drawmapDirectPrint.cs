@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: drawmapDirectPrint.cs 10743 2010-11-19 17:05:38Z tbonfort $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  A C# based mapscript example to draw the map directly onto a GDI

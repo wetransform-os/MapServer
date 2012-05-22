@@ -1,4 +1,4 @@
-# $Id: hashtest.py 3702 2004-10-02 23:34:15Z sean $
+# $Id$
 #
 # Project:  MapServer
 # Purpose:  xUnit style Python mapscript tests of hashTableObj

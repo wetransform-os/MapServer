@@ -1,4 +1,4 @@
-# $Id: symbolsettest.py 6566 2007-08-12 16:07:51Z hobu $
+# $Id$
 #
 # Project:  MapServer
 # Purpose:  xUnit style Python mapscript tests of SymbolSet

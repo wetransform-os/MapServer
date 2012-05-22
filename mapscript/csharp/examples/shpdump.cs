@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: shpdump.cs 7418 2008-02-29 00:02:49Z nsavard $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  A C# based based mapscript example to dump information from 

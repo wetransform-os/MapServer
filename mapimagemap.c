@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapimagemap.c 11473 2011-04-06 03:05:02Z dmorissette $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Implements imagemap outputformat support.
@@ -38,7 +38,7 @@
 #include <io.h>
 #endif
 
-MS_CVSID("$Id: mapimagemap.c 11473 2011-04-06 03:05:02Z dmorissette $")
+MS_CVSID("$Id$")
 
 #define MYDEBUG 0
 #define DEBUG_IF if (MYDEBUG > 2) 

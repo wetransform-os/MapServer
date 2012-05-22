@@ -5,7 +5,7 @@
 # Purpose: simple script to read a csv file, geocode the addresses
 # with the Geocoder API and write to a new shapefile
 #
-# $Id: geocode_addresses.py 9921 2010-03-06 17:08:20Z tomkralidis $
+# $Id$
 #
 
 import sys

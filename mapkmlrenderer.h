@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapkmlrenderer.h 11506 2011-04-07 21:08:48Z assefa $ 
+ * $Id$ 
  *
  * Project:  MapServer
  * Purpose:  Headers for mapkmlrenderer.cpp Google Earth KML output

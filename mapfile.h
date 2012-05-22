@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapfile.h 11177 2011-03-16 19:29:01Z sdlime $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Keyword definitions for the mapfiles and symbolfiles.

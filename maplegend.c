@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: maplegend.c 11673 2011-05-11 16:33:28Z tbonfort $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Legend generation.
@@ -29,7 +29,7 @@
 
 #include "mapserver.h"
 
-MS_CVSID("$Id: maplegend.c 11673 2011-05-11 16:33:28Z tbonfort $")
+MS_CVSID("$Id$")
 
 #define PSF .8
 #define VMARGIN 5 /* margin at top and bottom of legend graphic */

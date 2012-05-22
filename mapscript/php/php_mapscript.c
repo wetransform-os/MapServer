@@ -1,5 +1,5 @@
 /**********************************************************************
- * $Id: php_mapscript.c 11473 2011-04-06 03:05:02Z dmorissette $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  PHP/MapScript extension for MapServer.  External interface 
@@ -1192,6 +1192,15 @@ PHP_MINIT_FUNCTION(mapscript)
     REGISTER_LONG_CONSTANT("MS_LABEL_BINDING_POSITION", MS_LABEL_BINDING_POSITION, const_flag);
     REGISTER_LONG_CONSTANT("MS_LABEL_BINDING_SHADOWSIZEX", MS_LABEL_BINDING_SHADOWSIZEX, const_flag);
     REGISTER_LONG_CONSTANT("MS_LABEL_BINDING_SHADOWSIZEY", MS_LABEL_BINDING_SHADOWSIZEY, const_flag);
+
+    /* MS_CAPS_JOINS_AND_CORNERS */
+    REGISTER_LONG_CONSTANT("MS_CJC_NONE", MS_CJC_NONE, const_flag);
+    REGISTER_LONG_CONSTANT("MS_CJC_BEVEL", MS_CJC_BEVEL, const_flag);
+    REGISTER_LONG_CONSTANT("MS_CJC_BUTT", MS_CJC_BUTT, const_flag); 
+    REGISTER_LONG_CONSTANT("MS_CJC_MITER", MS_CJC_MITER, const_flag); 
+    REGISTER_LONG_CONSTANT("MS_CJC_ROUND", MS_CJC_ROUND, const_flag); 
+    REGISTER_LONG_CONSTANT("MS_CJC_SQUARE", MS_CJC_SQUARE, const_flag); 
+    REGISTER_LONG_CONSTANT("MS_CJC_TRIANGLE", MS_CJC_TRIANGLE, const_flag); 
 
     /*cgi request types*/
     REGISTER_LONG_CONSTANT("MS_GET_REQUEST", MS_GET_REQUEST, const_flag);

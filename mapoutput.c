@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapoutput.c 11240 2011-03-18 16:28:37Z tbonfort $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Various support code related to the outputFormatObj.
@@ -30,7 +30,7 @@
 #include <assert.h>
 #include "mapserver.h"
 
-MS_CVSID("$Id: mapoutput.c 11240 2011-03-18 16:28:37Z tbonfort $")
+MS_CVSID("$Id$")
 
 static outputFormatObj *msAllocOutputFormat( mapObj *map, const char *name, 
                                              const char *driver );
