@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapcopy.h 9093 2009-06-07 09:52:59Z tbonfort $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Declarations related to copyng mapObjs.  Provided by Mladen Turk 

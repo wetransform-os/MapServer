@@ -1,5 +1,5 @@
 /**********************************************************************
- * $Id: mapogcfiltercommon.c 11503 2011-04-07 19:56:16Z dmorissette $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  OGC Filter Encoding implementation
@@ -34,7 +34,7 @@
 #include "mapserver.h"
 #include "mapowscommon.h"
 
-MS_CVSID("$Id: mapogcfiltercommon.c 11503 2011-04-07 19:56:16Z dmorissette $")
+MS_CVSID("$Id$")
 
 #ifdef USE_OGR
 

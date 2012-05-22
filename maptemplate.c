@@ -37,7 +37,7 @@
 
 #include <ctype.h>
 
-MS_CVSID("$Id: maptemplate.c 11651 2011-05-05 05:05:35Z sdlime $")
+MS_CVSID("$Id$")
 
 static char *olUrl = "http://www.mapserver.org/lib/OpenLayers-ms60.js";
 static char *olTemplate = \

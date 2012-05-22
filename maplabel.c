@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: maplabel.c 11620 2011-04-27 16:18:45Z sdlime $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Labeling Implementation.
@@ -38,7 +38,7 @@
 
 #include "mapserver.h"
 
-MS_CVSID("$Id: maplabel.c 11620 2011-04-27 16:18:45Z sdlime $")
+MS_CVSID("$Id$")
 
 
 /**
@@ -444,6 +444,28 @@ int msAddLabel(mapObj *map, int layerindex, int classindex, shapeObj *shape, poi
   map->labelcache.numlabels++;
 
   return(MS_SUCCESS);
+}
+
+
+/*
+** Is a label completely in the image, reserving a gutter (in pixels) inside 
+** image for no labels (effectively making image larger. The gutter can be 
+** negative in cases where a label has a buffer around it.
+*/
+static int labelInImage(int width, int height, shapeObj *lpoly, int gutter)
+{
+  int i,j;
+
+  for(i=0; i<lpoly->numlines; i++) {
+    for(j=1; j<lpoly->line[i].numpoints; j++) {
+      if(lpoly->line[i].point[j].x < gutter) return(MS_FALSE);
+      if(lpoly->line[i].point[j].x >= width-gutter) return(MS_FALSE);
+      if(lpoly->line[i].point[j].y < gutter) return(MS_FALSE);
+      if(lpoly->line[i].point[j].y >= height-gutter) return(MS_FALSE);
+    }
+  }
+
+  return(MS_TRUE);
 }
 
 /* msTestLabelCacheCollisions()
@@ -956,26 +978,6 @@ pointObj get_metrics(pointObj *p, int position, rectObj rect, int ox, int oy, do
 }
 
 /*
-** is a label completely in the image (excluding label buffer)
-*/
-/* static int labelInImage(int width, int height, shapeObj *lpoly, int buffer) */
-int labelInImage(int width, int height, shapeObj *lpoly, int buffer)
-{
-  int i,j;
-
-  for(i=0; i<lpoly->numlines; i++) {
-    for(j=1; j<lpoly->line[i].numpoints; j++) {
-      if(lpoly->line[i].point[j].x < -buffer) return(MS_FALSE);
-      if(lpoly->line[i].point[j].x >= width+buffer) return(MS_FALSE);
-      if(lpoly->line[i].point[j].y < -buffer) return(MS_FALSE);
-      if(lpoly->line[i].point[j].y >= height+buffer) return(MS_FALSE);
-    }
-  }
-
-  return(MS_TRUE);
-}
-
-/*
 ** Variation on msIntersectPolygons. Label polygons aren't like shapefile polygons. They
 ** have no holes, and often do have overlapping parts (i.e. road symbols).
 */
@@ -1016,4 +1018,141 @@ int intersectLabelPolygons(shapeObj *p1, shapeObj *p2) {
   }
 
   return(MS_FALSE);
+}
+
+/* For MapScript, exactly the same the msInsertStyle */
+int msInsertLabelStyle(labelObj *label, styleObj *style, int nStyleIndex) {
+    int i;
+
+    if (!style)
+    {
+        msSetError(MS_CHILDERR, "Can't insert a NULL Style", "msInsertLabelStyle()");
+        return -1;
+    }
+
+    /* Ensure there is room for a new style */
+    if (msGrowLabelStyles(label) == NULL) {
+        return -1;
+    }
+    /* Catch attempt to insert past end of styles array */
+    else if (nStyleIndex >= label->numstyles) {
+        msSetError(MS_CHILDERR, "Cannot insert style beyond index %d", "insertLabelStyle()", label->numstyles-1);
+        return -1;
+    }
+    else if (nStyleIndex < 0) { /* Insert at the end by default */
+        label->styles[label->numstyles]=style;
+	MS_REFCNT_INCR(style);
+        label->numstyles++;
+        return label->numstyles-1;
+    }
+    else if (nStyleIndex >= 0 && nStyleIndex < label->numstyles) {
+        /* Move styles existing at the specified nStyleIndex or greater */
+        /* to a higher nStyleIndex */
+        for (i=label->numstyles-1; i>=nStyleIndex; i--) {
+            label->styles[i+1] = label->styles[i];
+        }
+        label->styles[nStyleIndex]=style;
+	MS_REFCNT_INCR(style);
+        label->numstyles++;
+        return nStyleIndex;
+    }
+    else {
+        msSetError(MS_CHILDERR, "Invalid nStyleIndex", "insertLabelStyle()");
+        return -1;
+    }
+}
+
+/**
+ * Move the style up inside the array of styles.
+ */  
+int msMoveLabelStyleUp(labelObj *label, int nStyleIndex)
+{
+    styleObj *psTmpStyle = NULL;
+    if (label && nStyleIndex < label->numstyles && nStyleIndex >0)
+    {
+        psTmpStyle = (styleObj *)malloc(sizeof(styleObj));
+        initStyle(psTmpStyle);
+        
+        msCopyStyle(psTmpStyle, label->styles[nStyleIndex]);
+
+        msCopyStyle(label->styles[nStyleIndex], 
+                    label->styles[nStyleIndex-1]);
+        
+        msCopyStyle(label->styles[nStyleIndex-1], psTmpStyle);
+
+        return(MS_SUCCESS);
+    }
+    msSetError(MS_CHILDERR, "Invalid index: %d", "msMoveLabelStyleUp()",
+               nStyleIndex);
+    return (MS_FAILURE);
+}
+
+
+/**
+ * Move the style down inside the array of styles.
+ */  
+int msMoveLabelStyleDown(labelObj *label, int nStyleIndex)
+{
+    styleObj *psTmpStyle = NULL;
+
+    if (label && nStyleIndex < label->numstyles-1 && nStyleIndex >=0)
+    {
+        psTmpStyle = (styleObj *)malloc(sizeof(styleObj));
+        initStyle(psTmpStyle);
+        
+        msCopyStyle(psTmpStyle, label->styles[nStyleIndex]);
+
+        msCopyStyle(label->styles[nStyleIndex], 
+                    label->styles[nStyleIndex+1]);
+        
+        msCopyStyle(label->styles[nStyleIndex+1], psTmpStyle);
+
+        return(MS_SUCCESS);
+    }
+    msSetError(MS_CHILDERR, "Invalid index: %d", "msMoveLabelStyleDown()",
+               nStyleIndex);
+    return (MS_FAILURE);
+}
+
+/**
+ * Delete the style identified by the index and shift
+ * styles that follows the deleted style.
+ */  
+int msDeleteLabelStyle(labelObj *label, int nStyleIndex)
+{
+    int i = 0;
+    if (label && nStyleIndex < label->numstyles && nStyleIndex >=0)
+    {
+        if (freeStyle(label->styles[nStyleIndex]) == MS_SUCCESS)
+            msFree(label->styles[nStyleIndex]);
+        for (i=nStyleIndex; i< label->numstyles-1; i++)
+        {
+            label->styles[i] = label->styles[i+1];
+        }
+        label->styles[label->numstyles-1] = NULL;
+        label->numstyles--;
+        return(MS_SUCCESS);
+    }
+    msSetError(MS_CHILDERR, "Invalid index: %d", "msDeleteLabelStyle()",
+               nStyleIndex);
+    return (MS_FAILURE);
+}
+
+styleObj *msRemoveLabelStyle(labelObj *label, int nStyleIndex) {
+    int i;
+    styleObj *style;
+    if (nStyleIndex < 0 || nStyleIndex >= label->numstyles) {
+        msSetError(MS_CHILDERR, "Cannot remove style, invalid nStyleIndex %d", "removeLabelStyle()", nStyleIndex);
+        return NULL;
+    }
+    else {
+        style=label->styles[nStyleIndex];
+        for (i=nStyleIndex; i<label->numstyles-1; i++) {
+             label->styles[i]=label->styles[i+1];
+        }
+	label->styles[label->numstyles-1]=NULL;
+        label->numstyles--;
+	MS_REFCNT_DECR(style);
+        return style;
+    }
 }

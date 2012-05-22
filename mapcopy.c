@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapcopy.c 11084 2011-03-06 12:15:20Z rouault $
+ * $Id$
  *
  * Project: MapServer
  * Purpose: Functions to allow copying/cloning of maps
@@ -45,7 +45,7 @@
 #include "mapserver.h"
 #include "mapsymbol.h"
 
-MS_CVSID("$Id: mapcopy.c 11084 2011-03-06 12:15:20Z rouault $")
+MS_CVSID("$Id$")
 
 #include "mapcopy.h"
 
@@ -977,6 +977,7 @@ int msCopyMap(mapObj *dst, mapObj *src)
     MS_COPYSTELEM(cellsize);
     MS_COPYSTELEM(units);
     MS_COPYSTELEM(scaledenom);
+    MS_COPYSTELEM(defresolution);
     MS_COPYSTELEM(resolution);
     MS_COPYSTRING(dst->shapepath, src->shapepath); 
     MS_COPYSTRING(dst->mappath, src->mappath); 

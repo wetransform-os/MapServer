@@ -1,4 +1,4 @@
-# $Id: runalltests.py 4154 2004-11-23 16:00:45Z sean $
+# $Id$
 #
 # Project:  MapServer
 # Purpose:  Comprehensive xUnit style Python mapscript test runner

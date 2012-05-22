@@ -1,4 +1,4 @@
-# $Id: fonttest.py 4597 2005-05-10 15:00:20Z sean $
+# $Id$
 #
 # Project:  MapServer
 # Purpose:  xUnit style Python mapscript tests of hashTableObj

@@ -1,4 +1,4 @@
-// $Id: MapTest.java 5531 2006-06-28 13:46:22Z umberto $
+// $Id$
 //
 // See README_THREADTEST.TXT for usage details.
 //

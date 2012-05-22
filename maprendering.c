@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: maprendering.c 11855 2011-06-28 17:29:16Z tbonfort $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Rendering utility functions

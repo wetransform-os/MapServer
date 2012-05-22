@@ -1,4 +1,4 @@
-# $Id: refcount.py 7205 2007-12-22 09:13:59Z unicoletti $
+# $Id$
 #
 # Project:  MapServer
 # Purpose:  xUnit style Python mapscript tests of Map

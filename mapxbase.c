@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapxbase.c 10772 2010-11-29 18:27:02Z aboudreault $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  .dbf access API.  Derived from shapelib, and relicensed with 
@@ -34,7 +34,7 @@
 #include <stdlib.h> /* for atof() and atoi() */
 #include <math.h>
 
-MS_CVSID("$Id: mapxbase.c 10772 2010-11-29 18:27:02Z aboudreault $")
+MS_CVSID("$Id$")
 
 /* try to use a large file version of fseek for files up to 4GB (#3514) */
 #if _MSC_VER > 1310

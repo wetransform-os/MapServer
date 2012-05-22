@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: maptree.c 10772 2010-11-29 18:27:02Z aboudreault $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  .qix spatial index implementation.  Derived from shapelib, and 
@@ -31,7 +31,7 @@
 #include "mapserver.h"
 #include "maptree.h"
 
-MS_CVSID("$Id: maptree.c 10772 2010-11-29 18:27:02Z aboudreault $")
+MS_CVSID("$Id$")
 
 /* -------------------------------------------------------------------- */
 /*      If the following is 0.5, nodes will be split in half.  If it    */

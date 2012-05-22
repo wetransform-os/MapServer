@@ -1,5 +1,5 @@
 /**********************************************************************
- * $Id: mapwfs.c 11544 2011-04-12 12:38:18Z aboudreault $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  WFS server implementation
@@ -28,7 +28,7 @@
 
 #include "mapserver.h"
 
-MS_CVSID("$Id: mapwfs.c 11544 2011-04-12 12:38:18Z aboudreault $")
+MS_CVSID("$Id$")
 
 #if defined(USE_WFS_SVR)
 
@@ -2637,7 +2637,6 @@ int msWFSGetFeature(mapObj *map, wfsParamsObj *paramsObj, cgiRequestObj *req, ow
                         if( to_allow < 0 )
                             to_allow = 0;
 
-                        lp->resultcache->numresults = 0;
                     }
                 }
             }
@@ -3205,7 +3204,11 @@ int msWFSParseRequest(mapObj *map, cgiRequestObj *request, owsRequestObj *ows_re
             if (pszValue)
               wfsparams->nStartIndex = atoi(pszValue);
             
-             /* free typname and filter. There may have been */
+            pszValue = xmlGetProp(rootnode, (xmlChar *)"outputFormat");
+            if (pszValue)
+              wfsparams->pszOutputFormat = msStrdup(pszValue);            
+
+            /* free typename and filter. There may have been */
             /* values if they were passed in the URL */
             if (wfsparams->pszTypeName)    
               free(wfsparams->pszTypeName);
@@ -3412,10 +3415,15 @@ int msWFSParseRequest(mapObj *map, cgiRequestObj *request, owsRequestObj *ows_re
                 if (pszValue)
                   wfsparams->nMaxFeatures = atoi(pszValue);
 
-                 pszValue = CPLGetXMLValue(psGetFeature,  "startIndex",
+                pszValue = CPLGetXMLValue(psGetFeature,  "startIndex",
                                                  NULL);
                 if (pszValue)
                   wfsparams->nStartIndex = atoi(pszValue);
+
+                pszValue = CPLGetXMLValue(psGetFeature, "outputFormat", 
+                                                 NULL);
+                if (pszValue)
+                  wfsparams->pszOutputFormat = msStrdup(pszValue);
 
                 psQuery = CPLGetXMLNode(psGetFeature, "Query");
                 if (psQuery)

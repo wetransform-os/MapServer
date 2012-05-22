@@ -39,7 +39,7 @@
 #include "mapserver.h"
 #include <assert.h>
 
-MS_CVSID("$Id: maporaclespatial.c 11881 2011-07-07 19:55:43Z sdlime $")
+MS_CVSID("$Id$")
 
 #ifdef USE_ORACLESPATIAL
 

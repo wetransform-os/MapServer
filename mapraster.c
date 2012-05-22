@@ -35,7 +35,7 @@
 #include "mapresample.h"
 #include "mapthread.h"
 
-MS_CVSID("$Id: mapraster.c 11881 2011-07-07 19:55:43Z sdlime $")
+MS_CVSID("$Id$")
 
 extern int msyylex_destroy(void);
 extern int yyparse(parseObj *);

@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapwms.c 11768 2011-05-30 13:15:57Z dmorissette $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  OpenGIS Web Mapping Service support implementation.
@@ -48,7 +48,7 @@
 #include <process.h>
 #endif
 
-MS_CVSID("$Id: mapwms.c 11768 2011-05-30 13:15:57Z dmorissette $")
+MS_CVSID("$Id$")
 
 /* ==================================================================
  * WMS Server stuff.

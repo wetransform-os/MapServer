@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: maptime.h 7779 2008-07-03 14:20:54Z Assefa $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Time processing related declarations.

@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapdebug.c 11503 2011-04-07 19:56:16Z dmorissette $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Implementation of debug/logging, msDebug() and related functions.
@@ -48,7 +48,7 @@
 #include <windows.h> /* OutputDebugStringA() */
 #endif
 
-MS_CVSID("$Id: mapdebug.c 11503 2011-04-07 19:56:16Z dmorissette $")
+MS_CVSID("$Id$")
 
 
 #ifndef USE_THREAD

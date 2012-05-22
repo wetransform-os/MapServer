@@ -1,4 +1,4 @@
-# $Id: threadtest.py 6191 2007-06-11 01:23:09Z hobu $
+# $Id$
 #
 # Project:  MapServer
 # Purpose:  xUnit style Python mapscript test of multi-threading

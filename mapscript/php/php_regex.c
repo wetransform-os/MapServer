@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: php_regex.c 9154 2009-07-08 18:40:27Z aboudreault $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Regex wrapper

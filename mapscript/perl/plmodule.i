@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: plmodule.i 8847 2009-03-30 17:48:25Z aboudreault $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Perl-specific enhancements to MapScript

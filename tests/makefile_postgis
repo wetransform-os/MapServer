@@ -1,5 +1,5 @@
 # ===========================================================================
-# $Id: makefile_postgis 7418 2008-02-29 00:02:49Z nsavard $
+# $Id$
 #
 # Project:  MapServer
 # Purpose:  Make and populate a PostGIS testing database

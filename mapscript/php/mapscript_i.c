@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapscript_i.c 11881 2011-07-07 19:55:43Z sdlime $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Interface file for MapServer PHP scripting extension 
@@ -723,6 +723,21 @@ int labelObj_updateFromString(labelObj *self, char *snippet) {
    return msUpdateLabelFromString(self, snippet);
 }
 
+int labelObj_moveStyleUp(labelObj *self, int index)
+{
+    return msMoveLabelStyleUp(self, index);
+}
+
+int labelObj_moveStyleDown(labelObj *self, int index)
+{
+    return msMoveLabelStyleDown(self, index);
+}
+
+int labelObj_deleteStyle(labelObj *self, int index)
+{
+    return msDeleteLabelStyle(self, index);
+}
+
 /**********************************************************************
  * class extensions for legendObj
  **********************************************************************/
@@ -777,6 +792,7 @@ classObj *classObj_new(layerObj *layer, classObj *class) {
     }
 
     layer->class[layer->numclasses]->type = layer->type;
+    layer->class[layer->numclasses]->layer = layer;
 
     layer->numclasses++;
 
@@ -1387,6 +1403,21 @@ styleObj *styleObj_new(classObj *class, styleObj *style) {
     class->numstyles++;
 
     return class->styles[class->numstyles-1];
+  }
+
+styleObj *styleObj_label_new(labelObj *label, styleObj *style) {
+    if(msGrowLabelStyles(label) == NULL)
+      return NULL;
+
+    if(initStyle(label->styles[label->numstyles]) == -1)
+      return NULL;
+
+    if (style)
+      msCopyStyle(label->styles[label->numstyles], style);
+        
+    label->numstyles++;
+
+    return label->styles[label->numstyles-1];
   }
 
 int styleObj_updateFromString(styleObj *self, char *snippet) {

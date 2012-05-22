@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapstring.c 11396 2011-03-30 19:57:35Z sdlime $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Various string handling functions.
@@ -33,7 +33,7 @@
 
 #include "mapserver.h"
 
-MS_CVSID("$Id: mapstring.c 11396 2011-03-30 19:57:35Z sdlime $")
+MS_CVSID("$Id$")
 
 #include <ctype.h>
 #include <string.h>
@@ -1644,6 +1644,8 @@ char *msGetFriBidiEncodedString(const char *string, const char *encoding)
     outstring[j] = '\0';
 
 #endif
+    
+     free(visual);
      return msStrdup(outstring);
   }
 }

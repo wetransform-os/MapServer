@@ -1,4 +1,4 @@
-# $Id: zoomtest.py 5542 2006-07-03 22:43:20Z hobu $
+# $Id$
 #
 # Project:  MapServer
 # Purpose:  xUnit style Python mapscript tests of Map "zooming"

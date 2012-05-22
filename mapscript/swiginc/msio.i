@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: msio.i 11163 2011-03-15 20:54:31Z schpidi $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Definitions for MapServer IO redirection capability.
@@ -31,12 +31,13 @@
  ****************************************************************************/
 
 
-/* $Id: msio.i 11163 2011-03-15 20:54:31Z schpidi $ */
+/* $Id$ */
 
 void msIO_resetHandlers(void);
 void msIO_installStdoutToBuffer(void);
 void msIO_installStdinFromBuffer(void);
-const char *msIO_stripStdoutBufferContentType(void);
+%newobject msIO_stripStdoutBufferContentType;
+const char *msIO_stripStdoutBufferContentType();
 void msIO_stripStdoutBufferContentHeaders(void);
 
 /* mapscript only extensions */
@@ -89,7 +90,7 @@ gdBuffer msIO_getStdoutBufferBytes() {
 
     gdBuf.data = buf->data;
     gdBuf.size = buf->data_offset;
-    gdBuf.owns_data = MS_FALSE;
+    gdBuf.owns_data = MS_TRUE;
 
     /* we are seizing ownership of the buffer contents */
     buf->data_offset = 0;

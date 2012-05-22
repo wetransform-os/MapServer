@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapserver.h 11896 2011-07-12 13:17:28Z dmorissette $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Primary MapServer include file.
@@ -32,11 +32,11 @@
 /*
 ** MapServer version - to be updated for every release 
 */
-#define MS_VERSION "6.0.1"
+#define MS_VERSION "6.0.3"
 
 #define MS_VERSION_MAJOR    6
 #define MS_VERSION_MINOR    0
-#define MS_VERSION_REV      1
+#define MS_VERSION_REV      3
 
 #define MS_VERSION_NUM (MS_VERSION_MAJOR*10000+MS_VERSION_MINOR*100+MS_VERSION_REV)
 
@@ -367,6 +367,7 @@ extern "C" {
 
 #define MS_INIT_COLOR(color,r,g,b,a) { (color).red = r; (color).green = g; (color).blue = b; (color).pen = MS_PEN_UNSET; (color).alpha=a; }
 #define MS_VALID_COLOR(color) (((color).red==-1 || (color).green==-1 || (color).blue==-1)?MS_FALSE:MS_TRUE)
+#define MS_COMPARE_COLOR(color1, color2) (((color2).red==(color1).red && (color2).green==(color1).green && (color2).blue==(color1).blue)?MS_TRUE:MS_FALSE)
 #define MS_TRANSPARENT_COLOR(color) (((color).alpha==0 || (color).red==-255 || (color).green==-255 || (color).blue==-255)?MS_TRUE:MS_FALSE)
 #define MS_COMPARE_COLORS(a,b) (((a).red!=(b).red || (a).green!=(b).green || (a).blue!=(b).blue)?MS_FALSE:MS_TRUE)
 #define MS_COLOR_GETRGB(color) (MS_VALID_COLOR(color)?((color).red *0x10000 + (color).green *0x100 + (color).blue):-1)
@@ -437,9 +438,17 @@ extern "C" {
 #define MS_ENCRYPTION_KEY_SIZE  16   /* Key size: 128 bits = 16 bytes */
 
 #define GET_LAYER(map, pos) map->layers[pos]
+
+#if defined(USE_THREAD) && (__GNUC__*10000 + __GNUC_MINOR__*100 + __GNUC_PATCHLEVEL__) >= 40102
+  // __sync* appeared in GCC 4.1.2
+#define MS_REFCNT_INCR(obj) __sync_fetch_and_add(&obj->refcount, +1)
+#define MS_REFCNT_DECR(obj) __sync_sub_and_fetch(&obj->refcount, +1)
+#define MS_REFCNT_INIT(obj) obj->refcount=1, __sync_synchronize()
+#else
 #define MS_REFCNT_INCR(obj) obj->refcount++
 #define MS_REFCNT_DECR(obj) (--(obj->refcount))
 #define MS_REFCNT_INIT(obj) obj->refcount=1
+#endif
 #define MS_REFCNT_DECR_IS_NOT_ZERO(obj) (MS_REFCNT_DECR(obj))>0
 #define MS_REFCNT_DECR_IS_ZERO(obj) (MS_REFCNT_DECR(obj))<=0
 
@@ -1732,7 +1741,6 @@ MS_DLL_EXPORT void msApplyDefaultSubstitutions(mapObj *map);
 MS_DLL_EXPORT int getClassIndex(layerObj *layer, char *str);
 
 /* For maplabel */
-int labelInImage(int width, int height, shapeObj *lpoly, int buffer);
 int intersectLabelPolygons(shapeObj *p1, shapeObj *p2);
 pointObj get_metrics_line(pointObj *p, int position, rectObj rect, int ox, int oy, double angle, int buffer, lineObj *poly);
 pointObj get_metrics(pointObj *p, int position, rectObj rect, int ox, int oy, double angle, int buffer, shapeObj *poly);
@@ -2302,6 +2310,14 @@ MS_DLL_EXPORT int msDeleteStyle(classObj *classo, int iStyleIndex);
 MS_DLL_EXPORT int msInsertStyle(classObj *classo, styleObj *style,
                                 int nStyleIndex);
 MS_DLL_EXPORT styleObj *msRemoveStyle(classObj *classo, int index);
+
+/* maplabel.c */
+MS_DLL_EXPORT int msInsertLabelStyle(labelObj *label, styleObj *style,
+                                     int nStyleIndex);
+MS_DLL_EXPORT int msMoveLabelStyleUp(labelObj *label, int nStyleIndex);
+MS_DLL_EXPORT int msMoveLabelStyleDown(labelObj *label, int nStyleIndex);
+MS_DLL_EXPORT int msDeleteLabelStyle(labelObj *label, int nStyleIndex);
+MS_DLL_EXPORT styleObj *msRemoveLabelStyle(labelObj *label, int nStyleIndex);
 
 /* Measured shape utility functions. */
 MS_DLL_EXPORT pointObj *msGetPointUsingMeasure(shapeObj *shape, double m);

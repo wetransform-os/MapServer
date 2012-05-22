@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapgeomtransform.c 11513 2011-04-10 09:50:28Z tbonfort $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose: RFC48 implementation of geometry transformations for styling
@@ -52,6 +52,9 @@ void msStyleSetGeomTransform(styleObj *s, char *transform) {
   }
   else if(!strncasecmp("labelpoly",transform,9)) {
     s->_geomtransform.type = MS_GEOMTRANSFORM_LABELPOLY;
+  }
+  else if(!strncasecmp("centroid",transform,8)) {
+    s->_geomtransform.type = MS_GEOMTRANSFORM_CENTROID;
   }
   else {
     s->_geomtransform.type = MS_GEOMTRANSFORM_NONE;

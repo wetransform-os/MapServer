@@ -5,7 +5,7 @@
 # Purpose: Applies area, perimeter and centroid calculations to a shapes
 #          in a shapefile (requires mapserver/mapscript to be built with GEOS)
 #
-# $Id: shapeprops.pl 5845 2006-11-14 23:16:52Z tkralidi $
+# $Id$
 #
 
 use strict;

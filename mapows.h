@@ -1,5 +1,5 @@
 /*****************************************************************************
- * $Id: mapows.h 11881 2011-07-07 19:55:43Z sdlime $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  OGC Web Services (WMS, WFS, WCS) support function definitions

@@ -1,5 +1,5 @@
 /**********************************************************************
- * $Id: mapgraticule.c 11881 2011-07-07 19:55:43Z sdlime $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Graticule Renderer
@@ -30,7 +30,7 @@
 #include <assert.h>
 #include "mapproject.h"
 
-MS_CVSID("$Id: mapgraticule.c 11881 2011-07-07 19:55:43Z sdlime $")
+MS_CVSID("$Id$")
 
 /**********************************************************************************************************************
  *

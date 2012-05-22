@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapresample.c 11734 2011-05-20 20:19:04Z warmerdam $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Assorted code related to resampling rasters.
@@ -31,7 +31,7 @@
 #include "mapresample.h"
 #include "mapthread.h"
 
-MS_CVSID("$Id: mapresample.c 11734 2011-05-20 20:19:04Z warmerdam $")
+MS_CVSID("$Id$")
 
 #ifndef MAX
 #  define MIN(a,b)      ((a<b) ? a : b)

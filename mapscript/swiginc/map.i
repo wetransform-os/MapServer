@@ -1,5 +1,5 @@
 /* ===========================================================================
-   $Id: map.i 10924 2011-02-02 04:28:39Z sdlime $
+   $Id$
  
    Project:  MapServer
    Purpose:  SWIG interface file for mapscript mapObj extensions

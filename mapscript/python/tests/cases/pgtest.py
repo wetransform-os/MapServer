@@ -1,4 +1,4 @@
-# $Id: pgtest.py 5546 2006-07-04 01:05:58Z hobu $
+# $Id$
 #
 # Project:  MapServer
 # Purpose:  xUnit style Python mapscript tests of PostGIS Layer

@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapdummyrenderer.c 11592 2011-04-18 10:15:18Z tbonfort $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Dummy functions to implement when using a pluggable renderer

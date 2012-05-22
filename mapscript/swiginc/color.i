@@ -1,5 +1,5 @@
 /* ===========================================================================
-   $Id: color.i 11208 2011-03-17 19:44:08Z tbonfort $
+   $Id$
  
    Project:  MapServer
    Purpose:  SWIG interface file for mapscript colorObj extensions

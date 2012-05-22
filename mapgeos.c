@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapgeos.c 11470 2011-04-05 20:11:33Z tamas $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  MapServer-GEOS integration.

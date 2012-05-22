@@ -1,4 +1,4 @@
-# $Id: drawshapes.py 4218 2004-12-07 21:33:28Z sean $
+# $Id$
 #
 # Timing tests of feature drawing -- map.draw vs drawing features
 # shape by shape.

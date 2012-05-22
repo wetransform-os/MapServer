@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapquery.c 11881 2011-07-07 19:55:43Z sdlime $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  layer query support.
@@ -29,7 +29,7 @@
 
 #include "mapserver.h"
 
-MS_CVSID("$Id: mapquery.c 11881 2011-07-07 19:55:43Z sdlime $")
+MS_CVSID("$Id$")
 
 int msInitQuery(queryObj *query)
 {

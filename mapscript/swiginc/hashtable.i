@@ -1,5 +1,5 @@
 /* ===========================================================================
-   $Id: hashtable.i 7800 2008-07-09 04:35:48Z sdlime $
+   $Id$
 
    Project:  MapServer
    Purpose:  SWIG interface file for mapscript hashTableObj extensions

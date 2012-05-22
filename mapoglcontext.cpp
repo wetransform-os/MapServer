@@ -33,7 +33,7 @@
 #include "maperror.h"
 #include "mapoglcontext.h"
 
-MS_CVSID("$Id: mapoglcontext.cpp 11512 2011-04-09 08:46:51Z toby $")
+MS_CVSID("$Id$")
 
 #define _T(x) __TEXT(x)
 

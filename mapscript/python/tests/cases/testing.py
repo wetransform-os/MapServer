@@ -1,4 +1,4 @@
-# $Id: testing.py 5539 2006-07-03 21:35:10Z hobu $
+# $Id$
 #
 # Project:  MapServer
 # Purpose:  xUnit style Python mapscript testing utilities

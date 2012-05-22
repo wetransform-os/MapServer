@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapentities.h 7056 2007-11-20 10:05:50Z tbonfort $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  HTML entity to unicode lookup table

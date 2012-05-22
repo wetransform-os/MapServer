@@ -1,5 +1,5 @@
 /**********************************************************************
- * $Id: mapogcfilter.h 11890 2011-07-12 13:06:14Z assefa $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  OGC Filter Encoding implementation

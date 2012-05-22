@@ -4,7 +4,7 @@
 #
 # Purpose: Simple example to read a csv file and reproject point x/y data
 #
-# $Id: project_csv.py 7900 2008-09-09 02:03:23Z tomkralidis $
+# $Id$
 #
 
 import sys

@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapquantization.c 11599 2011-04-19 05:14:17Z tbonfort $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  RGB(A) to Palette Support Functions

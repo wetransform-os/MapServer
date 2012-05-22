@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: cgiutil.h 10645 2010-10-22 20:42:59Z aboudreault $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  cgiRequestObj and CGI parsing utility related declarations.

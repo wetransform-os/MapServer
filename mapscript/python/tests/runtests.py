@@ -1,4 +1,4 @@
-# $Id: runtests.py 3738 2004-10-06 21:32:33Z sean $
+# $Id$
 #
 # Project:  MapServer
 # Purpose:  Comprehensive xUnit style Python mapscript test suite

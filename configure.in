@@ -1,5 +1,5 @@
 dnl **************************************************************************
-dnl $Id: configure.in 11618 2011-04-27 15:06:17Z dmorissette $
+dnl $Id$
 dnl
 dnl Project:  MapServer
 dnl Purpose:  Main autoconf script ( Process this file with autoconf to 

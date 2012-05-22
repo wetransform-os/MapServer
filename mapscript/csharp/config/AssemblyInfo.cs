@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: AssemblyInfo.cs 10129 2010-05-02 12:02:51Z tamas $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  MapScript CSharp Assembly Information

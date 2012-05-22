@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapcluster.c 11881 2011-07-07 19:55:43Z sdlime $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Implementation of the cluster layer data provider (RFC-69).
@@ -29,11 +29,11 @@
 
 #define _CRT_SECURE_NO_WARNINGS 1
 
-/* $Id: mapcluster.c 11881 2011-07-07 19:55:43Z sdlime $ */
+/* $Id$ */
 #include <assert.h>
 #include "mapserver.h"
 
-MS_CVSID("$Id: mapcluster.c 11881 2011-07-07 19:55:43Z sdlime $")
+MS_CVSID("$Id$")
 
 
 #ifdef USE_CLUSTER_PLUGIN

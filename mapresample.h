@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapresample.h 9873 2010-02-23 05:06:40Z warmerdam $
+ * $Id$
  *
  * Project:  CFS OGC MapServer
  * Purpose:  Definitions related to raster resampling support.

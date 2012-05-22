@@ -1,4 +1,4 @@
-# $Id: layertest.py 6519 2007-08-08 20:37:34Z hobu $
+# $Id$
 #
 # Project:  MapServer
 # Purpose:  xUnit style Python mapscript tests of Layer

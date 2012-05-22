@@ -1,5 +1,5 @@
 /* ===========================================================================
-   $Id: web.i 6373 2007-07-24 02:37:18Z dmorissette $
+   $Id$
  
    Project:  MapServer
    Purpose:  SWIG interface file for mapscript webObj extensions

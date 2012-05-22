@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapdrawgdal.c 11176 2011-03-16 19:01:00Z schpidi $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Code for drawing GDAL raster layers.  Called from 
@@ -33,7 +33,7 @@
 #include "mapresample.h"
 #include "mapthread.h"
 
-MS_CVSID("$Id: mapdrawgdal.c 11176 2011-03-16 19:01:00Z schpidi $")
+MS_CVSID("$Id$")
 
 extern int InvGeoTransform( double *gt_in, double *gt_out );
 
@@ -249,6 +249,18 @@ int msDrawRasterLayerGDAL(mapObj *map, layerObj *layer, imageObj *image,
                         GDALGetRasterXSize(hDS) - src_xoff);
         src_ysize = MIN(MAX(0,(int) (lly - ury + 0.5)),
                         GDALGetRasterYSize(hDS) - src_yoff);
+
+       /* We want very small windows to use at least one source pixel (#4172) */
+       if( src_xsize == 0 && (urx - llx) > 0.0 ) 
+       {
+           src_xsize = 1;
+	   src_xoff = MIN(src_xoff,GDALGetRasterXSize(hDS)-1);
+       }
+       if( src_ysize == 0 && (lly - ury) > 0.0 )
+       {
+           src_ysize = 1;
+	   src_yoff = MIN(src_yoff,GDALGetRasterYSize(hDS)-1);
+       }
 
         if( src_xsize == 0 || src_ysize == 0 )
         {

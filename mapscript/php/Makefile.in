@@ -5,7 +5,7 @@
 # This is an adapted version of php-3.0.14/dl/Makefile.tmpl for the 
 # MapServer php_mapscript.so module.
 #
-# $Id: Makefile.in 11455 2011-04-04 16:42:42Z aboudreault $
+# $Id$
 #
 
 # +----------------------------------------------------------------------+

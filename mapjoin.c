@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapjoin.c 11469 2011-04-05 19:52:41Z aboudreault $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Implements MapServer joins. 
@@ -29,7 +29,7 @@
 
 #include "mapserver.h"
 
-MS_CVSID("$Id: mapjoin.c 11469 2011-04-05 19:52:41Z aboudreault $")
+MS_CVSID("$Id$")
 
 #define ROW_ALLOCATION_SIZE 10
 

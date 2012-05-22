@@ -1,4 +1,4 @@
-# $Id: classtest.py 6517 2007-08-08 20:34:10Z hobu $
+# $Id$
 #
 # Project:  MapServer
 # Purpose:  xUnit style Python mapscript tests of classObj

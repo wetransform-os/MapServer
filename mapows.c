@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapows.c 11582 2011-04-15 09:55:46Z tbonfort $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  OGC Web Services (WMS, WFS) support functions
@@ -35,7 +35,7 @@
 #include <stdarg.h> 
 #include <assert.h>
 
-MS_CVSID("$Id: mapows.c 11582 2011-04-15 09:55:46Z tbonfort $")
+MS_CVSID("$Id$")
 
 /*
 ** msOWSDispatch() is the entry point for any OWS request (WMS, WFS, ...)

@@ -1,4 +1,4 @@
-# $Id: shapetest.py 6523 2007-08-08 20:50:12Z hobu $
+# $Id$
 #
 # Project:  MapServer
 # Purpose:  xUnit style Python mapscript tests of Shape

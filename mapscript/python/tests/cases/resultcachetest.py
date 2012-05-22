@@ -1,4 +1,4 @@
-# $Id: resultcachetest.py 3886 2004-10-26 17:18:34Z sean $
+# $Id$
 #
 # Project:  MapServer
 # Purpose:  xUnit style Python mapscript tests of ResultCache

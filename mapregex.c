@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapregex.c 10772 2010-11-29 18:27:02Z aboudreault $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Regex wrapper

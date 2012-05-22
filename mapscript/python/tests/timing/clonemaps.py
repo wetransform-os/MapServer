@@ -1,4 +1,4 @@
-# $Id: clonemaps.py 3454 2004-08-10 14:22:07Z sean $
+# $Id$
 #
 # Timing tests of mapfile parsing vs map cloning
 

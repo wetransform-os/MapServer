@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: legend.c 11372 2011-03-29 23:34:57Z dmorissette $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Mainline of commandline legend generation test utility.
@@ -29,7 +29,7 @@
 
 #include "mapserver.h"
 
-MS_CVSID("$Id: legend.c 11372 2011-03-29 23:34:57Z dmorissette $")
+MS_CVSID("$Id$")
 
 int main(int argc, char *argv[])
 {

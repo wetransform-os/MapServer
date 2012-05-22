@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapsearch.c 10535 2010-09-29 18:18:31Z warmerdam $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Various geospatial search operations.
@@ -35,7 +35,7 @@
 
 #include "mapserver.h"
 
-MS_CVSID("$Id: mapsearch.c 10535 2010-09-29 18:18:31Z warmerdam $")
+MS_CVSID("$Id$")
 
 #define LASTVERT(v,n)  ((v) == 0 ? n-2 : v-1)
 #define NEXTVERT(v,n)  ((v) == n-2 ? 0 : v+1)

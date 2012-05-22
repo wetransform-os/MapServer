@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapcairo.c 11591 2011-04-18 10:13:01Z tbonfort $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Cairo Rendering functions

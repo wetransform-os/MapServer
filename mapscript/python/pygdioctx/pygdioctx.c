@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: pygdioctx.c 10743 2010-11-19 17:05:38Z tbonfort $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Interface Python file-like objects with GD through IOCtx

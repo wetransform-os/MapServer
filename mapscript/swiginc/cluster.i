@@ -1,5 +1,5 @@
 /* ===========================================================================
-   $Id: cluster.i 11056 2011-03-03 22:21:25Z tamas $
+   $Id$
 
    Project:  MapServer
    Purpose:  SWIG interface file for mapscript clusterObj extensions

@@ -5,7 +5,7 @@
 # Purpose: Applies buffer to shapefile dataset using geos support
 #          buffer units as are per units of data
 #
-# $Id: buffer.pl 5816 2006-10-30 16:28:44Z tkralidi $
+# $Id$
 #
 
 use strict;

@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapwcs.c 11821 2011-06-14 20:49:10Z warmerdam $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  OpenGIS Web Coverage Server (WCS) Implementation.
@@ -32,7 +32,7 @@
 #include "mapthread.h"
 #include <assert.h>
 
-MS_CVSID("$Id: mapwcs.c 11821 2011-06-14 20:49:10Z warmerdam $")
+MS_CVSID("$Id$")
 
 #ifdef USE_WCS_SVR
 
@@ -296,7 +296,7 @@ void msWCSSetDefaultBandsRangeSetInfo( wcsParamsObj *params,
         return;
 
     value = strstr(value,"bands");
-    if( value[5] != '\0' && value[5] != ' ' )
+    if( value == NULL || (value[5] != '\0' && value[5] != ' ') )
         return;
 
     /* Are there any w*s_bands_ metadata already? If so, skip out. */

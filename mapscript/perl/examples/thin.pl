@@ -5,7 +5,7 @@
 #          basically the Douglas-Peucker generalization algorithm.
 #          (http://mapserver.gis.umn.edu/community/scripts/thin.pl)
 #
-# $Id: thin.pl 5814 2006-10-30 13:44:44Z tkralidi $
+# $Id$
 #
 
 use strict;

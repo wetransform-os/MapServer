@@ -5,7 +5,7 @@
 # Purpose: Converts a Point shapefile to a GPX document
 #          as per http://www.topografix.com/gpx.asp
 #
-# $Id: shpPoint2GPX.pl 5920 2007-02-27 18:46:13Z tkralidi $
+# $Id$
 #
 
 use strict;

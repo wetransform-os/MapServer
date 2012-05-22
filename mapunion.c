@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapunion.c 11881 2011-07-07 19:55:43Z sdlime $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Implementation of the union layer data provider (RFC-68).
@@ -29,11 +29,11 @@
 
 #define _CRT_SECURE_NO_WARNINGS 1
 
-/* $Id: mapunion.c 11881 2011-07-07 19:55:43Z sdlime $ */
+/* $Id$ */
 #include <assert.h>
 #include "mapserver.h"
 
-MS_CVSID("$Id: mapunion.c 11881 2011-07-07 19:55:43Z sdlime $")
+MS_CVSID("$Id$")
 
 #define MSUNION_NUMITEMS        3
 #define MSUNION_SOURCELAYERNAME        "Union:SourceLayerName"

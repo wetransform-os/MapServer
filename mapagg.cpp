@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapagg.cpp 11615 2011-04-21 10:13:42Z tbonfort $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  AGG rendering and other AGG related functions.

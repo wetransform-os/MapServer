@@ -1,5 +1,5 @@
 /**********************************************************************
- * $Id: mapogcfilter.c 11890 2011-07-12 13:06:14Z assefa $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  OGC Filter Encoding implementation
@@ -37,7 +37,7 @@
 #include "mapserver.h"
 #include "mapowscommon.h"
 
-MS_CVSID("$Id: mapogcfilter.c 11890 2011-07-12 13:06:14Z assefa $")
+MS_CVSID("$Id$")
 
 #ifdef USE_OGR
 
@@ -2569,7 +2569,10 @@ char *FLTGetBinaryComparisonSQLExpresssion(FilterEncodingNode *psFilterNode,
         psFilterNode->psRightNode->pOther && 
         (*(int *)psFilterNode->psRightNode->pOther) == 1)
     {
-        snprintf(szTmp, sizeof(szTmp), "lower('%s') ", psFilterNode->psRightNode->pszValue);
+        char* pszEscapedStr;
+        pszEscapedStr = msLayerEscapeSQLParam(lp, psFilterNode->psRightNode->pszValue);
+        snprintf(szTmp, sizeof(szTmp), "lower('%s') ", pszEscapedStr);
+        msFree(pszEscapedStr);
         strlcat(szBuffer, szTmp, bufferSize);
     }
     else

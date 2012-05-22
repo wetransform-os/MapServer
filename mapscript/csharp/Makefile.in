@@ -1,4 +1,4 @@
-# $Id: Makefile.in 11285 2011-03-19 21:53:46Z tamas $
+# $Id$
 #
 # Run ./configure in the main MapServer directory to turn this Makefile.in
 # into a proper Makefile

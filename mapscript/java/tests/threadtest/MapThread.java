@@ -1,4 +1,4 @@
-// $Id: MapThread.java 11750 2011-05-23 07:43:09Z unicoletti $
+// $Id$
 //
 // See README_THREADTEST.TXT for usage details.
 //

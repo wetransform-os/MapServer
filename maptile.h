@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: maptile.h 11503 2011-04-07 19:56:16Z dmorissette $ 
+ * $Id$ 
  *
  * Project:  MapServer
  * Purpose:  MapServer Tile Access API

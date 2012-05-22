@@ -39,7 +39,7 @@
 #include <signal.h>
 #endif
 
-MS_CVSID("$Id: mapserv.c 11452 2011-04-04 13:25:43Z aboudreault $")
+MS_CVSID("$Id$")
 
 mapservObj* mapserv;
 

@@ -1,5 +1,5 @@
 /**********************************************************************
- * $Id: mapogr.cpp 11890 2011-07-12 13:06:14Z assefa $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  OGR Link
@@ -40,7 +40,7 @@
 #  include "ogr_srs_api.h"
 #endif
 
-MS_CVSID("$Id: mapogr.cpp 11890 2011-07-12 13:06:14Z assefa $")
+MS_CVSID("$Id$")
 
 #if defined(GDAL_VERSION_NUM) && (GDAL_VERSION_NUM < 1400)
 #  define ACQUIRE_OLD_OGR_LOCK   msAcquireLock( TLOCK_OGR )

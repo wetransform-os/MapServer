@@ -129,4 +129,4 @@ Jerry Pisk
 
 
 ----------
-$Id: README_THREADTEST.TXT 5531 2006-06-28 13:46:22Z umberto $
+$Id$

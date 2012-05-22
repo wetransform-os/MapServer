@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: mapgd.c 11583 2011-04-15 10:01:11Z tbonfort $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  GD rendering functions (using renderer plugin API)
@@ -344,14 +344,14 @@ int renderLineGD(imageObj *img, shapeObj *p, strokeStyleObj *stroke)
   }
 
   if(stroke->width > 1) {
-     int brush_fc; 
-     brush = gdImageCreate(stroke->width, stroke->width);
+     int brush_fc;
+     brush = gdImageCreate(ceil(stroke->width), ceil(stroke->width));
      gdImageColorAllocate(brush, gdImageRed(ip,0), gdImageGreen(ip, 0), gdImageBlue(ip, 0));
      gdImageColorTransparent(brush,0);
      brush_fc = gdImageColorAllocate(brush, gdImageRed(ip,stroke->color->pen),
            gdImageGreen(ip,stroke->color->pen), gdImageBlue(ip,stroke->color->pen));
-     gdImageFilledEllipse(brush,MS_NINT(stroke->width/2),MS_NINT(stroke->width/2),
-           stroke->width,stroke->width, brush_fc);
+     gdImageFilledEllipse(brush,MS_NINT(brush->sx/2),MS_NINT(brush->sy/2),
+           MS_NINT(stroke->width),MS_NINT(stroke->width), brush_fc);
      gdImageSetBrush(ip, brush);
      if(stroke->patternlength > 0) {
        c = gdStyledBrushed;

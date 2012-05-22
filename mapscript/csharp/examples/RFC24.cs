@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: RFC24.cs 7418 2008-02-29 00:02:49Z nsavard $
+ * $Id$
  *
  * Project:  MapServer
  * Purpose:  Tests for RFC24 implementation. 
