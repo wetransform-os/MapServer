@@ -1,3 +1,9 @@
+mapserver (6.0.3-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Alan Boudreault <aboudreault@mapgears.com>  Tue, 22 May 2012 13:24:16 +0000
+
 mapserver (6.0.1-4) unstable; urgency=low
 
   * Fixed typo that prevented AGG use in debian/rules.
