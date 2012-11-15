@@ -29,6 +29,19 @@ Description: Shared library for MapServer
  functionality in MapScript is provided by the suggested mapscript
  library packages.
 
+Package: libmapserver-dev
+Section: libdevel
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Suggests: cgi-mapserver, mapserver-bin, mapserver-doc
+Description: Shared library for MapServer
+ This package contains the shared library.
+ .
+ MapServer is a CGI-based framework for Internet map services which
+ supports Open Geospatial Consortium (OGC) standards. Scripting
+ functionality in MapScript is provided by the suggested mapscript
+ library packages.
+
 Package: php5-mapscript
 Section: php
 Architecture: any
