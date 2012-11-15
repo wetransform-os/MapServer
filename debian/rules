@@ -185,7 +185,9 @@ install-arch-stamp: build-arch
 
 	#echo 'misc:Depends=libapache2-mod-php5' >> debian/php5-mapscript.substvars
 
-	-mkdir -p debian/tmp/usr/include/
+	# libmapserver-dev headers
+	-mkdir -p debian/tmp/usr/include
+	install -m755 mapserver.h debian/tmp/usr/include/
 
 	touch install-arch-stamp
 
