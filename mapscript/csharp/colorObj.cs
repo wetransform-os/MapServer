@@ -79,18 +79,6 @@ public class colorObj : IDisposable {
     return swigCPtr.Handle.GetHashCode();
   }
 
-  public int pen {
-    set {
-      mapscriptPINVOKE.colorObj_pen_set(swigCPtr, value);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-    } 
-    get {
-      int ret = mapscriptPINVOKE.colorObj_pen_get(swigCPtr);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-      return ret;
-    } 
-  }
-
   public int red {
     set {
       mapscriptPINVOKE.colorObj_red_set(swigCPtr, value);

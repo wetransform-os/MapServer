@@ -92,10 +92,6 @@ public class classObj : IDisposable {
   }
 
   public int numstyles {
-    set {
-      mapscriptPINVOKE.classObj_numstyles_set(swigCPtr, value);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-    } 
     get {
       int ret = mapscriptPINVOKE.classObj_numstyles_get(swigCPtr);
       if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
@@ -103,10 +99,13 @@ public class classObj : IDisposable {
     } 
   }
 
-  public labelObj label {
+  public int numlabels {
+    set {
+      mapscriptPINVOKE.classObj_numlabels_set(swigCPtr, value);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
     get {
-      IntPtr cPtr = mapscriptPINVOKE.classObj_label_get(swigCPtr);
-      labelObj ret = (cPtr == IntPtr.Zero) ? null : new labelObj(cPtr, false, ThisOwn_false());
+      int ret = mapscriptPINVOKE.classObj_numlabels_get(swigCPtr);
       if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
       return ret;
     } 
@@ -267,6 +266,19 @@ public class classObj : IDisposable {
     } 
   }
 
+  public labelLeaderObj leader {
+    set {
+      mapscriptPINVOKE.classObj_leader_set(swigCPtr, labelLeaderObj.getCPtr(value));
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      IntPtr cPtr = mapscriptPINVOKE.classObj_leader_get(swigCPtr);
+      labelLeaderObj ret = (cPtr == IntPtr.Zero) ? null : new labelLeaderObj(cPtr, false, ThisOwn_false());
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
   public classObj(layerObj layer) : this(mapscriptPINVOKE.new_classObj(layerObj.getCPtr(layer)), true, layer) {
   
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
@@ -342,6 +354,26 @@ public class classObj : IDisposable {
   public imageObj createLegendIcon(mapObj map, layerObj layer, int width, int height) {
     IntPtr cPtr = mapscriptPINVOKE.classObj_createLegendIcon(swigCPtr, mapObj.getCPtr(map), layerObj.getCPtr(layer), width, height);
     imageObj ret = (cPtr == IntPtr.Zero) ? null : new imageObj(cPtr, true, ThisOwn_true());
+    if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public labelObj getLabel(int i) {
+    IntPtr cPtr = mapscriptPINVOKE.classObj_getLabel(swigCPtr, i);
+    labelObj ret = (cPtr == IntPtr.Zero) ? null : new labelObj(cPtr, true, ThisOwn_true());
+    if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public int addLabel(labelObj label) {
+    int ret = mapscriptPINVOKE.classObj_addLabel(swigCPtr, labelObj.getCPtrAndSetReference(label, ThisOwn_false()));
+    if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public labelObj removeLabel(int index) {
+    IntPtr cPtr = mapscriptPINVOKE.classObj_removeLabel(swigCPtr, index);
+    labelObj ret = (cPtr == IntPtr.Zero) ? null : new labelObj(cPtr, true, ThisOwn_true());
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
     return ret;
   }

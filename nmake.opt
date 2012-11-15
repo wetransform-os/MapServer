@@ -685,7 +685,7 @@ FT_LIB=$(FT_DIR)/objs/win32/vc2008/freetype239.lib
 # GD include and library
 GD_INC= -I$(GD_DIR)
 GD_LIBS= $(GD_LIB) $(JPEG_LIB) $(PNG_LIB) $(FT_LIB)
-GD= $(OUTPUT_PNG) $(OUTPUT_JPEG) $(OUTPUT_WBMP) $(OUTPUT_GIF) $(ANNOTATION_FT) $(GD_HAS_GETBITMAPFONT) $(GD_HAS_FTEX_XSHOW)
+GD= -DUSE_GD $(OUTPUT_PNG) $(OUTPUT_JPEG) $(OUTPUT_WBMP) $(OUTPUT_GIF) $(ANNOTATION_FT) $(GD_HAS_GETBITMAPFONT) $(GD_HAS_FTEX_XSHOW)
 
 # Tiff library on input
 !IFDEF TIFF
@@ -779,11 +779,6 @@ renderers\agg\src\agg_trans_affine.obj renderers\agg\src\agg_vpgen_clip_polygon.
 renderers\agg\src\agg_vpgen_clip_polyline.obj renderers\agg\src\agg_font_freetype.obj \
 renderers\agg\src\agg_svg_parser.obj renderers\agg\src\agg_svg_path_renderer.obj \
 renderers\agg\src\agg_svg_path_tokenizer.obj renderers\agg\src\clipper.obj
-!ENDIF
-
-!IFDEF AGG_SVG_SYMBOL
-AGG_LIB= -lexpat
-AGG_OBJ=$(AGG_OBJ) renderers/agg/src/agg_svg_parser.obj renderers/agg/src/agg_svg_path_renderer.obj renderers/agg/src/agg_svg_path_tokenizer.obj
 !ENDIF
 
 # Setup PDF includes and libs
@@ -880,7 +875,7 @@ MS_DEFS = $(REGEX_OPT) $(STRINGS) $(POSTGIS) \
           $(WFS) $(WFSCLIENT) $(WCS) $(PDF) $(EGIS) \
           $(USE_GD_ANTIALIAS) $(ORACLE) \
           $(SDE_OPT) $(ICONV) $(GEOS) $(ZLIB) $(SOS)  $(XML2_ENABLED) $(AGG) \
-          $(OGL) $(CAIRO) $(RGBA_PNG_ENABLED) $(FRIBIDI) $(AGG_SVG_SYMBOLS) $(KML) $(GIF) $(CURL)
+          $(OGL) $(CAIRO) $(RGBA_PNG_ENABLED) $(FRIBIDI) $(KML) $(GIF) $(CURL)
 
 !IFDEF WIN64
 MS_CFLAGS=$(INCLUDES) $(MS_DEFS) -DWIN32 -D_WIN32 -DUSE_GENERIC_MS_NINT

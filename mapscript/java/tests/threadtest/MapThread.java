@@ -43,7 +43,7 @@ public class MapThread extends Thread {
 	       }
 	    }
    	    // We use this to test swig's memory management code
-	    System.gc();
+	    //System.gc();
             //map.draw().save("/tmp/mapthread"+id+"-"+i+".png", map);
             map.draw();
 	    
@@ -57,8 +57,8 @@ public class MapThread extends Thread {
 	layerObj layer = map.getLayer(3);
 	if (layer!=null) {
 		layer.open();
-                layer.queryByIndex(map,0,-1,mapscriptConstants.MS_FALSE);
-                shapeObj shape=layer.getShape(layer.getResults().getResult(0));
+		layer.queryByIndex(map,0,-1,mapscriptConstants.MS_FALSE);
+		shapeObj shape=layer.getShape(layer.getResults().getResult(0));
 		if (shape!=null) {
 			shapeObj buffer=shape.buffer(0.1);
 			if (buffer != null) {

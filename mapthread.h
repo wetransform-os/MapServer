@@ -15,7 +15,7 @@
  * and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in 
+ * The above copyright notice and this permission notice shall be included in
  * all copies of this Software or works derived from this Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
@@ -35,10 +35,10 @@ extern "C" {
 #endif
 
 #ifdef USE_THREAD
-void msThreadInit(void);
-int msGetThreadId(void);
-void msAcquireLock(int);
-void msReleaseLock(int);
+  void msThreadInit(void);
+  int msGetThreadId(void);
+  void msAcquireLock(int);
+  void msReleaseLock(int);
 #else
 #define msThreadInit()
 #define msGetThreadId() (0)
@@ -46,13 +46,13 @@ void msReleaseLock(int);
 #define msReleaseLock(x)
 #endif
 
-/*
-** lock ids - note there is a corresponding lock_names[] array in 
-** mapthread.c that needs to be extended when new ids are added.
-*/
+  /*
+  ** lock ids - note there is a corresponding lock_names[] array in
+  ** mapthread.c that needs to be extended when new ids are added.
+  */
 
-#define TLOCK_PARSER	1
-#define TLOCK_GDAL	2
+#define TLOCK_PARSER  1
+#define TLOCK_GDAL  2
 #define TLOCK_ERROROBJ  3
 #define TLOCK_PROJ      4
 #define TLOCK_TTF       5
@@ -65,6 +65,7 @@ void msReleaseLock(int);
 #define TLOCK_TMPFILE   12
 #define TLOCK_DEBUGOBJ  13
 #define TLOCK_OGR       14
+#define TLOCK_TIME      15
 
 #define TLOCK_STATIC_MAX 20
 #define TLOCK_MAX       100

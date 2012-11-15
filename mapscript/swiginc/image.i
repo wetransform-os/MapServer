@@ -69,7 +69,7 @@
                 msSetError(MS_MEMERR, NULL, "imageObj()");
                 return NULL;
             }
-            if ( (renderer->loadImageFromFile(file, rb)) == MS_FAILURE)
+            if ( (renderer->loadImageFromFile((char *)file, rb)) == MS_FAILURE)
                 return NULL;
 
             image = msImageCreate(rb->width, rb->height, format, NULL, NULL, 
@@ -116,7 +116,8 @@
             if (file)
             {
                 renderer = self->format->vtable;
-                retval = renderer->saveImage(self, file, self->format);
+                /* FIXME? as an improvement, pass a map argument instead of the NULL (see #4216) */
+                retval = renderer->saveImage(self, NULL, file, self->format);
             }
             else
             {
@@ -142,6 +143,7 @@
     Tcl_Obj *saveToString() 
     {
 
+#ifdef FORCE_BROKEN_GD_CODE
         unsigned char *imgbytes;
         int size;
         Tcl_Obj *imgstring;
@@ -206,9 +208,14 @@
         /* Tcl implementation to create string */
         imgstring = Tcl_NewByteArrayObj(imgbytes, size);    
     
-        gdFree(imgbytes);
+        msFree(imgbytes);
 
         return imgstring;
+#else /* force_gd_broken_code */
+        msSetError(MS_MISCERR, "saveToString() is long deprecated and severley broken", "saveToString()", self->format->driver );
+        return(MS_FAILURE);
+#endif
+
     }
 #endif
 
@@ -216,7 +223,7 @@
     -------------------------------------------------------------------------
     getBytes returns a gdBuffer structure (defined in mapscript.i) which must
     be typemapped to an object appropriate to the target language.  This
-    typemap must also gdFree the data member of the gdBuffer.  See the type-
+    typemap must also msFree the data member of the gdBuffer.  See the type-
     maps in java/javamodule.i and python/pymodule.i for examples.
 
     contributed by Jerry Pisk, jerry.pisk@gmail.com

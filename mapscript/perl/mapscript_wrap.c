@@ -1496,12 +1496,12 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_FILE swig_types[2]
 #define SWIGTYPE_p_cgiRequestObj swig_types[3]
 #define SWIGTYPE_p_char swig_types[4]
-#define SWIGTYPE_p_class_obj swig_types[5]
+#define SWIGTYPE_p_classObj swig_types[5]
 #define SWIGTYPE_p_clusterObj swig_types[6]
 #define SWIGTYPE_p_colorObj swig_types[7]
 #define SWIGTYPE_p_debugLevel swig_types[8]
 #define SWIGTYPE_p_double swig_types[9]
-#define SWIGTYPE_p_error_obj swig_types[10]
+#define SWIGTYPE_p_errorObj swig_types[10]
 #define SWIGTYPE_p_fontSetObj swig_types[11]
 #define SWIGTYPE_p_hashTableObj swig_types[12]
 #define SWIGTYPE_p_imageObj swig_types[13]
@@ -1511,37 +1511,38 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_labelCacheMemberObj swig_types[17]
 #define SWIGTYPE_p_labelCacheObj swig_types[18]
 #define SWIGTYPE_p_labelCacheSlotObj swig_types[19]
-#define SWIGTYPE_p_labelObj swig_types[20]
-#define SWIGTYPE_p_labelStyleObj swig_types[21]
-#define SWIGTYPE_p_layer_obj swig_types[22]
-#define SWIGTYPE_p_legendObj swig_types[23]
-#define SWIGTYPE_p_lineObj swig_types[24]
-#define SWIGTYPE_p_map_obj swig_types[25]
-#define SWIGTYPE_p_markerCacheMemberObj swig_types[26]
-#define SWIGTYPE_p_outputFormatObj swig_types[27]
-#define SWIGTYPE_p_p_char swig_types[28]
-#define SWIGTYPE_p_p_outputFormatObj swig_types[29]
-#define SWIGTYPE_p_pointObj swig_types[30]
-#define SWIGTYPE_p_projectionObj swig_types[31]
-#define SWIGTYPE_p_queryMapObj swig_types[32]
-#define SWIGTYPE_p_rectObj swig_types[33]
-#define SWIGTYPE_p_referenceMapObj swig_types[34]
-#define SWIGTYPE_p_rendererVTableObj swig_types[35]
-#define SWIGTYPE_p_resultCacheObj swig_types[36]
-#define SWIGTYPE_p_resultObj swig_types[37]
-#define SWIGTYPE_p_scalebarObj swig_types[38]
-#define SWIGTYPE_p_shapeObj swig_types[39]
-#define SWIGTYPE_p_shapefileObj swig_types[40]
-#define SWIGTYPE_p_strokeStyleObj swig_types[41]
-#define SWIGTYPE_p_styleObj swig_types[42]
-#define SWIGTYPE_p_symbolObj swig_types[43]
-#define SWIGTYPE_p_symbolSetObj swig_types[44]
-#define SWIGTYPE_p_symbolStyleObj swig_types[45]
-#define SWIGTYPE_p_tileCacheObj swig_types[46]
-#define SWIGTYPE_p_uint32_t swig_types[47]
-#define SWIGTYPE_p_webObj swig_types[48]
-static swig_type_info *swig_types[50];
-static swig_module_info swig_module = {swig_types, 49, 0, 0, 0, 0};
+#define SWIGTYPE_p_labelLeaderObj swig_types[20]
+#define SWIGTYPE_p_labelObj swig_types[21]
+#define SWIGTYPE_p_labelStyleObj swig_types[22]
+#define SWIGTYPE_p_layerObj swig_types[23]
+#define SWIGTYPE_p_legendObj swig_types[24]
+#define SWIGTYPE_p_lineObj swig_types[25]
+#define SWIGTYPE_p_mapObj swig_types[26]
+#define SWIGTYPE_p_markerCacheMemberObj swig_types[27]
+#define SWIGTYPE_p_outputFormatObj swig_types[28]
+#define SWIGTYPE_p_p_char swig_types[29]
+#define SWIGTYPE_p_p_outputFormatObj swig_types[30]
+#define SWIGTYPE_p_pointObj swig_types[31]
+#define SWIGTYPE_p_projectionObj swig_types[32]
+#define SWIGTYPE_p_queryMapObj swig_types[33]
+#define SWIGTYPE_p_rectObj swig_types[34]
+#define SWIGTYPE_p_referenceMapObj swig_types[35]
+#define SWIGTYPE_p_rendererVTableObj swig_types[36]
+#define SWIGTYPE_p_resultCacheObj swig_types[37]
+#define SWIGTYPE_p_resultObj swig_types[38]
+#define SWIGTYPE_p_scalebarObj swig_types[39]
+#define SWIGTYPE_p_shapeObj swig_types[40]
+#define SWIGTYPE_p_shapefileObj swig_types[41]
+#define SWIGTYPE_p_strokeStyleObj swig_types[42]
+#define SWIGTYPE_p_styleObj swig_types[43]
+#define SWIGTYPE_p_symbolObj swig_types[44]
+#define SWIGTYPE_p_symbolSetObj swig_types[45]
+#define SWIGTYPE_p_symbolStyleObj swig_types[46]
+#define SWIGTYPE_p_tileCacheObj swig_types[47]
+#define SWIGTYPE_p_uint32_t swig_types[48]
+#define SWIGTYPE_p_webObj swig_types[49]
+static swig_type_info *swig_types[51];
+static swig_module_info swig_module = {swig_types, 50, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -2073,7 +2074,7 @@ SWIGINTERN int styleObj_setSymbolByName(styleObj *self,mapObj *map,char *symboln
         return self->symbol;
     }
 SWIGINTERN int styleObj_removeBinding(styleObj *self,int binding){
-    if(binding < 0 || binding >= 8) return MS_FAILURE;
+    if(binding < 0 || binding >= 12) return MS_FAILURE;
 
     if(self->bindings[binding].item) {
       free(self->bindings[binding].item);
@@ -2086,7 +2087,7 @@ SWIGINTERN int styleObj_removeBinding(styleObj *self,int binding){
   }
 SWIGINTERN int styleObj_setBinding(styleObj *self,int binding,char *item){
     if(!item) return MS_FAILURE;
-    if(binding < 0 || binding >= 8) return MS_FAILURE;
+    if(binding < 0 || binding >= 12) return MS_FAILURE;
 
     if(self->bindings[binding].item) {
       free(self->bindings[binding].item);
@@ -2101,7 +2102,7 @@ SWIGINTERN int styleObj_setBinding(styleObj *self,int binding,char *item){
     return MS_SUCCESS;
   }
 SWIGINTERN char *styleObj_getBinding(styleObj *self,int binding){
-    if(binding < 0 || binding >= 8) return NULL;
+    if(binding < 0 || binding >= 12) return NULL;
 
     return self->bindings[binding].item;
   }
@@ -2161,6 +2162,20 @@ SWIG_From_char  SWIG_PERL_DECL_ARGS_1(char c)
   return SWIG_FromCharPtrAndSize(&c,1);
 }
 
+SWIGINTERN labelObj *new_labelObj(){
+      labelObj *label;
+        
+      label = (labelObj *)calloc(1, sizeof(labelObj));
+      if (!label)
+        return(NULL);
+    
+      initLabel(label);
+      
+      return(label);    	
+    }
+SWIGINTERN void delete_labelObj(labelObj *self){
+      freeLabel(self);
+    }
 SWIGINTERN int labelObj_updateFromString(labelObj *self,char *snippet){
     return msUpdateLabelFromString(self, snippet);
   }
@@ -2196,6 +2211,26 @@ SWIGINTERN int labelObj_setBinding(labelObj *self,int binding,char *item){
     self->numbindings++;
 
     return MS_SUCCESS;
+  }
+SWIGINTERN int labelObj_setExpression(labelObj *self,char *expression){
+    if (!expression || strlen(expression) == 0) {
+       freeExpression(&self->expression);
+       return MS_SUCCESS;
+    }
+    else return msLoadExpressionString(&self->expression, expression);
+  }
+SWIGINTERN char *labelObj_getExpressionString(labelObj *self){
+    return msGetExpressionString(&(self->expression));
+  }
+SWIGINTERN int labelObj_setText(labelObj *self,char *text){
+    if (!text || strlen(text) == 0) {
+      freeExpression(&self->text);
+      return MS_SUCCESS;
+    }	
+    else return msLoadExpressionString(&self->text, text);
+  }
+SWIGINTERN char *labelObj_getTextString(labelObj *self){
+    return msGetExpressionString(&(self->text));
   }
 SWIGINTERN styleObj *labelObj_getStyle(labelObj *self,int i){
       if (i >= 0 && i < self->numstyles) {
@@ -2342,30 +2377,46 @@ SWIGINTERN int classObj_drawLegendIcon(classObj *self,mapObj *map,layerObj *laye
 SWIGINTERN imageObj *classObj_createLegendIcon(classObj *self,mapObj *map,layerObj *layer,int width,int height){
     return msCreateLegendIcon(map, layer, self, width, height);
   }
+SWIGINTERN labelObj *classObj_getLabel(classObj *self,int i){
+    if (i >= 0 && i < self->numlabels) {
+      MS_REFCNT_INCR(self->labels[i]);
+      return self->labels[i];
+    } else {
+      msSetError(31, "Invalid index: %d.", "getLabel()", i);
+      return NULL;
+    }
+  }
+SWIGINTERN int classObj_addLabel(classObj *self,labelObj *label){
+    return msAddLabelToClass(self, label);
+  }
+SWIGINTERN labelObj *classObj_removeLabel(classObj *self,int index){
+    labelObj* label = (labelObj *) msRemoveLabelFromClass(self, index);
+    if (label) MS_REFCNT_INCR(label);
+    return label;
+  }
 SWIGINTERN styleObj *classObj_getStyle(classObj *self,int i){
-        if (i >= 0 && i < self->numstyles) {
-	    MS_REFCNT_INCR(self->styles[i]);
-            return self->styles[i];
-	} else {
-            msSetError(31, "Invalid index: %d", "getStyle()", i);
-            return NULL;
-        }
+    if (i >= 0 && i < self->numstyles) {
+      MS_REFCNT_INCR(self->styles[i]);
+      return self->styles[i];
+    } else {
+      msSetError(31, "Invalid index: %d", "getStyle()", i);
+      return NULL;
     }
+  }
 SWIGINTERN int classObj_insertStyle(classObj *self,styleObj *style,int index){
-        return msInsertStyle(self, style, index);
-    }
+    return msInsertStyle(self, style, index);
+  }
 SWIGINTERN styleObj *classObj_removeStyle(classObj *self,int index){
-	styleObj* style = (styleObj *) msRemoveStyle(self, index);
-	if (style)
-		MS_REFCNT_INCR(style);
-        return style;
-    }
+    styleObj* style = (styleObj *) msRemoveStyle(self, index);
+    if (style) MS_REFCNT_INCR(style);
+    return style;
+  }
 SWIGINTERN int classObj_moveStyleUp(classObj *self,int index){
-        return msMoveStyleUp(self, index);
-    }
+    return msMoveStyleUp(self, index);
+  }
 SWIGINTERN int classObj_moveStyleDown(classObj *self,int index){
-       return msMoveStyleDown(self, index);
-    }
+    return msMoveStyleDown(self, index);
+  }
 SWIGINTERN void labelCacheObj_freeCache(labelCacheObj *self){
         msFreeLabelCache(self);    
     }
@@ -2452,6 +2503,115 @@ SWIGINTERN int scalebarObj_updateFromString(scalebarObj *self,char *snippet){
 SWIGINTERN int legendObj_updateFromString(legendObj *self,char *snippet){
     return msUpdateLegendFromString(self, snippet, 0);
   }
+SWIGINTERN imageObj *new_imageObj(int width,int height,outputFormatObj *input_format,char const *file,double resolution,double defresolution){
+        imageObj *image=NULL;
+        outputFormatObj *format;
+        rendererVTableObj *renderer = NULL;
+        rasterBufferObj *rb = NULL;
+
+        if (input_format) {
+            format = input_format;
+        }
+        else {
+            format = msCreateDefaultOutputFormat(NULL, "GD/GIF", "gdgif");
+            if (format == NULL)
+                format = msCreateDefaultOutputFormat(NULL, "GD/PNG", "gdpng");
+            if (format == NULL)
+
+            if (format)
+                msInitializeRendererVTable(format);
+        }
+        if (format == NULL) {
+            msSetError(15, "Could not create output format",
+                       "imageObj()");
+            return NULL;
+        }
+
+        if (file) {
+            
+            renderer = format->vtable;
+            rb = (rasterBufferObj*) malloc(sizeof(rasterBufferObj));
+            if (!rb) {
+                msSetError(2, NULL, "imageObj()");
+                return NULL;
+            }
+            if ( (renderer->loadImageFromFile((char *)file, rb)) == MS_FAILURE)
+                return NULL;
+
+            image = msImageCreate(rb->width, rb->height, format, NULL, NULL, 
+                                  resolution, defresolution, NULL);
+            renderer->mergeRasterBuffer(image, rb, 1.0, 0, 0, 0, 0, rb->width, rb->height);
+
+            msFreeRasterBuffer(rb);
+            free(rb);
+
+            return image;
+        }
+
+        image = msImageCreate(width, height, format, NULL, NULL, resolution, defresolution, NULL);
+        return image;
+    }
+SWIGINTERN void delete_imageObj(imageObj *self){
+        msFreeImage(self);    
+    }
+SWIGINTERN void imageObj_save(imageObj *self,char *filename,mapObj *map){
+        msSaveImage(map, self, filename );
+    }
+SWIGINTERN int imageObj_write(imageObj *self,FILE *file){
+        int retval=MS_FAILURE;
+        rendererVTableObj *renderer = NULL;
+
+        if (MS_RENDERER_PLUGIN(self->format))
+        {
+            if (file)
+            {
+                renderer = self->format->vtable;
+                /* FIXME? as an improvement, pass a map argument instead of the NULL (see #4216) */
+                retval = renderer->saveImage(self, NULL, file, self->format);
+            }
+            else
+            {
+                retval = msSaveImage(NULL, self, NULL);
+            }
+        }
+        else
+        {
+            msSetError(15, "Writing of %s format not implemented",
+                       "imageObj::write");
+        }
+
+        return retval;
+    }
+SWIGINTERN gdBuffer imageObj_getBytes(imageObj *self){
+        gdBuffer buffer;
+        
+        buffer.owns_data = 1;
+        
+        buffer.data = msSaveImageBuffer(self, &buffer.size, self->format);
+            
+        if( buffer.data == NULL || buffer.size == 0 )
+        {
+            buffer.data = NULL;
+            msSetError(12, "Failed to get image buffer", "getBytes");
+            return buffer;
+        }
+
+        return buffer;
+    }
+SWIGINTERN int imageObj_getSize(imageObj *self){
+        gdBuffer buffer;
+	int size=0;
+        
+        buffer.data = msSaveImageBuffer(self, &buffer.size, self->format);
+	size = buffer.size;
+            
+        if( buffer.data == NULL || buffer.size == 0 ) {
+            buffer.data = NULL;
+            msSetError(12, "Failed to get image buffer size", "getSize");
+        }
+	free(buffer.data);
+        return size;
+    }
 SWIGINTERN layerObj *new_layerObj(mapObj *map){
         layerObj *layer;
         int result;
@@ -2624,6 +2784,9 @@ SWIGINTERN char *layerObj_getItem(layerObj *self,int i){
         else
             return NULL;
     }
+SWIGINTERN int layerObj_setItems(layerObj *self,char **items,int numitems){
+        return msLayerSetItems(self, items, numitems);
+    }
 SWIGINTERN int layerObj_draw(layerObj *self,mapObj *map,imageObj *image){
         return msDrawLayer(map, self, image);    
     }
@@ -2641,7 +2804,10 @@ SWIGINTERN int layerObj_queryByFilter(layerObj *self,mapObj *map,char *string){
         map->query.filter = (expressionObj *) malloc(sizeof(expressionObj));
         map->query.filter->string = strdup(string);
 	map->query.filter->type = 2000; /* MS_EXPRESSION: lot's of conflicts in mapfile.h */
-
+        map->query.filter->compiled = 0;
+        map->query.filter->flags = 0;
+        map->query.filter->tokens = map->query.filter->curtoken = NULL;
+        
         map->query.layer = self->index;
      	map->query.rect = map->extent;
 
@@ -2668,6 +2834,7 @@ SWIGINTERN int layerObj_queryByAttributes(layerObj *self,mapObj *map,char *qitem
         self->status = 1;
         retval = msQueryByAttributes(map);
         self->status = status;
+
         return retval;
     }
 SWIGINTERN int layerObj_queryByPoint(layerObj *self,mapObj *map,pointObj *point,int mode,double buffer){
@@ -2686,6 +2853,7 @@ SWIGINTERN int layerObj_queryByPoint(layerObj *self,mapObj *map,pointObj *point,
         self->status = 1;
         retval = msQueryByPoint(map);
         self->status = status;
+
         return retval;
     }
 SWIGINTERN int layerObj_queryByRect(layerObj *self,mapObj *map,rectObj rect){
@@ -2703,6 +2871,7 @@ SWIGINTERN int layerObj_queryByRect(layerObj *self,mapObj *map,rectObj rect){
         self->status = 1;
         retval = msQueryByRect(map);
         self->status = status;
+
         return retval;
     }
 SWIGINTERN int layerObj_queryByFeatures(layerObj *self,mapObj *map,int slayer){
@@ -2852,10 +3021,10 @@ SWIGINTERN char *layerObj_executeWFSGetFeature(layerObj *self,layerObj *layer){
         return (char *) msWFSExecuteGetFeature(layer);
     }
 SWIGINTERN int layerObj_applySLD(layerObj *self,char *sld,char *stylelayer){
-        return msSLDApplySLD(self->map, sld, self->index, stylelayer);
+      return msSLDApplySLD(self->map, sld, self->index, stylelayer, NULL);
     }
 SWIGINTERN int layerObj_applySLDURL(layerObj *self,char *sld,char *stylelayer){
-        return msSLDApplySLDURL(self->map, sld, self->index, stylelayer);
+      return msSLDApplySLDURL(self->map, sld, self->index, stylelayer, NULL);
     }
 SWIGINTERN char *layerObj_generateSLD(layerObj *self){
         return (char *) msSLDGenerateSLD(self->map, self->index, NULL);
@@ -3059,7 +3228,10 @@ SWIGINTERN int mapObj_queryByFilter(mapObj *self,char *string){
     self->query.filter = (expressionObj *) malloc(sizeof(expressionObj));
     self->query.filter->string = strdup(string);
     self->query.filter->type = 2000; /* MS_EXPRESSION: lot's of conflicts in mapfile.h */
-
+    self->query.filter->compiled = 0;
+    self->query.filter->flags = 0;
+    self->query.filter->tokens = self->query.filter->curtoken = NULL;
+    
     self->query.rect = self->extent;
 
     return msQueryByFilter(self);
@@ -3208,10 +3380,10 @@ SWIGINTERN void mapObj_applyConfigOptions(mapObj *self){
     msApplyMapConfigOptions( self );
   }
 SWIGINTERN int mapObj_applySLD(mapObj *self,char *sld){
-        return msSLDApplySLD(self, sld, -1, NULL);
+      return msSLDApplySLD(self, sld, -1, NULL, NULL);
     }
 SWIGINTERN int mapObj_applySLDURL(mapObj *self,char *sld){
-        return msSLDApplySLDURL(self, sld, -1, NULL);
+      return msSLDApplySLDURL(self, sld, -1, NULL, NULL);
     }
 SWIGINTERN char *mapObj_generateSLD(mapObj *self){
         return (char *) msSLDGenerateSLD(self, -1, NULL);
@@ -3767,114 +3939,6 @@ SWIGINTERN int mapObj_zoomScale(mapObj *self,double scale,pointObj *poPixPos,int
 
         return MS_SUCCESS;
     }
-SWIGINTERN imageObj *new_imageObj(int width,int height,outputFormatObj *input_format,char const *file,double resolution,double defresolution){
-        imageObj *image=NULL;
-        outputFormatObj *format;
-        rendererVTableObj *renderer = NULL;
-        rasterBufferObj *rb = NULL;
-
-        if (input_format) {
-            format = input_format;
-        }
-        else {
-            format = msCreateDefaultOutputFormat(NULL, "GD/GIF", "gdgif");
-            if (format == NULL)
-                format = msCreateDefaultOutputFormat(NULL, "GD/PNG", "gdpng");
-            if (format == NULL)
-
-            if (format)
-                msInitializeRendererVTable(format);
-        }
-        if (format == NULL) {
-            msSetError(15, "Could not create output format",
-                       "imageObj()");
-            return NULL;
-        }
-
-        if (file) {
-            
-            renderer = format->vtable;
-            rb = (rasterBufferObj*) malloc(sizeof(rasterBufferObj));
-            if (!rb) {
-                msSetError(2, NULL, "imageObj()");
-                return NULL;
-            }
-            if ( (renderer->loadImageFromFile(file, rb)) == MS_FAILURE)
-                return NULL;
-
-            image = msImageCreate(rb->width, rb->height, format, NULL, NULL, 
-                                  resolution, defresolution, NULL);
-            renderer->mergeRasterBuffer(image, rb, 1.0, 0, 0, 0, 0, rb->width, rb->height);
-
-            msFreeRasterBuffer(rb);
-            free(rb);
-
-            return image;
-        }
-
-        image = msImageCreate(width, height, format, NULL, NULL, resolution, defresolution, NULL);
-        return image;
-    }
-SWIGINTERN void delete_imageObj(imageObj *self){
-        msFreeImage(self);    
-    }
-SWIGINTERN void imageObj_save(imageObj *self,char *filename,mapObj *map){
-        msSaveImage(map, self, filename );
-    }
-SWIGINTERN int imageObj_write(imageObj *self,FILE *file){
-        int retval=MS_FAILURE;
-        rendererVTableObj *renderer = NULL;
-
-        if (MS_RENDERER_PLUGIN(self->format))
-        {
-            if (file)
-            {
-                renderer = self->format->vtable;
-                retval = renderer->saveImage(self, file, self->format);
-            }
-            else
-            {
-                retval = msSaveImage(NULL, self, NULL);
-            }
-        }
-        else
-        {
-            msSetError(15, "Writing of %s format not implemented",
-                       "imageObj::write");
-        }
-
-        return retval;
-    }
-SWIGINTERN gdBuffer imageObj_getBytes(imageObj *self){
-        gdBuffer buffer;
-        
-        buffer.owns_data = 1;
-        
-        buffer.data = msSaveImageBuffer(self, &buffer.size, self->format);
-            
-        if( buffer.data == NULL || buffer.size == 0 )
-        {
-            buffer.data = NULL;
-            msSetError(12, "Failed to get image buffer", "getBytes");
-            return buffer;
-        }
-
-        return buffer;
-    }
-SWIGINTERN int imageObj_getSize(imageObj *self){
-        gdBuffer buffer;
-	int size=0;
-        
-        buffer.data = msSaveImageBuffer(self, &buffer.size, self->format);
-	size = buffer.size;
-            
-        if( buffer.data == NULL || buffer.size == 0 ) {
-            buffer.data = NULL;
-            msSetError(12, "Failed to get image buffer size", "getSize");
-        }
-	free(buffer.data);
-        return size;
-    }
 SWIGINTERN rectObj *new_rectObj(double minx,double miny,double maxx,double maxy,int imageunits){	
         rectObj *rect;
     
@@ -3927,7 +3991,7 @@ SWIGINTERN int rectObj_draw(rectObj *self,mapObj *map,layerObj *layer,imageObj *
         shape.classindex = classindex;
         shape.text = strdup(text);
 
-        msDrawShape(map, layer, &shape, image, -1, 0);
+        msDrawShape(map, layer, &shape, image, -1, MS_DRAWMODE_FEATURES|MS_DRAWMODE_LABELS);
 
         msFreeShape(&shape);
     
@@ -4166,7 +4230,7 @@ SWIGINTERN int shapeObj_add(shapeObj *self,lineObj *line){
         return msAddLine(self, line);
     }
 SWIGINTERN int shapeObj_draw(shapeObj *self,mapObj *map,layerObj *layer,imageObj *image){
-        return msDrawShape(map, layer, self, image, -1, 0);
+        return msDrawShape(map, layer, self, image, -1, MS_DRAWMODE_FEATURES|MS_DRAWMODE_LABELS);
     }
 SWIGINTERN void shapeObj_setBounds(shapeObj *self){    
         msComputeBounds(self);
@@ -4553,7 +4617,7 @@ SWIGINTERN lineObj *symbolObj_getPoints(symbolObj *self){
         return line;
     }
 SWIGINTERN imageObj *symbolObj_getImage(symbolObj *self,outputFormatObj *input_format){
-        imageObj *image;
+        imageObj *image = NULL;
         outputFormatObj *format = NULL;
         rendererVTableObj *renderer = NULL;
 
@@ -4612,7 +4676,6 @@ SWIGINTERN int symbolObj_setImage(symbolObj *self,imageObj *image){
             msSetError(2, NULL, "setImage()");
             return MS_FAILURE;
         }
-        renderer->initializeRasterBuffer(self->pixmap_buffer, image->width, image->height, image->format->imagemode);
         self->type = MS_SYMBOL_PIXMAP;
         renderer->getRasterBufferCopy(image, self->pixmap_buffer);
 
@@ -4731,6 +4794,14 @@ SWIGINTERN void cgiRequestObj_setParameter(cgiRequestObj *self,char *name,char *
             self->ParamValues[self->NumParams] = strdup(value);
             self->NumParams++;
         }
+    }
+SWIGINTERN void cgiRequestObj_addParameter(cgiRequestObj *self,char *name,char *value){
+        if (self->NumParams == 100) {
+            msSetError(31, "Maximum number of items, %d, has been reached", "addParameter()", 100);
+        }
+        self->ParamNames[self->NumParams] = strdup(name);
+        self->ParamValues[self->NumParams] = strdup(value);
+        self->NumParams++;
     }
 SWIGINTERN char *cgiRequestObj_getName(cgiRequestObj *self,int index){
         if (index < 0 || index >= self->NumParams) {
@@ -7426,7 +7497,7 @@ XS(_wrap_webObj_map_get) {
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
-    struct map_obj *result = 0 ;
+    struct mapObj *result = 0 ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -7439,10 +7510,10 @@ XS(_wrap_webObj_map_get) {
     arg1 = (webObj *)(argp1);
     {
       /* Accessing map */
-      result = (struct map_obj *) ((arg1)->map);;
+      result = (struct mapObj *) ((arg1)->map);;
       MS_REFCNT_INCR(result);
     }
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_map_obj, 0 | SWIG_SHADOW); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_mapObj, 0 | SWIG_SHADOW); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -9815,6 +9886,71 @@ XS(_wrap_styleObj_gap_get) {
 }
 
 
+XS(_wrap_styleObj_initialgap_set) {
+  {
+    styleObj *arg1 = (styleObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: styleObj_initialgap_set(self,initialgap);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_styleObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "styleObj_initialgap_set" "', argument " "1"" of type '" "styleObj *""'"); 
+    }
+    arg1 = (styleObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "styleObj_initialgap_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->initialgap = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_styleObj_initialgap_get) {
+  {
+    styleObj *arg1 = (styleObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: styleObj_initialgap_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_styleObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "styleObj_initialgap_get" "', argument " "1"" of type '" "styleObj *""'"); 
+    }
+    arg1 = (styleObj *)(argp1);
+    result = (double) ((arg1)->initialgap);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_styleObj_position_set) {
   {
     styleObj *arg1 = (styleObj *) 0 ;
@@ -10465,6 +10601,136 @@ XS(_wrap_styleObj_offsety_get) {
 }
 
 
+XS(_wrap_styleObj_polaroffsetpixel_set) {
+  {
+    styleObj *arg1 = (styleObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: styleObj_polaroffsetpixel_set(self,polaroffsetpixel);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_styleObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "styleObj_polaroffsetpixel_set" "', argument " "1"" of type '" "styleObj *""'"); 
+    }
+    arg1 = (styleObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "styleObj_polaroffsetpixel_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->polaroffsetpixel = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_styleObj_polaroffsetpixel_get) {
+  {
+    styleObj *arg1 = (styleObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: styleObj_polaroffsetpixel_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_styleObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "styleObj_polaroffsetpixel_get" "', argument " "1"" of type '" "styleObj *""'"); 
+    }
+    arg1 = (styleObj *)(argp1);
+    result = (double) ((arg1)->polaroffsetpixel);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_styleObj_polaroffsetangle_set) {
+  {
+    styleObj *arg1 = (styleObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: styleObj_polaroffsetangle_set(self,polaroffsetangle);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_styleObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "styleObj_polaroffsetangle_set" "', argument " "1"" of type '" "styleObj *""'"); 
+    }
+    arg1 = (styleObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "styleObj_polaroffsetangle_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->polaroffsetangle = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_styleObj_polaroffsetangle_get) {
+  {
+    styleObj *arg1 = (styleObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: styleObj_polaroffsetangle_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_styleObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "styleObj_polaroffsetangle_get" "', argument " "1"" of type '" "styleObj *""'"); 
+    }
+    arg1 = (styleObj *)(argp1);
+    result = (double) ((arg1)->polaroffsetangle);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_styleObj_angle_set) {
   {
     styleObj *arg1 = (styleObj *) 0 ;
@@ -10738,7 +11004,7 @@ XS(_wrap_new_styleObj) {
       SWIG_croak("Usage: new_styleObj(parent_class);");
     }
     if (items > 0) {
-      res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+      res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
       if (!SWIG_IsOK(res1)) {
         SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_styleObj" "', argument " "1"" of type '" "classObj *""'"); 
       }
@@ -10873,7 +11139,7 @@ XS(_wrap_styleObj_setSymbolByName) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "styleObj_setSymbolByName" "', argument " "1"" of type '" "styleObj *""'"); 
     }
     arg1 = (styleObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_map_obj, 0 |  0 );
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_mapObj, 0 |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "styleObj_setSymbolByName" "', argument " "2"" of type '" "mapObj *""'"); 
     }
@@ -11084,6 +11350,237 @@ XS(_wrap_styleObj_setGeomTransform) {
   fail:
     
     if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelLeaderObj_maxdistance_set) {
+  {
+    labelLeaderObj *arg1 = (labelLeaderObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelLeaderObj_maxdistance_set(self,maxdistance);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelLeaderObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelLeaderObj_maxdistance_set" "', argument " "1"" of type '" "labelLeaderObj *""'"); 
+    }
+    arg1 = (labelLeaderObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelLeaderObj_maxdistance_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->maxdistance = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelLeaderObj_maxdistance_get) {
+  {
+    labelLeaderObj *arg1 = (labelLeaderObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelLeaderObj_maxdistance_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelLeaderObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelLeaderObj_maxdistance_get" "', argument " "1"" of type '" "labelLeaderObj *""'"); 
+    }
+    arg1 = (labelLeaderObj *)(argp1);
+    result = (int) ((arg1)->maxdistance);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelLeaderObj_gridstep_set) {
+  {
+    labelLeaderObj *arg1 = (labelLeaderObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelLeaderObj_gridstep_set(self,gridstep);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelLeaderObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelLeaderObj_gridstep_set" "', argument " "1"" of type '" "labelLeaderObj *""'"); 
+    }
+    arg1 = (labelLeaderObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelLeaderObj_gridstep_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->gridstep = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelLeaderObj_gridstep_get) {
+  {
+    labelLeaderObj *arg1 = (labelLeaderObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelLeaderObj_gridstep_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelLeaderObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelLeaderObj_gridstep_get" "', argument " "1"" of type '" "labelLeaderObj *""'"); 
+    }
+    arg1 = (labelLeaderObj *)(argp1);
+    result = (int) ((arg1)->gridstep);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelLeaderObj_numstyles_get) {
+  {
+    labelLeaderObj *arg1 = (labelLeaderObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelLeaderObj_numstyles_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelLeaderObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelLeaderObj_numstyles_get" "', argument " "1"" of type '" "labelLeaderObj *""'"); 
+    }
+    arg1 = (labelLeaderObj *)(argp1);
+    result = (int) ((arg1)->numstyles);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_labelLeaderObj) {
+  {
+    int argvi = 0;
+    labelLeaderObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 0) || (items > 0)) {
+      SWIG_croak("Usage: new_labelLeaderObj();");
+    }
+    result = (labelLeaderObj *)calloc(1, sizeof(labelLeaderObj));
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_labelLeaderObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_delete_labelLeaderObj) {
+  {
+    labelLeaderObj *arg1 = (labelLeaderObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: delete_labelLeaderObj(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelLeaderObj, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_labelLeaderObj" "', argument " "1"" of type '" "labelLeaderObj *""'"); 
+    }
+    arg1 = (labelLeaderObj *)(argp1);
+    free((char *) arg1);
+    ST(argvi) = sv_newmortal();
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_refcount_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_refcount_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_refcount_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (int) ((arg1)->refcount);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
     SWIG_croak_null();
   }
 }
@@ -13317,6 +13814,71 @@ XS(_wrap_labelObj_priority_get) {
 }
 
 
+XS(_wrap_labelObj_status_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_status_set(self,status);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_status_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelObj_status_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->status = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_status_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_status_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_status_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (int) ((arg1)->status);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_labelObj_numstyles_set) {
   {
     labelObj *arg1 = (labelObj *) 0 ;
@@ -13373,6 +13935,320 @@ XS(_wrap_labelObj_numstyles_get) {
     arg1 = (labelObj *)(argp1);
     result = (int) ((arg1)->numstyles);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_annotext_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_annotext_set(self,annotext);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_annotext_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "labelObj_annotext_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->annotext) free((char*)arg1->annotext);
+      if (arg2) {
+        arg1->annotext = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->annotext,arg2);
+      } else {
+        arg1->annotext = 0;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_annotext_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_annotext_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_annotext_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (char *) ((arg1)->annotext);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_annopoint_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    pointObj *arg2 = (pointObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_annopoint_set(self,annopoint);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_annopoint_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_pointObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "labelObj_annopoint_set" "', argument " "2"" of type '" "pointObj *""'"); 
+    }
+    arg2 = (pointObj *)(argp2);
+    if (arg1) (arg1)->annopoint = *arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_annopoint_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    pointObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_annopoint_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_annopoint_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (pointObj *)& ((arg1)->annopoint);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_pointObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_annopoly_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    shapeObj *arg2 = (shapeObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_annopoly_set(self,annopoly);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_annopoly_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_shapeObj, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "labelObj_annopoly_set" "', argument " "2"" of type '" "shapeObj *""'"); 
+    }
+    arg2 = (shapeObj *)(argp2);
+    if (arg1) (arg1)->annopoly = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_annopoly_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    shapeObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_annopoly_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_annopoly_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (shapeObj *) ((arg1)->annopoly);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_shapeObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_leader_set) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    labelLeaderObj *arg2 = (labelLeaderObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_leader_set(self,leader);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_leader_set" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_labelLeaderObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "labelObj_leader_set" "', argument " "2"" of type '" "labelLeaderObj *""'"); 
+    }
+    arg2 = (labelLeaderObj *)(argp2);
+    if (arg1) (arg1)->leader = *arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_leader_get) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    labelLeaderObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_leader_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_leader_get" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (labelLeaderObj *)& ((arg1)->leader);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_labelLeaderObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_labelObj) {
+  {
+    int argvi = 0;
+    labelObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 0) || (items > 0)) {
+      SWIG_croak("Usage: new_labelObj();");
+    }
+    result = (labelObj *)new_labelObj();
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_labelObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_delete_labelObj) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: delete_labelObj(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_labelObj" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    delete_labelObj(arg1);
+    ST(argvi) = sv_newmortal();
     
     XSRETURN(argvi);
   fail:
@@ -13541,6 +14417,142 @@ XS(_wrap_labelObj_setBinding) {
     
     
     if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_setExpression) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_setExpression(self,expression);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_setExpression" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "labelObj_setExpression" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (int)labelObj_setExpression(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_getExpressionString) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_getExpressionString(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_getExpressionString" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (char *)labelObj_getExpressionString(arg1);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    free((char*)result);
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_setText) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelObj_setText(self,text);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_setText" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "labelObj_setText" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (int)labelObj_setText(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelObj_getTextString) {
+  {
+    labelObj *arg1 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelObj_getTextString(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelObj_getTextString" "', argument " "1"" of type '" "labelObj *""'"); 
+    }
+    arg1 = (labelObj *)(argp1);
+    result = (char *)labelObj_getTextString(arg1);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    free((char*)result);
+    XSRETURN(argvi);
+  fail:
+    
     SWIG_croak_null();
   }
 }
@@ -13748,51 +14760,6 @@ XS(_wrap_labelObj_moveStyleDown) {
 }
 
 
-XS(_wrap_new_labelObj) {
-  {
-    int argvi = 0;
-    labelObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 0) || (items > 0)) {
-      SWIG_croak("Usage: new_labelObj();");
-    }
-    result = (labelObj *)calloc(1, sizeof(labelObj));
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_labelObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    XSRETURN(argvi);
-  fail:
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_delete_labelObj) {
-  {
-    labelObj *arg1 = (labelObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: delete_labelObj(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelObj, SWIG_POINTER_DISOWN |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_labelObj" "', argument " "1"" of type '" "labelObj *""'"); 
-    }
-    arg1 = (labelObj *)(argp1);
-    free((char *) arg1);
-    ST(argvi) = sv_newmortal();
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
 XS(_wrap_classObj_status_set) {
   {
     classObj *arg1 = (classObj *) 0 ;
@@ -13807,7 +14774,7 @@ XS(_wrap_classObj_status_set) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: classObj_status_set(self,status);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_status_set" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -13842,7 +14809,7 @@ XS(_wrap_classObj_status_get) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: classObj_status_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_status_get" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -13852,43 +14819,6 @@ XS(_wrap_classObj_status_get) {
     
     XSRETURN(argvi);
   fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_classObj_numstyles_set) {
-  {
-    classObj *arg1 = (classObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: classObj_numstyles_set(self,numstyles);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_numstyles_set" "', argument " "1"" of type '" "classObj *""'"); 
-    }
-    arg1 = (classObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "classObj_numstyles_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->numstyles = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
     
     SWIG_croak_null();
   }
@@ -13907,7 +14837,7 @@ XS(_wrap_classObj_numstyles_get) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: classObj_numstyles_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_numstyles_get" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -13923,25 +14853,62 @@ XS(_wrap_classObj_numstyles_get) {
 }
 
 
-XS(_wrap_classObj_label_get) {
+XS(_wrap_classObj_numlabels_set) {
+  {
+    classObj *arg1 = (classObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: classObj_numlabels_set(self,numlabels);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_numlabels_set" "', argument " "1"" of type '" "classObj *""'"); 
+    }
+    arg1 = (classObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "classObj_numlabels_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->numlabels = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_classObj_numlabels_get) {
   {
     classObj *arg1 = (classObj *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
-    labelObj *result = 0 ;
+    int result;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: classObj_label_get(self);");
+      SWIG_croak("Usage: classObj_numlabels_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_label_get" "', argument " "1"" of type '" "classObj *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_numlabels_get" "', argument " "1"" of type '" "classObj *""'"); 
     }
     arg1 = (classObj *)(argp1);
-    result = (labelObj *)& ((arg1)->label);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_labelObj, 0 | SWIG_SHADOW); argvi++ ;
+    result = (int) ((arg1)->numlabels);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -13966,7 +14933,7 @@ XS(_wrap_classObj_name_set) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: classObj_name_set(self,name);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_name_set" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -14009,7 +14976,7 @@ XS(_wrap_classObj_name_get) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: classObj_name_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_name_get" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -14040,7 +15007,7 @@ XS(_wrap_classObj_title_set) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: classObj_title_set(self,title);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_title_set" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -14083,7 +15050,7 @@ XS(_wrap_classObj_title_get) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: classObj_title_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_title_get" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -14114,7 +15081,7 @@ XS(_wrap_classObj_template_set) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: classObj_template_set(self,template);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_template_set" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -14157,7 +15124,7 @@ XS(_wrap_classObj_template_get) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: classObj_template_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_template_get" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -14187,7 +15154,7 @@ XS(_wrap_classObj_type_set) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: classObj_type_set(self,type);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_type_set" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -14222,7 +15189,7 @@ XS(_wrap_classObj_type_get) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: classObj_type_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_type_get" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -14250,7 +15217,7 @@ XS(_wrap_classObj_metadata_get) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: classObj_metadata_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_metadata_get" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -14278,7 +15245,7 @@ XS(_wrap_classObj_validation_get) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: classObj_validation_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_validation_get" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -14308,7 +15275,7 @@ XS(_wrap_classObj_minscaledenom_set) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: classObj_minscaledenom_set(self,minscaledenom);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_minscaledenom_set" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -14343,7 +15310,7 @@ XS(_wrap_classObj_minscaledenom_get) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: classObj_minscaledenom_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_minscaledenom_get" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -14373,7 +15340,7 @@ XS(_wrap_classObj_maxscaledenom_set) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: classObj_maxscaledenom_set(self,maxscaledenom);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_maxscaledenom_set" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -14408,7 +15375,7 @@ XS(_wrap_classObj_maxscaledenom_get) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: classObj_maxscaledenom_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_maxscaledenom_get" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -14438,7 +15405,7 @@ XS(_wrap_classObj_minfeaturesize_set) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: classObj_minfeaturesize_set(self,minfeaturesize);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_minfeaturesize_set" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -14473,7 +15440,7 @@ XS(_wrap_classObj_minfeaturesize_get) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: classObj_minfeaturesize_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_minfeaturesize_get" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -14501,7 +15468,7 @@ XS(_wrap_classObj_refcount_get) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: classObj_refcount_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_refcount_get" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -14523,23 +15490,23 @@ XS(_wrap_classObj_layer_get) {
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
-    struct layer_obj *result = 0 ;
+    struct layerObj *result = 0 ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: classObj_layer_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_layer_get" "', argument " "1"" of type '" "classObj *""'"); 
     }
     arg1 = (classObj *)(argp1);
     {
       /* Accessing layer */
-      result = (struct layer_obj *) ((arg1)->layer);;
+      result = (struct layerObj *) ((arg1)->layer);;
       MS_REFCNT_INCR(result);
     }
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_layer_obj, 0 | SWIG_SHADOW); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_layerObj, 0 | SWIG_SHADOW); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -14563,7 +15530,7 @@ XS(_wrap_classObj_debug_set) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: classObj_debug_set(self,debug);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_debug_set" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -14598,7 +15565,7 @@ XS(_wrap_classObj_debug_get) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: classObj_debug_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_debug_get" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -14629,7 +15596,7 @@ XS(_wrap_classObj_keyimage_set) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: classObj_keyimage_set(self,keyimage);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_keyimage_set" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -14672,7 +15639,7 @@ XS(_wrap_classObj_keyimage_get) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: classObj_keyimage_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_keyimage_get" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -14703,7 +15670,7 @@ XS(_wrap_classObj_group_set) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: classObj_group_set(self,group);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_group_set" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -14746,13 +15713,78 @@ XS(_wrap_classObj_group_get) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: classObj_group_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_group_get" "', argument " "1"" of type '" "classObj *""'"); 
     }
     arg1 = (classObj *)(argp1);
     result = (char *) ((arg1)->group);
     ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_classObj_leader_set) {
+  {
+    classObj *arg1 = (classObj *) 0 ;
+    labelLeaderObj *arg2 = (labelLeaderObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: classObj_leader_set(self,leader);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_leader_set" "', argument " "1"" of type '" "classObj *""'"); 
+    }
+    arg1 = (classObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_labelLeaderObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "classObj_leader_set" "', argument " "2"" of type '" "labelLeaderObj *""'"); 
+    }
+    arg2 = (labelLeaderObj *)(argp2);
+    if (arg1) (arg1)->leader = *arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_classObj_leader_get) {
+  {
+    classObj *arg1 = (classObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    labelLeaderObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: classObj_leader_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_leader_get" "', argument " "1"" of type '" "classObj *""'"); 
+    }
+    arg1 = (classObj *)(argp1);
+    result = (labelLeaderObj *)& ((arg1)->leader);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_labelLeaderObj, 0 | SWIG_SHADOW); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -14775,14 +15807,14 @@ XS(_wrap_new_classObj) {
       SWIG_croak("Usage: new_classObj(layer);");
     }
     if (items > 0) {
-      res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
+      res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
       if (!SWIG_IsOK(res1)) {
         SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_classObj" "', argument " "1"" of type '" "layerObj *""'"); 
       }
       arg1 = (layerObj *)(argp1);
     }
     result = (classObj *)new_classObj(arg1);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_class_obj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_classObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -14803,7 +15835,7 @@ XS(_wrap_delete_classObj) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: delete_classObj(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, SWIG_POINTER_DISOWN |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, SWIG_POINTER_DISOWN |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_classObj" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -14835,7 +15867,7 @@ XS(_wrap_classObj_updateFromString) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: classObj_updateFromString(self,snippet);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_updateFromString" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -14870,13 +15902,13 @@ XS(_wrap_classObj_clone) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: classObj_clone(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_clone" "', argument " "1"" of type '" "classObj *""'"); 
     }
     arg1 = (classObj *)(argp1);
     result = (classObj *)classObj_clone(arg1);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_class_obj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_classObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -14902,7 +15934,7 @@ XS(_wrap_classObj_setExpression) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: classObj_setExpression(self,expression);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_setExpression" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -14937,7 +15969,7 @@ XS(_wrap_classObj_getExpressionString) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: classObj_getExpressionString(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_getExpressionString" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -14970,7 +16002,7 @@ XS(_wrap_classObj_setText) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: classObj_setText(self,text);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_setText" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -15005,7 +16037,7 @@ XS(_wrap_classObj_getTextString) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: classObj_getTextString(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_getTextString" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -15038,7 +16070,7 @@ XS(_wrap_classObj_getMetaData) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: classObj_getMetaData(self,name);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_getMetaData" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -15081,7 +16113,7 @@ XS(_wrap_classObj_setMetaData) {
     if ((items < 3) || (items > 3)) {
       SWIG_croak("Usage: classObj_setMetaData(self,name,value);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_setMetaData" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -15123,7 +16155,7 @@ XS(_wrap_classObj_getFirstMetaDataKey) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: classObj_getFirstMetaDataKey(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_getFirstMetaDataKey" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -15155,7 +16187,7 @@ XS(_wrap_classObj_getNextMetaDataKey) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: classObj_getNextMetaDataKey(self,lastkey);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_getNextMetaDataKey" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -15211,17 +16243,17 @@ XS(_wrap_classObj_drawLegendIcon) {
     if ((items < 8) || (items > 8)) {
       SWIG_croak("Usage: classObj_drawLegendIcon(self,map,layer,width,height,dstImage,dstX,dstY);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_drawLegendIcon" "', argument " "1"" of type '" "classObj *""'"); 
     }
     arg1 = (classObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_map_obj, 0 |  0 );
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_mapObj, 0 |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "classObj_drawLegendIcon" "', argument " "2"" of type '" "mapObj *""'"); 
     }
     arg2 = (mapObj *)(argp2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_layer_obj, 0 |  0 );
+    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_layerObj, 0 |  0 );
     if (!SWIG_IsOK(res3)) {
       SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "classObj_drawLegendIcon" "', argument " "3"" of type '" "layerObj *""'"); 
     }
@@ -15300,17 +16332,17 @@ XS(_wrap_classObj_createLegendIcon) {
     if ((items < 5) || (items > 5)) {
       SWIG_croak("Usage: classObj_createLegendIcon(self,map,layer,width,height);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_createLegendIcon" "', argument " "1"" of type '" "classObj *""'"); 
     }
     arg1 = (classObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_map_obj, 0 |  0 );
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_mapObj, 0 |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "classObj_createLegendIcon" "', argument " "2"" of type '" "mapObj *""'"); 
     }
     arg2 = (mapObj *)(argp2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_layer_obj, 0 |  0 );
+    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_layerObj, 0 |  0 );
     if (!SWIG_IsOK(res3)) {
       SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "classObj_createLegendIcon" "', argument " "3"" of type '" "layerObj *""'"); 
     }
@@ -15344,6 +16376,120 @@ XS(_wrap_classObj_createLegendIcon) {
 }
 
 
+XS(_wrap_classObj_getLabel) {
+  {
+    classObj *arg1 = (classObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    labelObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: classObj_getLabel(self,i);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_getLabel" "', argument " "1"" of type '" "classObj *""'"); 
+    }
+    arg1 = (classObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "classObj_getLabel" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    result = (labelObj *)classObj_getLabel(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_labelObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_classObj_addLabel) {
+  {
+    classObj *arg1 = (classObj *) 0 ;
+    labelObj *arg2 = (labelObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: classObj_addLabel(self,label);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_addLabel" "', argument " "1"" of type '" "classObj *""'"); 
+    }
+    arg1 = (classObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_labelObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "classObj_addLabel" "', argument " "2"" of type '" "labelObj *""'"); 
+    }
+    arg2 = (labelObj *)(argp2);
+    result = (int)classObj_addLabel(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_classObj_removeLabel) {
+  {
+    classObj *arg1 = (classObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    labelObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: classObj_removeLabel(self,index);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_removeLabel" "', argument " "1"" of type '" "classObj *""'"); 
+    }
+    arg1 = (classObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "classObj_removeLabel" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    result = (labelObj *)classObj_removeLabel(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_labelObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_classObj_getStyle) {
   {
     classObj *arg1 = (classObj *) 0 ;
@@ -15359,7 +16505,7 @@ XS(_wrap_classObj_getStyle) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: classObj_getStyle(self,i);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_getStyle" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -15400,7 +16546,7 @@ XS(_wrap_classObj_insertStyle) {
     if ((items < 2) || (items > 3)) {
       SWIG_croak("Usage: classObj_insertStyle(self,style,index);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_insertStyle" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -15447,7 +16593,7 @@ XS(_wrap_classObj_removeStyle) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: classObj_removeStyle(self,index);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_removeStyle" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -15485,7 +16631,7 @@ XS(_wrap_classObj_moveStyleUp) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: classObj_moveStyleUp(self,index);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_moveStyleUp" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -15523,7 +16669,7 @@ XS(_wrap_classObj_moveStyleDown) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: classObj_moveStyleDown(self,index);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_class_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_classObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "classObj_moveStyleDown" "', argument " "1"" of type '" "classObj *""'"); 
     }
@@ -15540,34 +16686,6 @@ XS(_wrap_classObj_moveStyleDown) {
     XSRETURN(argvi);
   fail:
     
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelCacheMemberObj_text_get) {
-  {
-    labelCacheMemberObj *arg1 = (labelCacheMemberObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelCacheMemberObj_text_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelCacheMemberObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelCacheMemberObj_text_get" "', argument " "1"" of type '" "labelCacheMemberObj *""'"); 
-    }
-    arg1 = (labelCacheMemberObj *)(argp1);
-    result = (char *) ((arg1)->text);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
     
     SWIG_croak_null();
   }
@@ -15658,7 +16776,7 @@ XS(_wrap_labelCacheMemberObj_numstyles_get) {
 }
 
 
-XS(_wrap_labelCacheMemberObj_label_get) {
+XS(_wrap_labelCacheMemberObj_labels_get) {
   {
     labelCacheMemberObj *arg1 = (labelCacheMemberObj *) 0 ;
     void *argp1 = 0 ;
@@ -15668,15 +16786,43 @@ XS(_wrap_labelCacheMemberObj_label_get) {
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelCacheMemberObj_label_get(self);");
+      SWIG_croak("Usage: labelCacheMemberObj_labels_get(self);");
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelCacheMemberObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelCacheMemberObj_label_get" "', argument " "1"" of type '" "labelCacheMemberObj *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelCacheMemberObj_labels_get" "', argument " "1"" of type '" "labelCacheMemberObj *""'"); 
     }
     arg1 = (labelCacheMemberObj *)(argp1);
-    result = (labelObj *)& ((arg1)->label);
+    result = (labelObj *) ((arg1)->labels);
     ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_labelObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelCacheMemberObj_numlabels_get) {
+  {
+    labelCacheMemberObj *arg1 = (labelCacheMemberObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelCacheMemberObj_numlabels_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelCacheMemberObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelCacheMemberObj_numlabels_get" "', argument " "1"" of type '" "labelCacheMemberObj *""'"); 
+    }
+    arg1 = (labelCacheMemberObj *)(argp1);
+    result = (int) ((arg1)->numlabels);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -15732,62 +16878,6 @@ XS(_wrap_labelCacheMemberObj_classindex_get) {
     }
     arg1 = (labelCacheMemberObj *)(argp1);
     result = (int) ((arg1)->classindex);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelCacheMemberObj_tileindex_get) {
-  {
-    labelCacheMemberObj *arg1 = (labelCacheMemberObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelCacheMemberObj_tileindex_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelCacheMemberObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelCacheMemberObj_tileindex_get" "', argument " "1"" of type '" "labelCacheMemberObj *""'"); 
-    }
-    arg1 = (labelCacheMemberObj *)(argp1);
-    result = (int) ((arg1)->tileindex);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_labelCacheMemberObj_shapeindex_get) {
-  {
-    labelCacheMemberObj *arg1 = (labelCacheMemberObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelCacheMemberObj_shapeindex_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelCacheMemberObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelCacheMemberObj_shapeindex_get" "', argument " "1"" of type '" "labelCacheMemberObj *""'"); 
-    }
-    arg1 = (labelCacheMemberObj *)(argp1);
-    result = (int) ((arg1)->shapeindex);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -15929,6 +17019,62 @@ XS(_wrap_labelCacheMemberObj_markerid_get) {
     arg1 = (labelCacheMemberObj *)(argp1);
     result = (int) ((arg1)->markerid);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelCacheMemberObj_leaderline_get) {
+  {
+    labelCacheMemberObj *arg1 = (labelCacheMemberObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    lineObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelCacheMemberObj_leaderline_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelCacheMemberObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelCacheMemberObj_leaderline_get" "', argument " "1"" of type '" "labelCacheMemberObj *""'"); 
+    }
+    arg1 = (labelCacheMemberObj *)(argp1);
+    result = (lineObj *) ((arg1)->leaderline);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_lineObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelCacheMemberObj_leaderbbox_get) {
+  {
+    labelCacheMemberObj *arg1 = (labelCacheMemberObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    rectObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelCacheMemberObj_leaderbbox_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelCacheMemberObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelCacheMemberObj_leaderbbox_get" "', argument " "1"" of type '" "labelCacheMemberObj *""'"); 
+    }
+    arg1 = (labelCacheMemberObj *)(argp1);
+    result = (rectObj *) ((arg1)->leaderbbox);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_rectObj, 0 | SWIG_SHADOW); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -16343,6 +17489,34 @@ XS(_wrap_labelCacheObj_numlabels_get) {
     }
     arg1 = (labelCacheObj *)(argp1);
     result = (int) ((arg1)->numlabels);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelCacheObj_gutter_get) {
+  {
+    labelCacheObj *arg1 = (labelCacheObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelCacheObj_gutter_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelCacheObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelCacheObj_gutter_get" "', argument " "1"" of type '" "labelCacheObj *""'"); 
+    }
+    arg1 = (labelCacheObj *)(argp1);
+    result = (int) ((arg1)->gutter);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -18084,7 +19258,7 @@ XS(_wrap_referenceMapObj_map_get) {
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
-    struct map_obj *result = 0 ;
+    struct mapObj *result = 0 ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -18097,10 +19271,10 @@ XS(_wrap_referenceMapObj_map_get) {
     arg1 = (referenceMapObj *)(argp1);
     {
       /* Accessing map */
-      result = (struct map_obj *) ((arg1)->map);;
+      result = (struct mapObj *) ((arg1)->map);;
       MS_REFCNT_INCR(result);
     }
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_map_obj, 0 | SWIG_SHADOW); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_mapObj, 0 | SWIG_SHADOW); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -20011,7 +21185,7 @@ XS(_wrap_legendObj_map_get) {
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
-    struct map_obj *result = 0 ;
+    struct mapObj *result = 0 ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -20024,10 +21198,10 @@ XS(_wrap_legendObj_map_get) {
     arg1 = (legendObj *)(argp1);
     {
       /* Accessing map */
-      result = (struct map_obj *) ((arg1)->map);;
+      result = (struct mapObj *) ((arg1)->map);;
       MS_REFCNT_INCR(result);
     }
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_map_obj, 0 | SWIG_SHADOW); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_mapObj, 0 | SWIG_SHADOW); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -20115,10534 +21289,6 @@ XS(_wrap_delete_legendObj) {
     
     XSRETURN(argvi);
   fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_classitem_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_classitem_set(self,classitem);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_classitem_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_classitem_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    {
-      if (arg1->classitem) free((char*)arg1->classitem);
-      if (arg2) {
-        arg1->classitem = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->classitem,arg2);
-      } else {
-        arg1->classitem = 0;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_classitem_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_classitem_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_classitem_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (char *) ((arg1)->classitem);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_refcount_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_refcount_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_refcount_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (int) ((arg1)->refcount);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_numclasses_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_numclasses_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_numclasses_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (int) ((arg1)->numclasses);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_maxclasses_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_maxclasses_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_maxclasses_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (int) ((arg1)->maxclasses);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_index_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_index_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_index_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (int) ((arg1)->index);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_map_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    struct map_obj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_map_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_map_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    {
-      /* Accessing map */
-      result = (struct map_obj *) ((arg1)->map);;
-      MS_REFCNT_INCR(result);
-    }
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_map_obj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_header_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_header_set(self,header);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_header_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_header_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    {
-      if (arg1->header) free((char*)arg1->header);
-      if (arg2) {
-        arg1->header = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->header,arg2);
-      } else {
-        arg1->header = 0;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_header_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_header_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_header_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (char *) ((arg1)->header);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_footer_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_footer_set(self,footer);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_footer_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_footer_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    {
-      if (arg1->footer) free((char*)arg1->footer);
-      if (arg2) {
-        arg1->footer = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->footer,arg2);
-      } else {
-        arg1->footer = 0;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_footer_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_footer_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_footer_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (char *) ((arg1)->footer);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_template_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_template_set(self,template);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_template_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_template_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    {
-      if (arg1->template) free((char*)arg1->template);
-      if (arg2) {
-        arg1->template = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->template,arg2);
-      } else {
-        arg1->template = 0;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_template_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_template_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_template_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (char *) ((arg1)->template);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_name_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_name_set(self,name);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_name_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_name_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    {
-      if (arg1->name) free((char*)arg1->name);
-      if (arg2) {
-        arg1->name = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->name,arg2);
-      } else {
-        arg1->name = 0;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_name_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_name_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_name_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (char *) ((arg1)->name);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_group_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_group_set(self,group);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_group_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_group_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    {
-      if (arg1->group) free((char*)arg1->group);
-      if (arg2) {
-        arg1->group = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->group,arg2);
-      } else {
-        arg1->group = 0;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_group_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_group_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_group_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (char *) ((arg1)->group);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_status_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_status_set(self,status);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_status_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_status_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->status = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_status_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_status_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_status_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (int) ((arg1)->status);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_data_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_data_set(self,data);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_data_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_data_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    {
-      if (arg1->data) free((char*)arg1->data);
-      if (arg2) {
-        arg1->data = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->data,arg2);
-      } else {
-        arg1->data = 0;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_data_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_data_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_data_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (char *) ((arg1)->data);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_type_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    enum MS_LAYER_TYPE arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_type_set(self,type);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_type_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_type_set" "', argument " "2"" of type '" "enum MS_LAYER_TYPE""'");
-    } 
-    arg2 = (enum MS_LAYER_TYPE)(val2);
-    if (arg1) (arg1)->type = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_type_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    enum MS_LAYER_TYPE result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_type_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_type_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (enum MS_LAYER_TYPE) ((arg1)->type);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_tolerance_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    double arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_tolerance_set(self,tolerance);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_tolerance_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_tolerance_set" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    if (arg1) (arg1)->tolerance = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_tolerance_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_tolerance_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_tolerance_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (double) ((arg1)->tolerance);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_toleranceunits_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_toleranceunits_set(self,toleranceunits);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_toleranceunits_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_toleranceunits_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->toleranceunits = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_toleranceunits_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_toleranceunits_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_toleranceunits_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (int) ((arg1)->toleranceunits);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_symbolscaledenom_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    double arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_symbolscaledenom_set(self,symbolscaledenom);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_symbolscaledenom_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_symbolscaledenom_set" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    if (arg1) (arg1)->symbolscaledenom = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_symbolscaledenom_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_symbolscaledenom_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_symbolscaledenom_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (double) ((arg1)->symbolscaledenom);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_minscaledenom_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    double arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_minscaledenom_set(self,minscaledenom);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_minscaledenom_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_minscaledenom_set" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    if (arg1) (arg1)->minscaledenom = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_minscaledenom_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_minscaledenom_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_minscaledenom_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (double) ((arg1)->minscaledenom);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_maxscaledenom_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    double arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_maxscaledenom_set(self,maxscaledenom);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_maxscaledenom_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_maxscaledenom_set" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    if (arg1) (arg1)->maxscaledenom = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_maxscaledenom_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_maxscaledenom_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_maxscaledenom_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (double) ((arg1)->maxscaledenom);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_minfeaturesize_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_minfeaturesize_set(self,minfeaturesize);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_minfeaturesize_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_minfeaturesize_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->minfeaturesize = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_minfeaturesize_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_minfeaturesize_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_minfeaturesize_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (int) ((arg1)->minfeaturesize);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_labelminscaledenom_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    double arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_labelminscaledenom_set(self,labelminscaledenom);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_labelminscaledenom_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_labelminscaledenom_set" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    if (arg1) (arg1)->labelminscaledenom = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_labelminscaledenom_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_labelminscaledenom_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_labelminscaledenom_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (double) ((arg1)->labelminscaledenom);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_labelmaxscaledenom_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    double arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_labelmaxscaledenom_set(self,labelmaxscaledenom);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_labelmaxscaledenom_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_labelmaxscaledenom_set" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    if (arg1) (arg1)->labelmaxscaledenom = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_labelmaxscaledenom_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_labelmaxscaledenom_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_labelmaxscaledenom_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (double) ((arg1)->labelmaxscaledenom);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_mingeowidth_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    double arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_mingeowidth_set(self,mingeowidth);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_mingeowidth_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_mingeowidth_set" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    if (arg1) (arg1)->mingeowidth = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_mingeowidth_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_mingeowidth_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_mingeowidth_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (double) ((arg1)->mingeowidth);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_maxgeowidth_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    double arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_maxgeowidth_set(self,maxgeowidth);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_maxgeowidth_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_maxgeowidth_set" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    if (arg1) (arg1)->maxgeowidth = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_maxgeowidth_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_maxgeowidth_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_maxgeowidth_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (double) ((arg1)->maxgeowidth);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_sizeunits_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_sizeunits_set(self,sizeunits);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_sizeunits_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_sizeunits_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->sizeunits = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_sizeunits_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_sizeunits_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_sizeunits_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (int) ((arg1)->sizeunits);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_maxfeatures_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_maxfeatures_set(self,maxfeatures);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_maxfeatures_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_maxfeatures_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->maxfeatures = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_maxfeatures_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_maxfeatures_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_maxfeatures_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (int) ((arg1)->maxfeatures);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_startindex_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_startindex_set(self,startindex);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_startindex_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_startindex_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->startindex = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_startindex_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_startindex_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_startindex_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (int) ((arg1)->startindex);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_offsite_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    colorObj *arg2 = (colorObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_offsite_set(self,offsite);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_offsite_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_offsite_set" "', argument " "2"" of type '" "colorObj *""'"); 
-    }
-    arg2 = (colorObj *)(argp2);
-    if (arg1) (arg1)->offsite = *arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_offsite_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    colorObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_offsite_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_offsite_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (colorObj *)& ((arg1)->offsite);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_colorObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_transform_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_transform_set(self,transform);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_transform_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_transform_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->transform = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_transform_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_transform_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_transform_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (int) ((arg1)->transform);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_labelcache_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_labelcache_set(self,labelcache);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_labelcache_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_labelcache_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->labelcache = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_labelcache_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_labelcache_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_labelcache_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (int) ((arg1)->labelcache);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_postlabelcache_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_postlabelcache_set(self,postlabelcache);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_postlabelcache_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_postlabelcache_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->postlabelcache = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_postlabelcache_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_postlabelcache_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_postlabelcache_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (int) ((arg1)->postlabelcache);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_labelitem_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_labelitem_set(self,labelitem);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_labelitem_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_labelitem_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    {
-      if (arg1->labelitem) free((char*)arg1->labelitem);
-      if (arg2) {
-        arg1->labelitem = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->labelitem,arg2);
-      } else {
-        arg1->labelitem = 0;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_labelitem_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_labelitem_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_labelitem_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (char *) ((arg1)->labelitem);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_tileitem_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_tileitem_set(self,tileitem);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_tileitem_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_tileitem_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    {
-      if (arg1->tileitem) free((char*)arg1->tileitem);
-      if (arg2) {
-        arg1->tileitem = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->tileitem,arg2);
-      } else {
-        arg1->tileitem = 0;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_tileitem_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_tileitem_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_tileitem_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (char *) ((arg1)->tileitem);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_tileindex_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_tileindex_set(self,tileindex);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_tileindex_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_tileindex_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    {
-      if (arg1->tileindex) free((char*)arg1->tileindex);
-      if (arg2) {
-        arg1->tileindex = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->tileindex,arg2);
-      } else {
-        arg1->tileindex = 0;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_tileindex_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_tileindex_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_tileindex_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (char *) ((arg1)->tileindex);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_units_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_units_set(self,units);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_units_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_units_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->units = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_units_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_units_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_units_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (int) ((arg1)->units);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_connection_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_connection_set(self,connection);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_connection_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_connection_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    {
-      if (arg1->connection) free((char*)arg1->connection);
-      if (arg2) {
-        arg1->connection = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->connection,arg2);
-      } else {
-        arg1->connection = 0;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_connection_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_connection_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_connection_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (char *) ((arg1)->connection);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_plugin_library_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_plugin_library_set(self,plugin_library);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_plugin_library_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_plugin_library_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    {
-      if (arg1->plugin_library) free((char*)arg1->plugin_library);
-      if (arg2) {
-        arg1->plugin_library = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->plugin_library,arg2);
-      } else {
-        arg1->plugin_library = 0;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_plugin_library_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_plugin_library_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_plugin_library_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (char *) ((arg1)->plugin_library);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_plugin_library_original_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_plugin_library_original_set(self,plugin_library_original);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_plugin_library_original_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_plugin_library_original_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    {
-      if (arg1->plugin_library_original) free((char*)arg1->plugin_library_original);
-      if (arg2) {
-        arg1->plugin_library_original = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->plugin_library_original,arg2);
-      } else {
-        arg1->plugin_library_original = 0;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_plugin_library_original_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_plugin_library_original_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_plugin_library_original_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (char *) ((arg1)->plugin_library_original);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_connectiontype_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    enum MS_CONNECTION_TYPE arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_connectiontype_set(self,connectiontype);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_connectiontype_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_connectiontype_set" "', argument " "2"" of type '" "enum MS_CONNECTION_TYPE""'");
-    } 
-    arg2 = (enum MS_CONNECTION_TYPE)(val2);
-    if (arg1) (arg1)->connectiontype = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_connectiontype_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    enum MS_CONNECTION_TYPE result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_connectiontype_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_connectiontype_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (enum MS_CONNECTION_TYPE) ((arg1)->connectiontype);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_numitems_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_numitems_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_numitems_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (int) ((arg1)->numitems);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_bandsitem_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_bandsitem_set(self,bandsitem);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_bandsitem_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_bandsitem_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    {
-      if (arg1->bandsitem) free((char*)arg1->bandsitem);
-      if (arg2) {
-        arg1->bandsitem = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->bandsitem,arg2);
-      } else {
-        arg1->bandsitem = 0;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_bandsitem_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_bandsitem_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_bandsitem_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (char *) ((arg1)->bandsitem);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_filteritem_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_filteritem_set(self,filteritem);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_filteritem_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_filteritem_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    {
-      if (arg1->filteritem) free((char*)arg1->filteritem);
-      if (arg2) {
-        arg1->filteritem = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->filteritem,arg2);
-      } else {
-        arg1->filteritem = 0;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_filteritem_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_filteritem_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_filteritem_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (char *) ((arg1)->filteritem);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_styleitem_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_styleitem_set(self,styleitem);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_styleitem_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_styleitem_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    {
-      if (arg1->styleitem) free((char*)arg1->styleitem);
-      if (arg2) {
-        arg1->styleitem = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->styleitem,arg2);
-      } else {
-        arg1->styleitem = 0;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_styleitem_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_styleitem_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_styleitem_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (char *) ((arg1)->styleitem);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_requires_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_requires_set(self,requires);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_requires_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_requires_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    {
-      if (arg1->requires) free((char*)arg1->requires);
-      if (arg2) {
-        arg1->requires = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->requires,arg2);
-      } else {
-        arg1->requires = 0;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_requires_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_requires_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_requires_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (char *) ((arg1)->requires);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_labelrequires_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_labelrequires_set(self,labelrequires);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_labelrequires_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_labelrequires_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    {
-      if (arg1->labelrequires) free((char*)arg1->labelrequires);
-      if (arg2) {
-        arg1->labelrequires = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->labelrequires,arg2);
-      } else {
-        arg1->labelrequires = 0;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_labelrequires_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_labelrequires_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_labelrequires_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (char *) ((arg1)->labelrequires);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_metadata_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    hashTableObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_metadata_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_metadata_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (hashTableObj *)& ((arg1)->metadata);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_hashTableObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_validation_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    hashTableObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_validation_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_validation_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (hashTableObj *)& ((arg1)->validation);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_hashTableObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_bindvals_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    hashTableObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_bindvals_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_bindvals_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (hashTableObj *)& ((arg1)->bindvals);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_hashTableObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_cluster_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    clusterObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_cluster_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_cluster_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (clusterObj *)& ((arg1)->cluster);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_clusterObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_opacity_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_opacity_set(self,opacity);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_opacity_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_opacity_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->opacity = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_opacity_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_opacity_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_opacity_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (int) ((arg1)->opacity);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_dump_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_dump_set(self,dump);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_dump_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_dump_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->dump = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_dump_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_dump_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_dump_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (int) ((arg1)->dump);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_debug_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_debug_set(self,debug);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_debug_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_debug_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->debug = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_debug_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_debug_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_debug_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (int) ((arg1)->debug);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_extent_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    rectObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_extent_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_extent_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (rectObj *)& ((arg1)->extent);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_rectObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_numprocessing_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_numprocessing_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_numprocessing_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (int) ((arg1)->numprocessing);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_numjoins_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_numjoins_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_numjoins_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (int) ((arg1)->numjoins);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_classgroup_set) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_classgroup_set(self,classgroup);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_classgroup_set" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_classgroup_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    {
-      if (arg1->classgroup) free((char*)arg1->classgroup);
-      if (arg2) {
-        arg1->classgroup = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->classgroup,arg2);
-      } else {
-        arg1->classgroup = 0;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_classgroup_get) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_classgroup_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_classgroup_get" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (char *) ((arg1)->classgroup);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_new_layerObj) {
-  {
-    mapObj *arg1 = (mapObj *) NULL ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    layerObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 0) || (items > 1)) {
-      SWIG_croak("Usage: new_layerObj(map);");
-    }
-    if (items > 0) {
-      res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-      if (!SWIG_IsOK(res1)) {
-        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_layerObj" "', argument " "1"" of type '" "mapObj *""'"); 
-      }
-      arg1 = (mapObj *)(argp1);
-    }
-    result = (layerObj *)new_layerObj(arg1);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_layer_obj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_delete_layerObj) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: delete_layerObj(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, SWIG_POINTER_DISOWN |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_layerObj" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    delete_layerObj(arg1);
-    ST(argvi) = sv_newmortal();
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_clone) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    layerObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_clone(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_clone" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (layerObj *)layerObj_clone(arg1);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_layer_obj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_updateFromString) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_updateFromString(self,snippet);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_updateFromString" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_updateFromString" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (int)layerObj_updateFromString(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_insertClass) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    classObj *arg2 = (classObj *) 0 ;
-    int arg3 = (int) -1 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int val3 ;
-    int ecode3 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 3)) {
-      SWIG_croak("Usage: layerObj_insertClass(self,classobj,index);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_insertClass" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_class_obj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_insertClass" "', argument " "2"" of type '" "classObj *""'"); 
-    }
-    arg2 = (classObj *)(argp2);
-    if (items > 2) {
-      ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
-      if (!SWIG_IsOK(ecode3)) {
-        SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "layerObj_insertClass" "', argument " "3"" of type '" "int""'");
-      } 
-      arg3 = (int)(val3);
-    }
-    result = (int)layerObj_insertClass(arg1,arg2,arg3);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_removeClass) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    classObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_removeClass(self,index);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_removeClass" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_removeClass" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    result = (classObj *)layerObj_removeClass(arg1,arg2);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_class_obj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_open) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_open(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_open" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (int)layerObj_open(arg1);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_whichShapes) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    rectObj arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_whichShapes(self,rect);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_whichShapes" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    {
-      res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_rectObj,  0 );
-      if (!SWIG_IsOK(res2)) {
-        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_whichShapes" "', argument " "2"" of type '" "rectObj""'"); 
-      }  
-      if (!argp2) {
-        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "layerObj_whichShapes" "', argument " "2"" of type '" "rectObj""'");
-      } else {
-        arg2 = *((rectObj *)(argp2));
-      }
-    }
-    result = (int)layerObj_whichShapes(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_nextShape) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    shapeObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_nextShape(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_nextShape" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (shapeObj *)layerObj_nextShape(arg1);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_shapeObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_close) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_close(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_close" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    layerObj_close(arg1);
-    ST(argvi) = sv_newmortal();
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_getShape) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    resultObj *arg2 = (resultObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    shapeObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_getShape(self,record);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getShape" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_resultObj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_getShape" "', argument " "2"" of type '" "resultObj *""'"); 
-    }
-    arg2 = (resultObj *)(argp2);
-    result = (shapeObj *)layerObj_getShape(arg1,arg2);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_shapeObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_getNumResults) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_getNumResults(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getNumResults" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (int)layerObj_getNumResults(arg1);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_getResultsBounds) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    rectObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_getResultsBounds(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getResultsBounds" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (rectObj *)layerObj_getResultsBounds(arg1);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_rectObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_getResult) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    resultObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_getResult(self,i);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getResult" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_getResult" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    result = (resultObj *)layerObj_getResult(arg1,arg2);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_resultObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_getClass) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    classObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_getClass(self,i);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getClass" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_getClass" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    result = (classObj *)layerObj_getClass(arg1,arg2);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_class_obj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_getItem) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_getItem(self,i);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getItem" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_getItem" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    result = (char *)layerObj_getItem(arg1,arg2);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_draw) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    mapObj *arg2 = (mapObj *) 0 ;
-    imageObj *arg3 = (imageObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: layerObj_draw(self,map,image);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_draw" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_draw" "', argument " "2"" of type '" "mapObj *""'"); 
-    }
-    arg2 = (mapObj *)(argp2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_imageObj, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_draw" "', argument " "3"" of type '" "imageObj *""'"); 
-    }
-    arg3 = (imageObj *)(argp3);
-    result = (int)layerObj_draw(arg1,arg2,arg3);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_drawQuery) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    mapObj *arg2 = (mapObj *) 0 ;
-    imageObj *arg3 = (imageObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: layerObj_drawQuery(self,map,image);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_drawQuery" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_drawQuery" "', argument " "2"" of type '" "mapObj *""'"); 
-    }
-    arg2 = (mapObj *)(argp2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_imageObj, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_drawQuery" "', argument " "3"" of type '" "imageObj *""'"); 
-    }
-    arg3 = (imageObj *)(argp3);
-    result = (int)layerObj_drawQuery(arg1,arg2,arg3);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_queryByFilter) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    mapObj *arg2 = (mapObj *) 0 ;
-    char *arg3 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int res3 ;
-    char *buf3 = 0 ;
-    int alloc3 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: layerObj_queryByFilter(self,map,string);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_queryByFilter" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_queryByFilter" "', argument " "2"" of type '" "mapObj *""'"); 
-    }
-    arg2 = (mapObj *)(argp2);
-    res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_queryByFilter" "', argument " "3"" of type '" "char *""'");
-    }
-    arg3 = (char *)(buf3);
-    result = (int)layerObj_queryByFilter(arg1,arg2,arg3);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
-    XSRETURN(argvi);
-  fail:
-    
-    
-    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_queryByAttributes) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    mapObj *arg2 = (mapObj *) 0 ;
-    char *arg3 = (char *) 0 ;
-    char *arg4 = (char *) 0 ;
-    int arg5 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int res3 ;
-    char *buf3 = 0 ;
-    int alloc3 = 0 ;
-    int res4 ;
-    char *buf4 = 0 ;
-    int alloc4 = 0 ;
-    int val5 ;
-    int ecode5 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 5) || (items > 5)) {
-      SWIG_croak("Usage: layerObj_queryByAttributes(self,map,qitem,qstring,mode);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_queryByAttributes" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_queryByAttributes" "', argument " "2"" of type '" "mapObj *""'"); 
-    }
-    arg2 = (mapObj *)(argp2);
-    res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_queryByAttributes" "', argument " "3"" of type '" "char *""'");
-    }
-    arg3 = (char *)(buf3);
-    res4 = SWIG_AsCharPtrAndSize(ST(3), &buf4, NULL, &alloc4);
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "layerObj_queryByAttributes" "', argument " "4"" of type '" "char *""'");
-    }
-    arg4 = (char *)(buf4);
-    ecode5 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
-    if (!SWIG_IsOK(ecode5)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "layerObj_queryByAttributes" "', argument " "5"" of type '" "int""'");
-    } 
-    arg5 = (int)(val5);
-    result = (int)layerObj_queryByAttributes(arg1,arg2,arg3,arg4,arg5);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
-    if (alloc4 == SWIG_NEWOBJ) free((char*)buf4);
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
-    if (alloc4 == SWIG_NEWOBJ) free((char*)buf4);
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_queryByPoint) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    mapObj *arg2 = (mapObj *) 0 ;
-    pointObj *arg3 = (pointObj *) 0 ;
-    int arg4 ;
-    double arg5 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
-    int val4 ;
-    int ecode4 = 0 ;
-    double val5 ;
-    int ecode5 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 5) || (items > 5)) {
-      SWIG_croak("Usage: layerObj_queryByPoint(self,map,point,mode,buffer);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_queryByPoint" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_queryByPoint" "', argument " "2"" of type '" "mapObj *""'"); 
-    }
-    arg2 = (mapObj *)(argp2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_pointObj, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_queryByPoint" "', argument " "3"" of type '" "pointObj *""'"); 
-    }
-    arg3 = (pointObj *)(argp3);
-    ecode4 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
-    if (!SWIG_IsOK(ecode4)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "layerObj_queryByPoint" "', argument " "4"" of type '" "int""'");
-    } 
-    arg4 = (int)(val4);
-    ecode5 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
-    if (!SWIG_IsOK(ecode5)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "layerObj_queryByPoint" "', argument " "5"" of type '" "double""'");
-    } 
-    arg5 = (double)(val5);
-    result = (int)layerObj_queryByPoint(arg1,arg2,arg3,arg4,arg5);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_queryByRect) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    mapObj *arg2 = (mapObj *) 0 ;
-    rectObj arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    void *argp3 ;
-    int res3 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: layerObj_queryByRect(self,map,rect);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_queryByRect" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_queryByRect" "', argument " "2"" of type '" "mapObj *""'"); 
-    }
-    arg2 = (mapObj *)(argp2);
-    {
-      res3 = SWIG_ConvertPtr(ST(2), &argp3, SWIGTYPE_p_rectObj,  0 );
-      if (!SWIG_IsOK(res3)) {
-        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_queryByRect" "', argument " "3"" of type '" "rectObj""'"); 
-      }  
-      if (!argp3) {
-        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "layerObj_queryByRect" "', argument " "3"" of type '" "rectObj""'");
-      } else {
-        arg3 = *((rectObj *)(argp3));
-      }
-    }
-    result = (int)layerObj_queryByRect(arg1,arg2,arg3);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_queryByFeatures) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    mapObj *arg2 = (mapObj *) 0 ;
-    int arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int val3 ;
-    int ecode3 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: layerObj_queryByFeatures(self,map,slayer);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_queryByFeatures" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_queryByFeatures" "', argument " "2"" of type '" "mapObj *""'"); 
-    }
-    arg2 = (mapObj *)(argp2);
-    ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
-    if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "layerObj_queryByFeatures" "', argument " "3"" of type '" "int""'");
-    } 
-    arg3 = (int)(val3);
-    result = (int)layerObj_queryByFeatures(arg1,arg2,arg3);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_queryByShape) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    mapObj *arg2 = (mapObj *) 0 ;
-    shapeObj *arg3 = (shapeObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: layerObj_queryByShape(self,map,shape);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_queryByShape" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_queryByShape" "', argument " "2"" of type '" "mapObj *""'"); 
-    }
-    arg2 = (mapObj *)(argp2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_shapeObj, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_queryByShape" "', argument " "3"" of type '" "shapeObj *""'"); 
-    }
-    arg3 = (shapeObj *)(argp3);
-    result = (int)layerObj_queryByShape(arg1,arg2,arg3);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_queryByIndex) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    mapObj *arg2 = (mapObj *) 0 ;
-    int arg3 ;
-    int arg4 ;
-    int arg5 = (int) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int val3 ;
-    int ecode3 = 0 ;
-    int val4 ;
-    int ecode4 = 0 ;
-    int val5 ;
-    int ecode5 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 4) || (items > 5)) {
-      SWIG_croak("Usage: layerObj_queryByIndex(self,map,tileindex,shapeindex,bAddToQuery);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_queryByIndex" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_queryByIndex" "', argument " "2"" of type '" "mapObj *""'"); 
-    }
-    arg2 = (mapObj *)(argp2);
-    ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
-    if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "layerObj_queryByIndex" "', argument " "3"" of type '" "int""'");
-    } 
-    arg3 = (int)(val3);
-    ecode4 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
-    if (!SWIG_IsOK(ecode4)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "layerObj_queryByIndex" "', argument " "4"" of type '" "int""'");
-    } 
-    arg4 = (int)(val4);
-    if (items > 4) {
-      ecode5 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
-      if (!SWIG_IsOK(ecode5)) {
-        SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "layerObj_queryByIndex" "', argument " "5"" of type '" "int""'");
-      } 
-      arg5 = (int)(val5);
-    }
-    result = (int)layerObj_queryByIndex(arg1,arg2,arg3,arg4,arg5);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_getResults) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    resultCacheObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_getResults(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getResults" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (resultCacheObj *)layerObj_getResults(arg1);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_resultCacheObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_setFilter) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_setFilter(self,filter);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_setFilter" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_setFilter" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (int)layerObj_setFilter(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_getFilterString) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_getFilterString(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getFilterString" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (char *)layerObj_getFilterString(arg1);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    free((char*)result);
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_setWKTProjection) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_setWKTProjection(self,wkt);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_setWKTProjection" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_setWKTProjection" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (int)layerObj_setWKTProjection(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_getProjection) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_getProjection(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getProjection" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (char *)layerObj_getProjection(arg1);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    free((char*)result);
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_setProjection) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_setProjection(self,proj4);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_setProjection" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_setProjection" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (int)layerObj_setProjection(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_addFeature) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    shapeObj *arg2 = (shapeObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_addFeature(self,shape);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_addFeature" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_shapeObj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_addFeature" "', argument " "2"" of type '" "shapeObj *""'"); 
-    }
-    arg2 = (shapeObj *)(argp2);
-    result = (int)layerObj_addFeature(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_getNumFeatures) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_getNumFeatures(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getNumFeatures" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (int)layerObj_getNumFeatures(arg1);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_getExtent) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    rectObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_getExtent(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getExtent" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (rectObj *)layerObj_getExtent(arg1);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_rectObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_setExtent) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    double arg2 = (double) -1.0 ;
-    double arg3 = (double) -1.0 ;
-    double arg4 = (double) -1.0 ;
-    double arg5 = (double) -1.0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    double val3 ;
-    int ecode3 = 0 ;
-    double val4 ;
-    int ecode4 = 0 ;
-    double val5 ;
-    int ecode5 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 5)) {
-      SWIG_croak("Usage: layerObj_setExtent(self,minx,miny,maxx,maxy);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_setExtent" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    if (items > 1) {
-      ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-      if (!SWIG_IsOK(ecode2)) {
-        SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_setExtent" "', argument " "2"" of type '" "double""'");
-      } 
-      arg2 = (double)(val2);
-    }
-    if (items > 2) {
-      ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
-      if (!SWIG_IsOK(ecode3)) {
-        SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "layerObj_setExtent" "', argument " "3"" of type '" "double""'");
-      } 
-      arg3 = (double)(val3);
-    }
-    if (items > 3) {
-      ecode4 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
-      if (!SWIG_IsOK(ecode4)) {
-        SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "layerObj_setExtent" "', argument " "4"" of type '" "double""'");
-      } 
-      arg4 = (double)(val4);
-    }
-    if (items > 4) {
-      ecode5 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
-      if (!SWIG_IsOK(ecode5)) {
-        SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "layerObj_setExtent" "', argument " "5"" of type '" "double""'");
-      } 
-      arg5 = (double)(val5);
-    }
-    result = (int)layerObj_setExtent(arg1,arg2,arg3,arg4,arg5);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_getMetaData) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_getMetaData(self,name);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getMetaData" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_getMetaData" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (char *)layerObj_getMetaData(arg1,arg2);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_setMetaData) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    char *arg3 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int res3 ;
-    char *buf3 = 0 ;
-    int alloc3 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: layerObj_setMetaData(self,name,value);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_setMetaData" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_setMetaData" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_setMetaData" "', argument " "3"" of type '" "char *""'");
-    }
-    arg3 = (char *)(buf3);
-    result = (int)layerObj_setMetaData(arg1,arg2,arg3);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_removeMetaData) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_removeMetaData(self,name);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_removeMetaData" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_removeMetaData" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (int)layerObj_removeMetaData(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_getFirstMetaDataKey) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_getFirstMetaDataKey(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getFirstMetaDataKey" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (char *)layerObj_getFirstMetaDataKey(arg1);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_getNextMetaDataKey) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_getNextMetaDataKey(self,lastkey);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getNextMetaDataKey" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_getNextMetaDataKey" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (char *)layerObj_getNextMetaDataKey(arg1,arg2);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_getWMSFeatureInfoURL) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    mapObj *arg2 = (mapObj *) 0 ;
-    int arg3 ;
-    int arg4 ;
-    int arg5 ;
-    char *arg6 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int val3 ;
-    int ecode3 = 0 ;
-    int val4 ;
-    int ecode4 = 0 ;
-    int val5 ;
-    int ecode5 = 0 ;
-    int res6 ;
-    char *buf6 = 0 ;
-    int alloc6 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 6) || (items > 6)) {
-      SWIG_croak("Usage: layerObj_getWMSFeatureInfoURL(self,map,click_x,click_y,feature_count,info_format);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getWMSFeatureInfoURL" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_getWMSFeatureInfoURL" "', argument " "2"" of type '" "mapObj *""'"); 
-    }
-    arg2 = (mapObj *)(argp2);
-    ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
-    if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "layerObj_getWMSFeatureInfoURL" "', argument " "3"" of type '" "int""'");
-    } 
-    arg3 = (int)(val3);
-    ecode4 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
-    if (!SWIG_IsOK(ecode4)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "layerObj_getWMSFeatureInfoURL" "', argument " "4"" of type '" "int""'");
-    } 
-    arg4 = (int)(val4);
-    ecode5 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
-    if (!SWIG_IsOK(ecode5)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "layerObj_getWMSFeatureInfoURL" "', argument " "5"" of type '" "int""'");
-    } 
-    arg5 = (int)(val5);
-    res6 = SWIG_AsCharPtrAndSize(ST(5), &buf6, NULL, &alloc6);
-    if (!SWIG_IsOK(res6)) {
-      SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "layerObj_getWMSFeatureInfoURL" "', argument " "6"" of type '" "char *""'");
-    }
-    arg6 = (char *)(buf6);
-    result = (char *)layerObj_getWMSFeatureInfoURL(arg1,arg2,arg3,arg4,arg5,arg6);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    
-    
-    
-    
-    if (alloc6 == SWIG_NEWOBJ) free((char*)buf6);
-    free((char*)result);
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    
-    
-    if (alloc6 == SWIG_NEWOBJ) free((char*)buf6);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_executeWFSGetFeature) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    layerObj *arg2 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_executeWFSGetFeature(self,layer);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_executeWFSGetFeature" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_executeWFSGetFeature" "', argument " "2"" of type '" "layerObj *""'"); 
-    }
-    arg2 = (layerObj *)(argp2);
-    result = (char *)layerObj_executeWFSGetFeature(arg1,arg2);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    
-    free((char*)result);
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_applySLD) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    char *arg3 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int res3 ;
-    char *buf3 = 0 ;
-    int alloc3 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: layerObj_applySLD(self,sld,stylelayer);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_applySLD" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_applySLD" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_applySLD" "', argument " "3"" of type '" "char *""'");
-    }
-    arg3 = (char *)(buf3);
-    result = (int)layerObj_applySLD(arg1,arg2,arg3);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_applySLDURL) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    char *arg3 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int res3 ;
-    char *buf3 = 0 ;
-    int alloc3 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: layerObj_applySLDURL(self,sld,stylelayer);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_applySLDURL" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_applySLDURL" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_applySLDURL" "', argument " "3"" of type '" "char *""'");
-    }
-    arg3 = (char *)(buf3);
-    result = (int)layerObj_applySLDURL(arg1,arg2,arg3);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_generateSLD) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_generateSLD(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_generateSLD" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (char *)layerObj_generateSLD(arg1);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    free((char*)result);
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_isVisible) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_isVisible(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_isVisible" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (int)layerObj_isVisible(arg1);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_moveClassUp) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_moveClassUp(self,index);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_moveClassUp" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_moveClassUp" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    result = (int)layerObj_moveClassUp(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_moveClassDown) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_moveClassDown(self,index);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_moveClassDown" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_moveClassDown" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    result = (int)layerObj_moveClassDown(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_setProcessingKey) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    char *arg3 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int res3 ;
-    char *buf3 = 0 ;
-    int alloc3 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: layerObj_setProcessingKey(self,key,value);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_setProcessingKey" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_setProcessingKey" "', argument " "2"" of type '" "char const *""'");
-    }
-    arg2 = (char *)(buf2);
-    res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_setProcessingKey" "', argument " "3"" of type '" "char const *""'");
-    }
-    arg3 = (char *)(buf3);
-    layerObj_setProcessingKey(arg1,(char const *)arg2,(char const *)arg3);
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_setProcessing) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_setProcessing(self,directive);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_setProcessing" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_setProcessing" "', argument " "2"" of type '" "char const *""'");
-    }
-    arg2 = (char *)(buf2);
-    layerObj_setProcessing(arg1,(char const *)arg2);
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_addProcessing) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_addProcessing(self,directive);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_addProcessing" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_addProcessing" "', argument " "2"" of type '" "char const *""'");
-    }
-    arg2 = (char *)(buf2);
-    layerObj_addProcessing(arg1,(char const *)arg2);
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_getProcessing) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_getProcessing(self,index);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getProcessing" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_getProcessing" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    result = (char *)layerObj_getProcessing(arg1,arg2);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_getProcessingKey) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: layerObj_getProcessingKey(self,key);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getProcessingKey" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_getProcessingKey" "', argument " "2"" of type '" "char const *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (char *)layerObj_getProcessingKey(arg1,(char const *)arg2);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_clearProcessing) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: layerObj_clearProcessing(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_clearProcessing" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    result = (int)layerObj_clearProcessing(arg1);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_setConnectionType) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    int arg2 ;
-    char *arg3 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int res3 ;
-    char *buf3 = 0 ;
-    int alloc3 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: layerObj_setConnectionType(self,connectiontype,library_str);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_setConnectionType" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_setConnectionType" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_setConnectionType" "', argument " "3"" of type '" "char const *""'");
-    }
-    arg3 = (char *)(buf3);
-    result = (int)layerObj_setConnectionType(arg1,arg2,(char const *)arg3);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
-    XSRETURN(argvi);
-  fail:
-    
-    
-    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_layerObj_getClassIndex) {
-  {
-    layerObj *arg1 = (layerObj *) 0 ;
-    mapObj *arg2 = (mapObj *) 0 ;
-    shapeObj *arg3 = (shapeObj *) 0 ;
-    int *arg4 = (int *) NULL ;
-    int arg5 = (int) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
-    int val5 ;
-    int ecode5 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 3) || (items > 5)) {
-      SWIG_croak("Usage: layerObj_getClassIndex(self,map,shape,classgroup,numclasses);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getClassIndex" "', argument " "1"" of type '" "layerObj *""'"); 
-    }
-    arg1 = (layerObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_getClassIndex" "', argument " "2"" of type '" "mapObj *""'"); 
-    }
-    arg2 = (mapObj *)(argp2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_shapeObj, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_getClassIndex" "', argument " "3"" of type '" "shapeObj *""'"); 
-    }
-    arg3 = (shapeObj *)(argp3);
-    if (items > 3) {
-      res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_int, 0 |  0 );
-      if (!SWIG_IsOK(res4)) {
-        SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "layerObj_getClassIndex" "', argument " "4"" of type '" "int *""'"); 
-      }
-      arg4 = (int *)(argp4);
-    }
-    if (items > 4) {
-      ecode5 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
-      if (!SWIG_IsOK(ecode5)) {
-        SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "layerObj_getClassIndex" "', argument " "5"" of type '" "int""'");
-      } 
-      arg5 = (int)(val5);
-    }
-    result = (int)layerObj_getClassIndex(arg1,arg2,arg3,arg4,arg5);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_name_set) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_name_set(self,name);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_name_set" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_name_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    {
-      if (arg1->name) free((char*)arg1->name);
-      if (arg2) {
-        arg1->name = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->name,arg2);
-      } else {
-        arg1->name = 0;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_name_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_name_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_name_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (char *) ((arg1)->name);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_status_set) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_status_set(self,status);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_status_set" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_status_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->status = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_status_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_status_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_status_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (int) ((arg1)->status);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_height_set) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_height_set(self,height);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_height_set" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_height_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->height = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_height_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_height_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_height_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (int) ((arg1)->height);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_width_set) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_width_set(self,width);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_width_set" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_width_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->width = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_width_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_width_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_width_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (int) ((arg1)->width);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_maxsize_set) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_maxsize_set(self,maxsize);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_maxsize_set" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_maxsize_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->maxsize = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_maxsize_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_maxsize_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_maxsize_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (int) ((arg1)->maxsize);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_refcount_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_refcount_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_refcount_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (int) ((arg1)->refcount);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_numlayers_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_numlayers_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_numlayers_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (int) ((arg1)->numlayers);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_maxlayers_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_maxlayers_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_maxlayers_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (int) ((arg1)->maxlayers);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_symbolset_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    symbolSetObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_symbolset_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_symbolset_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (symbolSetObj *)& ((arg1)->symbolset);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_symbolSetObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_fontset_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    fontSetObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_fontset_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_fontset_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (fontSetObj *)& ((arg1)->fontset);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_fontSetObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_labelcache_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    labelCacheObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_labelcache_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_labelcache_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (labelCacheObj *)& ((arg1)->labelcache);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_labelCacheObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_transparent_set) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_transparent_set(self,transparent);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_transparent_set" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_transparent_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->transparent = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_transparent_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_transparent_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_transparent_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (int) ((arg1)->transparent);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_interlace_set) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_interlace_set(self,interlace);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_interlace_set" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_interlace_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->interlace = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_interlace_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_interlace_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_interlace_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (int) ((arg1)->interlace);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_imagequality_set) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_imagequality_set(self,imagequality);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_imagequality_set" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_imagequality_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->imagequality = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_imagequality_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_imagequality_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_imagequality_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (int) ((arg1)->imagequality);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_extent_set) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    rectObj *arg2 = (rectObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_extent_set(self,extent);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_extent_set" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_rectObj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_extent_set" "', argument " "2"" of type '" "rectObj *""'"); 
-    }
-    arg2 = (rectObj *)(argp2);
-    if (arg1) (arg1)->extent = *arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_extent_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    rectObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_extent_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_extent_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (rectObj *)& ((arg1)->extent);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_rectObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_cellsize_set) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    double arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_cellsize_set(self,cellsize);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_cellsize_set" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_cellsize_set" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    if (arg1) (arg1)->cellsize = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_cellsize_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_cellsize_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_cellsize_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (double) ((arg1)->cellsize);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_units_set) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    enum MS_UNITS arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_units_set(self,units);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_units_set" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_units_set" "', argument " "2"" of type '" "enum MS_UNITS""'");
-    } 
-    arg2 = (enum MS_UNITS)(val2);
-    if (arg1) (arg1)->units = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_units_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    enum MS_UNITS result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_units_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_units_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (enum MS_UNITS) ((arg1)->units);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_scaledenom_set) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    double arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_scaledenom_set(self,scaledenom);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_scaledenom_set" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_scaledenom_set" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    if (arg1) (arg1)->scaledenom = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_scaledenom_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_scaledenom_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_scaledenom_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (double) ((arg1)->scaledenom);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_resolution_set) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    double arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_resolution_set(self,resolution);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_resolution_set" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_resolution_set" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    if (arg1) (arg1)->resolution = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_resolution_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_resolution_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_resolution_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (double) ((arg1)->resolution);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_defresolution_set) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    double arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_defresolution_set(self,defresolution);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_defresolution_set" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_defresolution_set" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    if (arg1) (arg1)->defresolution = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_defresolution_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_defresolution_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_defresolution_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (double) ((arg1)->defresolution);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_shapepath_set) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_shapepath_set(self,shapepath);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_shapepath_set" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_shapepath_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    {
-      if (arg1->shapepath) free((char*)arg1->shapepath);
-      if (arg2) {
-        arg1->shapepath = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->shapepath,arg2);
-      } else {
-        arg1->shapepath = 0;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_shapepath_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_shapepath_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_shapepath_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (char *) ((arg1)->shapepath);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_mappath_set) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_mappath_set(self,mappath);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_mappath_set" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_mappath_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    {
-      if (arg1->mappath) free((char*)arg1->mappath);
-      if (arg2) {
-        arg1->mappath = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->mappath,arg2);
-      } else {
-        arg1->mappath = 0;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_mappath_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_mappath_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_mappath_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (char *) ((arg1)->mappath);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_imagecolor_set) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    colorObj *arg2 = (colorObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_imagecolor_set(self,imagecolor);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_imagecolor_set" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_imagecolor_set" "', argument " "2"" of type '" "colorObj *""'"); 
-    }
-    arg2 = (colorObj *)(argp2);
-    if (arg1) (arg1)->imagecolor = *arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_imagecolor_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    colorObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_imagecolor_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_imagecolor_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (colorObj *)& ((arg1)->imagecolor);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_colorObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_numoutputformats_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_numoutputformats_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_numoutputformats_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (int) ((arg1)->numoutputformats);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_outputformatlist_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    outputFormatObj **result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_outputformatlist_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_outputformatlist_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (outputFormatObj **) ((arg1)->outputformatlist);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_p_outputFormatObj, 0 | 0); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_outputformat_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    outputFormatObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_outputformat_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_outputformat_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (outputFormatObj *) ((arg1)->outputformat);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_outputFormatObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_imagetype_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_imagetype_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_imagetype_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (char *) ((arg1)->imagetype);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_reference_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    referenceMapObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_reference_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_reference_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (referenceMapObj *)& ((arg1)->reference);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_referenceMapObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_scalebar_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    scalebarObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_scalebar_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_scalebar_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (scalebarObj *)& ((arg1)->scalebar);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_scalebarObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_legend_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    legendObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_legend_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_legend_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (legendObj *)& ((arg1)->legend);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_legendObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_querymap_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    queryMapObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_querymap_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_querymap_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (queryMapObj *)& ((arg1)->querymap);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_queryMapObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_web_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    webObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_web_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_web_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (webObj *)& ((arg1)->web);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_webObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_layerorder_set) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    int *arg2 = (int *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_layerorder_set(self,layerorder);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_layerorder_set" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_int, SWIG_POINTER_DISOWN |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_layerorder_set" "', argument " "2"" of type '" "int *""'"); 
-    }
-    arg2 = (int *)(argp2);
-    if (arg1) (arg1)->layerorder = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_layerorder_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_layerorder_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_layerorder_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (int *) ((arg1)->layerorder);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_int, 0 | 0); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_debug_set) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_debug_set(self,debug);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_debug_set" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_debug_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->debug = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_debug_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_debug_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_debug_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (int) ((arg1)->debug);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_datapattern_set) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_datapattern_set(self,datapattern);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_datapattern_set" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_datapattern_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    {
-      if (arg1->datapattern) free((char*)arg1->datapattern);
-      if (arg2) {
-        arg1->datapattern = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->datapattern,arg2);
-      } else {
-        arg1->datapattern = 0;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_datapattern_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_datapattern_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_datapattern_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (char *) ((arg1)->datapattern);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_templatepattern_set) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_templatepattern_set(self,templatepattern);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_templatepattern_set" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_templatepattern_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    {
-      if (arg1->templatepattern) free((char*)arg1->templatepattern);
-      if (arg2) {
-        arg1->templatepattern = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->templatepattern,arg2);
-      } else {
-        arg1->templatepattern = 0;
-      }
-    }
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_templatepattern_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_templatepattern_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_templatepattern_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (char *) ((arg1)->templatepattern);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_configoptions_get) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    hashTableObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_configoptions_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_configoptions_get" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (hashTableObj *)& ((arg1)->configoptions);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_hashTableObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_new_mapObj) {
-  {
-    char *arg1 = (char *) "" ;
-    int res1 ;
-    char *buf1 = 0 ;
-    int alloc1 = 0 ;
-    int argvi = 0;
-    mapObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 0) || (items > 1)) {
-      SWIG_croak("Usage: new_mapObj(filename);");
-    }
-    if (items > 0) {
-      res1 = SWIG_AsCharPtrAndSize(ST(0), &buf1, NULL, &alloc1);
-      if (!SWIG_IsOK(res1)) {
-        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_mapObj" "', argument " "1"" of type '" "char *""'");
-      }
-      arg1 = (char *)(buf1);
-    }
-    result = (mapObj *)new_mapObj(arg1);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_map_obj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
-    XSRETURN(argvi);
-  fail:
-    if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_delete_mapObj) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: delete_mapObj(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, SWIG_POINTER_DISOWN |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_mapObj" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    delete_mapObj(arg1);
-    ST(argvi) = sv_newmortal();
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_clone) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    mapObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_clone(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_clone" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (mapObj *)mapObj_clone(arg1);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_map_obj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_insertLayer) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    layerObj *arg2 = (layerObj *) 0 ;
-    int arg3 = (int) -1 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int val3 ;
-    int ecode3 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 3)) {
-      SWIG_croak("Usage: mapObj_insertLayer(self,layer,index);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_insertLayer" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_layer_obj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_insertLayer" "', argument " "2"" of type '" "layerObj *""'"); 
-    }
-    arg2 = (layerObj *)(argp2);
-    if (items > 2) {
-      ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
-      if (!SWIG_IsOK(ecode3)) {
-        SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "mapObj_insertLayer" "', argument " "3"" of type '" "int""'");
-      } 
-      arg3 = (int)(val3);
-    }
-    result = (int)mapObj_insertLayer(arg1,arg2,arg3);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_removeLayer) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    layerObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_removeLayer(self,index);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_removeLayer" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_removeLayer" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    result = (layerObj *)mapObj_removeLayer(arg1,arg2);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_layer_obj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_setExtent) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    double arg2 ;
-    double arg3 ;
-    double arg4 ;
-    double arg5 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    double val3 ;
-    int ecode3 = 0 ;
-    double val4 ;
-    int ecode4 = 0 ;
-    double val5 ;
-    int ecode5 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 5) || (items > 5)) {
-      SWIG_croak("Usage: mapObj_setExtent(self,minx,miny,maxx,maxy);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_setExtent" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_setExtent" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
-    if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "mapObj_setExtent" "', argument " "3"" of type '" "double""'");
-    } 
-    arg3 = (double)(val3);
-    ecode4 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
-    if (!SWIG_IsOK(ecode4)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "mapObj_setExtent" "', argument " "4"" of type '" "double""'");
-    } 
-    arg4 = (double)(val4);
-    ecode5 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
-    if (!SWIG_IsOK(ecode5)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "mapObj_setExtent" "', argument " "5"" of type '" "double""'");
-    } 
-    arg5 = (double)(val5);
-    result = (int)mapObj_setExtent(arg1,arg2,arg3,arg4,arg5);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_offsetExtent) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    double arg2 ;
-    double arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    double val3 ;
-    int ecode3 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: mapObj_offsetExtent(self,x,y);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_offsetExtent" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_offsetExtent" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
-    if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "mapObj_offsetExtent" "', argument " "3"" of type '" "double""'");
-    } 
-    arg3 = (double)(val3);
-    result = (int)mapObj_offsetExtent(arg1,arg2,arg3);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_scaleExtent) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    double arg2 ;
-    double arg3 ;
-    double arg4 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    double val3 ;
-    int ecode3 = 0 ;
-    double val4 ;
-    int ecode4 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 4) || (items > 4)) {
-      SWIG_croak("Usage: mapObj_scaleExtent(self,zoomfactor,minscaledenom,maxscaledenom);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_scaleExtent" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_scaleExtent" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
-    if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "mapObj_scaleExtent" "', argument " "3"" of type '" "double""'");
-    } 
-    arg3 = (double)(val3);
-    ecode4 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
-    if (!SWIG_IsOK(ecode4)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "mapObj_scaleExtent" "', argument " "4"" of type '" "double""'");
-    } 
-    arg4 = (double)(val4);
-    result = (int)mapObj_scaleExtent(arg1,arg2,arg3,arg4);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_setCenter) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    pointObj *arg2 = (pointObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_setCenter(self,center);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_setCenter" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_pointObj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_setCenter" "', argument " "2"" of type '" "pointObj *""'"); 
-    }
-    arg2 = (pointObj *)(argp2);
-    result = (int)mapObj_setCenter(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_setSize) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    int arg2 ;
-    int arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int val3 ;
-    int ecode3 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: mapObj_setSize(self,width,height);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_setSize" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_setSize" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
-    if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "mapObj_setSize" "', argument " "3"" of type '" "int""'");
-    } 
-    arg3 = (int)(val3);
-    result = (int)mapObj_setSize(arg1,arg2,arg3);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_setRotation) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    double arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_setRotation(self,rotation_angle);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_setRotation" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_setRotation" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    result = (int)mapObj_setRotation(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_getLayer) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    layerObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_getLayer(self,i);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_getLayer" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_getLayer" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    result = (layerObj *)mapObj_getLayer(arg1,arg2);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_layer_obj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_getLayerByName) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    layerObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_getLayerByName(self,name);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_getLayerByName" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_getLayerByName" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (layerObj *)mapObj_getLayerByName(arg1,arg2);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_layer_obj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_getSymbolByName) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_getSymbolByName(self,name);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_getSymbolByName" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_getSymbolByName" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (int)mapObj_getSymbolByName(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_prepareQuery) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_prepareQuery(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_prepareQuery" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    mapObj_prepareQuery(arg1);
-    ST(argvi) = sv_newmortal();
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_prepareImage) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    imageObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_prepareImage(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_prepareImage" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (imageObj *)mapObj_prepareImage(arg1);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_imageObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_setImageType) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_setImageType(self,imagetype);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_setImageType" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_setImageType" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    mapObj_setImageType(arg1,arg2);
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_selectOutputFormat) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_selectOutputFormat(self,imagetype);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_selectOutputFormat" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_selectOutputFormat" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    mapObj_selectOutputFormat(arg1,arg2);
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_setOutputFormat) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    outputFormatObj *arg2 = (outputFormatObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_setOutputFormat(self,format);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_setOutputFormat" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_outputFormatObj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_setOutputFormat" "', argument " "2"" of type '" "outputFormatObj *""'"); 
-    }
-    arg2 = (outputFormatObj *)(argp2);
-    mapObj_setOutputFormat(arg1,arg2);
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_draw) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    imageObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_draw(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_draw" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (imageObj *)mapObj_draw(arg1);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_imageObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_drawQuery) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    imageObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_drawQuery(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_drawQuery" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (imageObj *)mapObj_drawQuery(arg1);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_imageObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_drawLegend) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    imageObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_drawLegend(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_drawLegend" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (imageObj *)mapObj_drawLegend(arg1);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_imageObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_drawScalebar) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    imageObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_drawScalebar(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_drawScalebar" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (imageObj *)mapObj_drawScalebar(arg1);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_imageObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_drawReferenceMap) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    imageObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_drawReferenceMap(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_drawReferenceMap" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (imageObj *)mapObj_drawReferenceMap(arg1);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_imageObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_embedScalebar) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    imageObj *arg2 = (imageObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_embedScalebar(self,image);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_embedScalebar" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_imageObj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_embedScalebar" "', argument " "2"" of type '" "imageObj *""'"); 
-    }
-    arg2 = (imageObj *)(argp2);
-    result = (int)mapObj_embedScalebar(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_embedLegend) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    imageObj *arg2 = (imageObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_embedLegend(self,image);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_embedLegend" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_imageObj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_embedLegend" "', argument " "2"" of type '" "imageObj *""'"); 
-    }
-    arg2 = (imageObj *)(argp2);
-    result = (int)mapObj_embedLegend(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_drawLabelCache) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    imageObj *arg2 = (imageObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_drawLabelCache(self,image);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_drawLabelCache" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_imageObj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_drawLabelCache" "', argument " "2"" of type '" "imageObj *""'"); 
-    }
-    arg2 = (imageObj *)(argp2);
-    result = (int)mapObj_drawLabelCache(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_getLabel) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    labelCacheMemberObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_getLabel(self,i);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_getLabel" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_getLabel" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    result = (labelCacheMemberObj *)mapObj_getLabel(arg1,arg2);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_labelCacheMemberObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_nextLabel) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    labelCacheMemberObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_nextLabel(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_nextLabel" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (labelCacheMemberObj *)mapObj_nextLabel(arg1);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_labelCacheMemberObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_queryByFilter) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_queryByFilter(self,string);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_queryByFilter" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_queryByFilter" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (int)mapObj_queryByFilter(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_queryByPoint) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    pointObj *arg2 = (pointObj *) 0 ;
-    int arg3 ;
-    double arg4 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int val3 ;
-    int ecode3 = 0 ;
-    double val4 ;
-    int ecode4 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 4) || (items > 4)) {
-      SWIG_croak("Usage: mapObj_queryByPoint(self,point,mode,buffer);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_queryByPoint" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_pointObj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_queryByPoint" "', argument " "2"" of type '" "pointObj *""'"); 
-    }
-    arg2 = (pointObj *)(argp2);
-    ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
-    if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "mapObj_queryByPoint" "', argument " "3"" of type '" "int""'");
-    } 
-    arg3 = (int)(val3);
-    ecode4 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
-    if (!SWIG_IsOK(ecode4)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "mapObj_queryByPoint" "', argument " "4"" of type '" "double""'");
-    } 
-    arg4 = (double)(val4);
-    result = (int)mapObj_queryByPoint(arg1,arg2,arg3,arg4);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_queryByRect) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    rectObj arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_queryByRect(self,rect);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_queryByRect" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    {
-      res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_rectObj,  0 );
-      if (!SWIG_IsOK(res2)) {
-        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_queryByRect" "', argument " "2"" of type '" "rectObj""'"); 
-      }  
-      if (!argp2) {
-        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "mapObj_queryByRect" "', argument " "2"" of type '" "rectObj""'");
-      } else {
-        arg2 = *((rectObj *)(argp2));
-      }
-    }
-    result = (int)mapObj_queryByRect(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_queryByFeatures) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_queryByFeatures(self,slayer);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_queryByFeatures" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_queryByFeatures" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    result = (int)mapObj_queryByFeatures(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_queryByShape) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    shapeObj *arg2 = (shapeObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_queryByShape(self,shape);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_queryByShape" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_shapeObj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_queryByShape" "', argument " "2"" of type '" "shapeObj *""'"); 
-    }
-    arg2 = (shapeObj *)(argp2);
-    result = (int)mapObj_queryByShape(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_setWKTProjection) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_setWKTProjection(self,wkt);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_setWKTProjection" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_setWKTProjection" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (int)mapObj_setWKTProjection(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_getProjection) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_getProjection(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_getProjection" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (char *)mapObj_getProjection(arg1);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    free((char*)result);
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_setProjection) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_setProjection(self,proj4);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_setProjection" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_setProjection" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (int)mapObj_setProjection(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_save) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_save(self,filename);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_save" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_save" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (int)mapObj_save(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_saveQuery) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    int arg3 = (int) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int val3 ;
-    int ecode3 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 3)) {
-      SWIG_croak("Usage: mapObj_saveQuery(self,filename,results);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_saveQuery" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_saveQuery" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    if (items > 2) {
-      ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
-      if (!SWIG_IsOK(ecode3)) {
-        SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "mapObj_saveQuery" "', argument " "3"" of type '" "int""'");
-      } 
-      arg3 = (int)(val3);
-    }
-    result = (int)mapObj_saveQuery(arg1,arg2,arg3);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_loadQuery) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_loadQuery(self,filename);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_loadQuery" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_loadQuery" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (int)mapObj_loadQuery(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_freeQuery) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    int arg2 = (int) -1 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_freeQuery(self,qlayer);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_freeQuery" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    if (items > 1) {
-      ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-      if (!SWIG_IsOK(ecode2)) {
-        SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_freeQuery" "', argument " "2"" of type '" "int""'");
-      } 
-      arg2 = (int)(val2);
-    }
-    mapObj_freeQuery(arg1,arg2);
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_saveQueryAsGML) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    char *arg3 = (char *) "GOMF" ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int res3 ;
-    char *buf3 = 0 ;
-    int alloc3 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 3)) {
-      SWIG_croak("Usage: mapObj_saveQueryAsGML(self,filename,ns);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_saveQueryAsGML" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_saveQueryAsGML" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    if (items > 2) {
-      res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
-      if (!SWIG_IsOK(res3)) {
-        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "mapObj_saveQueryAsGML" "', argument " "3"" of type '" "char const *""'");
-      }
-      arg3 = (char *)(buf3);
-    }
-    result = (int)mapObj_saveQueryAsGML(arg1,arg2,(char const *)arg3);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_getMetaData) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_getMetaData(self,name);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_getMetaData" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_getMetaData" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (char *)mapObj_getMetaData(arg1,arg2);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_setMetaData) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    char *arg3 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int res3 ;
-    char *buf3 = 0 ;
-    int alloc3 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: mapObj_setMetaData(self,name,value);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_setMetaData" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_setMetaData" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "mapObj_setMetaData" "', argument " "3"" of type '" "char *""'");
-    }
-    arg3 = (char *)(buf3);
-    result = (int)mapObj_setMetaData(arg1,arg2,arg3);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_removeMetaData) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_removeMetaData(self,name);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_removeMetaData" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_removeMetaData" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (int)mapObj_removeMetaData(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_getFirstMetaDataKey) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_getFirstMetaDataKey(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_getFirstMetaDataKey" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (char *)mapObj_getFirstMetaDataKey(arg1);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_getNextMetaDataKey) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_getNextMetaDataKey(self,lastkey);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_getNextMetaDataKey" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_getNextMetaDataKey" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (char *)mapObj_getNextMetaDataKey(arg1,arg2);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_setSymbolSet) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_setSymbolSet(self,szFileName);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_setSymbolSet" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_setSymbolSet" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (int)mapObj_setSymbolSet(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_getNumSymbols) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_getNumSymbols(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_getNumSymbols" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (int)mapObj_getNumSymbols(arg1);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_setFontSet) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_setFontSet(self,filename);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_setFontSet" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_setFontSet" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (int)mapObj_setFontSet(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_saveMapContext) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_saveMapContext(self,szFileName);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_saveMapContext" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_saveMapContext" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (int)mapObj_saveMapContext(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_loadMapContext) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    int arg3 = (int) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int val3 ;
-    int ecode3 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 3)) {
-      SWIG_croak("Usage: mapObj_loadMapContext(self,szFileName,useUniqueNames);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_loadMapContext" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_loadMapContext" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    if (items > 2) {
-      ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
-      if (!SWIG_IsOK(ecode3)) {
-        SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "mapObj_loadMapContext" "', argument " "3"" of type '" "int""'");
-      } 
-      arg3 = (int)(val3);
-    }
-    result = (int)mapObj_loadMapContext(arg1,arg2,arg3);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_moveLayerUp) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_moveLayerUp(self,layerindex);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_moveLayerUp" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_moveLayerUp" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    result = (int)mapObj_moveLayerUp(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_moveLayerDown) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_moveLayerDown(self,layerindex);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_moveLayerDown" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_moveLayerDown" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    result = (int)mapObj_moveLayerDown(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_getLayersDrawingOrder) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    intarray *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_getLayersDrawingOrder(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_getLayersDrawingOrder" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (intarray *)mapObj_getLayersDrawingOrder(arg1);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_intarray, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_setLayersDrawingOrder) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    int *arg2 = (int *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_setLayersDrawingOrder(self,panIndexes);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_setLayersDrawingOrder" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_setLayersDrawingOrder" "', argument " "2"" of type '" "int *""'"); 
-    }
-    arg2 = (int *)(argp2);
-    result = (int)mapObj_setLayersDrawingOrder(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_setConfigOption) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    char *arg3 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int res3 ;
-    char *buf3 = 0 ;
-    int alloc3 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: mapObj_setConfigOption(self,key,value);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_setConfigOption" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_setConfigOption" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "mapObj_setConfigOption" "', argument " "3"" of type '" "char *""'");
-    }
-    arg3 = (char *)(buf3);
-    mapObj_setConfigOption(arg1,arg2,arg3);
-    ST(argvi) = sv_newmortal();
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_getConfigOption) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_getConfigOption(self,key);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_getConfigOption" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_getConfigOption" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (char *)mapObj_getConfigOption(arg1,arg2);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_applyConfigOptions) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_applyConfigOptions(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_applyConfigOptions" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    mapObj_applyConfigOptions(arg1);
-    ST(argvi) = sv_newmortal();
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_applySLD) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_applySLD(self,sld);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_applySLD" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_applySLD" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (int)mapObj_applySLD(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_applySLDURL) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_applySLDURL(self,sld);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_applySLDURL" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_applySLDURL" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (int)mapObj_applySLDURL(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_generateSLD) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: mapObj_generateSLD(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_generateSLD" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    result = (char *)mapObj_generateSLD(arg1);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    free((char*)result);
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_processTemplate) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    int arg2 ;
-    char **arg3 = (char **) 0 ;
-    char **arg4 = (char **) 0 ;
-    int arg5 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
-    int val5 ;
-    int ecode5 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 5) || (items > 5)) {
-      SWIG_croak("Usage: mapObj_processTemplate(self,bGenerateImages,names,values,numentries);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_processTemplate" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_processTemplate" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_p_char, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "mapObj_processTemplate" "', argument " "3"" of type '" "char **""'"); 
-    }
-    arg3 = (char **)(argp3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_p_char, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "mapObj_processTemplate" "', argument " "4"" of type '" "char **""'"); 
-    }
-    arg4 = (char **)(argp4);
-    ecode5 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
-    if (!SWIG_IsOK(ecode5)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "mapObj_processTemplate" "', argument " "5"" of type '" "int""'");
-    } 
-    arg5 = (int)(val5);
-    result = (char *)mapObj_processTemplate(arg1,arg2,arg3,arg4,arg5);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    
-    
-    
-    
-    free((char*)result);
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_processLegendTemplate) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char **arg2 = (char **) 0 ;
-    char **arg3 = (char **) 0 ;
-    int arg4 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
-    int val4 ;
-    int ecode4 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 4) || (items > 4)) {
-      SWIG_croak("Usage: mapObj_processLegendTemplate(self,names,values,numentries);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_processLegendTemplate" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_p_char, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_processLegendTemplate" "', argument " "2"" of type '" "char **""'"); 
-    }
-    arg2 = (char **)(argp2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_p_char, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "mapObj_processLegendTemplate" "', argument " "3"" of type '" "char **""'"); 
-    }
-    arg3 = (char **)(argp3);
-    ecode4 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
-    if (!SWIG_IsOK(ecode4)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "mapObj_processLegendTemplate" "', argument " "4"" of type '" "int""'");
-    } 
-    arg4 = (int)(val4);
-    result = (char *)mapObj_processLegendTemplate(arg1,arg2,arg3,arg4);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    
-    
-    
-    free((char*)result);
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_processQueryTemplate) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char **arg2 = (char **) 0 ;
-    char **arg3 = (char **) 0 ;
-    int arg4 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
-    int val4 ;
-    int ecode4 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 4) || (items > 4)) {
-      SWIG_croak("Usage: mapObj_processQueryTemplate(self,names,values,numentries);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_processQueryTemplate" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_p_char, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_processQueryTemplate" "', argument " "2"" of type '" "char **""'"); 
-    }
-    arg2 = (char **)(argp2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_p_char, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "mapObj_processQueryTemplate" "', argument " "3"" of type '" "char **""'"); 
-    }
-    arg3 = (char **)(argp3);
-    ecode4 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
-    if (!SWIG_IsOK(ecode4)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "mapObj_processQueryTemplate" "', argument " "4"" of type '" "int""'");
-    } 
-    arg4 = (int)(val4);
-    result = (char *)mapObj_processQueryTemplate(arg1,arg2,arg3,arg4);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    
-    
-    
-    free((char*)result);
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_getOutputFormatByName) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    outputFormatObj *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_getOutputFormatByName(self,name);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_getOutputFormatByName" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_getOutputFormatByName" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (outputFormatObj *)mapObj_getOutputFormatByName(arg1,arg2);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_outputFormatObj, 0 | SWIG_SHADOW); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_appendOutputFormat) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    outputFormatObj *arg2 = (outputFormatObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_appendOutputFormat(self,format);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_appendOutputFormat" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_outputFormatObj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_appendOutputFormat" "', argument " "2"" of type '" "outputFormatObj *""'"); 
-    }
-    arg2 = (outputFormatObj *)(argp2);
-    result = (int)mapObj_appendOutputFormat(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_removeOutputFormat) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_removeOutputFormat(self,name);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_removeOutputFormat" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_removeOutputFormat" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (int)mapObj_removeOutputFormat(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_loadOWSParameters) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    cgiRequestObj *arg2 = (cgiRequestObj *) 0 ;
-    char *arg3 = (char *) "1.1.1" ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int res3 ;
-    char *buf3 = 0 ;
-    int alloc3 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 3)) {
-      SWIG_croak("Usage: mapObj_loadOWSParameters(self,request,wmtver_string);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_loadOWSParameters" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_cgiRequestObj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_loadOWSParameters" "', argument " "2"" of type '" "cgiRequestObj *""'"); 
-    }
-    arg2 = (cgiRequestObj *)(argp2);
-    if (items > 2) {
-      res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
-      if (!SWIG_IsOK(res3)) {
-        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "mapObj_loadOWSParameters" "', argument " "3"" of type '" "char *""'");
-      }
-      arg3 = (char *)(buf3);
-    }
-    result = (int)mapObj_loadOWSParameters(arg1,arg2,arg3);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
-    XSRETURN(argvi);
-  fail:
-    
-    
-    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_OWSDispatch) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    cgiRequestObj *arg2 = (cgiRequestObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: mapObj_OWSDispatch(self,req);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_OWSDispatch" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_cgiRequestObj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_OWSDispatch" "', argument " "2"" of type '" "cgiRequestObj *""'"); 
-    }
-    arg2 = (cgiRequestObj *)(argp2);
-    result = (int)mapObj_OWSDispatch(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_zoomPoint) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    int arg2 ;
-    pointObj *arg3 = (pointObj *) 0 ;
-    int arg4 ;
-    int arg5 ;
-    rectObj *arg6 = (rectObj *) 0 ;
-    rectObj *arg7 = (rectObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
-    int val4 ;
-    int ecode4 = 0 ;
-    int val5 ;
-    int ecode5 = 0 ;
-    void *argp6 = 0 ;
-    int res6 = 0 ;
-    void *argp7 = 0 ;
-    int res7 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 7) || (items > 7)) {
-      SWIG_croak("Usage: mapObj_zoomPoint(self,zoomfactor,poPixPos,width,height,poGeorefExt,poMaxGeorefExt);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_zoomPoint" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_zoomPoint" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_pointObj, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "mapObj_zoomPoint" "', argument " "3"" of type '" "pointObj *""'"); 
-    }
-    arg3 = (pointObj *)(argp3);
-    ecode4 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
-    if (!SWIG_IsOK(ecode4)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "mapObj_zoomPoint" "', argument " "4"" of type '" "int""'");
-    } 
-    arg4 = (int)(val4);
-    ecode5 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
-    if (!SWIG_IsOK(ecode5)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "mapObj_zoomPoint" "', argument " "5"" of type '" "int""'");
-    } 
-    arg5 = (int)(val5);
-    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_rectObj, 0 |  0 );
-    if (!SWIG_IsOK(res6)) {
-      SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "mapObj_zoomPoint" "', argument " "6"" of type '" "rectObj *""'"); 
-    }
-    arg6 = (rectObj *)(argp6);
-    res7 = SWIG_ConvertPtr(ST(6), &argp7,SWIGTYPE_p_rectObj, 0 |  0 );
-    if (!SWIG_IsOK(res7)) {
-      SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "mapObj_zoomPoint" "', argument " "7"" of type '" "rectObj *""'"); 
-    }
-    arg7 = (rectObj *)(argp7);
-    result = (int)mapObj_zoomPoint(arg1,arg2,arg3,arg4,arg5,arg6,arg7);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    
-    
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_zoomRectangle) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    rectObj *arg2 = (rectObj *) 0 ;
-    int arg3 ;
-    int arg4 ;
-    rectObj *arg5 = (rectObj *) 0 ;
-    rectObj *arg6 = (rectObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int val3 ;
-    int ecode3 = 0 ;
-    int val4 ;
-    int ecode4 = 0 ;
-    void *argp5 = 0 ;
-    int res5 = 0 ;
-    void *argp6 = 0 ;
-    int res6 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 6) || (items > 6)) {
-      SWIG_croak("Usage: mapObj_zoomRectangle(self,poPixRect,width,height,poGeorefExt,poMaxGeorefExt);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_zoomRectangle" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_rectObj, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_zoomRectangle" "', argument " "2"" of type '" "rectObj *""'"); 
-    }
-    arg2 = (rectObj *)(argp2);
-    ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
-    if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "mapObj_zoomRectangle" "', argument " "3"" of type '" "int""'");
-    } 
-    arg3 = (int)(val3);
-    ecode4 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
-    if (!SWIG_IsOK(ecode4)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "mapObj_zoomRectangle" "', argument " "4"" of type '" "int""'");
-    } 
-    arg4 = (int)(val4);
-    res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_rectObj, 0 |  0 );
-    if (!SWIG_IsOK(res5)) {
-      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "mapObj_zoomRectangle" "', argument " "5"" of type '" "rectObj *""'"); 
-    }
-    arg5 = (rectObj *)(argp5);
-    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_rectObj, 0 |  0 );
-    if (!SWIG_IsOK(res6)) {
-      SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "mapObj_zoomRectangle" "', argument " "6"" of type '" "rectObj *""'"); 
-    }
-    arg6 = (rectObj *)(argp6);
-    result = (int)mapObj_zoomRectangle(arg1,arg2,arg3,arg4,arg5,arg6);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_mapObj_zoomScale) {
-  {
-    mapObj *arg1 = (mapObj *) 0 ;
-    double arg2 ;
-    pointObj *arg3 = (pointObj *) 0 ;
-    int arg4 ;
-    int arg5 ;
-    rectObj *arg6 = (rectObj *) 0 ;
-    rectObj *arg7 = (rectObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
-    int val4 ;
-    int ecode4 = 0 ;
-    int val5 ;
-    int ecode5 = 0 ;
-    void *argp6 = 0 ;
-    int res6 = 0 ;
-    void *argp7 = 0 ;
-    int res7 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 7) || (items > 7)) {
-      SWIG_croak("Usage: mapObj_zoomScale(self,scale,poPixPos,width,height,poGeorefExt,poMaxGeorefExt);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_zoomScale" "', argument " "1"" of type '" "mapObj *""'"); 
-    }
-    arg1 = (mapObj *)(argp1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_zoomScale" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_pointObj, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "mapObj_zoomScale" "', argument " "3"" of type '" "pointObj *""'"); 
-    }
-    arg3 = (pointObj *)(argp3);
-    ecode4 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
-    if (!SWIG_IsOK(ecode4)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "mapObj_zoomScale" "', argument " "4"" of type '" "int""'");
-    } 
-    arg4 = (int)(val4);
-    ecode5 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
-    if (!SWIG_IsOK(ecode5)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "mapObj_zoomScale" "', argument " "5"" of type '" "int""'");
-    } 
-    arg5 = (int)(val5);
-    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_rectObj, 0 |  0 );
-    if (!SWIG_IsOK(res6)) {
-      SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "mapObj_zoomScale" "', argument " "6"" of type '" "rectObj *""'"); 
-    }
-    arg6 = (rectObj *)(argp6);
-    res7 = SWIG_ConvertPtr(ST(6), &argp7,SWIGTYPE_p_rectObj, 0 |  0 );
-    if (!SWIG_IsOK(res7)) {
-      SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "mapObj_zoomScale" "', argument " "7"" of type '" "rectObj *""'"); 
-    }
-    arg7 = (rectObj *)(argp7);
-    result = (int)mapObj_zoomScale(arg1,arg2,arg3,arg4,arg5,arg6,arg7);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    
-    
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    
-    
-    
     
     SWIG_croak_null();
   }
@@ -30988,7 +21634,7 @@ XS(_wrap_imageObj_save) {
     }
     arg2 = (char *)(buf2);
     if (items > 2) {
-      res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_map_obj, 0 |  0 );
+      res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_mapObj, 0 |  0 );
       if (!SWIG_IsOK(res3)) {
         SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "imageObj_save" "', argument " "3"" of type '" "mapObj *""'"); 
       }
@@ -31074,7 +21720,7 @@ XS(_wrap_imageObj_getBytes) {
       sv_2mortal(ST(argvi));
       argvi++;
       if( (&result)->owns_data )
-      gdFree((&result)->data);
+      msFree((&result)->data);
     }
     
     XSRETURN(argvi);
@@ -31113,6 +21759,10656 @@ XS(_wrap_imageObj_getSize) {
 }
 
 
+XS(_wrap_layerObj_classitem_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_classitem_set(self,classitem);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_classitem_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_classitem_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->classitem) free((char*)arg1->classitem);
+      if (arg2) {
+        arg1->classitem = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->classitem,arg2);
+      } else {
+        arg1->classitem = 0;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_classitem_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_classitem_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_classitem_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (char *) ((arg1)->classitem);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_refcount_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_refcount_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_refcount_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int) ((arg1)->refcount);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_numclasses_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_numclasses_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_numclasses_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int) ((arg1)->numclasses);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_maxclasses_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_maxclasses_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_maxclasses_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int) ((arg1)->maxclasses);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_index_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_index_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_index_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int) ((arg1)->index);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_map_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    struct mapObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_map_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_map_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    {
+      /* Accessing map */
+      result = (struct mapObj *) ((arg1)->map);;
+      MS_REFCNT_INCR(result);
+    }
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_mapObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_header_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_header_set(self,header);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_header_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_header_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->header) free((char*)arg1->header);
+      if (arg2) {
+        arg1->header = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->header,arg2);
+      } else {
+        arg1->header = 0;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_header_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_header_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_header_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (char *) ((arg1)->header);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_footer_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_footer_set(self,footer);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_footer_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_footer_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->footer) free((char*)arg1->footer);
+      if (arg2) {
+        arg1->footer = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->footer,arg2);
+      } else {
+        arg1->footer = 0;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_footer_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_footer_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_footer_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (char *) ((arg1)->footer);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_template_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_template_set(self,template);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_template_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_template_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->template) free((char*)arg1->template);
+      if (arg2) {
+        arg1->template = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->template,arg2);
+      } else {
+        arg1->template = 0;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_template_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_template_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_template_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (char *) ((arg1)->template);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_name_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_name_set(self,name);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_name_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_name_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->name) free((char*)arg1->name);
+      if (arg2) {
+        arg1->name = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->name,arg2);
+      } else {
+        arg1->name = 0;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_name_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_name_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_name_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (char *) ((arg1)->name);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_group_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_group_set(self,group);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_group_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_group_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->group) free((char*)arg1->group);
+      if (arg2) {
+        arg1->group = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->group,arg2);
+      } else {
+        arg1->group = 0;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_group_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_group_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_group_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (char *) ((arg1)->group);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_status_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_status_set(self,status);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_status_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_status_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->status = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_status_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_status_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_status_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int) ((arg1)->status);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_data_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_data_set(self,data);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_data_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_data_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->data) free((char*)arg1->data);
+      if (arg2) {
+        arg1->data = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->data,arg2);
+      } else {
+        arg1->data = 0;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_data_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_data_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_data_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (char *) ((arg1)->data);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_type_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    enum MS_LAYER_TYPE arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_type_set(self,type);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_type_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_type_set" "', argument " "2"" of type '" "enum MS_LAYER_TYPE""'");
+    } 
+    arg2 = (enum MS_LAYER_TYPE)(val2);
+    if (arg1) (arg1)->type = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_type_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    enum MS_LAYER_TYPE result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_type_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_type_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (enum MS_LAYER_TYPE) ((arg1)->type);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_tolerance_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_tolerance_set(self,tolerance);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_tolerance_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_tolerance_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->tolerance = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_tolerance_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_tolerance_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_tolerance_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (double) ((arg1)->tolerance);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_toleranceunits_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_toleranceunits_set(self,toleranceunits);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_toleranceunits_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_toleranceunits_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->toleranceunits = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_toleranceunits_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_toleranceunits_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_toleranceunits_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int) ((arg1)->toleranceunits);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_symbolscaledenom_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_symbolscaledenom_set(self,symbolscaledenom);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_symbolscaledenom_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_symbolscaledenom_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->symbolscaledenom = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_symbolscaledenom_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_symbolscaledenom_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_symbolscaledenom_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (double) ((arg1)->symbolscaledenom);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_minscaledenom_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_minscaledenom_set(self,minscaledenom);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_minscaledenom_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_minscaledenom_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->minscaledenom = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_minscaledenom_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_minscaledenom_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_minscaledenom_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (double) ((arg1)->minscaledenom);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_maxscaledenom_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_maxscaledenom_set(self,maxscaledenom);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_maxscaledenom_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_maxscaledenom_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->maxscaledenom = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_maxscaledenom_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_maxscaledenom_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_maxscaledenom_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (double) ((arg1)->maxscaledenom);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_minfeaturesize_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_minfeaturesize_set(self,minfeaturesize);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_minfeaturesize_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_minfeaturesize_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->minfeaturesize = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_minfeaturesize_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_minfeaturesize_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_minfeaturesize_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int) ((arg1)->minfeaturesize);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_labelminscaledenom_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_labelminscaledenom_set(self,labelminscaledenom);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_labelminscaledenom_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_labelminscaledenom_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->labelminscaledenom = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_labelminscaledenom_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_labelminscaledenom_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_labelminscaledenom_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (double) ((arg1)->labelminscaledenom);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_labelmaxscaledenom_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_labelmaxscaledenom_set(self,labelmaxscaledenom);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_labelmaxscaledenom_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_labelmaxscaledenom_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->labelmaxscaledenom = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_labelmaxscaledenom_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_labelmaxscaledenom_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_labelmaxscaledenom_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (double) ((arg1)->labelmaxscaledenom);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_mingeowidth_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_mingeowidth_set(self,mingeowidth);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_mingeowidth_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_mingeowidth_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->mingeowidth = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_mingeowidth_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_mingeowidth_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_mingeowidth_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (double) ((arg1)->mingeowidth);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_maxgeowidth_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_maxgeowidth_set(self,maxgeowidth);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_maxgeowidth_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_maxgeowidth_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->maxgeowidth = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_maxgeowidth_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_maxgeowidth_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_maxgeowidth_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (double) ((arg1)->maxgeowidth);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_sizeunits_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_sizeunits_set(self,sizeunits);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_sizeunits_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_sizeunits_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->sizeunits = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_sizeunits_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_sizeunits_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_sizeunits_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int) ((arg1)->sizeunits);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_maxfeatures_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_maxfeatures_set(self,maxfeatures);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_maxfeatures_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_maxfeatures_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->maxfeatures = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_maxfeatures_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_maxfeatures_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_maxfeatures_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int) ((arg1)->maxfeatures);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_startindex_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_startindex_set(self,startindex);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_startindex_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_startindex_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->startindex = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_startindex_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_startindex_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_startindex_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int) ((arg1)->startindex);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_offsite_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    colorObj *arg2 = (colorObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_offsite_set(self,offsite);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_offsite_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_offsite_set" "', argument " "2"" of type '" "colorObj *""'"); 
+    }
+    arg2 = (colorObj *)(argp2);
+    if (arg1) (arg1)->offsite = *arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_offsite_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    colorObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_offsite_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_offsite_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (colorObj *)& ((arg1)->offsite);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_colorObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_transform_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_transform_set(self,transform);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_transform_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_transform_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->transform = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_transform_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_transform_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_transform_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int) ((arg1)->transform);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_labelcache_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_labelcache_set(self,labelcache);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_labelcache_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_labelcache_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->labelcache = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_labelcache_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_labelcache_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_labelcache_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int) ((arg1)->labelcache);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_postlabelcache_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_postlabelcache_set(self,postlabelcache);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_postlabelcache_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_postlabelcache_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->postlabelcache = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_postlabelcache_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_postlabelcache_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_postlabelcache_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int) ((arg1)->postlabelcache);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_labelitem_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_labelitem_set(self,labelitem);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_labelitem_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_labelitem_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->labelitem) free((char*)arg1->labelitem);
+      if (arg2) {
+        arg1->labelitem = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->labelitem,arg2);
+      } else {
+        arg1->labelitem = 0;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_labelitem_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_labelitem_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_labelitem_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (char *) ((arg1)->labelitem);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_tileitem_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_tileitem_set(self,tileitem);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_tileitem_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_tileitem_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->tileitem) free((char*)arg1->tileitem);
+      if (arg2) {
+        arg1->tileitem = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->tileitem,arg2);
+      } else {
+        arg1->tileitem = 0;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_tileitem_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_tileitem_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_tileitem_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (char *) ((arg1)->tileitem);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_tileindex_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_tileindex_set(self,tileindex);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_tileindex_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_tileindex_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->tileindex) free((char*)arg1->tileindex);
+      if (arg2) {
+        arg1->tileindex = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->tileindex,arg2);
+      } else {
+        arg1->tileindex = 0;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_tileindex_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_tileindex_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_tileindex_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (char *) ((arg1)->tileindex);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_units_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_units_set(self,units);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_units_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_units_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->units = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_units_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_units_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_units_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int) ((arg1)->units);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_connection_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_connection_set(self,connection);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_connection_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_connection_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->connection) free((char*)arg1->connection);
+      if (arg2) {
+        arg1->connection = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->connection,arg2);
+      } else {
+        arg1->connection = 0;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_connection_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_connection_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_connection_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (char *) ((arg1)->connection);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_plugin_library_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_plugin_library_set(self,plugin_library);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_plugin_library_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_plugin_library_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->plugin_library) free((char*)arg1->plugin_library);
+      if (arg2) {
+        arg1->plugin_library = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->plugin_library,arg2);
+      } else {
+        arg1->plugin_library = 0;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_plugin_library_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_plugin_library_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_plugin_library_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (char *) ((arg1)->plugin_library);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_plugin_library_original_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_plugin_library_original_set(self,plugin_library_original);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_plugin_library_original_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_plugin_library_original_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->plugin_library_original) free((char*)arg1->plugin_library_original);
+      if (arg2) {
+        arg1->plugin_library_original = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->plugin_library_original,arg2);
+      } else {
+        arg1->plugin_library_original = 0;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_plugin_library_original_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_plugin_library_original_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_plugin_library_original_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (char *) ((arg1)->plugin_library_original);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_connectiontype_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    enum MS_CONNECTION_TYPE arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_connectiontype_set(self,connectiontype);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_connectiontype_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_connectiontype_set" "', argument " "2"" of type '" "enum MS_CONNECTION_TYPE""'");
+    } 
+    arg2 = (enum MS_CONNECTION_TYPE)(val2);
+    if (arg1) (arg1)->connectiontype = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_connectiontype_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    enum MS_CONNECTION_TYPE result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_connectiontype_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_connectiontype_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (enum MS_CONNECTION_TYPE) ((arg1)->connectiontype);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_numitems_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_numitems_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_numitems_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int) ((arg1)->numitems);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_bandsitem_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_bandsitem_set(self,bandsitem);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_bandsitem_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_bandsitem_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->bandsitem) free((char*)arg1->bandsitem);
+      if (arg2) {
+        arg1->bandsitem = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->bandsitem,arg2);
+      } else {
+        arg1->bandsitem = 0;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_bandsitem_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_bandsitem_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_bandsitem_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (char *) ((arg1)->bandsitem);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_filteritem_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_filteritem_set(self,filteritem);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_filteritem_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_filteritem_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->filteritem) free((char*)arg1->filteritem);
+      if (arg2) {
+        arg1->filteritem = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->filteritem,arg2);
+      } else {
+        arg1->filteritem = 0;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_filteritem_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_filteritem_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_filteritem_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (char *) ((arg1)->filteritem);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_styleitem_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_styleitem_set(self,styleitem);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_styleitem_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_styleitem_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->styleitem) free((char*)arg1->styleitem);
+      if (arg2) {
+        arg1->styleitem = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->styleitem,arg2);
+      } else {
+        arg1->styleitem = 0;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_styleitem_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_styleitem_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_styleitem_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (char *) ((arg1)->styleitem);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_requires_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_requires_set(self,requires);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_requires_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_requires_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->requires) free((char*)arg1->requires);
+      if (arg2) {
+        arg1->requires = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->requires,arg2);
+      } else {
+        arg1->requires = 0;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_requires_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_requires_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_requires_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (char *) ((arg1)->requires);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_labelrequires_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_labelrequires_set(self,labelrequires);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_labelrequires_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_labelrequires_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->labelrequires) free((char*)arg1->labelrequires);
+      if (arg2) {
+        arg1->labelrequires = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->labelrequires,arg2);
+      } else {
+        arg1->labelrequires = 0;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_labelrequires_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_labelrequires_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_labelrequires_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (char *) ((arg1)->labelrequires);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_metadata_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    hashTableObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_metadata_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_metadata_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (hashTableObj *)& ((arg1)->metadata);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_hashTableObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_validation_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    hashTableObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_validation_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_validation_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (hashTableObj *)& ((arg1)->validation);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_hashTableObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_bindvals_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    hashTableObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_bindvals_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_bindvals_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (hashTableObj *)& ((arg1)->bindvals);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_hashTableObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_cluster_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    clusterObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_cluster_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_cluster_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (clusterObj *)& ((arg1)->cluster);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_clusterObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_opacity_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_opacity_set(self,opacity);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_opacity_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_opacity_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->opacity = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_opacity_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_opacity_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_opacity_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int) ((arg1)->opacity);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_dump_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_dump_set(self,dump);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_dump_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_dump_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->dump = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_dump_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_dump_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_dump_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int) ((arg1)->dump);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_debug_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_debug_set(self,debug);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_debug_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_debug_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->debug = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_debug_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_debug_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_debug_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int) ((arg1)->debug);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_extent_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    rectObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_extent_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_extent_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (rectObj *)& ((arg1)->extent);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_rectObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_numprocessing_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_numprocessing_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_numprocessing_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int) ((arg1)->numprocessing);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_numjoins_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_numjoins_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_numjoins_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int) ((arg1)->numjoins);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_classgroup_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_classgroup_set(self,classgroup);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_classgroup_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_classgroup_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->classgroup) free((char*)arg1->classgroup);
+      if (arg2) {
+        arg1->classgroup = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->classgroup,arg2);
+      } else {
+        arg1->classgroup = 0;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_classgroup_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_classgroup_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_classgroup_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (char *) ((arg1)->classgroup);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_mask_set) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_mask_set(self,mask);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_mask_set" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_mask_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->mask) free((char*)arg1->mask);
+      if (arg2) {
+        arg1->mask = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->mask,arg2);
+      } else {
+        arg1->mask = 0;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_mask_get) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_mask_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_mask_get" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (char *) ((arg1)->mask);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_layerObj) {
+  {
+    mapObj *arg1 = (mapObj *) NULL ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    layerObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 0) || (items > 1)) {
+      SWIG_croak("Usage: new_layerObj(map);");
+    }
+    if (items > 0) {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_layerObj" "', argument " "1"" of type '" "mapObj *""'"); 
+      }
+      arg1 = (mapObj *)(argp1);
+    }
+    result = (layerObj *)new_layerObj(arg1);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_layerObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_delete_layerObj) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: delete_layerObj(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_layerObj" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    delete_layerObj(arg1);
+    ST(argvi) = sv_newmortal();
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_clone) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    layerObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_clone(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_clone" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (layerObj *)layerObj_clone(arg1);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_layerObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_updateFromString) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_updateFromString(self,snippet);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_updateFromString" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_updateFromString" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (int)layerObj_updateFromString(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_insertClass) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    classObj *arg2 = (classObj *) 0 ;
+    int arg3 = (int) -1 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int val3 ;
+    int ecode3 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 3)) {
+      SWIG_croak("Usage: layerObj_insertClass(self,classobj,index);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_insertClass" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_classObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_insertClass" "', argument " "2"" of type '" "classObj *""'"); 
+    }
+    arg2 = (classObj *)(argp2);
+    if (items > 2) {
+      ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+      if (!SWIG_IsOK(ecode3)) {
+        SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "layerObj_insertClass" "', argument " "3"" of type '" "int""'");
+      } 
+      arg3 = (int)(val3);
+    }
+    result = (int)layerObj_insertClass(arg1,arg2,arg3);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_removeClass) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    classObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_removeClass(self,index);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_removeClass" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_removeClass" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    result = (classObj *)layerObj_removeClass(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_classObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_open) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_open(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_open" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int)layerObj_open(arg1);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_whichShapes) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    rectObj arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_whichShapes(self,rect);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_whichShapes" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    {
+      res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_rectObj,  0 );
+      if (!SWIG_IsOK(res2)) {
+        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_whichShapes" "', argument " "2"" of type '" "rectObj""'"); 
+      }  
+      if (!argp2) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "layerObj_whichShapes" "', argument " "2"" of type '" "rectObj""'");
+      } else {
+        arg2 = *((rectObj *)(argp2));
+      }
+    }
+    result = (int)layerObj_whichShapes(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_nextShape) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    shapeObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_nextShape(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_nextShape" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (shapeObj *)layerObj_nextShape(arg1);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_shapeObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_close) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_close(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_close" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    layerObj_close(arg1);
+    ST(argvi) = sv_newmortal();
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_getShape) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    resultObj *arg2 = (resultObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    shapeObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_getShape(self,record);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getShape" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_resultObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_getShape" "', argument " "2"" of type '" "resultObj *""'"); 
+    }
+    arg2 = (resultObj *)(argp2);
+    result = (shapeObj *)layerObj_getShape(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_shapeObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_getNumResults) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_getNumResults(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getNumResults" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int)layerObj_getNumResults(arg1);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_getResultsBounds) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    rectObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_getResultsBounds(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getResultsBounds" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (rectObj *)layerObj_getResultsBounds(arg1);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_rectObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_getResult) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    resultObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_getResult(self,i);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getResult" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_getResult" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    result = (resultObj *)layerObj_getResult(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_resultObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_getClass) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    classObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_getClass(self,i);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getClass" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_getClass" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    result = (classObj *)layerObj_getClass(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_classObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_getItem) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_getItem(self,i);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getItem" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_getItem" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    result = (char *)layerObj_getItem(arg1,arg2);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_setItems) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char **arg2 = (char **) 0 ;
+    int arg3 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int val3 ;
+    int ecode3 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: layerObj_setItems(self,items,numitems);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_setItems" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_p_char, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_setItems" "', argument " "2"" of type '" "char **""'"); 
+    }
+    arg2 = (char **)(argp2);
+    ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "layerObj_setItems" "', argument " "3"" of type '" "int""'");
+    } 
+    arg3 = (int)(val3);
+    result = (int)layerObj_setItems(arg1,arg2,arg3);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_draw) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    mapObj *arg2 = (mapObj *) 0 ;
+    imageObj *arg3 = (imageObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    void *argp3 = 0 ;
+    int res3 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: layerObj_draw(self,map,image);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_draw" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_draw" "', argument " "2"" of type '" "mapObj *""'"); 
+    }
+    arg2 = (mapObj *)(argp2);
+    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_imageObj, 0 |  0 );
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_draw" "', argument " "3"" of type '" "imageObj *""'"); 
+    }
+    arg3 = (imageObj *)(argp3);
+    result = (int)layerObj_draw(arg1,arg2,arg3);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_drawQuery) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    mapObj *arg2 = (mapObj *) 0 ;
+    imageObj *arg3 = (imageObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    void *argp3 = 0 ;
+    int res3 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: layerObj_drawQuery(self,map,image);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_drawQuery" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_drawQuery" "', argument " "2"" of type '" "mapObj *""'"); 
+    }
+    arg2 = (mapObj *)(argp2);
+    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_imageObj, 0 |  0 );
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_drawQuery" "', argument " "3"" of type '" "imageObj *""'"); 
+    }
+    arg3 = (imageObj *)(argp3);
+    result = (int)layerObj_drawQuery(arg1,arg2,arg3);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_queryByFilter) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    mapObj *arg2 = (mapObj *) 0 ;
+    char *arg3 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int res3 ;
+    char *buf3 = 0 ;
+    int alloc3 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: layerObj_queryByFilter(self,map,string);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_queryByFilter" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_queryByFilter" "', argument " "2"" of type '" "mapObj *""'"); 
+    }
+    arg2 = (mapObj *)(argp2);
+    res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_queryByFilter" "', argument " "3"" of type '" "char *""'");
+    }
+    arg3 = (char *)(buf3);
+    result = (int)layerObj_queryByFilter(arg1,arg2,arg3);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    XSRETURN(argvi);
+  fail:
+    
+    
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_queryByAttributes) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    mapObj *arg2 = (mapObj *) 0 ;
+    char *arg3 = (char *) 0 ;
+    char *arg4 = (char *) 0 ;
+    int arg5 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int res3 ;
+    char *buf3 = 0 ;
+    int alloc3 = 0 ;
+    int res4 ;
+    char *buf4 = 0 ;
+    int alloc4 = 0 ;
+    int val5 ;
+    int ecode5 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 5) || (items > 5)) {
+      SWIG_croak("Usage: layerObj_queryByAttributes(self,map,qitem,qstring,mode);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_queryByAttributes" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_queryByAttributes" "', argument " "2"" of type '" "mapObj *""'"); 
+    }
+    arg2 = (mapObj *)(argp2);
+    res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_queryByAttributes" "', argument " "3"" of type '" "char *""'");
+    }
+    arg3 = (char *)(buf3);
+    res4 = SWIG_AsCharPtrAndSize(ST(3), &buf4, NULL, &alloc4);
+    if (!SWIG_IsOK(res4)) {
+      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "layerObj_queryByAttributes" "', argument " "4"" of type '" "char *""'");
+    }
+    arg4 = (char *)(buf4);
+    ecode5 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
+    if (!SWIG_IsOK(ecode5)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "layerObj_queryByAttributes" "', argument " "5"" of type '" "int""'");
+    } 
+    arg5 = (int)(val5);
+    result = (int)layerObj_queryByAttributes(arg1,arg2,arg3,arg4,arg5);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    if (alloc4 == SWIG_NEWOBJ) free((char*)buf4);
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    if (alloc4 == SWIG_NEWOBJ) free((char*)buf4);
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_queryByPoint) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    mapObj *arg2 = (mapObj *) 0 ;
+    pointObj *arg3 = (pointObj *) 0 ;
+    int arg4 ;
+    double arg5 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    void *argp3 = 0 ;
+    int res3 = 0 ;
+    int val4 ;
+    int ecode4 = 0 ;
+    double val5 ;
+    int ecode5 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 5) || (items > 5)) {
+      SWIG_croak("Usage: layerObj_queryByPoint(self,map,point,mode,buffer);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_queryByPoint" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_queryByPoint" "', argument " "2"" of type '" "mapObj *""'"); 
+    }
+    arg2 = (mapObj *)(argp2);
+    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_pointObj, 0 |  0 );
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_queryByPoint" "', argument " "3"" of type '" "pointObj *""'"); 
+    }
+    arg3 = (pointObj *)(argp3);
+    ecode4 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
+    if (!SWIG_IsOK(ecode4)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "layerObj_queryByPoint" "', argument " "4"" of type '" "int""'");
+    } 
+    arg4 = (int)(val4);
+    ecode5 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
+    if (!SWIG_IsOK(ecode5)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "layerObj_queryByPoint" "', argument " "5"" of type '" "double""'");
+    } 
+    arg5 = (double)(val5);
+    result = (int)layerObj_queryByPoint(arg1,arg2,arg3,arg4,arg5);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_queryByRect) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    mapObj *arg2 = (mapObj *) 0 ;
+    rectObj arg3 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    void *argp3 ;
+    int res3 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: layerObj_queryByRect(self,map,rect);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_queryByRect" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_queryByRect" "', argument " "2"" of type '" "mapObj *""'"); 
+    }
+    arg2 = (mapObj *)(argp2);
+    {
+      res3 = SWIG_ConvertPtr(ST(2), &argp3, SWIGTYPE_p_rectObj,  0 );
+      if (!SWIG_IsOK(res3)) {
+        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_queryByRect" "', argument " "3"" of type '" "rectObj""'"); 
+      }  
+      if (!argp3) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "layerObj_queryByRect" "', argument " "3"" of type '" "rectObj""'");
+      } else {
+        arg3 = *((rectObj *)(argp3));
+      }
+    }
+    result = (int)layerObj_queryByRect(arg1,arg2,arg3);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_queryByFeatures) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    mapObj *arg2 = (mapObj *) 0 ;
+    int arg3 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int val3 ;
+    int ecode3 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: layerObj_queryByFeatures(self,map,slayer);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_queryByFeatures" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_queryByFeatures" "', argument " "2"" of type '" "mapObj *""'"); 
+    }
+    arg2 = (mapObj *)(argp2);
+    ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "layerObj_queryByFeatures" "', argument " "3"" of type '" "int""'");
+    } 
+    arg3 = (int)(val3);
+    result = (int)layerObj_queryByFeatures(arg1,arg2,arg3);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_queryByShape) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    mapObj *arg2 = (mapObj *) 0 ;
+    shapeObj *arg3 = (shapeObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    void *argp3 = 0 ;
+    int res3 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: layerObj_queryByShape(self,map,shape);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_queryByShape" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_queryByShape" "', argument " "2"" of type '" "mapObj *""'"); 
+    }
+    arg2 = (mapObj *)(argp2);
+    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_shapeObj, 0 |  0 );
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_queryByShape" "', argument " "3"" of type '" "shapeObj *""'"); 
+    }
+    arg3 = (shapeObj *)(argp3);
+    result = (int)layerObj_queryByShape(arg1,arg2,arg3);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_queryByIndex) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    mapObj *arg2 = (mapObj *) 0 ;
+    int arg3 ;
+    int arg4 ;
+    int arg5 = (int) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int val3 ;
+    int ecode3 = 0 ;
+    int val4 ;
+    int ecode4 = 0 ;
+    int val5 ;
+    int ecode5 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 4) || (items > 5)) {
+      SWIG_croak("Usage: layerObj_queryByIndex(self,map,tileindex,shapeindex,bAddToQuery);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_queryByIndex" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_queryByIndex" "', argument " "2"" of type '" "mapObj *""'"); 
+    }
+    arg2 = (mapObj *)(argp2);
+    ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "layerObj_queryByIndex" "', argument " "3"" of type '" "int""'");
+    } 
+    arg3 = (int)(val3);
+    ecode4 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
+    if (!SWIG_IsOK(ecode4)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "layerObj_queryByIndex" "', argument " "4"" of type '" "int""'");
+    } 
+    arg4 = (int)(val4);
+    if (items > 4) {
+      ecode5 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
+      if (!SWIG_IsOK(ecode5)) {
+        SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "layerObj_queryByIndex" "', argument " "5"" of type '" "int""'");
+      } 
+      arg5 = (int)(val5);
+    }
+    result = (int)layerObj_queryByIndex(arg1,arg2,arg3,arg4,arg5);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_getResults) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    resultCacheObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_getResults(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getResults" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (resultCacheObj *)layerObj_getResults(arg1);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_resultCacheObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_setFilter) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_setFilter(self,filter);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_setFilter" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_setFilter" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (int)layerObj_setFilter(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_getFilterString) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_getFilterString(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getFilterString" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (char *)layerObj_getFilterString(arg1);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    free((char*)result);
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_setWKTProjection) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_setWKTProjection(self,wkt);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_setWKTProjection" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_setWKTProjection" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (int)layerObj_setWKTProjection(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_getProjection) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_getProjection(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getProjection" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (char *)layerObj_getProjection(arg1);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    free((char*)result);
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_setProjection) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_setProjection(self,proj4);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_setProjection" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_setProjection" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (int)layerObj_setProjection(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_addFeature) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    shapeObj *arg2 = (shapeObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_addFeature(self,shape);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_addFeature" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_shapeObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_addFeature" "', argument " "2"" of type '" "shapeObj *""'"); 
+    }
+    arg2 = (shapeObj *)(argp2);
+    result = (int)layerObj_addFeature(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_getNumFeatures) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_getNumFeatures(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getNumFeatures" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int)layerObj_getNumFeatures(arg1);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_getExtent) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    rectObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_getExtent(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getExtent" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (rectObj *)layerObj_getExtent(arg1);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_rectObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_setExtent) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    double arg2 = (double) -1.0 ;
+    double arg3 = (double) -1.0 ;
+    double arg4 = (double) -1.0 ;
+    double arg5 = (double) -1.0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    double val3 ;
+    int ecode3 = 0 ;
+    double val4 ;
+    int ecode4 = 0 ;
+    double val5 ;
+    int ecode5 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 5)) {
+      SWIG_croak("Usage: layerObj_setExtent(self,minx,miny,maxx,maxy);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_setExtent" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    if (items > 1) {
+      ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+      if (!SWIG_IsOK(ecode2)) {
+        SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_setExtent" "', argument " "2"" of type '" "double""'");
+      } 
+      arg2 = (double)(val2);
+    }
+    if (items > 2) {
+      ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+      if (!SWIG_IsOK(ecode3)) {
+        SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "layerObj_setExtent" "', argument " "3"" of type '" "double""'");
+      } 
+      arg3 = (double)(val3);
+    }
+    if (items > 3) {
+      ecode4 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
+      if (!SWIG_IsOK(ecode4)) {
+        SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "layerObj_setExtent" "', argument " "4"" of type '" "double""'");
+      } 
+      arg4 = (double)(val4);
+    }
+    if (items > 4) {
+      ecode5 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
+      if (!SWIG_IsOK(ecode5)) {
+        SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "layerObj_setExtent" "', argument " "5"" of type '" "double""'");
+      } 
+      arg5 = (double)(val5);
+    }
+    result = (int)layerObj_setExtent(arg1,arg2,arg3,arg4,arg5);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_getMetaData) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_getMetaData(self,name);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getMetaData" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_getMetaData" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (char *)layerObj_getMetaData(arg1,arg2);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_setMetaData) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    char *arg3 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int res3 ;
+    char *buf3 = 0 ;
+    int alloc3 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: layerObj_setMetaData(self,name,value);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_setMetaData" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_setMetaData" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_setMetaData" "', argument " "3"" of type '" "char *""'");
+    }
+    arg3 = (char *)(buf3);
+    result = (int)layerObj_setMetaData(arg1,arg2,arg3);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_removeMetaData) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_removeMetaData(self,name);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_removeMetaData" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_removeMetaData" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (int)layerObj_removeMetaData(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_getFirstMetaDataKey) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_getFirstMetaDataKey(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getFirstMetaDataKey" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (char *)layerObj_getFirstMetaDataKey(arg1);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_getNextMetaDataKey) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_getNextMetaDataKey(self,lastkey);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getNextMetaDataKey" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_getNextMetaDataKey" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (char *)layerObj_getNextMetaDataKey(arg1,arg2);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_getWMSFeatureInfoURL) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    mapObj *arg2 = (mapObj *) 0 ;
+    int arg3 ;
+    int arg4 ;
+    int arg5 ;
+    char *arg6 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int val3 ;
+    int ecode3 = 0 ;
+    int val4 ;
+    int ecode4 = 0 ;
+    int val5 ;
+    int ecode5 = 0 ;
+    int res6 ;
+    char *buf6 = 0 ;
+    int alloc6 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 6) || (items > 6)) {
+      SWIG_croak("Usage: layerObj_getWMSFeatureInfoURL(self,map,click_x,click_y,feature_count,info_format);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getWMSFeatureInfoURL" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_getWMSFeatureInfoURL" "', argument " "2"" of type '" "mapObj *""'"); 
+    }
+    arg2 = (mapObj *)(argp2);
+    ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "layerObj_getWMSFeatureInfoURL" "', argument " "3"" of type '" "int""'");
+    } 
+    arg3 = (int)(val3);
+    ecode4 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
+    if (!SWIG_IsOK(ecode4)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "layerObj_getWMSFeatureInfoURL" "', argument " "4"" of type '" "int""'");
+    } 
+    arg4 = (int)(val4);
+    ecode5 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
+    if (!SWIG_IsOK(ecode5)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "layerObj_getWMSFeatureInfoURL" "', argument " "5"" of type '" "int""'");
+    } 
+    arg5 = (int)(val5);
+    res6 = SWIG_AsCharPtrAndSize(ST(5), &buf6, NULL, &alloc6);
+    if (!SWIG_IsOK(res6)) {
+      SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "layerObj_getWMSFeatureInfoURL" "', argument " "6"" of type '" "char *""'");
+    }
+    arg6 = (char *)(buf6);
+    result = (char *)layerObj_getWMSFeatureInfoURL(arg1,arg2,arg3,arg4,arg5,arg6);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    
+    
+    
+    
+    if (alloc6 == SWIG_NEWOBJ) free((char*)buf6);
+    free((char*)result);
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    
+    if (alloc6 == SWIG_NEWOBJ) free((char*)buf6);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_executeWFSGetFeature) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    layerObj *arg2 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_executeWFSGetFeature(self,layer);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_executeWFSGetFeature" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_executeWFSGetFeature" "', argument " "2"" of type '" "layerObj *""'"); 
+    }
+    arg2 = (layerObj *)(argp2);
+    result = (char *)layerObj_executeWFSGetFeature(arg1,arg2);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    
+    free((char*)result);
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_applySLD) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    char *arg3 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int res3 ;
+    char *buf3 = 0 ;
+    int alloc3 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: layerObj_applySLD(self,sld,stylelayer);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_applySLD" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_applySLD" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_applySLD" "', argument " "3"" of type '" "char *""'");
+    }
+    arg3 = (char *)(buf3);
+    result = (int)layerObj_applySLD(arg1,arg2,arg3);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_applySLDURL) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    char *arg3 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int res3 ;
+    char *buf3 = 0 ;
+    int alloc3 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: layerObj_applySLDURL(self,sld,stylelayer);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_applySLDURL" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_applySLDURL" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_applySLDURL" "', argument " "3"" of type '" "char *""'");
+    }
+    arg3 = (char *)(buf3);
+    result = (int)layerObj_applySLDURL(arg1,arg2,arg3);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_generateSLD) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_generateSLD(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_generateSLD" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (char *)layerObj_generateSLD(arg1);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    free((char*)result);
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_isVisible) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_isVisible(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_isVisible" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int)layerObj_isVisible(arg1);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_moveClassUp) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_moveClassUp(self,index);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_moveClassUp" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_moveClassUp" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    result = (int)layerObj_moveClassUp(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_moveClassDown) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_moveClassDown(self,index);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_moveClassDown" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_moveClassDown" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    result = (int)layerObj_moveClassDown(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_setProcessingKey) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    char *arg3 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int res3 ;
+    char *buf3 = 0 ;
+    int alloc3 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: layerObj_setProcessingKey(self,key,value);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_setProcessingKey" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_setProcessingKey" "', argument " "2"" of type '" "char const *""'");
+    }
+    arg2 = (char *)(buf2);
+    res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_setProcessingKey" "', argument " "3"" of type '" "char const *""'");
+    }
+    arg3 = (char *)(buf3);
+    layerObj_setProcessingKey(arg1,(char const *)arg2,(char const *)arg3);
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_setProcessing) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_setProcessing(self,directive);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_setProcessing" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_setProcessing" "', argument " "2"" of type '" "char const *""'");
+    }
+    arg2 = (char *)(buf2);
+    layerObj_setProcessing(arg1,(char const *)arg2);
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_addProcessing) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_addProcessing(self,directive);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_addProcessing" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_addProcessing" "', argument " "2"" of type '" "char const *""'");
+    }
+    arg2 = (char *)(buf2);
+    layerObj_addProcessing(arg1,(char const *)arg2);
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_getProcessing) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_getProcessing(self,index);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getProcessing" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_getProcessing" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    result = (char *)layerObj_getProcessing(arg1,arg2);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_getProcessingKey) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: layerObj_getProcessingKey(self,key);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getProcessingKey" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_getProcessingKey" "', argument " "2"" of type '" "char const *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (char *)layerObj_getProcessingKey(arg1,(char const *)arg2);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_clearProcessing) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: layerObj_clearProcessing(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_clearProcessing" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    result = (int)layerObj_clearProcessing(arg1);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_setConnectionType) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    int arg2 ;
+    char *arg3 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int res3 ;
+    char *buf3 = 0 ;
+    int alloc3 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: layerObj_setConnectionType(self,connectiontype,library_str);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_setConnectionType" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "layerObj_setConnectionType" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_setConnectionType" "', argument " "3"" of type '" "char const *""'");
+    }
+    arg3 = (char *)(buf3);
+    result = (int)layerObj_setConnectionType(arg1,arg2,(char const *)arg3);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    XSRETURN(argvi);
+  fail:
+    
+    
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_layerObj_getClassIndex) {
+  {
+    layerObj *arg1 = (layerObj *) 0 ;
+    mapObj *arg2 = (mapObj *) 0 ;
+    shapeObj *arg3 = (shapeObj *) 0 ;
+    int *arg4 = (int *) NULL ;
+    int arg5 = (int) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    void *argp3 = 0 ;
+    int res3 = 0 ;
+    void *argp4 = 0 ;
+    int res4 = 0 ;
+    int val5 ;
+    int ecode5 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 5)) {
+      SWIG_croak("Usage: layerObj_getClassIndex(self,map,shape,classgroup,numclasses);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layerObj_getClassIndex" "', argument " "1"" of type '" "layerObj *""'"); 
+    }
+    arg1 = (layerObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "layerObj_getClassIndex" "', argument " "2"" of type '" "mapObj *""'"); 
+    }
+    arg2 = (mapObj *)(argp2);
+    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_shapeObj, 0 |  0 );
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "layerObj_getClassIndex" "', argument " "3"" of type '" "shapeObj *""'"); 
+    }
+    arg3 = (shapeObj *)(argp3);
+    if (items > 3) {
+      res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_int, 0 |  0 );
+      if (!SWIG_IsOK(res4)) {
+        SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "layerObj_getClassIndex" "', argument " "4"" of type '" "int *""'"); 
+      }
+      arg4 = (int *)(argp4);
+    }
+    if (items > 4) {
+      ecode5 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
+      if (!SWIG_IsOK(ecode5)) {
+        SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "layerObj_getClassIndex" "', argument " "5"" of type '" "int""'");
+      } 
+      arg5 = (int)(val5);
+    }
+    result = (int)layerObj_getClassIndex(arg1,arg2,arg3,arg4,arg5);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_name_set) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_name_set(self,name);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_name_set" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_name_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->name) free((char*)arg1->name);
+      if (arg2) {
+        arg1->name = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->name,arg2);
+      } else {
+        arg1->name = 0;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_name_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_name_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_name_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (char *) ((arg1)->name);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_status_set) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_status_set(self,status);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_status_set" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_status_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->status = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_status_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_status_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_status_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (int) ((arg1)->status);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_height_set) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_height_set(self,height);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_height_set" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_height_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->height = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_height_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_height_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_height_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (int) ((arg1)->height);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_width_set) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_width_set(self,width);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_width_set" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_width_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->width = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_width_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_width_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_width_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (int) ((arg1)->width);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_maxsize_set) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_maxsize_set(self,maxsize);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_maxsize_set" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_maxsize_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->maxsize = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_maxsize_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_maxsize_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_maxsize_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (int) ((arg1)->maxsize);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_refcount_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_refcount_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_refcount_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (int) ((arg1)->refcount);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_numlayers_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_numlayers_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_numlayers_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (int) ((arg1)->numlayers);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_maxlayers_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_maxlayers_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_maxlayers_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (int) ((arg1)->maxlayers);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_symbolset_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    symbolSetObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_symbolset_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_symbolset_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (symbolSetObj *)& ((arg1)->symbolset);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_symbolSetObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_fontset_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    fontSetObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_fontset_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_fontset_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (fontSetObj *)& ((arg1)->fontset);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_fontSetObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_labelcache_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    labelCacheObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_labelcache_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_labelcache_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (labelCacheObj *)& ((arg1)->labelcache);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_labelCacheObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_transparent_set) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_transparent_set(self,transparent);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_transparent_set" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_transparent_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->transparent = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_transparent_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_transparent_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_transparent_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (int) ((arg1)->transparent);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_interlace_set) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_interlace_set(self,interlace);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_interlace_set" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_interlace_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->interlace = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_interlace_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_interlace_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_interlace_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (int) ((arg1)->interlace);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_imagequality_set) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_imagequality_set(self,imagequality);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_imagequality_set" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_imagequality_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->imagequality = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_imagequality_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_imagequality_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_imagequality_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (int) ((arg1)->imagequality);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_extent_set) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    rectObj *arg2 = (rectObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_extent_set(self,extent);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_extent_set" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_rectObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_extent_set" "', argument " "2"" of type '" "rectObj *""'"); 
+    }
+    arg2 = (rectObj *)(argp2);
+    if (arg1) (arg1)->extent = *arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_extent_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    rectObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_extent_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_extent_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (rectObj *)& ((arg1)->extent);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_rectObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_cellsize_set) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_cellsize_set(self,cellsize);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_cellsize_set" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_cellsize_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->cellsize = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_cellsize_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_cellsize_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_cellsize_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (double) ((arg1)->cellsize);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_units_set) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    enum MS_UNITS arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_units_set(self,units);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_units_set" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_units_set" "', argument " "2"" of type '" "enum MS_UNITS""'");
+    } 
+    arg2 = (enum MS_UNITS)(val2);
+    if (arg1) (arg1)->units = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_units_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    enum MS_UNITS result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_units_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_units_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (enum MS_UNITS) ((arg1)->units);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_scaledenom_set) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_scaledenom_set(self,scaledenom);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_scaledenom_set" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_scaledenom_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->scaledenom = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_scaledenom_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_scaledenom_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_scaledenom_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (double) ((arg1)->scaledenom);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_resolution_set) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_resolution_set(self,resolution);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_resolution_set" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_resolution_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->resolution = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_resolution_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_resolution_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_resolution_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (double) ((arg1)->resolution);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_defresolution_set) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_defresolution_set(self,defresolution);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_defresolution_set" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_defresolution_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->defresolution = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_defresolution_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_defresolution_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_defresolution_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (double) ((arg1)->defresolution);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_shapepath_set) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_shapepath_set(self,shapepath);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_shapepath_set" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_shapepath_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->shapepath) free((char*)arg1->shapepath);
+      if (arg2) {
+        arg1->shapepath = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->shapepath,arg2);
+      } else {
+        arg1->shapepath = 0;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_shapepath_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_shapepath_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_shapepath_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (char *) ((arg1)->shapepath);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_mappath_set) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_mappath_set(self,mappath);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_mappath_set" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_mappath_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->mappath) free((char*)arg1->mappath);
+      if (arg2) {
+        arg1->mappath = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->mappath,arg2);
+      } else {
+        arg1->mappath = 0;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_mappath_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_mappath_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_mappath_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (char *) ((arg1)->mappath);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_imagecolor_set) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    colorObj *arg2 = (colorObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_imagecolor_set(self,imagecolor);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_imagecolor_set" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_colorObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_imagecolor_set" "', argument " "2"" of type '" "colorObj *""'"); 
+    }
+    arg2 = (colorObj *)(argp2);
+    if (arg1) (arg1)->imagecolor = *arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_imagecolor_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    colorObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_imagecolor_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_imagecolor_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (colorObj *)& ((arg1)->imagecolor);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_colorObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_numoutputformats_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_numoutputformats_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_numoutputformats_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (int) ((arg1)->numoutputformats);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_outputformatlist_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    outputFormatObj **result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_outputformatlist_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_outputformatlist_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (outputFormatObj **) ((arg1)->outputformatlist);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_p_outputFormatObj, 0 | 0); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_outputformat_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    outputFormatObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_outputformat_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_outputformat_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (outputFormatObj *) ((arg1)->outputformat);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_outputFormatObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_imagetype_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_imagetype_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_imagetype_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (char *) ((arg1)->imagetype);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_reference_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    referenceMapObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_reference_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_reference_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (referenceMapObj *)& ((arg1)->reference);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_referenceMapObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_scalebar_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    scalebarObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_scalebar_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_scalebar_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (scalebarObj *)& ((arg1)->scalebar);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_scalebarObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_legend_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    legendObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_legend_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_legend_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (legendObj *)& ((arg1)->legend);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_legendObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_querymap_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    queryMapObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_querymap_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_querymap_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (queryMapObj *)& ((arg1)->querymap);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_queryMapObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_web_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    webObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_web_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_web_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (webObj *)& ((arg1)->web);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_webObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_layerorder_set) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    int *arg2 = (int *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_layerorder_set(self,layerorder);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_layerorder_set" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_int, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_layerorder_set" "', argument " "2"" of type '" "int *""'"); 
+    }
+    arg2 = (int *)(argp2);
+    if (arg1) (arg1)->layerorder = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_layerorder_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_layerorder_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_layerorder_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (int *) ((arg1)->layerorder);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_int, 0 | 0); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_debug_set) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_debug_set(self,debug);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_debug_set" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_debug_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->debug = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_debug_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_debug_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_debug_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (int) ((arg1)->debug);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_datapattern_set) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_datapattern_set(self,datapattern);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_datapattern_set" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_datapattern_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->datapattern) free((char*)arg1->datapattern);
+      if (arg2) {
+        arg1->datapattern = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->datapattern,arg2);
+      } else {
+        arg1->datapattern = 0;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_datapattern_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_datapattern_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_datapattern_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (char *) ((arg1)->datapattern);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_templatepattern_set) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_templatepattern_set(self,templatepattern);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_templatepattern_set" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_templatepattern_set" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    {
+      if (arg1->templatepattern) free((char*)arg1->templatepattern);
+      if (arg2) {
+        arg1->templatepattern = (char *) malloc(strlen(arg2)+1);
+        strcpy((char*)arg1->templatepattern,arg2);
+      } else {
+        arg1->templatepattern = 0;
+      }
+    }
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_templatepattern_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_templatepattern_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_templatepattern_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (char *) ((arg1)->templatepattern);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_configoptions_get) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    hashTableObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_configoptions_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_configoptions_get" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (hashTableObj *)& ((arg1)->configoptions);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_hashTableObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_mapObj) {
+  {
+    char *arg1 = (char *) "" ;
+    int res1 ;
+    char *buf1 = 0 ;
+    int alloc1 = 0 ;
+    int argvi = 0;
+    mapObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 0) || (items > 1)) {
+      SWIG_croak("Usage: new_mapObj(filename);");
+    }
+    if (items > 0) {
+      res1 = SWIG_AsCharPtrAndSize(ST(0), &buf1, NULL, &alloc1);
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_mapObj" "', argument " "1"" of type '" "char *""'");
+      }
+      arg1 = (char *)(buf1);
+    }
+    result = (mapObj *)new_mapObj(arg1);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_mapObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
+    XSRETURN(argvi);
+  fail:
+    if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_delete_mapObj) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: delete_mapObj(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_mapObj" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    delete_mapObj(arg1);
+    ST(argvi) = sv_newmortal();
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_clone) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    mapObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_clone(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_clone" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (mapObj *)mapObj_clone(arg1);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_mapObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_insertLayer) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    layerObj *arg2 = (layerObj *) 0 ;
+    int arg3 = (int) -1 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int val3 ;
+    int ecode3 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 3)) {
+      SWIG_croak("Usage: mapObj_insertLayer(self,layer,index);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_insertLayer" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_layerObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_insertLayer" "', argument " "2"" of type '" "layerObj *""'"); 
+    }
+    arg2 = (layerObj *)(argp2);
+    if (items > 2) {
+      ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+      if (!SWIG_IsOK(ecode3)) {
+        SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "mapObj_insertLayer" "', argument " "3"" of type '" "int""'");
+      } 
+      arg3 = (int)(val3);
+    }
+    result = (int)mapObj_insertLayer(arg1,arg2,arg3);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_removeLayer) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    layerObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_removeLayer(self,index);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_removeLayer" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_removeLayer" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    result = (layerObj *)mapObj_removeLayer(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_layerObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_setExtent) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    double arg2 ;
+    double arg3 ;
+    double arg4 ;
+    double arg5 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    double val3 ;
+    int ecode3 = 0 ;
+    double val4 ;
+    int ecode4 = 0 ;
+    double val5 ;
+    int ecode5 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 5) || (items > 5)) {
+      SWIG_croak("Usage: mapObj_setExtent(self,minx,miny,maxx,maxy);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_setExtent" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_setExtent" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "mapObj_setExtent" "', argument " "3"" of type '" "double""'");
+    } 
+    arg3 = (double)(val3);
+    ecode4 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
+    if (!SWIG_IsOK(ecode4)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "mapObj_setExtent" "', argument " "4"" of type '" "double""'");
+    } 
+    arg4 = (double)(val4);
+    ecode5 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
+    if (!SWIG_IsOK(ecode5)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "mapObj_setExtent" "', argument " "5"" of type '" "double""'");
+    } 
+    arg5 = (double)(val5);
+    result = (int)mapObj_setExtent(arg1,arg2,arg3,arg4,arg5);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_offsetExtent) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    double arg2 ;
+    double arg3 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    double val3 ;
+    int ecode3 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: mapObj_offsetExtent(self,x,y);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_offsetExtent" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_offsetExtent" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "mapObj_offsetExtent" "', argument " "3"" of type '" "double""'");
+    } 
+    arg3 = (double)(val3);
+    result = (int)mapObj_offsetExtent(arg1,arg2,arg3);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_scaleExtent) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    double arg2 ;
+    double arg3 ;
+    double arg4 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    double val3 ;
+    int ecode3 = 0 ;
+    double val4 ;
+    int ecode4 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 4) || (items > 4)) {
+      SWIG_croak("Usage: mapObj_scaleExtent(self,zoomfactor,minscaledenom,maxscaledenom);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_scaleExtent" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_scaleExtent" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "mapObj_scaleExtent" "', argument " "3"" of type '" "double""'");
+    } 
+    arg3 = (double)(val3);
+    ecode4 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
+    if (!SWIG_IsOK(ecode4)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "mapObj_scaleExtent" "', argument " "4"" of type '" "double""'");
+    } 
+    arg4 = (double)(val4);
+    result = (int)mapObj_scaleExtent(arg1,arg2,arg3,arg4);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_setCenter) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    pointObj *arg2 = (pointObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_setCenter(self,center);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_setCenter" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_pointObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_setCenter" "', argument " "2"" of type '" "pointObj *""'"); 
+    }
+    arg2 = (pointObj *)(argp2);
+    result = (int)mapObj_setCenter(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_setSize) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    int arg2 ;
+    int arg3 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int val3 ;
+    int ecode3 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: mapObj_setSize(self,width,height);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_setSize" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_setSize" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "mapObj_setSize" "', argument " "3"" of type '" "int""'");
+    } 
+    arg3 = (int)(val3);
+    result = (int)mapObj_setSize(arg1,arg2,arg3);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_setRotation) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_setRotation(self,rotation_angle);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_setRotation" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_setRotation" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    result = (int)mapObj_setRotation(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_getLayer) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    layerObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_getLayer(self,i);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_getLayer" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_getLayer" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    result = (layerObj *)mapObj_getLayer(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_layerObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_getLayerByName) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    layerObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_getLayerByName(self,name);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_getLayerByName" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_getLayerByName" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (layerObj *)mapObj_getLayerByName(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_layerObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_getSymbolByName) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_getSymbolByName(self,name);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_getSymbolByName" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_getSymbolByName" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (int)mapObj_getSymbolByName(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_prepareQuery) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_prepareQuery(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_prepareQuery" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    mapObj_prepareQuery(arg1);
+    ST(argvi) = sv_newmortal();
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_prepareImage) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    imageObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_prepareImage(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_prepareImage" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (imageObj *)mapObj_prepareImage(arg1);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_imageObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_setImageType) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_setImageType(self,imagetype);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_setImageType" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_setImageType" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    mapObj_setImageType(arg1,arg2);
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_selectOutputFormat) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_selectOutputFormat(self,imagetype);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_selectOutputFormat" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_selectOutputFormat" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    mapObj_selectOutputFormat(arg1,arg2);
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_setOutputFormat) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    outputFormatObj *arg2 = (outputFormatObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_setOutputFormat(self,format);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_setOutputFormat" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_outputFormatObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_setOutputFormat" "', argument " "2"" of type '" "outputFormatObj *""'"); 
+    }
+    arg2 = (outputFormatObj *)(argp2);
+    mapObj_setOutputFormat(arg1,arg2);
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_draw) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    imageObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_draw(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_draw" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (imageObj *)mapObj_draw(arg1);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_imageObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_drawQuery) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    imageObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_drawQuery(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_drawQuery" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (imageObj *)mapObj_drawQuery(arg1);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_imageObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_drawLegend) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    imageObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_drawLegend(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_drawLegend" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (imageObj *)mapObj_drawLegend(arg1);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_imageObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_drawScalebar) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    imageObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_drawScalebar(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_drawScalebar" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (imageObj *)mapObj_drawScalebar(arg1);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_imageObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_drawReferenceMap) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    imageObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_drawReferenceMap(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_drawReferenceMap" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (imageObj *)mapObj_drawReferenceMap(arg1);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_imageObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_embedScalebar) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    imageObj *arg2 = (imageObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_embedScalebar(self,image);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_embedScalebar" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_imageObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_embedScalebar" "', argument " "2"" of type '" "imageObj *""'"); 
+    }
+    arg2 = (imageObj *)(argp2);
+    result = (int)mapObj_embedScalebar(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_embedLegend) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    imageObj *arg2 = (imageObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_embedLegend(self,image);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_embedLegend" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_imageObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_embedLegend" "', argument " "2"" of type '" "imageObj *""'"); 
+    }
+    arg2 = (imageObj *)(argp2);
+    result = (int)mapObj_embedLegend(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_drawLabelCache) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    imageObj *arg2 = (imageObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_drawLabelCache(self,image);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_drawLabelCache" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_imageObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_drawLabelCache" "', argument " "2"" of type '" "imageObj *""'"); 
+    }
+    arg2 = (imageObj *)(argp2);
+    result = (int)mapObj_drawLabelCache(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_getLabel) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    labelCacheMemberObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_getLabel(self,i);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_getLabel" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_getLabel" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    result = (labelCacheMemberObj *)mapObj_getLabel(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_labelCacheMemberObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_nextLabel) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    labelCacheMemberObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_nextLabel(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_nextLabel" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (labelCacheMemberObj *)mapObj_nextLabel(arg1);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_labelCacheMemberObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_queryByFilter) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_queryByFilter(self,string);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_queryByFilter" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_queryByFilter" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (int)mapObj_queryByFilter(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_queryByPoint) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    pointObj *arg2 = (pointObj *) 0 ;
+    int arg3 ;
+    double arg4 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int val3 ;
+    int ecode3 = 0 ;
+    double val4 ;
+    int ecode4 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 4) || (items > 4)) {
+      SWIG_croak("Usage: mapObj_queryByPoint(self,point,mode,buffer);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_queryByPoint" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_pointObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_queryByPoint" "', argument " "2"" of type '" "pointObj *""'"); 
+    }
+    arg2 = (pointObj *)(argp2);
+    ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "mapObj_queryByPoint" "', argument " "3"" of type '" "int""'");
+    } 
+    arg3 = (int)(val3);
+    ecode4 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
+    if (!SWIG_IsOK(ecode4)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "mapObj_queryByPoint" "', argument " "4"" of type '" "double""'");
+    } 
+    arg4 = (double)(val4);
+    result = (int)mapObj_queryByPoint(arg1,arg2,arg3,arg4);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_queryByRect) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    rectObj arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_queryByRect(self,rect);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_queryByRect" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    {
+      res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_rectObj,  0 );
+      if (!SWIG_IsOK(res2)) {
+        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_queryByRect" "', argument " "2"" of type '" "rectObj""'"); 
+      }  
+      if (!argp2) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "mapObj_queryByRect" "', argument " "2"" of type '" "rectObj""'");
+      } else {
+        arg2 = *((rectObj *)(argp2));
+      }
+    }
+    result = (int)mapObj_queryByRect(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_queryByFeatures) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_queryByFeatures(self,slayer);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_queryByFeatures" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_queryByFeatures" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    result = (int)mapObj_queryByFeatures(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_queryByShape) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    shapeObj *arg2 = (shapeObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_queryByShape(self,shape);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_queryByShape" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_shapeObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_queryByShape" "', argument " "2"" of type '" "shapeObj *""'"); 
+    }
+    arg2 = (shapeObj *)(argp2);
+    result = (int)mapObj_queryByShape(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_setWKTProjection) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_setWKTProjection(self,wkt);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_setWKTProjection" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_setWKTProjection" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (int)mapObj_setWKTProjection(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_getProjection) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_getProjection(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_getProjection" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (char *)mapObj_getProjection(arg1);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    free((char*)result);
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_setProjection) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_setProjection(self,proj4);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_setProjection" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_setProjection" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (int)mapObj_setProjection(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_save) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_save(self,filename);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_save" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_save" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (int)mapObj_save(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_saveQuery) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    int arg3 = (int) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int val3 ;
+    int ecode3 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 3)) {
+      SWIG_croak("Usage: mapObj_saveQuery(self,filename,results);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_saveQuery" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_saveQuery" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    if (items > 2) {
+      ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+      if (!SWIG_IsOK(ecode3)) {
+        SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "mapObj_saveQuery" "', argument " "3"" of type '" "int""'");
+      } 
+      arg3 = (int)(val3);
+    }
+    result = (int)mapObj_saveQuery(arg1,arg2,arg3);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_loadQuery) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_loadQuery(self,filename);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_loadQuery" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_loadQuery" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (int)mapObj_loadQuery(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_freeQuery) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    int arg2 = (int) -1 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_freeQuery(self,qlayer);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_freeQuery" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    if (items > 1) {
+      ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+      if (!SWIG_IsOK(ecode2)) {
+        SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_freeQuery" "', argument " "2"" of type '" "int""'");
+      } 
+      arg2 = (int)(val2);
+    }
+    mapObj_freeQuery(arg1,arg2);
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_saveQueryAsGML) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    char *arg3 = (char *) "GOMF" ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int res3 ;
+    char *buf3 = 0 ;
+    int alloc3 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 3)) {
+      SWIG_croak("Usage: mapObj_saveQueryAsGML(self,filename,ns);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_saveQueryAsGML" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_saveQueryAsGML" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    if (items > 2) {
+      res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
+      if (!SWIG_IsOK(res3)) {
+        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "mapObj_saveQueryAsGML" "', argument " "3"" of type '" "char const *""'");
+      }
+      arg3 = (char *)(buf3);
+    }
+    result = (int)mapObj_saveQueryAsGML(arg1,arg2,(char const *)arg3);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_getMetaData) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_getMetaData(self,name);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_getMetaData" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_getMetaData" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (char *)mapObj_getMetaData(arg1,arg2);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_setMetaData) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    char *arg3 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int res3 ;
+    char *buf3 = 0 ;
+    int alloc3 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: mapObj_setMetaData(self,name,value);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_setMetaData" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_setMetaData" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "mapObj_setMetaData" "', argument " "3"" of type '" "char *""'");
+    }
+    arg3 = (char *)(buf3);
+    result = (int)mapObj_setMetaData(arg1,arg2,arg3);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_removeMetaData) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_removeMetaData(self,name);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_removeMetaData" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_removeMetaData" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (int)mapObj_removeMetaData(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_getFirstMetaDataKey) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_getFirstMetaDataKey(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_getFirstMetaDataKey" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (char *)mapObj_getFirstMetaDataKey(arg1);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_getNextMetaDataKey) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_getNextMetaDataKey(self,lastkey);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_getNextMetaDataKey" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_getNextMetaDataKey" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (char *)mapObj_getNextMetaDataKey(arg1,arg2);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_setSymbolSet) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_setSymbolSet(self,szFileName);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_setSymbolSet" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_setSymbolSet" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (int)mapObj_setSymbolSet(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_getNumSymbols) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_getNumSymbols(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_getNumSymbols" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (int)mapObj_getNumSymbols(arg1);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_setFontSet) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_setFontSet(self,filename);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_setFontSet" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_setFontSet" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (int)mapObj_setFontSet(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_saveMapContext) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_saveMapContext(self,szFileName);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_saveMapContext" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_saveMapContext" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (int)mapObj_saveMapContext(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_loadMapContext) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    int arg3 = (int) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int val3 ;
+    int ecode3 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 3)) {
+      SWIG_croak("Usage: mapObj_loadMapContext(self,szFileName,useUniqueNames);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_loadMapContext" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_loadMapContext" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    if (items > 2) {
+      ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+      if (!SWIG_IsOK(ecode3)) {
+        SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "mapObj_loadMapContext" "', argument " "3"" of type '" "int""'");
+      } 
+      arg3 = (int)(val3);
+    }
+    result = (int)mapObj_loadMapContext(arg1,arg2,arg3);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_moveLayerUp) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_moveLayerUp(self,layerindex);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_moveLayerUp" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_moveLayerUp" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    result = (int)mapObj_moveLayerUp(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_moveLayerDown) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_moveLayerDown(self,layerindex);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_moveLayerDown" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_moveLayerDown" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    result = (int)mapObj_moveLayerDown(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_getLayersDrawingOrder) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    intarray *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_getLayersDrawingOrder(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_getLayersDrawingOrder" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (intarray *)mapObj_getLayersDrawingOrder(arg1);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_intarray, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_setLayersDrawingOrder) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    int *arg2 = (int *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_setLayersDrawingOrder(self,panIndexes);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_setLayersDrawingOrder" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_int, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_setLayersDrawingOrder" "', argument " "2"" of type '" "int *""'"); 
+    }
+    arg2 = (int *)(argp2);
+    result = (int)mapObj_setLayersDrawingOrder(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_setConfigOption) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    char *arg3 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int res3 ;
+    char *buf3 = 0 ;
+    int alloc3 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: mapObj_setConfigOption(self,key,value);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_setConfigOption" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_setConfigOption" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "mapObj_setConfigOption" "', argument " "3"" of type '" "char *""'");
+    }
+    arg3 = (char *)(buf3);
+    mapObj_setConfigOption(arg1,arg2,arg3);
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_getConfigOption) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_getConfigOption(self,key);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_getConfigOption" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_getConfigOption" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (char *)mapObj_getConfigOption(arg1,arg2);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_applyConfigOptions) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_applyConfigOptions(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_applyConfigOptions" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    mapObj_applyConfigOptions(arg1);
+    ST(argvi) = sv_newmortal();
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_applySLD) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_applySLD(self,sld);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_applySLD" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_applySLD" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (int)mapObj_applySLD(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_applySLDURL) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_applySLDURL(self,sld);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_applySLDURL" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_applySLDURL" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (int)mapObj_applySLDURL(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_generateSLD) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: mapObj_generateSLD(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_generateSLD" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    result = (char *)mapObj_generateSLD(arg1);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    free((char*)result);
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_processTemplate) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    int arg2 ;
+    char **arg3 = (char **) 0 ;
+    char **arg4 = (char **) 0 ;
+    int arg5 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    void *argp3 = 0 ;
+    int res3 = 0 ;
+    void *argp4 = 0 ;
+    int res4 = 0 ;
+    int val5 ;
+    int ecode5 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 5) || (items > 5)) {
+      SWIG_croak("Usage: mapObj_processTemplate(self,bGenerateImages,names,values,numentries);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_processTemplate" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_processTemplate" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_p_char, 0 |  0 );
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "mapObj_processTemplate" "', argument " "3"" of type '" "char **""'"); 
+    }
+    arg3 = (char **)(argp3);
+    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_p_char, 0 |  0 );
+    if (!SWIG_IsOK(res4)) {
+      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "mapObj_processTemplate" "', argument " "4"" of type '" "char **""'"); 
+    }
+    arg4 = (char **)(argp4);
+    ecode5 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
+    if (!SWIG_IsOK(ecode5)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "mapObj_processTemplate" "', argument " "5"" of type '" "int""'");
+    } 
+    arg5 = (int)(val5);
+    result = (char *)mapObj_processTemplate(arg1,arg2,arg3,arg4,arg5);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    
+    
+    
+    
+    free((char*)result);
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_processLegendTemplate) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char **arg2 = (char **) 0 ;
+    char **arg3 = (char **) 0 ;
+    int arg4 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    void *argp3 = 0 ;
+    int res3 = 0 ;
+    int val4 ;
+    int ecode4 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 4) || (items > 4)) {
+      SWIG_croak("Usage: mapObj_processLegendTemplate(self,names,values,numentries);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_processLegendTemplate" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_p_char, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_processLegendTemplate" "', argument " "2"" of type '" "char **""'"); 
+    }
+    arg2 = (char **)(argp2);
+    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_p_char, 0 |  0 );
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "mapObj_processLegendTemplate" "', argument " "3"" of type '" "char **""'"); 
+    }
+    arg3 = (char **)(argp3);
+    ecode4 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
+    if (!SWIG_IsOK(ecode4)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "mapObj_processLegendTemplate" "', argument " "4"" of type '" "int""'");
+    } 
+    arg4 = (int)(val4);
+    result = (char *)mapObj_processLegendTemplate(arg1,arg2,arg3,arg4);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    
+    
+    
+    free((char*)result);
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_processQueryTemplate) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char **arg2 = (char **) 0 ;
+    char **arg3 = (char **) 0 ;
+    int arg4 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    void *argp3 = 0 ;
+    int res3 = 0 ;
+    int val4 ;
+    int ecode4 = 0 ;
+    int argvi = 0;
+    char *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 4) || (items > 4)) {
+      SWIG_croak("Usage: mapObj_processQueryTemplate(self,names,values,numentries);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_processQueryTemplate" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_p_char, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_processQueryTemplate" "', argument " "2"" of type '" "char **""'"); 
+    }
+    arg2 = (char **)(argp2);
+    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_p_char, 0 |  0 );
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "mapObj_processQueryTemplate" "', argument " "3"" of type '" "char **""'"); 
+    }
+    arg3 = (char **)(argp3);
+    ecode4 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
+    if (!SWIG_IsOK(ecode4)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "mapObj_processQueryTemplate" "', argument " "4"" of type '" "int""'");
+    } 
+    arg4 = (int)(val4);
+    result = (char *)mapObj_processQueryTemplate(arg1,arg2,arg3,arg4);
+    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    
+    
+    
+    
+    free((char*)result);
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_getOutputFormatByName) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    outputFormatObj *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_getOutputFormatByName(self,name);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_getOutputFormatByName" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_getOutputFormatByName" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (outputFormatObj *)mapObj_getOutputFormatByName(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_outputFormatObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_appendOutputFormat) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    outputFormatObj *arg2 = (outputFormatObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_appendOutputFormat(self,format);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_appendOutputFormat" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_outputFormatObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_appendOutputFormat" "', argument " "2"" of type '" "outputFormatObj *""'"); 
+    }
+    arg2 = (outputFormatObj *)(argp2);
+    result = (int)mapObj_appendOutputFormat(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_removeOutputFormat) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_removeOutputFormat(self,name);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_removeOutputFormat" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_removeOutputFormat" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    result = (int)mapObj_removeOutputFormat(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_loadOWSParameters) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    cgiRequestObj *arg2 = (cgiRequestObj *) 0 ;
+    char *arg3 = (char *) "1.1.1" ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int res3 ;
+    char *buf3 = 0 ;
+    int alloc3 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 3)) {
+      SWIG_croak("Usage: mapObj_loadOWSParameters(self,request,wmtver_string);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_loadOWSParameters" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_cgiRequestObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_loadOWSParameters" "', argument " "2"" of type '" "cgiRequestObj *""'"); 
+    }
+    arg2 = (cgiRequestObj *)(argp2);
+    if (items > 2) {
+      res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
+      if (!SWIG_IsOK(res3)) {
+        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "mapObj_loadOWSParameters" "', argument " "3"" of type '" "char *""'");
+      }
+      arg3 = (char *)(buf3);
+    }
+    result = (int)mapObj_loadOWSParameters(arg1,arg2,arg3);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    XSRETURN(argvi);
+  fail:
+    
+    
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_OWSDispatch) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    cgiRequestObj *arg2 = (cgiRequestObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: mapObj_OWSDispatch(self,req);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_OWSDispatch" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_cgiRequestObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_OWSDispatch" "', argument " "2"" of type '" "cgiRequestObj *""'"); 
+    }
+    arg2 = (cgiRequestObj *)(argp2);
+    result = (int)mapObj_OWSDispatch(arg1,arg2);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_zoomPoint) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    int arg2 ;
+    pointObj *arg3 = (pointObj *) 0 ;
+    int arg4 ;
+    int arg5 ;
+    rectObj *arg6 = (rectObj *) 0 ;
+    rectObj *arg7 = (rectObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    void *argp3 = 0 ;
+    int res3 = 0 ;
+    int val4 ;
+    int ecode4 = 0 ;
+    int val5 ;
+    int ecode5 = 0 ;
+    void *argp6 = 0 ;
+    int res6 = 0 ;
+    void *argp7 = 0 ;
+    int res7 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 7) || (items > 7)) {
+      SWIG_croak("Usage: mapObj_zoomPoint(self,zoomfactor,poPixPos,width,height,poGeorefExt,poMaxGeorefExt);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_zoomPoint" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_zoomPoint" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_pointObj, 0 |  0 );
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "mapObj_zoomPoint" "', argument " "3"" of type '" "pointObj *""'"); 
+    }
+    arg3 = (pointObj *)(argp3);
+    ecode4 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
+    if (!SWIG_IsOK(ecode4)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "mapObj_zoomPoint" "', argument " "4"" of type '" "int""'");
+    } 
+    arg4 = (int)(val4);
+    ecode5 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
+    if (!SWIG_IsOK(ecode5)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "mapObj_zoomPoint" "', argument " "5"" of type '" "int""'");
+    } 
+    arg5 = (int)(val5);
+    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_rectObj, 0 |  0 );
+    if (!SWIG_IsOK(res6)) {
+      SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "mapObj_zoomPoint" "', argument " "6"" of type '" "rectObj *""'"); 
+    }
+    arg6 = (rectObj *)(argp6);
+    res7 = SWIG_ConvertPtr(ST(6), &argp7,SWIGTYPE_p_rectObj, 0 |  0 );
+    if (!SWIG_IsOK(res7)) {
+      SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "mapObj_zoomPoint" "', argument " "7"" of type '" "rectObj *""'"); 
+    }
+    arg7 = (rectObj *)(argp7);
+    result = (int)mapObj_zoomPoint(arg1,arg2,arg3,arg4,arg5,arg6,arg7);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_zoomRectangle) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    rectObj *arg2 = (rectObj *) 0 ;
+    int arg3 ;
+    int arg4 ;
+    rectObj *arg5 = (rectObj *) 0 ;
+    rectObj *arg6 = (rectObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int val3 ;
+    int ecode3 = 0 ;
+    int val4 ;
+    int ecode4 = 0 ;
+    void *argp5 = 0 ;
+    int res5 = 0 ;
+    void *argp6 = 0 ;
+    int res6 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 6) || (items > 6)) {
+      SWIG_croak("Usage: mapObj_zoomRectangle(self,poPixRect,width,height,poGeorefExt,poMaxGeorefExt);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_zoomRectangle" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_rectObj, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "mapObj_zoomRectangle" "', argument " "2"" of type '" "rectObj *""'"); 
+    }
+    arg2 = (rectObj *)(argp2);
+    ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "mapObj_zoomRectangle" "', argument " "3"" of type '" "int""'");
+    } 
+    arg3 = (int)(val3);
+    ecode4 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
+    if (!SWIG_IsOK(ecode4)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "mapObj_zoomRectangle" "', argument " "4"" of type '" "int""'");
+    } 
+    arg4 = (int)(val4);
+    res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_rectObj, 0 |  0 );
+    if (!SWIG_IsOK(res5)) {
+      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "mapObj_zoomRectangle" "', argument " "5"" of type '" "rectObj *""'"); 
+    }
+    arg5 = (rectObj *)(argp5);
+    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_rectObj, 0 |  0 );
+    if (!SWIG_IsOK(res6)) {
+      SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "mapObj_zoomRectangle" "', argument " "6"" of type '" "rectObj *""'"); 
+    }
+    arg6 = (rectObj *)(argp6);
+    result = (int)mapObj_zoomRectangle(arg1,arg2,arg3,arg4,arg5,arg6);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_mapObj_zoomScale) {
+  {
+    mapObj *arg1 = (mapObj *) 0 ;
+    double arg2 ;
+    pointObj *arg3 = (pointObj *) 0 ;
+    int arg4 ;
+    int arg5 ;
+    rectObj *arg6 = (rectObj *) 0 ;
+    rectObj *arg7 = (rectObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    void *argp3 = 0 ;
+    int res3 = 0 ;
+    int val4 ;
+    int ecode4 = 0 ;
+    int val5 ;
+    int ecode5 = 0 ;
+    void *argp6 = 0 ;
+    int res6 = 0 ;
+    void *argp7 = 0 ;
+    int res7 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 7) || (items > 7)) {
+      SWIG_croak("Usage: mapObj_zoomScale(self,scale,poPixPos,width,height,poGeorefExt,poMaxGeorefExt);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "mapObj_zoomScale" "', argument " "1"" of type '" "mapObj *""'"); 
+    }
+    arg1 = (mapObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "mapObj_zoomScale" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_pointObj, 0 |  0 );
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "mapObj_zoomScale" "', argument " "3"" of type '" "pointObj *""'"); 
+    }
+    arg3 = (pointObj *)(argp3);
+    ecode4 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
+    if (!SWIG_IsOK(ecode4)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "mapObj_zoomScale" "', argument " "4"" of type '" "int""'");
+    } 
+    arg4 = (int)(val4);
+    ecode5 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
+    if (!SWIG_IsOK(ecode5)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "mapObj_zoomScale" "', argument " "5"" of type '" "int""'");
+    } 
+    arg5 = (int)(val5);
+    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_rectObj, 0 |  0 );
+    if (!SWIG_IsOK(res6)) {
+      SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "mapObj_zoomScale" "', argument " "6"" of type '" "rectObj *""'"); 
+    }
+    arg6 = (rectObj *)(argp6);
+    res7 = SWIG_ConvertPtr(ST(6), &argp7,SWIGTYPE_p_rectObj, 0 |  0 );
+    if (!SWIG_IsOK(res7)) {
+      SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "mapObj_zoomScale" "', argument " "7"" of type '" "rectObj *""'"); 
+    }
+    arg7 = (rectObj *)(argp7);
+    result = (int)mapObj_zoomScale(arg1,arg2,arg3,arg4,arg5,arg6,arg7);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_msSaveImage) {
   {
     mapObj *arg1 = (mapObj *) 0 ;
@@ -31132,7 +32428,7 @@ XS(_wrap_msSaveImage) {
     if ((items < 3) || (items > 3)) {
       SWIG_croak("Usage: msSaveImage(map,img,filename);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_map_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_mapObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "msSaveImage" "', argument " "1"" of type '" "mapObj *""'"); 
     }
@@ -31209,16 +32505,26 @@ XS(_wrap_msSetup) {
 
 XS(_wrap_msCleanup) {
   {
+    int arg1 ;
+    int val1 ;
+    int ecode1 = 0 ;
     int argvi = 0;
     dXSARGS;
     
-    if ((items < 0) || (items > 0)) {
-      SWIG_croak("Usage: msCleanup();");
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: msCleanup(signal);");
     }
-    msCleanup();
+    ecode1 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "msCleanup" "', argument " "1"" of type '" "int""'");
+    } 
+    arg1 = (int)(val1);
+    msCleanup(arg1);
     ST(argvi) = sv_newmortal();
+    
     XSRETURN(argvi);
   fail:
+    
     SWIG_croak_null();
   }
 }
@@ -31252,7 +32558,7 @@ XS(_wrap_msLoadMapFromString) {
     }
     arg2 = (char *)(buf2);
     result = (mapObj *)msLoadMapFromString(arg1,arg2);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_map_obj, 0 | SWIG_SHADOW); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_mapObj, 0 | SWIG_SHADOW); argvi++ ;
     if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
     if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
     XSRETURN(argvi);
@@ -31457,6 +32763,71 @@ XS(_wrap_strokeStyleObj_pattern_get) {
     arg1 = (strokeStyleObj *)(argp1);
     result = (double *)(double *) ((arg1)->pattern);
     ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_double, 0 | 0); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_strokeStyleObj_patternoffset_set) {
+  {
+    strokeStyleObj *arg1 = (strokeStyleObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: strokeStyleObj_patternoffset_set(self,patternoffset);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_strokeStyleObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "strokeStyleObj_patternoffset_set" "', argument " "1"" of type '" "strokeStyleObj *""'"); 
+    }
+    arg1 = (strokeStyleObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "strokeStyleObj_patternoffset_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->patternoffset = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_strokeStyleObj_patternoffset_get) {
+  {
+    strokeStyleObj *arg1 = (strokeStyleObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: strokeStyleObj_patternoffset_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_strokeStyleObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "strokeStyleObj_patternoffset_get" "', argument " "1"" of type '" "strokeStyleObj *""'"); 
+    }
+    arg1 = (strokeStyleObj *)(argp1);
+    result = (double) ((arg1)->patternoffset);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -33096,71 +34467,134 @@ XS(_wrap_delete_tileCacheObj) {
 }
 
 
-XS(_wrap_labelStyleObj_font_set) {
+XS(_wrap_labelStyleObj_fonts_set) {
   {
     labelStyleObj *arg1 = (labelStyleObj *) 0 ;
-    char *arg2 = (char *) 0 ;
+    char **arg2 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
     int argvi = 0;
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: labelStyleObj_font_set(self,font);");
+      SWIG_croak("Usage: labelStyleObj_fonts_set(self,fonts);");
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelStyleObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelStyleObj_font_set" "', argument " "1"" of type '" "labelStyleObj *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelStyleObj_fonts_set" "', argument " "1"" of type '" "labelStyleObj *""'"); 
     }
     arg1 = (labelStyleObj *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_p_char, 0 |  0 );
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "labelStyleObj_font_set" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "labelStyleObj_fonts_set" "', argument " "2"" of type '" "char *[5]""'"); 
+    } 
+    arg2 = (char **)(argp2);
     {
-      if (arg1->font) free((char*)arg1->font);
       if (arg2) {
-        arg1->font = (char *) malloc(strlen(arg2)+1);
-        strcpy((char*)arg1->font,arg2);
+        size_t ii = 0;
+        for (; ii < (size_t)5; ++ii) arg1->fonts[ii] = arg2[ii];
       } else {
-        arg1->font = 0;
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in variable '""fonts""' of type '""char *[5]""'");
       }
     }
     ST(argvi) = sv_newmortal();
     
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    
     XSRETURN(argvi);
   fail:
     
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    
     SWIG_croak_null();
   }
 }
 
 
-XS(_wrap_labelStyleObj_font_get) {
+XS(_wrap_labelStyleObj_fonts_get) {
   {
     labelStyleObj *arg1 = (labelStyleObj *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
-    char *result = 0 ;
+    char **result = 0 ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: labelStyleObj_font_get(self);");
+      SWIG_croak("Usage: labelStyleObj_fonts_get(self);");
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelStyleObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelStyleObj_font_get" "', argument " "1"" of type '" "labelStyleObj *""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelStyleObj_fonts_get" "', argument " "1"" of type '" "labelStyleObj *""'"); 
     }
     arg1 = (labelStyleObj *)(argp1);
-    result = (char *) ((arg1)->font);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
+    result = (char **)(char **) ((arg1)->fonts);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_p_char, 0 | 0); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelStyleObj_numfonts_set) {
+  {
+    labelStyleObj *arg1 = (labelStyleObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelStyleObj_numfonts_set(self,numfonts);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelStyleObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelStyleObj_numfonts_set" "', argument " "1"" of type '" "labelStyleObj *""'"); 
+    }
+    arg1 = (labelStyleObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelStyleObj_numfonts_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->numfonts = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelStyleObj_numfonts_get) {
+  {
+    labelStyleObj *arg1 = (labelStyleObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelStyleObj_numfonts_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelStyleObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelStyleObj_numfonts_get" "', argument " "1"" of type '" "labelStyleObj *""'"); 
+    }
+    arg1 = (labelStyleObj *)(argp1);
+    result = (int) ((arg1)->numfonts);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -33486,6 +34920,71 @@ XS(_wrap_labelStyleObj_outlinecolor_get) {
     arg1 = (labelStyleObj *)(argp1);
     result = (colorObj *) ((arg1)->outlinecolor);
     ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_colorObj, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelStyleObj_antialias_set) {
+  {
+    labelStyleObj *arg1 = (labelStyleObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: labelStyleObj_antialias_set(self,antialias);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelStyleObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelStyleObj_antialias_set" "', argument " "1"" of type '" "labelStyleObj *""'"); 
+    }
+    arg1 = (labelStyleObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "labelStyleObj_antialias_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->antialias = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_labelStyleObj_antialias_get) {
+  {
+    labelStyleObj *arg1 = (labelStyleObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: labelStyleObj_antialias_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_labelStyleObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "labelStyleObj_antialias_get" "', argument " "1"" of type '" "labelStyleObj *""'"); 
+    }
+    arg1 = (labelStyleObj *)(argp1);
+    result = (int) ((arg1)->antialias);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -34034,12 +35533,12 @@ XS(_wrap_rectObj_draw) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "rectObj_draw" "', argument " "1"" of type '" "rectObj *""'"); 
     }
     arg1 = (rectObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_map_obj, 0 |  0 );
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_mapObj, 0 |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "rectObj_draw" "', argument " "2"" of type '" "mapObj *""'"); 
     }
     arg2 = (mapObj *)(argp2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_layer_obj, 0 |  0 );
+    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_layerObj, 0 |  0 );
     if (!SWIG_IsOK(res3)) {
       SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "rectObj_draw" "', argument " "3"" of type '" "layerObj *""'"); 
     }
@@ -34469,12 +35968,12 @@ XS(_wrap_pointObj_draw) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "pointObj_draw" "', argument " "1"" of type '" "pointObj *""'"); 
     }
     arg1 = (pointObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_map_obj, 0 |  0 );
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_mapObj, 0 |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "pointObj_draw" "', argument " "2"" of type '" "mapObj *""'"); 
     }
     arg2 = (mapObj *)(argp2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_layer_obj, 0 |  0 );
+    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_layerObj, 0 |  0 );
     if (!SWIG_IsOK(res3)) {
       SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "pointObj_draw" "', argument " "3"" of type '" "layerObj *""'"); 
     }
@@ -35960,12 +37459,12 @@ XS(_wrap_shapeObj_draw) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "shapeObj_draw" "', argument " "1"" of type '" "shapeObj *""'"); 
     }
     arg1 = (shapeObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_map_obj, 0 |  0 );
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_mapObj, 0 |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "shapeObj_draw" "', argument " "2"" of type '" "mapObj *""'"); 
     }
     arg2 = (mapObj *)(argp2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_layer_obj, 0 |  0 );
+    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_layerObj, 0 |  0 );
     if (!SWIG_IsOK(res3)) {
       SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "shapeObj_draw" "', argument " "3"" of type '" "layerObj *""'"); 
     }
@@ -37862,11 +39361,8 @@ XS(_wrap_shapefileObj_source_get) {
     arg1 = (shapefileObj *)(argp1);
     result = (char *)(char *) ((arg1)->source);
     {
-      size_t size = MS_PATH_LENGTH;
-      
-      while (size && (result[size - 1] == '\0')) --size;
-      
-      ST(argvi) = SWIG_FromCharPtrAndSize(result, size); argvi++ ;
+      ST(argvi) = newSVpvn(result, strlen(result));
+      argvi++;
     }
     
     XSRETURN(argvi);
@@ -38301,7 +39797,7 @@ XS(_wrap_shapefileObj_getTransformed) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "shapefileObj_getTransformed" "', argument " "1"" of type '" "shapefileObj *""'"); 
     }
     arg1 = (shapefileObj *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_map_obj, 0 |  0 );
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_mapObj, 0 |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "shapefileObj_getTransformed" "', argument " "2"" of type '" "mapObj *""'"); 
     }
@@ -38540,6 +40036,71 @@ XS(_wrap_projectionObj_automatic_get) {
 }
 
 
+XS(_wrap_projectionObj_wellknownprojection_set) {
+  {
+    projectionObj *arg1 = (projectionObj *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: projectionObj_wellknownprojection_set(self,wellknownprojection);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_projectionObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "projectionObj_wellknownprojection_set" "', argument " "1"" of type '" "projectionObj *""'"); 
+    }
+    arg1 = (projectionObj *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "projectionObj_wellknownprojection_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->wellknownprojection = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_projectionObj_wellknownprojection_get) {
+  {
+    projectionObj *arg1 = (projectionObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: projectionObj_wellknownprojection_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_projectionObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "projectionObj_wellknownprojection_get" "', argument " "1"" of type '" "projectionObj *""'"); 
+    }
+    arg1 = (projectionObj *)(argp1);
+    result = (int) ((arg1)->wellknownprojection);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_new_projectionObj) {
   {
     char *arg1 = (char *) 0 ;
@@ -38653,71 +40214,6 @@ XS(_wrap_projectionObj_getUnits) {
     }
     arg1 = (projectionObj *)(argp1);
     result = (int)projectionObj_getUnits(arg1);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_colorObj_pen_set) {
-  {
-    colorObj *arg1 = (colorObj *) 0 ;
-    int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: colorObj_pen_set(self,pen);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_colorObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "colorObj_pen_set" "', argument " "1"" of type '" "colorObj *""'"); 
-    }
-    arg1 = (colorObj *)(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "colorObj_pen_set" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    if (arg1) (arg1)->pen = arg2;
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_colorObj_pen_get) {
-  {
-    colorObj *arg1 = (colorObj *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: colorObj_pen_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_colorObj, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "colorObj_pen_get" "', argument " "1"" of type '" "colorObj *""'"); 
-    }
-    arg1 = (colorObj *)(argp1);
-    result = (int) ((arg1)->pen);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -39922,6 +41418,136 @@ XS(_wrap_symbolObj_filled_get) {
 }
 
 
+XS(_wrap_symbolObj_anchorpoint_x_set) {
+  {
+    symbolObj *arg1 = (symbolObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: symbolObj_anchorpoint_x_set(self,anchorpoint_x);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_symbolObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolObj_anchorpoint_x_set" "', argument " "1"" of type '" "symbolObj *""'"); 
+    }
+    arg1 = (symbolObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "symbolObj_anchorpoint_x_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->anchorpoint_x = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_symbolObj_anchorpoint_x_get) {
+  {
+    symbolObj *arg1 = (symbolObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: symbolObj_anchorpoint_x_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_symbolObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolObj_anchorpoint_x_get" "', argument " "1"" of type '" "symbolObj *""'"); 
+    }
+    arg1 = (symbolObj *)(argp1);
+    result = (double) ((arg1)->anchorpoint_x);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_symbolObj_anchorpoint_y_set) {
+  {
+    symbolObj *arg1 = (symbolObj *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: symbolObj_anchorpoint_y_set(self,anchorpoint_y);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_symbolObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolObj_anchorpoint_y_set" "', argument " "1"" of type '" "symbolObj *""'"); 
+    }
+    arg1 = (symbolObj *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "symbolObj_anchorpoint_y_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->anchorpoint_y = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_symbolObj_anchorpoint_y_get) {
+  {
+    symbolObj *arg1 = (symbolObj *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: symbolObj_anchorpoint_y_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_symbolObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "symbolObj_anchorpoint_y_get" "', argument " "1"" of type '" "symbolObj *""'"); 
+    }
+    arg1 = (symbolObj *)(argp1);
+    result = (double) ((arg1)->anchorpoint_y);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_symbolObj_imagepath_get) {
   {
     symbolObj *arg1 = (symbolObj *) 0 ;
@@ -40631,7 +42257,7 @@ XS(_wrap_errorObj_code_set) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: errorObj_code_set(self,code);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_error_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_errorObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "errorObj_code_set" "', argument " "1"" of type '" "errorObj *""'"); 
     }
@@ -40666,7 +42292,7 @@ XS(_wrap_errorObj_code_get) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: errorObj_code_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_error_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_errorObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "errorObj_code_get" "', argument " "1"" of type '" "errorObj *""'"); 
     }
@@ -40696,7 +42322,7 @@ XS(_wrap_errorObj_routine_set) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: errorObj_routine_set(self,routine);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_error_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_errorObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "errorObj_routine_set" "', argument " "1"" of type '" "errorObj *""'"); 
     }
@@ -40732,18 +42358,15 @@ XS(_wrap_errorObj_routine_get) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: errorObj_routine_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_error_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_errorObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "errorObj_routine_get" "', argument " "1"" of type '" "errorObj *""'"); 
     }
     arg1 = (errorObj *)(argp1);
     result = (char *)(char *) ((arg1)->routine);
     {
-      size_t size = 64;
-      
-      while (size && (result[size - 1] == '\0')) --size;
-      
-      ST(argvi) = SWIG_FromCharPtrAndSize(result, size); argvi++ ;
+      ST(argvi) = newSVpvn(result, strlen(result));
+      argvi++;
     }
     
     XSRETURN(argvi);
@@ -40768,7 +42391,7 @@ XS(_wrap_errorObj_message_set) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: errorObj_message_set(self,message);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_error_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_errorObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "errorObj_message_set" "', argument " "1"" of type '" "errorObj *""'"); 
     }
@@ -40804,18 +42427,15 @@ XS(_wrap_errorObj_message_get) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: errorObj_message_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_error_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_errorObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "errorObj_message_get" "', argument " "1"" of type '" "errorObj *""'"); 
     }
     arg1 = (errorObj *)(argp1);
     result = (char *)(char *) ((arg1)->message);
     {
-      size_t size = 2048;
-      
-      while (size && (result[size - 1] == '\0')) --size;
-      
-      ST(argvi) = SWIG_FromCharPtrAndSize(result, size); argvi++ ;
+      ST(argvi) = newSVpvn(result, strlen(result));
+      argvi++;
     }
     
     XSRETURN(argvi);
@@ -40840,7 +42460,7 @@ XS(_wrap_errorObj_isreported_set) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: errorObj_isreported_set(self,isreported);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_error_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_errorObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "errorObj_isreported_set" "', argument " "1"" of type '" "errorObj *""'"); 
     }
@@ -40875,7 +42495,7 @@ XS(_wrap_errorObj_isreported_get) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: errorObj_isreported_get(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_error_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_errorObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "errorObj_isreported_get" "', argument " "1"" of type '" "errorObj *""'"); 
     }
@@ -40901,7 +42521,7 @@ XS(_wrap_new_errorObj) {
       SWIG_croak("Usage: new_errorObj();");
     }
     result = (errorObj *)new_errorObj();
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_error_obj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_errorObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -40920,7 +42540,7 @@ XS(_wrap_delete_errorObj) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: delete_errorObj(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_error_obj, SWIG_POINTER_DISOWN |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_errorObj, SWIG_POINTER_DISOWN |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_errorObj" "', argument " "1"" of type '" "errorObj *""'"); 
     }
@@ -40948,13 +42568,13 @@ XS(_wrap_errorObj_next) {
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: errorObj_next(self);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_error_obj, 0 |  0 );
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_errorObj, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "errorObj_next" "', argument " "1"" of type '" "errorObj *""'"); 
     }
     arg1 = (errorObj *)(argp1);
     result = (errorObj *)errorObj_next(arg1);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_error_obj, 0 | SWIG_SHADOW); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_errorObj, 0 | SWIG_SHADOW); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -40974,7 +42594,7 @@ XS(_wrap_msGetErrorObj) {
       SWIG_croak("Usage: msGetErrorObj();");
     }
     result = (errorObj *)msGetErrorObj();
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_error_obj, 0 | SWIG_SHADOW); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_errorObj, 0 | SWIG_SHADOW); argvi++ ;
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -41822,6 +43442,55 @@ XS(_wrap_OWSRequest_setParameter) {
 }
 
 
+XS(_wrap_OWSRequest_addParameter) {
+  {
+    cgiRequestObj *arg1 = (cgiRequestObj *) 0 ;
+    char *arg2 = (char *) 0 ;
+    char *arg3 = (char *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    char *buf2 = 0 ;
+    int alloc2 = 0 ;
+    int res3 ;
+    char *buf3 = 0 ;
+    int alloc3 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: OWSRequest_addParameter(self,name,value);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_cgiRequestObj, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "OWSRequest_addParameter" "', argument " "1"" of type '" "cgiRequestObj *""'"); 
+    }
+    arg1 = (cgiRequestObj *)(argp1);
+    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "OWSRequest_addParameter" "', argument " "2"" of type '" "char *""'");
+    }
+    arg2 = (char *)(buf2);
+    res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "OWSRequest_addParameter" "', argument " "3"" of type '" "char *""'");
+    }
+    arg3 = (char *)(buf3);
+    cgiRequestObj_addParameter(arg1,arg2,arg3);
+    ST(argvi) = sv_newmortal();
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    XSRETURN(argvi);
+  fail:
+    
+    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_OWSRequest_getName) {
   {
     cgiRequestObj *arg1 = (cgiRequestObj *) 0 ;
@@ -42080,7 +43749,7 @@ XS(_wrap_msIO_getStdoutBufferBytes) {
       sv_2mortal(ST(argvi));
       argvi++;
       if( (&result)->owns_data )
-      gdFree((&result)->data);
+      msFree((&result)->data);
     }
     XSRETURN(argvi);
   fail:
@@ -42100,12 +43769,12 @@ static swig_type_info _swigt__p_DBFInfo = {"_p_DBFInfo", "DBFInfo *", 0, 0, (voi
 static swig_type_info _swigt__p_FILE = {"_p_FILE", "FILE *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_cgiRequestObj = {"_p_cgiRequestObj", "cgiRequestObj *", 0, 0, (void*)"mapscript::OWSRequest", 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_class_obj = {"_p_class_obj", "classObj *|struct class_obj *", 0, 0, (void*)"mapscript::classObj", 0};
+static swig_type_info _swigt__p_classObj = {"_p_classObj", "struct classObj *|classObj *", 0, 0, (void*)"mapscript::classObj", 0};
 static swig_type_info _swigt__p_clusterObj = {"_p_clusterObj", "clusterObj *", 0, 0, (void*)"mapscript::clusterObj", 0};
 static swig_type_info _swigt__p_colorObj = {"_p_colorObj", "colorObj *", 0, 0, (void*)"mapscript::colorObj", 0};
 static swig_type_info _swigt__p_debugLevel = {"_p_debugLevel", "enum debugLevel *|debugLevel *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_double = {"_p_double", "double *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_error_obj = {"_p_error_obj", "struct error_obj *|errorObj *", 0, 0, (void*)"mapscript::errorObj", 0};
+static swig_type_info _swigt__p_errorObj = {"_p_errorObj", "struct errorObj *|errorObj *", 0, 0, (void*)"mapscript::errorObj", 0};
 static swig_type_info _swigt__p_fontSetObj = {"_p_fontSetObj", "fontSetObj *", 0, 0, (void*)"mapscript::fontSetObj", 0};
 static swig_type_info _swigt__p_hashTableObj = {"_p_hashTableObj", "hashTableObj *", 0, 0, (void*)"mapscript::hashTableObj", 0};
 static swig_type_info _swigt__p_imageObj = {"_p_imageObj", "imageObj *", 0, 0, (void*)"mapscript::imageObj", 0};
@@ -42115,12 +43784,13 @@ static swig_type_info _swigt__p_intarray = {"_p_intarray", "struct intarray *|in
 static swig_type_info _swigt__p_labelCacheMemberObj = {"_p_labelCacheMemberObj", "labelCacheMemberObj *", 0, 0, (void*)"mapscript::labelCacheMemberObj", 0};
 static swig_type_info _swigt__p_labelCacheObj = {"_p_labelCacheObj", "labelCacheObj *", 0, 0, (void*)"mapscript::labelCacheObj", 0};
 static swig_type_info _swigt__p_labelCacheSlotObj = {"_p_labelCacheSlotObj", "labelCacheSlotObj *", 0, 0, (void*)"mapscript::labelCacheSlotObj", 0};
+static swig_type_info _swigt__p_labelLeaderObj = {"_p_labelLeaderObj", "labelLeaderObj *", 0, 0, (void*)"mapscript::labelLeaderObj", 0};
 static swig_type_info _swigt__p_labelObj = {"_p_labelObj", "labelObj *", 0, 0, (void*)"mapscript::labelObj", 0};
 static swig_type_info _swigt__p_labelStyleObj = {"_p_labelStyleObj", "labelStyleObj *", 0, 0, (void*)"mapscript::labelStyleObj", 0};
-static swig_type_info _swigt__p_layer_obj = {"_p_layer_obj", "struct layer_obj *|layerObj *", 0, 0, (void*)"mapscript::layerObj", 0};
+static swig_type_info _swigt__p_layerObj = {"_p_layerObj", "struct layerObj *|layerObj *", 0, 0, (void*)"mapscript::layerObj", 0};
 static swig_type_info _swigt__p_legendObj = {"_p_legendObj", "legendObj *", 0, 0, (void*)"mapscript::legendObj", 0};
 static swig_type_info _swigt__p_lineObj = {"_p_lineObj", "lineObj *|multipointObj *", 0, 0, (void*)"mapscript::lineObj", 0};
-static swig_type_info _swigt__p_map_obj = {"_p_map_obj", "mapObj *|struct map_obj *", 0, 0, (void*)"mapscript::mapObj", 0};
+static swig_type_info _swigt__p_mapObj = {"_p_mapObj", "struct mapObj *|mapObj *", 0, 0, (void*)"mapscript::mapObj", 0};
 static swig_type_info _swigt__p_markerCacheMemberObj = {"_p_markerCacheMemberObj", "markerCacheMemberObj *", 0, 0, (void*)"mapscript::markerCacheMemberObj", 0};
 static swig_type_info _swigt__p_outputFormatObj = {"_p_outputFormatObj", "outputFormatObj *", 0, 0, (void*)"mapscript::outputFormatObj", 0};
 static swig_type_info _swigt__p_p_char = {"_p_p_char", "char **", 0, 0, (void*)0, 0};
@@ -42151,12 +43821,12 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_FILE,
   &_swigt__p_cgiRequestObj,
   &_swigt__p_char,
-  &_swigt__p_class_obj,
+  &_swigt__p_classObj,
   &_swigt__p_clusterObj,
   &_swigt__p_colorObj,
   &_swigt__p_debugLevel,
   &_swigt__p_double,
-  &_swigt__p_error_obj,
+  &_swigt__p_errorObj,
   &_swigt__p_fontSetObj,
   &_swigt__p_hashTableObj,
   &_swigt__p_imageObj,
@@ -42166,12 +43836,13 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_labelCacheMemberObj,
   &_swigt__p_labelCacheObj,
   &_swigt__p_labelCacheSlotObj,
+  &_swigt__p_labelLeaderObj,
   &_swigt__p_labelObj,
   &_swigt__p_labelStyleObj,
-  &_swigt__p_layer_obj,
+  &_swigt__p_layerObj,
   &_swigt__p_legendObj,
   &_swigt__p_lineObj,
-  &_swigt__p_map_obj,
+  &_swigt__p_mapObj,
   &_swigt__p_markerCacheMemberObj,
   &_swigt__p_outputFormatObj,
   &_swigt__p_p_char,
@@ -42202,12 +43873,12 @@ static swig_cast_info _swigc__p_DBFInfo[] = {  {&_swigt__p_DBFInfo, 0, 0, 0},{0,
 static swig_cast_info _swigc__p_FILE[] = {  {&_swigt__p_FILE, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_cgiRequestObj[] = {  {&_swigt__p_cgiRequestObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_class_obj[] = {  {&_swigt__p_class_obj, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_classObj[] = {  {&_swigt__p_classObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_clusterObj[] = {  {&_swigt__p_clusterObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_colorObj[] = {  {&_swigt__p_colorObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_debugLevel[] = {  {&_swigt__p_debugLevel, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_error_obj[] = {  {&_swigt__p_error_obj, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_errorObj[] = {  {&_swigt__p_errorObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_fontSetObj[] = {  {&_swigt__p_fontSetObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_hashTableObj[] = {  {&_swigt__p_hashTableObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_imageObj[] = {  {&_swigt__p_imageObj, 0, 0, 0},{0, 0, 0, 0}};
@@ -42217,12 +43888,13 @@ static swig_cast_info _swigc__p_intarray[] = {  {&_swigt__p_intarray, 0, 0, 0},{
 static swig_cast_info _swigc__p_labelCacheMemberObj[] = {  {&_swigt__p_labelCacheMemberObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_labelCacheObj[] = {  {&_swigt__p_labelCacheObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_labelCacheSlotObj[] = {  {&_swigt__p_labelCacheSlotObj, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_labelLeaderObj[] = {  {&_swigt__p_labelLeaderObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_labelObj[] = {  {&_swigt__p_labelObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_labelStyleObj[] = {  {&_swigt__p_labelStyleObj, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_layer_obj[] = {  {&_swigt__p_layer_obj, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_layerObj[] = {  {&_swigt__p_layerObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_legendObj[] = {  {&_swigt__p_legendObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_lineObj[] = {  {&_swigt__p_lineObj, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_map_obj[] = {  {&_swigt__p_map_obj, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_mapObj[] = {  {&_swigt__p_mapObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_markerCacheMemberObj[] = {  {&_swigt__p_markerCacheMemberObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_outputFormatObj[] = {  {&_swigt__p_outputFormatObj, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_p_char[] = {  {&_swigt__p_p_char, 0, 0, 0},{0, 0, 0, 0}};
@@ -42253,12 +43925,12 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_FILE,
   _swigc__p_cgiRequestObj,
   _swigc__p_char,
-  _swigc__p_class_obj,
+  _swigc__p_classObj,
   _swigc__p_clusterObj,
   _swigc__p_colorObj,
   _swigc__p_debugLevel,
   _swigc__p_double,
-  _swigc__p_error_obj,
+  _swigc__p_errorObj,
   _swigc__p_fontSetObj,
   _swigc__p_hashTableObj,
   _swigc__p_imageObj,
@@ -42268,12 +43940,13 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_labelCacheMemberObj,
   _swigc__p_labelCacheObj,
   _swigc__p_labelCacheSlotObj,
+  _swigc__p_labelLeaderObj,
   _swigc__p_labelObj,
   _swigc__p_labelStyleObj,
-  _swigc__p_layer_obj,
+  _swigc__p_layerObj,
   _swigc__p_legendObj,
   _swigc__p_lineObj,
-  _swigc__p_map_obj,
+  _swigc__p_mapObj,
   _swigc__p_markerCacheMemberObj,
   _swigc__p_outputFormatObj,
   _swigc__p_p_char,
@@ -42460,6 +44133,8 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::styleObj_pattern_get", _wrap_styleObj_pattern_get},
 {"mapscriptc::styleObj_gap_set", _wrap_styleObj_gap_set},
 {"mapscriptc::styleObj_gap_get", _wrap_styleObj_gap_get},
+{"mapscriptc::styleObj_initialgap_set", _wrap_styleObj_initialgap_set},
+{"mapscriptc::styleObj_initialgap_get", _wrap_styleObj_initialgap_get},
 {"mapscriptc::styleObj_position_set", _wrap_styleObj_position_set},
 {"mapscriptc::styleObj_position_get", _wrap_styleObj_position_get},
 {"mapscriptc::styleObj_linecap_set", _wrap_styleObj_linecap_set},
@@ -42480,6 +44155,10 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::styleObj_offsetx_get", _wrap_styleObj_offsetx_get},
 {"mapscriptc::styleObj_offsety_set", _wrap_styleObj_offsety_set},
 {"mapscriptc::styleObj_offsety_get", _wrap_styleObj_offsety_get},
+{"mapscriptc::styleObj_polaroffsetpixel_set", _wrap_styleObj_polaroffsetpixel_set},
+{"mapscriptc::styleObj_polaroffsetpixel_get", _wrap_styleObj_polaroffsetpixel_get},
+{"mapscriptc::styleObj_polaroffsetangle_set", _wrap_styleObj_polaroffsetangle_set},
+{"mapscriptc::styleObj_polaroffsetangle_get", _wrap_styleObj_polaroffsetangle_get},
 {"mapscriptc::styleObj_angle_set", _wrap_styleObj_angle_set},
 {"mapscriptc::styleObj_angle_get", _wrap_styleObj_angle_get},
 {"mapscriptc::styleObj_antialias_set", _wrap_styleObj_antialias_set},
@@ -42498,6 +44177,14 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::styleObj_getBinding", _wrap_styleObj_getBinding},
 {"mapscriptc::styleObj_getGeomTransform", _wrap_styleObj_getGeomTransform},
 {"mapscriptc::styleObj_setGeomTransform", _wrap_styleObj_setGeomTransform},
+{"mapscriptc::labelLeaderObj_maxdistance_set", _wrap_labelLeaderObj_maxdistance_set},
+{"mapscriptc::labelLeaderObj_maxdistance_get", _wrap_labelLeaderObj_maxdistance_get},
+{"mapscriptc::labelLeaderObj_gridstep_set", _wrap_labelLeaderObj_gridstep_set},
+{"mapscriptc::labelLeaderObj_gridstep_get", _wrap_labelLeaderObj_gridstep_get},
+{"mapscriptc::labelLeaderObj_numstyles_get", _wrap_labelLeaderObj_numstyles_get},
+{"mapscriptc::new_labelLeaderObj", _wrap_new_labelLeaderObj},
+{"mapscriptc::delete_labelLeaderObj", _wrap_delete_labelLeaderObj},
+{"mapscriptc::labelObj_refcount_get", _wrap_labelObj_refcount_get},
 {"mapscriptc::labelObj_font_set", _wrap_labelObj_font_set},
 {"mapscriptc::labelObj_font_get", _wrap_labelObj_font_get},
 {"mapscriptc::labelObj_type_set", _wrap_labelObj_type_set},
@@ -42566,24 +44253,38 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::labelObj_encoding_get", _wrap_labelObj_encoding_get},
 {"mapscriptc::labelObj_priority_set", _wrap_labelObj_priority_set},
 {"mapscriptc::labelObj_priority_get", _wrap_labelObj_priority_get},
+{"mapscriptc::labelObj_status_set", _wrap_labelObj_status_set},
+{"mapscriptc::labelObj_status_get", _wrap_labelObj_status_get},
 {"mapscriptc::labelObj_numstyles_set", _wrap_labelObj_numstyles_set},
 {"mapscriptc::labelObj_numstyles_get", _wrap_labelObj_numstyles_get},
+{"mapscriptc::labelObj_annotext_set", _wrap_labelObj_annotext_set},
+{"mapscriptc::labelObj_annotext_get", _wrap_labelObj_annotext_get},
+{"mapscriptc::labelObj_annopoint_set", _wrap_labelObj_annopoint_set},
+{"mapscriptc::labelObj_annopoint_get", _wrap_labelObj_annopoint_get},
+{"mapscriptc::labelObj_annopoly_set", _wrap_labelObj_annopoly_set},
+{"mapscriptc::labelObj_annopoly_get", _wrap_labelObj_annopoly_get},
+{"mapscriptc::labelObj_leader_set", _wrap_labelObj_leader_set},
+{"mapscriptc::labelObj_leader_get", _wrap_labelObj_leader_get},
+{"mapscriptc::new_labelObj", _wrap_new_labelObj},
+{"mapscriptc::delete_labelObj", _wrap_delete_labelObj},
 {"mapscriptc::labelObj_updateFromString", _wrap_labelObj_updateFromString},
 {"mapscriptc::labelObj_removeBinding", _wrap_labelObj_removeBinding},
 {"mapscriptc::labelObj_getBinding", _wrap_labelObj_getBinding},
 {"mapscriptc::labelObj_setBinding", _wrap_labelObj_setBinding},
+{"mapscriptc::labelObj_setExpression", _wrap_labelObj_setExpression},
+{"mapscriptc::labelObj_getExpressionString", _wrap_labelObj_getExpressionString},
+{"mapscriptc::labelObj_setText", _wrap_labelObj_setText},
+{"mapscriptc::labelObj_getTextString", _wrap_labelObj_getTextString},
 {"mapscriptc::labelObj_getStyle", _wrap_labelObj_getStyle},
 {"mapscriptc::labelObj_insertStyle", _wrap_labelObj_insertStyle},
 {"mapscriptc::labelObj_removeStyle", _wrap_labelObj_removeStyle},
 {"mapscriptc::labelObj_moveStyleUp", _wrap_labelObj_moveStyleUp},
 {"mapscriptc::labelObj_moveStyleDown", _wrap_labelObj_moveStyleDown},
-{"mapscriptc::new_labelObj", _wrap_new_labelObj},
-{"mapscriptc::delete_labelObj", _wrap_delete_labelObj},
 {"mapscriptc::classObj_status_set", _wrap_classObj_status_set},
 {"mapscriptc::classObj_status_get", _wrap_classObj_status_get},
-{"mapscriptc::classObj_numstyles_set", _wrap_classObj_numstyles_set},
 {"mapscriptc::classObj_numstyles_get", _wrap_classObj_numstyles_get},
-{"mapscriptc::classObj_label_get", _wrap_classObj_label_get},
+{"mapscriptc::classObj_numlabels_set", _wrap_classObj_numlabels_set},
+{"mapscriptc::classObj_numlabels_get", _wrap_classObj_numlabels_get},
 {"mapscriptc::classObj_name_set", _wrap_classObj_name_set},
 {"mapscriptc::classObj_name_get", _wrap_classObj_name_get},
 {"mapscriptc::classObj_title_set", _wrap_classObj_title_set},
@@ -42608,6 +44309,8 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::classObj_keyimage_get", _wrap_classObj_keyimage_get},
 {"mapscriptc::classObj_group_set", _wrap_classObj_group_set},
 {"mapscriptc::classObj_group_get", _wrap_classObj_group_get},
+{"mapscriptc::classObj_leader_set", _wrap_classObj_leader_set},
+{"mapscriptc::classObj_leader_get", _wrap_classObj_leader_get},
 {"mapscriptc::new_classObj", _wrap_new_classObj},
 {"mapscriptc::delete_classObj", _wrap_delete_classObj},
 {"mapscriptc::classObj_updateFromString", _wrap_classObj_updateFromString},
@@ -42622,25 +44325,28 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::classObj_getNextMetaDataKey", _wrap_classObj_getNextMetaDataKey},
 {"mapscriptc::classObj_drawLegendIcon", _wrap_classObj_drawLegendIcon},
 {"mapscriptc::classObj_createLegendIcon", _wrap_classObj_createLegendIcon},
+{"mapscriptc::classObj_getLabel", _wrap_classObj_getLabel},
+{"mapscriptc::classObj_addLabel", _wrap_classObj_addLabel},
+{"mapscriptc::classObj_removeLabel", _wrap_classObj_removeLabel},
 {"mapscriptc::classObj_getStyle", _wrap_classObj_getStyle},
 {"mapscriptc::classObj_insertStyle", _wrap_classObj_insertStyle},
 {"mapscriptc::classObj_removeStyle", _wrap_classObj_removeStyle},
 {"mapscriptc::classObj_moveStyleUp", _wrap_classObj_moveStyleUp},
 {"mapscriptc::classObj_moveStyleDown", _wrap_classObj_moveStyleDown},
-{"mapscriptc::labelCacheMemberObj_text_get", _wrap_labelCacheMemberObj_text_get},
 {"mapscriptc::labelCacheMemberObj_featuresize_get", _wrap_labelCacheMemberObj_featuresize_get},
 {"mapscriptc::labelCacheMemberObj_styles_get", _wrap_labelCacheMemberObj_styles_get},
 {"mapscriptc::labelCacheMemberObj_numstyles_get", _wrap_labelCacheMemberObj_numstyles_get},
-{"mapscriptc::labelCacheMemberObj_label_get", _wrap_labelCacheMemberObj_label_get},
+{"mapscriptc::labelCacheMemberObj_labels_get", _wrap_labelCacheMemberObj_labels_get},
+{"mapscriptc::labelCacheMemberObj_numlabels_get", _wrap_labelCacheMemberObj_numlabels_get},
 {"mapscriptc::labelCacheMemberObj_layerindex_get", _wrap_labelCacheMemberObj_layerindex_get},
 {"mapscriptc::labelCacheMemberObj_classindex_get", _wrap_labelCacheMemberObj_classindex_get},
-{"mapscriptc::labelCacheMemberObj_tileindex_get", _wrap_labelCacheMemberObj_tileindex_get},
-{"mapscriptc::labelCacheMemberObj_shapeindex_get", _wrap_labelCacheMemberObj_shapeindex_get},
 {"mapscriptc::labelCacheMemberObj_shapetype_get", _wrap_labelCacheMemberObj_shapetype_get},
 {"mapscriptc::labelCacheMemberObj_point_get", _wrap_labelCacheMemberObj_point_get},
 {"mapscriptc::labelCacheMemberObj_poly_get", _wrap_labelCacheMemberObj_poly_get},
 {"mapscriptc::labelCacheMemberObj_status_get", _wrap_labelCacheMemberObj_status_get},
 {"mapscriptc::labelCacheMemberObj_markerid_get", _wrap_labelCacheMemberObj_markerid_get},
+{"mapscriptc::labelCacheMemberObj_leaderline_get", _wrap_labelCacheMemberObj_leaderline_get},
+{"mapscriptc::labelCacheMemberObj_leaderbbox_get", _wrap_labelCacheMemberObj_leaderbbox_get},
 {"mapscriptc::new_labelCacheMemberObj", _wrap_new_labelCacheMemberObj},
 {"mapscriptc::delete_labelCacheMemberObj", _wrap_delete_labelCacheMemberObj},
 {"mapscriptc::markerCacheMemberObj_id_get", _wrap_markerCacheMemberObj_id_get},
@@ -42657,6 +44363,7 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::delete_labelCacheSlotObj", _wrap_delete_labelCacheSlotObj},
 {"mapscriptc::labelCacheObj_slots_get", _wrap_labelCacheObj_slots_get},
 {"mapscriptc::labelCacheObj_numlabels_get", _wrap_labelCacheObj_numlabels_get},
+{"mapscriptc::labelCacheObj_gutter_get", _wrap_labelCacheObj_gutter_get},
 {"mapscriptc::labelCacheObj_freeCache", _wrap_labelCacheObj_freeCache},
 {"mapscriptc::new_labelCacheObj", _wrap_new_labelCacheObj},
 {"mapscriptc::delete_labelCacheObj", _wrap_delete_labelCacheObj},
@@ -42775,6 +44482,19 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::legendObj_updateFromString", _wrap_legendObj_updateFromString},
 {"mapscriptc::new_legendObj", _wrap_new_legendObj},
 {"mapscriptc::delete_legendObj", _wrap_delete_legendObj},
+{"mapscriptc::imageObj_width_get", _wrap_imageObj_width_get},
+{"mapscriptc::imageObj_height_get", _wrap_imageObj_height_get},
+{"mapscriptc::imageObj_resolution_get", _wrap_imageObj_resolution_get},
+{"mapscriptc::imageObj_resolutionfactor_get", _wrap_imageObj_resolutionfactor_get},
+{"mapscriptc::imageObj_imagepath_get", _wrap_imageObj_imagepath_get},
+{"mapscriptc::imageObj_imageurl_get", _wrap_imageObj_imageurl_get},
+{"mapscriptc::imageObj_format_get", _wrap_imageObj_format_get},
+{"mapscriptc::new_imageObj", _wrap_new_imageObj},
+{"mapscriptc::delete_imageObj", _wrap_delete_imageObj},
+{"mapscriptc::imageObj_save", _wrap_imageObj_save},
+{"mapscriptc::imageObj_write", _wrap_imageObj_write},
+{"mapscriptc::imageObj_getBytes", _wrap_imageObj_getBytes},
+{"mapscriptc::imageObj_getSize", _wrap_imageObj_getSize},
 {"mapscriptc::layerObj_classitem_set", _wrap_layerObj_classitem_set},
 {"mapscriptc::layerObj_classitem_get", _wrap_layerObj_classitem_get},
 {"mapscriptc::layerObj_refcount_get", _wrap_layerObj_refcount_get},
@@ -42874,6 +44594,8 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::layerObj_numjoins_get", _wrap_layerObj_numjoins_get},
 {"mapscriptc::layerObj_classgroup_set", _wrap_layerObj_classgroup_set},
 {"mapscriptc::layerObj_classgroup_get", _wrap_layerObj_classgroup_get},
+{"mapscriptc::layerObj_mask_set", _wrap_layerObj_mask_set},
+{"mapscriptc::layerObj_mask_get", _wrap_layerObj_mask_get},
 {"mapscriptc::new_layerObj", _wrap_new_layerObj},
 {"mapscriptc::delete_layerObj", _wrap_delete_layerObj},
 {"mapscriptc::layerObj_clone", _wrap_layerObj_clone},
@@ -42890,6 +44612,7 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::layerObj_getResult", _wrap_layerObj_getResult},
 {"mapscriptc::layerObj_getClass", _wrap_layerObj_getClass},
 {"mapscriptc::layerObj_getItem", _wrap_layerObj_getItem},
+{"mapscriptc::layerObj_setItems", _wrap_layerObj_setItems},
 {"mapscriptc::layerObj_draw", _wrap_layerObj_draw},
 {"mapscriptc::layerObj_drawQuery", _wrap_layerObj_drawQuery},
 {"mapscriptc::layerObj_queryByFilter", _wrap_layerObj_queryByFilter},
@@ -43061,19 +44784,6 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::mapObj_zoomPoint", _wrap_mapObj_zoomPoint},
 {"mapscriptc::mapObj_zoomRectangle", _wrap_mapObj_zoomRectangle},
 {"mapscriptc::mapObj_zoomScale", _wrap_mapObj_zoomScale},
-{"mapscriptc::imageObj_width_get", _wrap_imageObj_width_get},
-{"mapscriptc::imageObj_height_get", _wrap_imageObj_height_get},
-{"mapscriptc::imageObj_resolution_get", _wrap_imageObj_resolution_get},
-{"mapscriptc::imageObj_resolutionfactor_get", _wrap_imageObj_resolutionfactor_get},
-{"mapscriptc::imageObj_imagepath_get", _wrap_imageObj_imagepath_get},
-{"mapscriptc::imageObj_imageurl_get", _wrap_imageObj_imageurl_get},
-{"mapscriptc::imageObj_format_get", _wrap_imageObj_format_get},
-{"mapscriptc::new_imageObj", _wrap_new_imageObj},
-{"mapscriptc::delete_imageObj", _wrap_delete_imageObj},
-{"mapscriptc::imageObj_save", _wrap_imageObj_save},
-{"mapscriptc::imageObj_write", _wrap_imageObj_write},
-{"mapscriptc::imageObj_getBytes", _wrap_imageObj_getBytes},
-{"mapscriptc::imageObj_getSize", _wrap_imageObj_getSize},
 {"mapscriptc::msSaveImage", _wrap_msSaveImage},
 {"mapscriptc::msFreeImage", _wrap_msFreeImage},
 {"mapscriptc::msSetup", _wrap_msSetup},
@@ -43085,6 +44795,8 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::strokeStyleObj_patternlength_get", _wrap_strokeStyleObj_patternlength_get},
 {"mapscriptc::strokeStyleObj_pattern_set", _wrap_strokeStyleObj_pattern_set},
 {"mapscriptc::strokeStyleObj_pattern_get", _wrap_strokeStyleObj_pattern_get},
+{"mapscriptc::strokeStyleObj_patternoffset_set", _wrap_strokeStyleObj_patternoffset_set},
+{"mapscriptc::strokeStyleObj_patternoffset_get", _wrap_strokeStyleObj_patternoffset_get},
 {"mapscriptc::strokeStyleObj_color_set", _wrap_strokeStyleObj_color_set},
 {"mapscriptc::strokeStyleObj_color_get", _wrap_strokeStyleObj_color_get},
 {"mapscriptc::strokeStyleObj_linecap_set", _wrap_strokeStyleObj_linecap_set},
@@ -43137,8 +44849,10 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::tileCacheObj_next_get", _wrap_tileCacheObj_next_get},
 {"mapscriptc::new_tileCacheObj", _wrap_new_tileCacheObj},
 {"mapscriptc::delete_tileCacheObj", _wrap_delete_tileCacheObj},
-{"mapscriptc::labelStyleObj_font_set", _wrap_labelStyleObj_font_set},
-{"mapscriptc::labelStyleObj_font_get", _wrap_labelStyleObj_font_get},
+{"mapscriptc::labelStyleObj_fonts_set", _wrap_labelStyleObj_fonts_set},
+{"mapscriptc::labelStyleObj_fonts_get", _wrap_labelStyleObj_fonts_get},
+{"mapscriptc::labelStyleObj_numfonts_set", _wrap_labelStyleObj_numfonts_set},
+{"mapscriptc::labelStyleObj_numfonts_get", _wrap_labelStyleObj_numfonts_get},
 {"mapscriptc::labelStyleObj_size_set", _wrap_labelStyleObj_size_set},
 {"mapscriptc::labelStyleObj_size_get", _wrap_labelStyleObj_size_get},
 {"mapscriptc::labelStyleObj_rotation_set", _wrap_labelStyleObj_rotation_set},
@@ -43149,6 +44863,8 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::labelStyleObj_outlinewidth_get", _wrap_labelStyleObj_outlinewidth_get},
 {"mapscriptc::labelStyleObj_outlinecolor_set", _wrap_labelStyleObj_outlinecolor_set},
 {"mapscriptc::labelStyleObj_outlinecolor_get", _wrap_labelStyleObj_outlinecolor_get},
+{"mapscriptc::labelStyleObj_antialias_set", _wrap_labelStyleObj_antialias_set},
+{"mapscriptc::labelStyleObj_antialias_get", _wrap_labelStyleObj_antialias_get},
 {"mapscriptc::new_labelStyleObj", _wrap_new_labelStyleObj},
 {"mapscriptc::delete_labelStyleObj", _wrap_delete_labelStyleObj},
 {"mapscriptc::rectObj_minx_set", _wrap_rectObj_minx_set},
@@ -43288,12 +45004,12 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::shapefileObj_getDBF", _wrap_shapefileObj_getDBF},
 {"mapscriptc::projectionObj_numargs_get", _wrap_projectionObj_numargs_get},
 {"mapscriptc::projectionObj_automatic_get", _wrap_projectionObj_automatic_get},
+{"mapscriptc::projectionObj_wellknownprojection_set", _wrap_projectionObj_wellknownprojection_set},
+{"mapscriptc::projectionObj_wellknownprojection_get", _wrap_projectionObj_wellknownprojection_get},
 {"mapscriptc::new_projectionObj", _wrap_new_projectionObj},
 {"mapscriptc::delete_projectionObj", _wrap_delete_projectionObj},
 {"mapscriptc::projectionObj_setWKTProjection", _wrap_projectionObj_setWKTProjection},
 {"mapscriptc::projectionObj_getUnits", _wrap_projectionObj_getUnits},
-{"mapscriptc::colorObj_pen_set", _wrap_colorObj_pen_set},
-{"mapscriptc::colorObj_pen_get", _wrap_colorObj_pen_get},
 {"mapscriptc::colorObj_red_set", _wrap_colorObj_red_set},
 {"mapscriptc::colorObj_red_get", _wrap_colorObj_red_get},
 {"mapscriptc::colorObj_green_set", _wrap_colorObj_green_set},
@@ -43329,6 +45045,10 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::symbolObj_numpoints_get", _wrap_symbolObj_numpoints_get},
 {"mapscriptc::symbolObj_filled_set", _wrap_symbolObj_filled_set},
 {"mapscriptc::symbolObj_filled_get", _wrap_symbolObj_filled_get},
+{"mapscriptc::symbolObj_anchorpoint_x_set", _wrap_symbolObj_anchorpoint_x_set},
+{"mapscriptc::symbolObj_anchorpoint_x_get", _wrap_symbolObj_anchorpoint_x_get},
+{"mapscriptc::symbolObj_anchorpoint_y_set", _wrap_symbolObj_anchorpoint_y_set},
+{"mapscriptc::symbolObj_anchorpoint_y_get", _wrap_symbolObj_anchorpoint_y_get},
 {"mapscriptc::symbolObj_imagepath_get", _wrap_symbolObj_imagepath_get},
 {"mapscriptc::symbolObj_transparent_set", _wrap_symbolObj_transparent_set},
 {"mapscriptc::symbolObj_transparent_get", _wrap_symbolObj_transparent_get},
@@ -43387,6 +45107,7 @@ static swig_command_info swig_commands[] = {
 {"mapscriptc::OWSRequest_loadParams", _wrap_OWSRequest_loadParams},
 {"mapscriptc::OWSRequest_loadParamsFromURL", _wrap_OWSRequest_loadParamsFromURL},
 {"mapscriptc::OWSRequest_setParameter", _wrap_OWSRequest_setParameter},
+{"mapscriptc::OWSRequest_addParameter", _wrap_OWSRequest_addParameter},
 {"mapscriptc::OWSRequest_getName", _wrap_OWSRequest_getName},
 {"mapscriptc::OWSRequest_getValue", _wrap_OWSRequest_getValue},
 {"mapscriptc::OWSRequest_getValueByName", _wrap_OWSRequest_getValueByName},
@@ -43700,7 +45421,7 @@ XS(SWIG_init) {
   
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_VERSION", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_FromCharPtr("6.0.3"));
+    sv_setsv(sv, SWIG_FromCharPtr("6.2.0"));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
@@ -43710,22 +45431,17 @@ XS(SWIG_init) {
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_VERSION_MINOR", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(0)));
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(2)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_VERSION_REV", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(3)));
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(0)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_VERSION_NUM", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)((6*10000+0*100+3))));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "__FUNCTION__", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_FromCharPtr("MapServer"));
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)((6*10000+2*100+0))));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
@@ -43799,13 +45515,28 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_LABEL_ALLOCSIZE", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(2)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_MAX_LABEL_PRIORITY", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(10)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_MAX_LABEL_FONTS", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(5)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_DEFAULT_LABEL_PRIORITY", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(1)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_LABEL_FORCE_GROUP", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(2)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
@@ -44194,6 +45925,11 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_UVRASTER", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_UVRASTER)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_DB_XBASE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_DB_XBASE)));
     SvREADONLY_on(sv);
@@ -44470,7 +46206,7 @@ XS(SWIG_init) {
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_STYLE_BINDING_LENGTH", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(8)));
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(12)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
@@ -44511,6 +46247,26 @@ XS(SWIG_init) {
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_STYLE_BINDING_OPACITY", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_STYLE_BINDING_OPACITY)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_STYLE_BINDING_OFFSET_X", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_STYLE_BINDING_OFFSET_X)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_STYLE_BINDING_OFFSET_Y", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_STYLE_BINDING_OFFSET_Y)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_STYLE_BINDING_POLAROFFSET_PIXEL", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_STYLE_BINDING_POLAROFFSET_PIXEL)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_STYLE_BINDING_POLAROFFSET_ANGLE", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_STYLE_BINDING_POLAROFFSET_ANGLE)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
@@ -44735,6 +46491,11 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_FUNCTION_DIFFERENCE", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_FUNCTION_DIFFERENCE)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_TOKEN_BINDING_DOUBLE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_TOKEN_BINDING_DOUBLE)));
     SvREADONLY_on(sv);
@@ -44784,8 +46545,9 @@ XS(SWIG_init) {
   SWIG_TypeClientData(SWIGTYPE_p_queryMapObj, (void*) "mapscript::queryMapObj");
   SWIG_TypeClientData(SWIGTYPE_p_webObj, (void*) "mapscript::webObj");
   SWIG_TypeClientData(SWIGTYPE_p_styleObj, (void*) "mapscript::styleObj");
+  SWIG_TypeClientData(SWIGTYPE_p_labelLeaderObj, (void*) "mapscript::labelLeaderObj");
   SWIG_TypeClientData(SWIGTYPE_p_labelObj, (void*) "mapscript::labelObj");
-  SWIG_TypeClientData(SWIGTYPE_p_class_obj, (void*) "mapscript::classObj");
+  SWIG_TypeClientData(SWIGTYPE_p_classObj, (void*) "mapscript::classObj");
   SWIG_TypeClientData(SWIGTYPE_p_labelCacheMemberObj, (void*) "mapscript::labelCacheMemberObj");
   SWIG_TypeClientData(SWIGTYPE_p_markerCacheMemberObj, (void*) "mapscript::markerCacheMemberObj");
   SWIG_TypeClientData(SWIGTYPE_p_labelCacheSlotObj, (void*) "mapscript::labelCacheSlotObj");
@@ -44796,9 +46558,9 @@ XS(SWIG_init) {
   SWIG_TypeClientData(SWIGTYPE_p_referenceMapObj, (void*) "mapscript::referenceMapObj");
   SWIG_TypeClientData(SWIGTYPE_p_scalebarObj, (void*) "mapscript::scalebarObj");
   SWIG_TypeClientData(SWIGTYPE_p_legendObj, (void*) "mapscript::legendObj");
-  SWIG_TypeClientData(SWIGTYPE_p_layer_obj, (void*) "mapscript::layerObj");
-  SWIG_TypeClientData(SWIGTYPE_p_map_obj, (void*) "mapscript::mapObj");
   SWIG_TypeClientData(SWIGTYPE_p_imageObj, (void*) "mapscript::imageObj");
+  SWIG_TypeClientData(SWIGTYPE_p_layerObj, (void*) "mapscript::layerObj");
+  SWIG_TypeClientData(SWIGTYPE_p_mapObj, (void*) "mapscript::mapObj");
   SWIG_TypeClientData(SWIGTYPE_p_strokeStyleObj, (void*) "mapscript::strokeStyleObj");
   SWIG_TypeClientData(SWIGTYPE_p_symbolStyleObj, (void*) "mapscript::symbolStyleObj");
   SWIG_TypeClientData(SWIGTYPE_p_tileCacheObj, (void*) "mapscript::tileCacheObj");
@@ -44894,6 +46656,21 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   SWIG_TypeClientData(SWIGTYPE_p_shapefileObj, (void*) "mapscript::shapefileObj");
+  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "wkp_none", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(0)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "wkp_lonlat", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(1)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "wkp_gmerc", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(2)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
   SWIG_TypeClientData(SWIGTYPE_p_projectionObj, (void*) "mapscript::projectionObj");
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_SYMBOL_SIMPLE", TRUE | 0x2 | GV_ADDMULTI);
@@ -45187,7 +46964,7 @@ XS(SWIG_init) {
     sv_setsv(sv, SWIG_FromCharPtr("en-US"));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
-  SWIG_TypeClientData(SWIGTYPE_p_error_obj, (void*) "mapscript::errorObj");
+  SWIG_TypeClientData(SWIGTYPE_p_errorObj, (void*) "mapscript::errorObj");
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_DEBUGLEVEL_ERRORSONLY", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(MS_DEBUGLEVEL_ERRORSONLY)));

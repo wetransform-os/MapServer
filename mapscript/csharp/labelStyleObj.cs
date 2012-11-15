@@ -79,13 +79,26 @@ public class labelStyleObj : IDisposable {
     return swigCPtr.Handle.GetHashCode();
   }
 
-  public string font {
+  public SWIGTYPE_p_p_char fonts {
     set {
-      mapscriptPINVOKE.labelStyleObj_font_set(swigCPtr, value);
+      mapscriptPINVOKE.labelStyleObj_fonts_set(swigCPtr, SWIGTYPE_p_p_char.getCPtr(value));
       if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
     } 
     get {
-      string ret = mapscriptPINVOKE.labelStyleObj_font_get(swigCPtr);
+      IntPtr cPtr = mapscriptPINVOKE.labelStyleObj_fonts_get(swigCPtr);
+      SWIGTYPE_p_p_char ret = (cPtr == IntPtr.Zero) ? null : new SWIGTYPE_p_p_char(cPtr, false, ThisOwn_false());
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public int numfonts {
+    set {
+      mapscriptPINVOKE.labelStyleObj_numfonts_set(swigCPtr, value);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      int ret = mapscriptPINVOKE.labelStyleObj_numfonts_get(swigCPtr);
       if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
       return ret;
     } 
@@ -148,6 +161,18 @@ public class labelStyleObj : IDisposable {
     get {
       IntPtr cPtr = mapscriptPINVOKE.labelStyleObj_outlinecolor_get(swigCPtr);
       colorObj ret = (cPtr == IntPtr.Zero) ? null : new colorObj(cPtr, false, ThisOwn_false());
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public int antialias {
+    set {
+      mapscriptPINVOKE.labelStyleObj_antialias_set(swigCPtr, value);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      int ret = mapscriptPINVOKE.labelStyleObj_antialias_get(swigCPtr);
       if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
       return ret;
     } 

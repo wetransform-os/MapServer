@@ -41,7 +41,12 @@
         sv_2mortal($result);
         argvi++;
         if( $1.owns_data )
-            gdFree($1.data);
+            msFree($1.data);
+}
+
+%typemap(out) char[ANY] {
+        $result = newSVpvn($1, strlen($1));
+        argvi++;
 }
 
 /*

@@ -116,6 +116,18 @@ public class strokeStyleObj : IDisposable {
     } 
   }
 
+  public double patternoffset {
+    set {
+      mapscriptPINVOKE.strokeStyleObj_patternoffset_set(swigCPtr, value);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      double ret = mapscriptPINVOKE.strokeStyleObj_patternoffset_get(swigCPtr);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
   public colorObj color {
     set {
       mapscriptPINVOKE.strokeStyleObj_color_set(swigCPtr, colorObj.getCPtr(value));

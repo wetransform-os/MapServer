@@ -156,6 +156,11 @@ public class OWSRequest : IDisposable {
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
   }
 
+  public void addParameter(string name, string value) {
+    mapscriptPINVOKE.OWSRequest_addParameter(swigCPtr, name, value);
+    if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+  }
+
   public string getName(int index) {
     string ret = mapscriptPINVOKE.OWSRequest_getName(swigCPtr, index);
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();

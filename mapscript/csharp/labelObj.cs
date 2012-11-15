@@ -79,6 +79,14 @@ public class labelObj : IDisposable {
     return swigCPtr.Handle.GetHashCode();
   }
 
+  public int refcount {
+    get {
+      int ret = mapscriptPINVOKE.labelObj_refcount_get(swigCPtr);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
   public string font {
     set {
       mapscriptPINVOKE.labelObj_font_set(swigCPtr, value);
@@ -490,6 +498,18 @@ public class labelObj : IDisposable {
     } 
   }
 
+  public int status {
+    set {
+      mapscriptPINVOKE.labelObj_status_set(swigCPtr, value);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      int ret = mapscriptPINVOKE.labelObj_status_get(swigCPtr);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
   public int numstyles {
     set {
       mapscriptPINVOKE.labelObj_numstyles_set(swigCPtr, value);
@@ -500,6 +520,61 @@ public class labelObj : IDisposable {
       if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
       return ret;
     } 
+  }
+
+  public string annotext {
+    set {
+      mapscriptPINVOKE.labelObj_annotext_set(swigCPtr, value);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      string ret = mapscriptPINVOKE.labelObj_annotext_get(swigCPtr);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public pointObj annopoint {
+    set {
+      mapscriptPINVOKE.labelObj_annopoint_set(swigCPtr, pointObj.getCPtr(value));
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      IntPtr cPtr = mapscriptPINVOKE.labelObj_annopoint_get(swigCPtr);
+      pointObj ret = (cPtr == IntPtr.Zero) ? null : new pointObj(cPtr, false, ThisOwn_false());
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public shapeObj annopoly {
+    set {
+      mapscriptPINVOKE.labelObj_annopoly_set(swigCPtr, shapeObj.getCPtr(value));
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      IntPtr cPtr = mapscriptPINVOKE.labelObj_annopoly_get(swigCPtr);
+      shapeObj ret = (cPtr == IntPtr.Zero) ? null : new shapeObj(cPtr, false, ThisOwn_false());
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public labelLeaderObj leader {
+    set {
+      mapscriptPINVOKE.labelObj_leader_set(swigCPtr, labelLeaderObj.getCPtr(value));
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      IntPtr cPtr = mapscriptPINVOKE.labelObj_leader_get(swigCPtr);
+      labelLeaderObj ret = (cPtr == IntPtr.Zero) ? null : new labelLeaderObj(cPtr, false, ThisOwn_false());
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public labelObj() : this(mapscriptPINVOKE.new_labelObj(), true, null) {
+    if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
   }
 
   public int updateFromString(string snippet) {
@@ -522,6 +597,30 @@ public class labelObj : IDisposable {
 
   public int setBinding(int binding, string item) {
     int ret = mapscriptPINVOKE.labelObj_setBinding(swigCPtr, binding, item);
+    if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public int setExpression(string expression) {
+    int ret = mapscriptPINVOKE.labelObj_setExpression(swigCPtr, expression);
+    if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public string getExpressionString() {
+    string ret = mapscriptPINVOKE.labelObj_getExpressionString(swigCPtr);
+    if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public int setText(string text) {
+    int ret = mapscriptPINVOKE.labelObj_setText(swigCPtr, text);
+    if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public string getTextString() {
+    string ret = mapscriptPINVOKE.labelObj_getTextString(swigCPtr);
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
     return ret;
   }
@@ -556,10 +655,6 @@ public class labelObj : IDisposable {
     int ret = mapscriptPINVOKE.labelObj_moveStyleDown(swigCPtr, index);
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
     return ret;
-  }
-
-  public labelObj() : this(mapscriptPINVOKE.new_labelObj(), true, null) {
-    if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
   }
 
 }
