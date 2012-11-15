@@ -1,3 +1,13 @@
+mapserver (6.2.0-1) unstable; urgency=low
+
+  * New upstream release
+  * Added libmapserver package
+  * Added patch to fix mapscriptvars to send the right argument to ld
+  * Changed php5-mapscript dependencies, removed misc:depends and added
+    libapache2-mod-php5 explicitly
+
+ -- Jerome Villeneuve Larouche <jlarouche@mapgears.com>  Thu, 15 Nov 2012 13:43:51 +0000
+
 mapserver (6.0.3-1) unstable; urgency=low
 
   * New upstream release.

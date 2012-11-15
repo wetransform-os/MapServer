@@ -15,9 +15,7 @@ version_major=$(shell expr `pwd` : '.*-\([0-9]*\).[0-9.]*')
 CURDIR := $(shell pwd)
 PYVERS=$(shell pyversions -r debian/control)
 RUBYVERS=1.8 1.9.1
-PHP5API=$(shell php-config5 --phpapi)
-PHP5DIR=$(shell php-config5 --extension-dir)
-
+#PHP5API=$(shell php-config5 --phpapi)
 
 # Configure config :
 # Not using non free libpdf
@@ -26,7 +24,6 @@ PHP5DIR=$(shell php-config5 --extension-dir)
 
 
 COMMON_CONFIG=	--prefix=/usr \
-		--enable-debug \
 		--without-tiff \
 		--without-pdf \
 		--with-gd=/usr \
@@ -49,27 +46,19 @@ COMMON_CONFIG=	--prefix=/usr \
 		--with-geos \
 		--with-fastcgi \
 		--with-agg \
-		--with-experimental-png \
+		--with-php \
 		--with-cairo
 
 rstoptions=--stylesheet=mapscript.css --link-stylesheet 
 
-MS_CFLAGS=-g -O2
+MS_CFLAGS=-O2
 MS_CXXFLAGS=$(MS_CFLAGS)
 
 configure-stamp:
 	dh_testdir
 	./configure $(COMMON_CONFIG) CFLAGS="$(MS_CFLAGS)" CXXFLAGS="$(MS_CXXFLAGS)"
 
-
 	touch configure-stamp
-
-configure-php5-stamp: clean-first-build
-	dh_testdir
-	./configure $(COMMON_CONFIG) \
-		--with-php=/usr/include/php5  CFLAGS="$(MS_CFLAGS)" CXXFLAGS="$(MS_CXXFLAGS)"
-
-	touch configure-php5-stamp
 
 # This is the correct, policy-compliant build target
 #build: build-indep build-arch
@@ -81,7 +70,6 @@ build: build-arch
 build-indep: build-indep-stamp
 build-indep-stamp:
 	dh_testdir
-
 	touch build-indep-stamp
 
 build-arch: build-arch-stamp
@@ -94,8 +82,8 @@ build-arch-stamp: configure-stamp
 
 	# Build Perl mapscript
 	cd $(CURDIR)/mapscript/perl && \
-		perl Makefile.PL INSTALLDIRS=vendor \
-		&& $(MAKE) LD_RUN_PATH="" OPTIMIZE="-O2 -g -W -Wall"
+	  perl Makefile.PL INSTALLDIRS=vendor \
+	  && $(MAKE) LD_RUN_PATH="" OPTIMIZE="-O2 -g -W -Wall"
 
 	# Build python
 	cd $(CURDIR)/mapscript/python && \
@@ -110,12 +98,6 @@ build-arch-stamp: configure-stamp
 
 	touch build-arch-stamp
 
-build-php5-stamp: configure-php5-stamp
-	dh_testdir
-	-cd mapscript/php && \
-		$(MAKE) clean
-	# Build php_mapscript
-	$(MAKE)
 
 # This is needed to do 'make clean', but will be removed by the clean
 # targets.  The end result is that 'debuild clean' only can execute
@@ -153,7 +135,8 @@ clean-first-build:
 clean: clean-first-build
 	dh_testdir
 	dh_prep
-	-$(RM) configure-php5-stamp build-php5-stamp install-arch-stamp install-indep-stamp install-php5-stamp
+	-$(RM) install-arch-stamp install-indep-stamp
+	-$(RM) -rf $(CURDIR)/debian/files
 	[ ! -f Makefile ] || $(MAKE) distclean
 	rm -f debian/*.debhelper.log
 
@@ -165,18 +148,12 @@ install-indep-stamp: build-indep
 	dh_install -i
 	touch install-indep-stamp
 
-install-arch: install-arch-stamp install-php5-stamp
+install-arch: install-arch-stamp
 install-arch-stamp: build-arch
 	dh_testdir -a
 	dh_testroot -a
 	dh_installdirs -a
-
-	-mkdir -p debian/tmp/usr/lib/  debian/tmp/usr/include/ \
-		debian/tmp/usr/lib/cgi-bin/ \
-		debian/tmp/usr/bin
-
-	# CGI mapserver
-	install -m755 mapserv debian/tmp/usr/lib/cgi-bin/mapserv
+	dh_auto_install
 
 	# Perl mapscript
 	cd $(CURDIR)/mapscript/perl && \
@@ -196,26 +173,19 @@ install-arch-stamp: build-arch
 	      $(MAKE) distclean ; \
 	  done
 
-	# Mapserver  Binary
-	install -m755 legend scalebar shp2img shptree \
-		shptreetst shptreevis sortshp tile4ms msencrypt \
-		debian/tmp/usr/bin
-	install -m755 shp2mysql.pl debian/tmp/usr/bin/shp2mysql
+	# removing embedded rpath in binaries
+	-find $(CURDIR)/debian/tmp/usr/bin -type f  -exec chrpath --delete {} \;
+
+	# remove la file in php ext dir
+	-$(RM) -rf $(CURDIR)/debian/tmp/usr/lib/php5/20090626/*.la
+
+	# CGI mapserver
+	-mkdir -p debian/tmp/usr/lib/cgi-bin
+	install -m755 debian/tmp/usr/bin/mapserv debian/tmp/usr/lib/cgi-bin/mapserv
+
+	#echo 'misc:Depends=libapache2-mod-php5' >> debian/php5-mapscript.substvars
+
 	touch install-arch-stamp
-
-install-php5-stamp: build-php5-stamp
-	dh_testdir
-	dh_testroot
-
-	-mkdir -p debian/tmp$(PHP5DIR)
-
-	# php5-mapscript
-	install -m644 mapscript/php/php_mapscript.so \
-		debian/tmp$(PHP5DIR)
-                      
-	echo 'misc:Depends=phpapi-'$(PHP5API) >> debian/php5-mapscript.substvars
-
-	touch install-php5-stamp
 
 binary-indep: install-indep
 	dh_testdir -i
