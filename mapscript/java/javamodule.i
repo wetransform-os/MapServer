@@ -9,7 +9,7 @@
 
 %pragma(java) jniclasscode=%{
     static {
-        String  library = System.getProperty("mapserver.library.name", "mapscript");
+        String  library = System.getProperty("mapserver.library.name", "javamapscript");
 
         System.loadLibrary(library);
         /* TODO Throw when return value not MS_SUCCESS? */
@@ -23,7 +23,7 @@
 
 %typemap(out) gdBuffer
 %{ $result = SWIG_JavaArrayOutSchar(jenv, $1.data, $1.size); 
-   if( $1.owns_data ) gdFree($1.data); %}
+   if( $1.owns_data ) msFree($1.data); %}
 
 %typemap(javain) gdBuffer "$javainput"
 %typemap(javaout) gdBuffer {
@@ -211,12 +211,12 @@ RFC-24 implementation follows
         return clazz;
 }
                 
-%typemap(javacode) layerObj %{
+%typemap(javacode) struct layerObj %{
         /* parent reference, RFC-24 item 3.2 */
         mapObj map=null;
 %}
 
-%typemap(javacode) classObj %{
+%typemap(javacode) struct classObj %{
         /* parent reference, RFC-24 item 3.2 */
         layerObj layer=null;
 %}

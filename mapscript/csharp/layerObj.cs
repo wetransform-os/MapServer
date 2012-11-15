@@ -706,6 +706,18 @@ public class layerObj : IDisposable {
     } 
   }
 
+  public string mask {
+    set {
+      mapscriptPINVOKE.layerObj_mask_set(swigCPtr, value);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      string ret = mapscriptPINVOKE.layerObj_mask_get(swigCPtr);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
   public layerObj(mapObj map) : this(mapscriptPINVOKE.new_layerObj(mapObj.getCPtr(map)), true, map) {
   
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
@@ -797,6 +809,12 @@ public class layerObj : IDisposable {
 
   public string getItem(int i) {
     string ret = mapscriptPINVOKE.layerObj_getItem(swigCPtr, i);
+    if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
+  public int setItems(string[] items, int numitems) {
+    int ret = mapscriptPINVOKE.layerObj_setItems(swigCPtr, new mapscriptPINVOKE.StringArrayMarshal(items)._ar, numitems);
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
     return ret;
   }

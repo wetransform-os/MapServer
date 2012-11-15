@@ -1,3 +1,4 @@
+
 MapServer Revision History
 ==========================
 
@@ -11,112 +12,244 @@ the top of the list.)
 
 For a complete change history, please see the Git log comments.
 
-Version 6.0.3 (2012-05-18):
----------------------------
+Current Version (git master, 6.3-dev, future 6.4):
+--------------------------------------------------
+
+- Fix WFS GetFeature result bounds are not written in requested projection (#4494)
+
+- Fixed wrong size in LegendURL of root layer (#4441)
+
+- Fixed wms_style_name in GetMap requests (#4439)
+
+- Fix segfault in queryByFilter function in MapScript
+
+- Adjusted WCS 2.0 to WCS Core 2.0.1 and GMLCOV 1.0.1 corrigenda (#4003)
+
+- Adjusted mediatype to multipart/related in WCS 2.0 (#4003)
+
+- Fix symbolObj.getImage seg fault in PHP/MapScript
+
+- Fix bad handling of startindex in some drivers (#4011)
+  WFSGetFeature also now uses a global maxfeatures and startindex to support
+  maxfeatures across layers rather than within layers
+
+- Fixed bugs with WCS 1.1/2.0 with VSIMEM (#4369)
+
+- Add notable changes here. Less important changes should go only in the
+  commit message and not appear here.
+  
+- Fixed the OGR driver to use point or line spatial filter geometries in degenerated cases (#4420)
+
+- Fix WFS filter is produced as non-standard XML (#4171)
+
+- Fix pixmap symbol loading issue (#4329)
+
+- Added INSPIRE ExtendedCapabilities and DOCTYPE definition to WMS 1.1.1 (#3608)
+
+- Fix wms_enable_request-related errors are not properly tagged (#4187)
+
+- Fixed "msGetMarkerSize() called on unloaded pixmap symbol" in mapsymbol.c (#4225)
+
+- Fixed PHP MapScript support for PHP 5.4 (#4309)
+
+- Fix msOGREscapeSQLParam could return random data (#4335)
+
+- Fixed locations of supported and native formats in Capabilities and CoverageDescriptions for WCS 2.0 (#4003)
+
+- Made format parameter for WCS 2.0 GetCoverage requests optional (#4003)
+
+- Swig mapscript for multi-label support (#4310)
 
 - Fix creation of a vector symbolObj in mapscript (#4318)
 
 - Added coverage metadata in WCS (#4306)
 
-- Adjusted WCS 2.0 GetCapbilities response (#4003)
-
 - Ignore unknown requets parameteres in WCS 2.0 (#4307).
 
-- Fixed mapscript is unusable in a web application due to
-  memory leaks (#4262)
-
-- Fixed getFeature request with custom output format fails on filter
-  encoding (#4190)
+- Fixed getFeature request with custom output format fails on filter encoding (#4190)
 
 - Fixed resolution when UoM changes in WCS 2.0 (#4283)
 
-- Added missing DEFRESOLUTION parameter to msCopyMap() function (#4272)
+- Added missing DEFRESOLUTION parameter to msCopyMap() function (#4272) 
 
-- Fixed Python MapScript layerObj/classObj Error (#3940)
+- Migrated svn to git, and issue tracking from trac to github
 
-- Fixed WCS 2.0 axis order, offset vector, and origin (#4006, #4191)
+- Fixed mapscript is unusable in a web application due to memory leaks (#4262)
+ 
+- Fixed legend image problem with annotation layers with label offsets (#4147)
 
-- Fixed PHP MapScript opacity property of StyleObj no longer works (#3920)
+- Add support for mutiple labels per feature (RFC81)
+
+- Add support for INSPIRE view service (RFC 75)
+
+- Drop support for GDAL/OGR older than 1.5.0 (#4224)
+
+- PDF backend: add support for generating geospatial PDF, when
+  GDAL 2.0 with PDF driver is used, and the GEO_ENCODING FORMATOPTION
+  (set to ISO32000 or OGC_BP) is added to the OUTPUTFORMAT definition. (#4216)
+
+- Python mapscript: fix swig mappings to work with both python 2.5.and 2.6 (#3940)
+
+- Added classgroup CGI parameter support (#4207)
+
+- Java mapscript: renamed shared library and completed libtool support (#2595)
+
+- Fixed WCS 2.0 axis order (#4191)
 
 - Added MS_CJC_* constants in PHP/MapScript (#4183)
 
-- Fixed Memory leak with fribidi strings (#4188)
+- Fixed Memory Leak with Fribidi Strings (#4188)
 
-- Added missing properties in styleObj setter of PHP/MapScript (#3901)
+- Allow multiple label definitions within a class (RFC 77/#4127)
 
-Version 6.0.2 (2012-02-08):
----------------------------
+- shp2img: make it possible to specify layers (with -l option) that match GROUP names.
 
-- Fix security issue with quote escape in WFS GetFeature Filter (#4087)
+- reuse a pre-parsed mapfile across fastcgi loops in case the mapfile is
+  specified with the MS_MAPFILE env variable. (#4018)
 
-- Fixed lexer buffer size issue with single quotes in a string  (#4175)
-
-- Raster layer fails to be drawn if the window is less than half a pixel (#4172)
+- Ability to do use PropertyIsLike with a column of a different type than text (postgis) (#4176)
 
 - Fixed SLD with FILTER doesn't apply properly to database layers (#4112)
 
-- Fixed a problem with calls to labelInImage() (maplabel.c) when label gutter
-  and label buffers are both used (#3303). Also changed the usage around that
-  function to make it easier to understand. At a result the
-  "labelcache_map_edge_buffer" processing option (i.e. gutter) can be provided
-  as a positive or negative value. (closes #1355 too)
+- Fixed lexer buffer size issue with single quotes in a string  (#4175)
 
-- Added label->style markers to collision detection (#4133)
+- WFS Quote Escape issue (#4087)
+
+- Raster layer fails to be drawn if the window is less than half a pixel (#4172)
+
+- shptree: Improvement to reduce size of .qix files (#4169)
+
+- avoid potential gd fontcache deadlock on fastcgi exit signals(#4093)
+
+- Adjusted WCS GetCapabilities for an empty list of layers (#4140)
+
+- Adjusted WMS GetCapabilities for an empty list of layers (#3755)
+
+- Refactor cgi masperv to not call exit on argument errors (#3099)
+
+- Add --with-apache-module configure option to build an apache dso module
+  (#2565)
+
+- Use libtool to build object files and libraries
+
+- Dynamically link libmapserver to the created binaries by default
+  (requires the make install step to be run)
+
+- Python mapscript builds with make instead of setuptools
+
+- Fix LABELPNT geomtransform position for non-cached labels (#4121)
+
+- Add RFC80 font fallback support (#4114)
+
+- Added POLAROFFSET style option for a different symbol transform (#4117)
+
+- automatically translate vector symbol points (#4116)
+
+- Add RFC79 Layer masking (#4111)
 
 - Fixed single pixel coverages in WCS 2.0 (#4110)
 
+- Add svg symbols support (#3671)
+
 - Fixed subsetting in WCS 2.0 (#4099)
+
+- Upgrade clipper library to 4.6.3
+
+- Make openlayers wms template request images with mimetype of outputformat
+  defined in the mapfile's imagetype
+
+- Fix memory leak in msSLDParseRasterSymbolizer()
+
+- Fix compilation error with clang in renderers/agg/include/agg_renderer_outline_aa.h
+
+- Add stable hatch rendering (#3847)
+
+- Added vector field rendering (#4094)
+
+- Add wms dimensions support (#3466)
 
 - Fixed segfault when calling classObj::updateFromString() with SYMBOL (#4062)
 
-- fix rendering offset on thick GD lines (#3962)
+- Use a renderer native follow text implementation if available.
 
-- fix segfault on join with postgresql tables (#4074)
+- Fixed layer with inline feature to support multiple classes (#4070)
 
-- Fixed Python Mapscript does not write COLOR to reference map (#4042)
- 
-- Fixed cannot add a style to a label in PHP/SWIG Mapscript (#4038) 
+- Add support for rfc45 anchorpoint on marker symbols (#4066)
 
-- Add missing outputFormat support in WFS GetFeature POST XML requests (#4052)
+- Add initial gap support for line marker symbols (#3879)
+
+- Fix center to center computation of gaps for line marker symbols
+  and polygon tile patterns (#3867)
+
+- Add initial gap support for line patterns (#3879)
+
+- Fixed grid of thin lines in polygon symbol fills (#3868)
+
+- Fixed cannot add a style to a label in PHP/SWIG Mapscript (#4038)
 
 - Fixed schema validity issue for WCS 1.1 GetCoverage responses (#4047)
 
-- fix centroid geomtransform parser (#4029)
+- remove default compiler search paths from the GD CFLAGS/LDFLAGS (#4046)
 
-- PHP MapScript is missing many styleObj properties (#3901)
+- Fixed Python Mapscript does not write COLOR to reference map (#4042)
 
-- Added GEOMTRANSFORM in writeStyle function
+- Added XMP support for metadata embedding, RFC 76, (#3932)
+
+- Added GetLegendGraphic Cascading support (#3923)
+
+- Rewrite  postgres TIME queries to take advantage of indexes (#3374)
+
+- Unified OWS requests and applied to WCS (defaults to version 2.0 now) (#3925)
 
 - WCS 1.0: Fix crash with some _rangeset_axes values (#4020)
 
-- Changed msDrawVectorLayer() not to cache shapes if attribute binding is 
-  present after the first style (#3976)
+- WCS 2.0: Adjusted offset vector and origin (#4006)
+
+- Added addParameter() method to MapScript (#3973)
+
+- Changed msDrawVectorLayer() not to cache shapes if attribute binding is present after	the first style	(#3976)
 
 - Fix mapscript to build when TRUE macro is not defined (#3926)
 
 - Fix mapscript php build issues with MSVC (#4004)
 
-- PHP/Mapscript: Segmentation fault when getting complex object using 
-  PHP 5.2 (#3930)
+- PHP MapScript is missing many styleObj properties (#3901)
+
+- PHP/Mapscript: Segmentation fault when getting complex object using PHP 5.2  (#3930)
+
+- PHP/Mapscript: Fixed webObj->metadata returns a webObj (#3971)
+
+- WCS 1.1: Added check for imageCRS in msOWSCommonBoundingBox() (#3966)
 
 - Fixed contains operator in logical expresions (#3974)
 
+- WCS 1.0: WCS Exceptions raise mapscript exceptions (#3972)
+
+- WMS: LAYERS parameter is optional when sld is given (#1166)
+
+- Add runtime substitution for "filename" output format option (#3571) and
+  allow setting defaults in either metadata or validation (preferred) blocks
+  for both layer and output format.
+
+- Add non antialiased text rendering for GD (#3896)
+
+- Fixed OGC filter using expressions (#3481)
+
 - Fix incorrect rendering of GD lines between 1 and 2 pixels wide (#3962)
 
-Version 6.0.1 (2011-07-12):
----------------------------
+- Add gamma correction to AGG polygon rendering (#3165)
 
-IMPORTANT SECURITY FIXES:
+- Initialize the scalebar image color to transparent by default (#3957)
+
+- Do not divide by zero in io read/write funcs (#4135)
+
+IMPORTANT SECURITY FIX:
 
 -  Fixes to prevent SQL injections through OGC filter encoding (in WMS, WFS 
    and SOS), as well as a potential SQL injection in WMS time support. 
    Your system may be vulnerable if it has MapServer with OGC protocols 
    enabled, with layers connecting to an SQL RDBMS backend, either 
-   natively or via OGR (#3903) 
-
-Other fixes:
-
-- Applied patch for ticket (symbol writing issues) (#3589)
+   natively or via OGR (#3903)
 
 - Fix performance issue with Oracle and scrollable cursors (#3905)
 
@@ -128,26 +261,36 @@ Other fixes:
 
 - Fix rendering of lines with outlinewidth set if not on first style (#3935)
 
-- Added writing of cluster object when saving map. Also improved handling of
-  cluster parsing errors (#3934)
+- Correct SLD with spatial filters bbox and intersects (#3929)
+
+- Applied patch for ticket (symbol writing issues) (#3589)
+
+- Added WMS GetFeatureInfo Cascading (#3764)
+
+- Fixed png lib is not found on multiarch systems (#3921)
+
+- Fixed PHP MapScript opacity property of StyleObj no longer works (#3920)
+
+- Fixed Using STYLEITEM AUTO, loadExpression fails when the label text
+  contains a space or begins with a double quote (#3481)
 
 - Fix for the cluster processing if the shape bounds doesn't overlap 
   with the given extent (#3913)
+  
+- Add support for dashes on polygon hatches (#3912)
 
-- OGC Filter: fix segfault when a ows_varname_type or wfs_varname_type is
-  defined but not a gml_varname_type (#3902)
+- Union layer 3 new processing options added (#3900)
 
-- Fix regression of MapServer 6.0.0 when specifying a time range in WMS time
-  requests on a Postgis layer (#3909)
-
-- Fixed order of metadata lookup for WMS GML GetFeatureInfo. 'ows' should 
-  come last, not first (#3636).
+- Changed msRemoveStyle to allow removing all styles (#3895)
 
 - Fixed mssql2008 to return correct geometries with chart layer type (#3894)
 
+- Ensure msLayerSetProcessingKey() supports setting a NULL value to clear
+  a processing key. 
+
 - Write SYMBOLSET/END tags when saving a symbol file (#3885)
 
-- Make java threadtests work again (#3887) 
+- Make java threadtests work again (#3887)
 
 - Fix segfault on malformed <PropertyIsLike> filters (#3888)
 
@@ -155,16 +298,26 @@ Other fixes:
 
 - Fixed potential crash with AVERAGE resampling and crazy reprojection (#3886)
 
+- Adjusted OperationsMetadata for POST in WCS 2.0 GetCapabilities response
+
 - Fix for the warnings in mapunion.c (#3880)
+
+- SLD: correct when same layer is used with multiple styles (#1602)
 
 - Fixed the build problem in mapunion.c (#3877)
 
+- Implement to get all shapes with the clustered layer (#3873)
+
 - Union layer: Fixed the crash when styling source layers using attributes (#3870)
+
+- Added GEOS difference operator to expression support (#3871) 
 
 - Improve rangeset item checking so that Bands=1,2,3 is supported with WCS 1.0
   (#3919).
 
 - Fix GetMapserverUnitUsingProj() for proj=latlong (#3883)
+
+- Add support for OGR output of 2.5D geometries (#3906)
 
 
 Version 6.0.0 (2011-05-11)

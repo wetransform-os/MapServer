@@ -184,6 +184,7 @@ char path[MS_MAXPATHLEN];
 <EXPRESSION_STRING>round                       { MS_LEXER_RETURN_TOKEN(MS_TOKEN_FUNCTION_ROUND); }
 
 <EXPRESSION_STRING>buffer                      { MS_LEXER_RETURN_TOKEN(MS_TOKEN_FUNCTION_BUFFER); }
+<EXPRESSION_STRING>difference                  { MS_LEXER_RETURN_TOKEN(MS_TOKEN_FUNCTION_DIFFERENCE); }
 
 <EXPRESSION_STRING>intersects                  { MS_LEXER_RETURN_TOKEN(MS_TOKEN_COMPARISON_INTERSECTS); }
 <EXPRESSION_STRING>disjoint                    { MS_LEXER_RETURN_TOKEN(MS_TOKEN_COMPARISON_DISJOINT); }
@@ -201,7 +202,8 @@ char path[MS_MAXPATHLEN];
 <INITIAL>datarange                             { MS_LEXER_RETURN_TOKEN(DATARANGE); }
 <INITIAL>rangeitem                             { MS_LEXER_RETURN_TOKEN(RANGEITEM); }
 
-<INITIAL,URL_STRING>align                       { MS_LEXER_RETURN_TOKEN(ALIGN); }
+<INITIAL,URL_STRING>align                      { MS_LEXER_RETURN_TOKEN(ALIGN); }
+<INITIAL>anchorpoint                           { MS_LEXER_RETURN_TOKEN(ANCHORPOINT); }
 <INITIAL,URL_VARIABLE,URL_STRING>angle         { MS_LEXER_RETURN_TOKEN(ANGLE); }
 <INITIAL,URL_STRING>antialias                  { MS_LEXER_RETURN_TOKEN(ANTIALIAS); }
 <INITIAL,URL_STRING>backgroundcolor            { MS_LEXER_RETURN_TOKEN(BACKGROUNDCOLOR); }
@@ -240,9 +242,10 @@ char path[MS_MAXPATHLEN];
 <INITIAL>force                                 { MS_LEXER_RETURN_TOKEN(FORCE); }
 <INITIAL>formatoption                          { MS_LEXER_RETURN_TOKEN(FORMATOPTION); }
 <INITIAL>from                                  { MS_LEXER_RETURN_TOKEN(FROM); }
-<INITIAL>gap                                   { MS_LEXER_RETURN_TOKEN(GAP); }
+<INITIAL,URL_STRING>gap                        { MS_LEXER_RETURN_TOKEN(GAP); }
 <INITIAL>geomtransform                         { MS_LEXER_RETURN_TOKEN(GEOMTRANSFORM); }
 <INITIAL>grid                                  { MS_LEXER_RETURN_TOKEN(GRID); }
+<INITIAL>gridstep                              { MS_LEXER_RETURN_TOKEN(GRIDSTEP); }
 <INITIAL>graticule                             { MS_LEXER_RETURN_TOKEN(GRATICULE); }
 <INITIAL,URL_STRING>group                      { MS_LEXER_RETURN_TOKEN(GROUP); }
 <INITIAL,URL_STRING>header                     { MS_LEXER_RETURN_TOKEN(HEADER); }
@@ -256,6 +259,7 @@ char path[MS_MAXPATHLEN];
 <INITIAL>imageurl                              { MS_LEXER_RETURN_TOKEN(IMAGEURL); }
 <INITIAL>include                               { BEGIN(INCLUDE); }
 <INITIAL>index                                 { MS_LEXER_RETURN_TOKEN(INDEX); }
+<INITIAL,URL_STRING>initialgap                 { MS_LEXER_RETURN_TOKEN(INITIALGAP); }
 <INITIAL>interlace                             { MS_LEXER_RETURN_TOKEN(INTERLACE); }
 <INITIAL,URL_STRING>intervals                  { MS_LEXER_RETURN_TOKEN(INTERVALS); } 
 <INITIAL>join                                  { MS_LEXER_RETURN_TOKEN(JOIN); }
@@ -273,6 +277,7 @@ char path[MS_MAXPATHLEN];
 <INITIAL,URL_STRING>labelrequires              { MS_LEXER_RETURN_TOKEN(LABELREQUIRES); }
 <INITIAL>latlon                                { MS_LEXER_RETURN_TOKEN(LATLON); }
 <INITIAL,URL_VARIABLE>layer                    { MS_LEXER_RETURN_TOKEN(LAYER); }
+<INITIAL>leader                                { MS_LEXER_RETURN_TOKEN(LEADER); }
 <INITIAL,URL_VARIABLE>legend                   { MS_LEXER_RETURN_TOKEN(LEGEND); }
 <INITIAL>legendformat                          { MS_LEXER_RETURN_TOKEN(LEGENDFORMAT); }
 <INITIAL>linecap                               { MS_LEXER_RETURN_TOKEN(LINECAP); }
@@ -282,13 +287,14 @@ char path[MS_MAXPATHLEN];
 <INITIAL,URL_VARIABLE>map                      { MS_LEXER_RETURN_TOKEN(MAP); }
 <INITIAL>marker                                { MS_LEXER_RETURN_TOKEN(MARKER); }
 <INITIAL>markersize                            { MS_LEXER_RETURN_TOKEN(MARKERSIZE); }
+<INITIAL>mask                                  { MS_LEXER_RETURN_TOKEN(MASK); }
 <INITIAL>maxarcs                               { MS_LEXER_RETURN_TOKEN(MAXARCS); }
 <INITIAL>maxboxsize                            { MS_LEXER_RETURN_TOKEN(MAXBOXSIZE); }
 <INITIAL>maxdistance                           { MS_LEXER_RETURN_TOKEN(MAXDISTANCE); }
 <INITIAL>maxfeatures                           { MS_LEXER_RETURN_TOKEN(MAXFEATURES); }
 <INITIAL>maxinterval                           { MS_LEXER_RETURN_TOKEN(MAXINTERVAL); }
-<INITIAL,URL_STRING>maxscale                   { MS_LEXER_RETURN_TOKEN(MAXSCALE); }
-<INITIAL,URL_STRING>maxscaledenom              { MS_LEXER_RETURN_TOKEN(MAXSCALEDENOM); }
+<INITIAL>maxscale                              { MS_LEXER_RETURN_TOKEN(MAXSCALE); }
+<INITIAL>maxscaledenom                         { MS_LEXER_RETURN_TOKEN(MAXSCALEDENOM); }
 <INITIAL>maxgeowidth                           { MS_LEXER_RETURN_TOKEN(MAXGEOWIDTH); }
 <INITIAL>maxlength                             { MS_LEXER_RETURN_TOKEN(MAXLENGTH); }
 <INITIAL>maxsize                               { MS_LEXER_RETURN_TOKEN(MAXSIZE); }
@@ -304,8 +310,8 @@ char path[MS_MAXPATHLEN];
 <INITIAL>maxoverlapangle                       { MS_LEXER_RETURN_TOKEN(MAXOVERLAPANGLE); } 
 <INITIAL>minfeaturesize                        { MS_LEXER_RETURN_TOKEN(MINFEATURESIZE); }
 <INITIAL>mininterval                           { MS_LEXER_RETURN_TOKEN(MININTERVAL); }
-<INITIAL,URL_STRING>minscale                   { MS_LEXER_RETURN_TOKEN(MINSCALE); }
-<INITIAL,URL_STRING>minscaledenom              { MS_LEXER_RETURN_TOKEN(MINSCALEDENOM); }
+<INITIAL>minscale                              { MS_LEXER_RETURN_TOKEN(MINSCALE); }
+<INITIAL>minscaledenom                         { MS_LEXER_RETURN_TOKEN(MINSCALEDENOM); }
 <INITIAL>mingeowidth                           { MS_LEXER_RETURN_TOKEN(MINGEOWIDTH); }
 <INITIAL>minlength                             { MS_LEXER_RETURN_TOKEN(MINLENGTH); }
 <INITIAL>minsize                               { MS_LEXER_RETURN_TOKEN(MINSIZE); }
@@ -313,7 +319,7 @@ char path[MS_MAXPATHLEN];
 <INITIAL>mintemplate                           { MS_LEXER_RETURN_TOKEN(MINTEMPLATE); }
 <INITIAL>minwidth                              { MS_LEXER_RETURN_TOKEN(MINWIDTH); }
 <INITIAL>name                                  { MS_LEXER_RETURN_TOKEN(NAME); }
-<INITIAL>offset                                { MS_LEXER_RETURN_TOKEN(OFFSET); }
+<INITIAL,URL_STRING>offset                     { MS_LEXER_RETURN_TOKEN(OFFSET); }
 <INITIAL>offsite                               { MS_LEXER_RETURN_TOKEN(OFFSITE); }
 <INITIAL,URL_STRING>opacity                    { MS_LEXER_RETURN_TOKEN(OPACITY); }
 <INITIAL,URL_STRING>outlinecolor               { MS_LEXER_RETURN_TOKEN(OUTLINECOLOR); }
@@ -327,7 +333,7 @@ char path[MS_MAXPATHLEN];
 <INITIAL,URL_STRING>overlaysize                { MS_LEXER_RETURN_TOKEN(OVERLAYSIZE); }
 <INITIAL,URL_STRING>overlaysymbol              { MS_LEXER_RETURN_TOKEN(OVERLAYSYMBOL); }
 <INITIAL>partials                              { MS_LEXER_RETURN_TOKEN(PARTIALS); }
-<INITIAL>pattern                               { MS_LEXER_RETURN_TOKEN(PATTERN); }
+<INITIAL,URL_STRING>pattern                    { MS_LEXER_RETURN_TOKEN(PATTERN); }
 <INITIAL,URL_STRING>points                     { MS_LEXER_RETURN_TOKEN(POINTS); }
 <INITIAL>items                                 { MS_LEXER_RETURN_TOKEN(ITEMS); }
 <INITIAL,URL_STRING>position                   { MS_LEXER_RETURN_TOKEN(POSITION); }
@@ -444,6 +450,7 @@ char path[MS_MAXPATHLEN];
 <INITIAL>small                                 { MS_LEXER_RETURN_TOKEN(MS_SMALL); }
 <INITIAL>square                                { MS_LEXER_RETURN_TOKEN(MS_CJC_SQUARE); }
 <INITIAL>svg                                   { MS_LEXER_RETURN_TOKEN(MS_SYMBOL_SVG); }
+<INITIAL>polaroffset                           { MS_LEXER_RETURN_TOKEN(POLAROFFSET); }
 <INITIAL>tiny                                  { MS_LEXER_RETURN_TOKEN(MS_TINY); }
 <INITIAL>triangle                              { MS_LEXER_RETURN_TOKEN(MS_CJC_TRIANGLE); }
 <INITIAL,URL_STRING>true                       { MS_LEXER_RETURN_TOKEN(MS_TRUE); }
@@ -452,6 +459,7 @@ char path[MS_MAXPATHLEN];
 <INITIAL,URL_STRING>ul                         { MS_LEXER_RETURN_TOKEN(MS_UL); }
 <INITIAL,URL_STRING>ur                         { MS_LEXER_RETURN_TOKEN(MS_UR); }
 <INITIAL>union                                 { MS_LEXER_RETURN_TOKEN(MS_UNION); }
+<INITIAL>uvraster                              { MS_LEXER_RETURN_TOKEN(MS_UVRASTER); }
 <INITIAL>vector                                { MS_LEXER_RETURN_TOKEN(MS_SYMBOL_VECTOR); }
 <INITIAL>wfs                                   { MS_LEXER_RETURN_TOKEN(MS_WFS); }
 <INITIAL>wms                                   { MS_LEXER_RETURN_TOKEN(MS_WMS); }

@@ -36,7 +36,7 @@
 #include<libxml/xpath.h>
 #include<libxml/xpathInternals.h>
 
-MS_CVSID("$Id$")
+
 
 /**
  * msLibXml2GenerateList()
@@ -51,7 +51,8 @@ MS_CVSID("$Id$")
  *
  */
 
-void msLibXml2GenerateList(xmlNodePtr psParent, xmlNsPtr psNs, const char *elname, const char *values, char delim) {
+void msLibXml2GenerateList(xmlNodePtr psParent, xmlNsPtr psNs, const char *elname, const char *values, char delim)
+{
   char **tokens = NULL;
   int n = 0;
   int i = 0;
@@ -77,13 +78,14 @@ void msLibXml2GenerateList(xmlNodePtr psParent, xmlNsPtr psNs, const char *elnam
  *
  */
 
-xmlXPathObjectPtr msLibXml2GetXPath(xmlDocPtr doc, xmlXPathContextPtr context, xmlChar *xpath) {
+xmlXPathObjectPtr msLibXml2GetXPath(xmlDocPtr doc, xmlXPathContextPtr context, xmlChar *xpath)
+{
   xmlXPathObjectPtr result;
   result = xmlXPathEval(xpath, context);
   if (result == NULL) {
     return NULL;
   }
-  if(xmlXPathNodeSetIsEmpty(result->nodesetval)){
+  if(xmlXPathNodeSetIsEmpty(result->nodesetval)) {
     xmlXPathFreeObject(result);
     return NULL;
   }
@@ -102,7 +104,8 @@ xmlXPathObjectPtr msLibXml2GetXPath(xmlDocPtr doc, xmlXPathContextPtr context, x
  *
  */
 
-const char *msLibXml2GetXPathTree(xmlDocPtr doc, xmlXPathObjectPtr xpath) {
+const char *msLibXml2GetXPathTree(xmlDocPtr doc, xmlXPathObjectPtr xpath)
+{
   xmlBufferPtr xbuf;
   const char *result = NULL;
 

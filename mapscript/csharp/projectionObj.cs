@@ -95,6 +95,18 @@ public class projectionObj : IDisposable {
     } 
   }
 
+  public int wellknownprojection {
+    set {
+      mapscriptPINVOKE.projectionObj_wellknownprojection_set(swigCPtr, value);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      int ret = mapscriptPINVOKE.projectionObj_wellknownprojection_get(swigCPtr);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
   public projectionObj(string proj4) : this(mapscriptPINVOKE.new_projectionObj(proj4), true, null) {
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
   }

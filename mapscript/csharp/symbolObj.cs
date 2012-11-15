@@ -215,6 +215,30 @@ public class symbolObj : IDisposable {
     } 
   }
 
+  public double anchorpoint_x {
+    set {
+      mapscriptPINVOKE.symbolObj_anchorpoint_x_set(swigCPtr, value);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      double ret = mapscriptPINVOKE.symbolObj_anchorpoint_x_get(swigCPtr);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public double anchorpoint_y {
+    set {
+      mapscriptPINVOKE.symbolObj_anchorpoint_y_set(swigCPtr, value);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      double ret = mapscriptPINVOKE.symbolObj_anchorpoint_y_get(swigCPtr);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
   public string imagepath {
     get {
       string ret = mapscriptPINVOKE.symbolObj_imagepath_get(swigCPtr);

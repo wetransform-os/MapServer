@@ -79,14 +79,6 @@ public class labelCacheMemberObj : IDisposable {
     return swigCPtr.Handle.GetHashCode();
   }
 
-  public string text {
-    get {
-      string ret = mapscriptPINVOKE.labelCacheMemberObj_text_get(swigCPtr);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-      return ret;
-    } 
-  }
-
   public double featuresize {
     get {
       double ret = mapscriptPINVOKE.labelCacheMemberObj_featuresize_get(swigCPtr);
@@ -112,10 +104,18 @@ public class labelCacheMemberObj : IDisposable {
     } 
   }
 
-  public labelObj label {
+  public labelObj labels {
     get {
-      IntPtr cPtr = mapscriptPINVOKE.labelCacheMemberObj_label_get(swigCPtr);
+      IntPtr cPtr = mapscriptPINVOKE.labelCacheMemberObj_labels_get(swigCPtr);
       labelObj ret = (cPtr == IntPtr.Zero) ? null : new labelObj(cPtr, false, ThisOwn_false());
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public int numlabels {
+    get {
+      int ret = mapscriptPINVOKE.labelCacheMemberObj_numlabels_get(swigCPtr);
       if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
       return ret;
     } 
@@ -132,22 +132,6 @@ public class labelCacheMemberObj : IDisposable {
   public int classindex {
     get {
       int ret = mapscriptPINVOKE.labelCacheMemberObj_classindex_get(swigCPtr);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-      return ret;
-    } 
-  }
-
-  public int tileindex {
-    get {
-      int ret = mapscriptPINVOKE.labelCacheMemberObj_tileindex_get(swigCPtr);
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-      return ret;
-    } 
-  }
-
-  public int shapeindex {
-    get {
-      int ret = mapscriptPINVOKE.labelCacheMemberObj_shapeindex_get(swigCPtr);
       if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
       return ret;
     } 
@@ -190,6 +174,24 @@ public class labelCacheMemberObj : IDisposable {
   public int markerid {
     get {
       int ret = mapscriptPINVOKE.labelCacheMemberObj_markerid_get(swigCPtr);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public lineObj leaderline {
+    get {
+      IntPtr cPtr = mapscriptPINVOKE.labelCacheMemberObj_leaderline_get(swigCPtr);
+      lineObj ret = (cPtr == IntPtr.Zero) ? null : new lineObj(cPtr, false, ThisOwn_false());
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public rectObj leaderbbox {
+    get {
+      IntPtr cPtr = mapscriptPINVOKE.labelCacheMemberObj_leaderbbox_get(swigCPtr);
+      rectObj ret = (cPtr == IntPtr.Zero) ? null : new rectObj(cPtr, false, ThisOwn_false());
       if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
       return ret;
     } 

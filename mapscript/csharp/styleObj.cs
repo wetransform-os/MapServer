@@ -321,6 +321,18 @@ public class styleObj : IDisposable {
     } 
   }
 
+  public double initialgap {
+    set {
+      mapscriptPINVOKE.styleObj_initialgap_set(swigCPtr, value);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      double ret = mapscriptPINVOKE.styleObj_initialgap_get(swigCPtr);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
   public int position {
     set {
       mapscriptPINVOKE.styleObj_position_set(swigCPtr, value);
@@ -436,6 +448,30 @@ public class styleObj : IDisposable {
     } 
     get {
       double ret = mapscriptPINVOKE.styleObj_offsety_get(swigCPtr);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public double polaroffsetpixel {
+    set {
+      mapscriptPINVOKE.styleObj_polaroffsetpixel_set(swigCPtr, value);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      double ret = mapscriptPINVOKE.styleObj_polaroffsetpixel_get(swigCPtr);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public double polaroffsetangle {
+    set {
+      mapscriptPINVOKE.styleObj_polaroffsetangle_set(swigCPtr, value);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      double ret = mapscriptPINVOKE.styleObj_polaroffsetangle_get(swigCPtr);
       if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
       return ret;
     } 

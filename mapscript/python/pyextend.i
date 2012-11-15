@@ -168,6 +168,7 @@ def fromstring(data, mappath=None):
     imageObj(PyObject *arg1=Py_None, PyObject *arg2=Py_None, 
              PyObject *input_format=Py_None, PyObject *input_resolution=Py_None, PyObject *input_defresolution=Py_None)
     {
+#ifdef FORCE_BROKEN_GD_CODE
         imageObj *image=NULL;
         outputFormatObj *format=NULL;
         int width;
@@ -318,6 +319,10 @@ def fromstring(data, mappath=None):
                        "imageObj()");
             return NULL;
         }
+#else
+         msSetError(MS_IMGERR, "imageObj() is severely broken and should not be used","imageObj()");
+         return NULL;
+#endif
     }
   
     /* ======================================================================
@@ -349,7 +354,8 @@ def fromstring(data, mappath=None):
         else if (PyFile_Check(file)) /* a Python (C) file */
         {
             renderer = self->format->vtable;
-            retval = renderer->saveImage(self, PyFile_AsFile(file), self->format);
+            /* FIXME? as an improvement, pass a map argument instead of the NULL (see #4216) */
+            retval = renderer->saveImage(self, NULL, PyFile_AsFile(file), self->format);
         }
         else /* presume a Python file-like object */
         {

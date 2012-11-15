@@ -555,7 +555,7 @@ SWIGINTERN int styleObj_setSymbolByName(styleObj *self,mapObj *map,char *symboln
         return self->symbol;
     }
 SWIGINTERN int styleObj_removeBinding(styleObj *self,int binding){
-    if(binding < 0 || binding >= 8) return MS_FAILURE;
+    if(binding < 0 || binding >= 12) return MS_FAILURE;
 
     if(self->bindings[binding].item) {
       free(self->bindings[binding].item);
@@ -568,7 +568,7 @@ SWIGINTERN int styleObj_removeBinding(styleObj *self,int binding){
   }
 SWIGINTERN int styleObj_setBinding(styleObj *self,int binding,char *item){
     if(!item) return MS_FAILURE;
-    if(binding < 0 || binding >= 8) return MS_FAILURE;
+    if(binding < 0 || binding >= 12) return MS_FAILURE;
 
     if(self->bindings[binding].item) {
       free(self->bindings[binding].item);
@@ -583,7 +583,7 @@ SWIGINTERN int styleObj_setBinding(styleObj *self,int binding,char *item){
     return MS_SUCCESS;
   }
 SWIGINTERN char *styleObj_getBinding(styleObj *self,int binding){
-    if(binding < 0 || binding >= 8) return NULL;
+    if(binding < 0 || binding >= 12) return NULL;
 
     return self->bindings[binding].item;
   }
@@ -593,6 +593,20 @@ SWIGINTERN char *styleObj_getGeomTransform(styleObj *self){
 SWIGINTERN void styleObj_setGeomTransform(styleObj *self,char *transform){
     msStyleSetGeomTransform(self, transform);
   }
+SWIGINTERN labelObj *new_labelObj(){
+      labelObj *label;
+        
+      label = (labelObj *)calloc(1, sizeof(labelObj));
+      if (!label)
+        return(NULL);
+    
+      initLabel(label);
+      
+      return(label);    	
+    }
+SWIGINTERN void delete_labelObj(labelObj *self){
+      freeLabel(self);
+    }
 SWIGINTERN int labelObj_updateFromString(labelObj *self,char *snippet){
     return msUpdateLabelFromString(self, snippet);
   }
@@ -628,6 +642,26 @@ SWIGINTERN int labelObj_setBinding(labelObj *self,int binding,char *item){
     self->numbindings++;
 
     return MS_SUCCESS;
+  }
+SWIGINTERN int labelObj_setExpression(labelObj *self,char *expression){
+    if (!expression || strlen(expression) == 0) {
+       freeExpression(&self->expression);
+       return MS_SUCCESS;
+    }
+    else return msLoadExpressionString(&self->expression, expression);
+  }
+SWIGINTERN char *labelObj_getExpressionString(labelObj *self){
+    return msGetExpressionString(&(self->expression));
+  }
+SWIGINTERN int labelObj_setText(labelObj *self,char *text){
+    if (!text || strlen(text) == 0) {
+      freeExpression(&self->text);
+      return MS_SUCCESS;
+    }	
+    else return msLoadExpressionString(&self->text, text);
+  }
+SWIGINTERN char *labelObj_getTextString(labelObj *self){
+    return msGetExpressionString(&(self->text));
   }
 SWIGINTERN styleObj *labelObj_getStyle(labelObj *self,int i){
       if (i >= 0 && i < self->numstyles) {
@@ -774,30 +808,46 @@ SWIGINTERN int classObj_drawLegendIcon(classObj *self,mapObj *map,layerObj *laye
 SWIGINTERN imageObj *classObj_createLegendIcon(classObj *self,mapObj *map,layerObj *layer,int width,int height){
     return msCreateLegendIcon(map, layer, self, width, height);
   }
+SWIGINTERN labelObj *classObj_getLabel(classObj *self,int i){
+    if (i >= 0 && i < self->numlabels) {
+      MS_REFCNT_INCR(self->labels[i]);
+      return self->labels[i];
+    } else {
+      msSetError(31, "Invalid index: %d.", "getLabel()", i);
+      return NULL;
+    }
+  }
+SWIGINTERN int classObj_addLabel(classObj *self,labelObj *label){
+    return msAddLabelToClass(self, label);
+  }
+SWIGINTERN labelObj *classObj_removeLabel(classObj *self,int index){
+    labelObj* label = (labelObj *) msRemoveLabelFromClass(self, index);
+    if (label) MS_REFCNT_INCR(label);
+    return label;
+  }
 SWIGINTERN styleObj *classObj_getStyle(classObj *self,int i){
-        if (i >= 0 && i < self->numstyles) {
-	    MS_REFCNT_INCR(self->styles[i]);
-            return self->styles[i];
-	} else {
-            msSetError(31, "Invalid index: %d", "getStyle()", i);
-            return NULL;
-        }
+    if (i >= 0 && i < self->numstyles) {
+      MS_REFCNT_INCR(self->styles[i]);
+      return self->styles[i];
+    } else {
+      msSetError(31, "Invalid index: %d", "getStyle()", i);
+      return NULL;
     }
+  }
 SWIGINTERN int classObj_insertStyle(classObj *self,styleObj *style,int index){
-        return msInsertStyle(self, style, index);
-    }
+    return msInsertStyle(self, style, index);
+  }
 SWIGINTERN styleObj *classObj_removeStyle(classObj *self,int index){
-	styleObj* style = (styleObj *) msRemoveStyle(self, index);
-	if (style)
-		MS_REFCNT_INCR(style);
-        return style;
-    }
+    styleObj* style = (styleObj *) msRemoveStyle(self, index);
+    if (style) MS_REFCNT_INCR(style);
+    return style;
+  }
 SWIGINTERN int classObj_moveStyleUp(classObj *self,int index){
-        return msMoveStyleUp(self, index);
-    }
+    return msMoveStyleUp(self, index);
+  }
 SWIGINTERN int classObj_moveStyleDown(classObj *self,int index){
-       return msMoveStyleDown(self, index);
-    }
+    return msMoveStyleDown(self, index);
+  }
 SWIGINTERN void labelCacheObj_freeCache(labelCacheObj *self){
         msFreeLabelCache(self);    
     }
@@ -884,6 +934,89 @@ SWIGINTERN int scalebarObj_updateFromString(scalebarObj *self,char *snippet){
 SWIGINTERN int legendObj_updateFromString(legendObj *self,char *snippet){
     return msUpdateLegendFromString(self, snippet, 0);
   }
+SWIGINTERN void imageObj_getBytes(imageObj *self,SWIG_CSharpByteArrayHelperCallback callback){
+        gdBuffer buffer;
+        
+        buffer.owns_data = MS_TRUE;
+        
+        buffer.data = msSaveImageBuffer(self, &buffer.size, self->format);
+            
+        if( buffer.data == NULL || buffer.size == 0 )
+        {
+            msSetError(MS_MISCERR, "Failed to get image buffer", "getBytes");
+            return;
+        }
+        callback(buffer.data, buffer.size);
+        msFree(buffer.data);
+	}
+SWIGINTERN imageObj *new_imageObj(int width,int height,outputFormatObj *input_format,char const *file,double resolution,double defresolution){
+        imageObj *image=NULL;
+        outputFormatObj *format;
+        rendererVTableObj *renderer = NULL;
+        rasterBufferObj *rb = NULL;
+
+        if (input_format) {
+            format = input_format;
+        }
+        else {
+            format = msCreateDefaultOutputFormat(NULL, "GD/GIF", "gdgif");
+            if (format == NULL)
+                format = msCreateDefaultOutputFormat(NULL, "GD/PNG", "gdpng");
+            if (format == NULL)
+
+            if (format)
+                msInitializeRendererVTable(format);
+        }
+        if (format == NULL) {
+            msSetError(15, "Could not create output format",
+                       "imageObj()");
+            return NULL;
+        }
+
+        if (file) {
+            
+            renderer = format->vtable;
+            rb = (rasterBufferObj*) malloc(sizeof(rasterBufferObj));
+            if (!rb) {
+                msSetError(2, NULL, "imageObj()");
+                return NULL;
+            }
+            if ( (renderer->loadImageFromFile((char *)file, rb)) == MS_FAILURE)
+                return NULL;
+
+            image = msImageCreate(rb->width, rb->height, format, NULL, NULL, 
+                                  resolution, defresolution, NULL);
+            renderer->mergeRasterBuffer(image, rb, 1.0, 0, 0, 0, 0, rb->width, rb->height);
+
+            msFreeRasterBuffer(rb);
+            free(rb);
+
+            return image;
+        }
+
+        image = msImageCreate(width, height, format, NULL, NULL, resolution, defresolution, NULL);
+        return image;
+    }
+SWIGINTERN void delete_imageObj(imageObj *self){
+        msFreeImage(self);    
+    }
+SWIGINTERN void imageObj_save(imageObj *self,char *filename,mapObj *map){
+        msSaveImage(map, self, filename );
+    }
+SWIGINTERN int imageObj_getSize(imageObj *self){
+        gdBuffer buffer;
+	int size=0;
+        
+        buffer.data = msSaveImageBuffer(self, &buffer.size, self->format);
+	size = buffer.size;
+            
+        if( buffer.data == NULL || buffer.size == 0 ) {
+            buffer.data = NULL;
+            msSetError(12, "Failed to get image buffer size", "getSize");
+        }
+	free(buffer.data);
+        return size;
+    }
 SWIGINTERN layerObj *new_layerObj(mapObj *map){
         layerObj *layer;
         int result;
@@ -1056,6 +1189,9 @@ SWIGINTERN char *layerObj_getItem(layerObj *self,int i){
         else
             return NULL;
     }
+SWIGINTERN int layerObj_setItems(layerObj *self,char **items,int numitems){
+        return msLayerSetItems(self, items, numitems);
+    }
 SWIGINTERN int layerObj_draw(layerObj *self,mapObj *map,imageObj *image){
         return msDrawLayer(map, self, image);    
     }
@@ -1073,7 +1209,10 @@ SWIGINTERN int layerObj_queryByFilter(layerObj *self,mapObj *map,char *string){
         map->query.filter = (expressionObj *) malloc(sizeof(expressionObj));
         map->query.filter->string = strdup(string);
 	map->query.filter->type = 2000; /* MS_EXPRESSION: lot's of conflicts in mapfile.h */
-
+        map->query.filter->compiled = 0;
+        map->query.filter->flags = 0;
+        map->query.filter->tokens = map->query.filter->curtoken = NULL;
+        
         map->query.layer = self->index;
      	map->query.rect = map->extent;
 
@@ -1100,6 +1239,7 @@ SWIGINTERN int layerObj_queryByAttributes(layerObj *self,mapObj *map,char *qitem
         self->status = 1;
         retval = msQueryByAttributes(map);
         self->status = status;
+
         return retval;
     }
 SWIGINTERN int layerObj_queryByPoint(layerObj *self,mapObj *map,pointObj *point,int mode,double buffer){
@@ -1118,6 +1258,7 @@ SWIGINTERN int layerObj_queryByPoint(layerObj *self,mapObj *map,pointObj *point,
         self->status = 1;
         retval = msQueryByPoint(map);
         self->status = status;
+
         return retval;
     }
 SWIGINTERN int layerObj_queryByRect(layerObj *self,mapObj *map,rectObj rect){
@@ -1135,6 +1276,7 @@ SWIGINTERN int layerObj_queryByRect(layerObj *self,mapObj *map,rectObj rect){
         self->status = 1;
         retval = msQueryByRect(map);
         self->status = status;
+
         return retval;
     }
 SWIGINTERN int layerObj_queryByFeatures(layerObj *self,mapObj *map,int slayer){
@@ -1284,10 +1426,10 @@ SWIGINTERN char *layerObj_executeWFSGetFeature(layerObj *self,layerObj *layer){
         return (char *) msWFSExecuteGetFeature(layer);
     }
 SWIGINTERN int layerObj_applySLD(layerObj *self,char *sld,char *stylelayer){
-        return msSLDApplySLD(self->map, sld, self->index, stylelayer);
+      return msSLDApplySLD(self->map, sld, self->index, stylelayer, NULL);
     }
 SWIGINTERN int layerObj_applySLDURL(layerObj *self,char *sld,char *stylelayer){
-        return msSLDApplySLDURL(self->map, sld, self->index, stylelayer);
+      return msSLDApplySLDURL(self->map, sld, self->index, stylelayer, NULL);
     }
 SWIGINTERN char *layerObj_generateSLD(layerObj *self){
         return (char *) msSLDGenerateSLD(self->map, self->index, NULL);
@@ -1491,7 +1633,10 @@ SWIGINTERN int mapObj_queryByFilter(mapObj *self,char *string){
     self->query.filter = (expressionObj *) malloc(sizeof(expressionObj));
     self->query.filter->string = strdup(string);
     self->query.filter->type = 2000; /* MS_EXPRESSION: lot's of conflicts in mapfile.h */
-
+    self->query.filter->compiled = 0;
+    self->query.filter->flags = 0;
+    self->query.filter->tokens = self->query.filter->curtoken = NULL;
+    
     self->query.rect = self->extent;
 
     return msQueryByFilter(self);
@@ -1640,10 +1785,10 @@ SWIGINTERN void mapObj_applyConfigOptions(mapObj *self){
     msApplyMapConfigOptions( self );
   }
 SWIGINTERN int mapObj_applySLD(mapObj *self,char *sld){
-        return msSLDApplySLD(self, sld, -1, NULL);
+      return msSLDApplySLD(self, sld, -1, NULL, NULL);
     }
 SWIGINTERN int mapObj_applySLDURL(mapObj *self,char *sld){
-        return msSLDApplySLDURL(self, sld, -1, NULL);
+      return msSLDApplySLDURL(self, sld, -1, NULL, NULL);
     }
 SWIGINTERN char *mapObj_generateSLD(mapObj *self){
         return (char *) msSLDGenerateSLD(self, -1, NULL);
@@ -2199,89 +2344,6 @@ SWIGINTERN int mapObj_zoomScale(mapObj *self,double scale,pointObj *poPixPos,int
 
         return MS_SUCCESS;
     }
-SWIGINTERN void imageObj_getBytes(imageObj *self,SWIG_CSharpByteArrayHelperCallback callback){
-        gdBuffer buffer;
-        
-        buffer.owns_data = MS_TRUE;
-        
-        buffer.data = msSaveImageBuffer(self, &buffer.size, self->format);
-            
-        if( buffer.data == NULL || buffer.size == 0 )
-        {
-            msSetError(MS_MISCERR, "Failed to get image buffer", "getBytes");
-            return;
-        }
-        callback(buffer.data, buffer.size);
-        msFree(buffer.data);
-	}
-SWIGINTERN imageObj *new_imageObj(int width,int height,outputFormatObj *input_format,char const *file,double resolution,double defresolution){
-        imageObj *image=NULL;
-        outputFormatObj *format;
-        rendererVTableObj *renderer = NULL;
-        rasterBufferObj *rb = NULL;
-
-        if (input_format) {
-            format = input_format;
-        }
-        else {
-            format = msCreateDefaultOutputFormat(NULL, "GD/GIF", "gdgif");
-            if (format == NULL)
-                format = msCreateDefaultOutputFormat(NULL, "GD/PNG", "gdpng");
-            if (format == NULL)
-
-            if (format)
-                msInitializeRendererVTable(format);
-        }
-        if (format == NULL) {
-            msSetError(15, "Could not create output format",
-                       "imageObj()");
-            return NULL;
-        }
-
-        if (file) {
-            
-            renderer = format->vtable;
-            rb = (rasterBufferObj*) malloc(sizeof(rasterBufferObj));
-            if (!rb) {
-                msSetError(2, NULL, "imageObj()");
-                return NULL;
-            }
-            if ( (renderer->loadImageFromFile(file, rb)) == MS_FAILURE)
-                return NULL;
-
-            image = msImageCreate(rb->width, rb->height, format, NULL, NULL, 
-                                  resolution, defresolution, NULL);
-            renderer->mergeRasterBuffer(image, rb, 1.0, 0, 0, 0, 0, rb->width, rb->height);
-
-            msFreeRasterBuffer(rb);
-            free(rb);
-
-            return image;
-        }
-
-        image = msImageCreate(width, height, format, NULL, NULL, resolution, defresolution, NULL);
-        return image;
-    }
-SWIGINTERN void delete_imageObj(imageObj *self){
-        msFreeImage(self);    
-    }
-SWIGINTERN void imageObj_save(imageObj *self,char *filename,mapObj *map){
-        msSaveImage(map, self, filename );
-    }
-SWIGINTERN int imageObj_getSize(imageObj *self){
-        gdBuffer buffer;
-	int size=0;
-        
-        buffer.data = msSaveImageBuffer(self, &buffer.size, self->format);
-	size = buffer.size;
-            
-        if( buffer.data == NULL || buffer.size == 0 ) {
-            buffer.data = NULL;
-            msSetError(12, "Failed to get image buffer size", "getSize");
-        }
-	free(buffer.data);
-        return size;
-    }
 SWIGINTERN rectObj *new_rectObj(double minx,double miny,double maxx,double maxy,int imageunits){	
         rectObj *rect;
     
@@ -2334,7 +2396,7 @@ SWIGINTERN int rectObj_draw(rectObj *self,mapObj *map,layerObj *layer,imageObj *
         shape.classindex = classindex;
         shape.text = strdup(text);
 
-        msDrawShape(map, layer, &shape, image, -1, 0);
+        msDrawShape(map, layer, &shape, image, -1, MS_DRAWMODE_FEATURES|MS_DRAWMODE_LABELS);
 
         msFreeShape(&shape);
     
@@ -2573,7 +2635,7 @@ SWIGINTERN int shapeObj_add(shapeObj *self,lineObj *line){
         return msAddLine(self, line);
     }
 SWIGINTERN int shapeObj_draw(shapeObj *self,mapObj *map,layerObj *layer,imageObj *image){
-        return msDrawShape(map, layer, self, image, -1, 0);
+        return msDrawShape(map, layer, self, image, -1, MS_DRAWMODE_FEATURES|MS_DRAWMODE_LABELS);
     }
 SWIGINTERN void shapeObj_setBounds(shapeObj *self){    
         msComputeBounds(self);
@@ -2944,7 +3006,7 @@ SWIGINTERN lineObj *symbolObj_getPoints(symbolObj *self){
         return line;
     }
 SWIGINTERN imageObj *symbolObj_getImage(symbolObj *self,outputFormatObj *input_format){
-        imageObj *image;
+        imageObj *image = NULL;
         outputFormatObj *format = NULL;
         rendererVTableObj *renderer = NULL;
 
@@ -3003,7 +3065,6 @@ SWIGINTERN int symbolObj_setImage(symbolObj *self,imageObj *image){
             msSetError(2, NULL, "setImage()");
             return MS_FAILURE;
         }
-        renderer->initializeRasterBuffer(self->pixmap_buffer, image->width, image->height, image->format->imagemode);
         self->type = MS_SYMBOL_PIXMAP;
         renderer->getRasterBufferCopy(image, self->pixmap_buffer);
 
@@ -3124,6 +3185,14 @@ SWIGINTERN void cgiRequestObj_setParameter(cgiRequestObj *self,char *name,char *
             self->ParamValues[self->NumParams] = strdup(value);
             self->NumParams++;
         }
+    }
+SWIGINTERN void cgiRequestObj_addParameter(cgiRequestObj *self,char *name,char *value){
+        if (self->NumParams == 100) {
+            msSetError(31, "Maximum number of items, %d, has been reached", "addParameter()", 100);
+        }
+        self->ParamNames[self->NumParams] = strdup(name);
+        self->ParamValues[self->NumParams] = strdup(value);
+        self->NumParams++;
     }
 SWIGINTERN char *cgiRequestObj_getName(cgiRequestObj *self,int index){
         if (index < 0 || index >= self->NumParams) {
@@ -3281,7 +3350,7 @@ SWIGEXPORT char * SWIGSTDCALL CSharp_MS_VERSION_get() {
   char * jresult ;
   char *result = 0 ;
   
-  result = (char *) "6.0.3";
+  result = (char *) "6.2.0";
   jresult = SWIG_csharp_string_callback((const char *)result); 
   return jresult;
 }
@@ -3301,7 +3370,7 @@ SWIGEXPORT int SWIGSTDCALL CSharp_MS_VERSION_MINOR_get() {
   int jresult ;
   int result;
   
-  result = (int) 0;
+  result = (int) 2;
   jresult = result; 
   return jresult;
 }
@@ -3311,7 +3380,7 @@ SWIGEXPORT int SWIGSTDCALL CSharp_MS_VERSION_REV_get() {
   int jresult ;
   int result;
   
-  result = (int) 3;
+  result = (int) 0;
   jresult = result; 
   return jresult;
 }
@@ -3321,18 +3390,8 @@ SWIGEXPORT int SWIGSTDCALL CSharp_MS_VERSION_NUM_get() {
   int jresult ;
   int result;
   
-  result = (int) (6*10000+0*100+3);
+  result = (int) (6*10000+2*100+0);
   jresult = result; 
-  return jresult;
-}
-
-
-SWIGEXPORT char * SWIGSTDCALL CSharp___FUNCTION___get() {
-  char * jresult ;
-  char *result = 0 ;
-  
-  result = (char *) "MapServer";
-  jresult = SWIG_csharp_string_callback((const char *)result); 
   return jresult;
 }
 
@@ -3477,6 +3536,16 @@ SWIGEXPORT int SWIGSTDCALL CSharp_MS_STYLE_ALLOCSIZE_get() {
 }
 
 
+SWIGEXPORT int SWIGSTDCALL CSharp_MS_LABEL_ALLOCSIZE_get() {
+  int jresult ;
+  int result;
+  
+  result = (int) 2;
+  jresult = result; 
+  return jresult;
+}
+
+
 SWIGEXPORT int SWIGSTDCALL CSharp_MS_MAX_LABEL_PRIORITY_get() {
   int jresult ;
   int result;
@@ -3487,11 +3556,31 @@ SWIGEXPORT int SWIGSTDCALL CSharp_MS_MAX_LABEL_PRIORITY_get() {
 }
 
 
+SWIGEXPORT int SWIGSTDCALL CSharp_MS_MAX_LABEL_FONTS_get() {
+  int jresult ;
+  int result;
+  
+  result = (int) 5;
+  jresult = result; 
+  return jresult;
+}
+
+
 SWIGEXPORT int SWIGSTDCALL CSharp_MS_DEFAULT_LABEL_PRIORITY_get() {
   int jresult ;
   int result;
   
   result = (int) 1;
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_MS_LABEL_FORCE_GROUP_get() {
+  int jresult ;
+  int result;
+  
+  result = (int) 2;
   jresult = result; 
   return jresult;
 }
@@ -3671,7 +3760,7 @@ SWIGEXPORT int SWIGSTDCALL CSharp_MS_STYLE_BINDING_LENGTH_get() {
   int jresult ;
   int result;
   
-  result = (int) 8;
+  result = (int) 12;
   jresult = result; 
   return jresult;
 }
@@ -4905,10 +4994,10 @@ SWIGEXPORT char * SWIGSTDCALL CSharp_webObj_temppath_get(void * jarg1) {
 SWIGEXPORT void * SWIGSTDCALL CSharp_webObj_map_get(void * jarg1) {
   void * jresult ;
   webObj *arg1 = (webObj *) 0 ;
-  struct map_obj *result = 0 ;
+  struct mapObj *result = 0 ;
   
   arg1 = (webObj *)jarg1; 
-  result = (struct map_obj *) ((arg1)->map);
+  result = (struct mapObj *) ((arg1)->map);
   jresult = (void *)result; 
   return jresult;
 }
@@ -5837,6 +5926,28 @@ SWIGEXPORT double SWIGSTDCALL CSharp_styleObj_gap_get(void * jarg1) {
 }
 
 
+SWIGEXPORT void SWIGSTDCALL CSharp_styleObj_initialgap_set(void * jarg1, double jarg2) {
+  styleObj *arg1 = (styleObj *) 0 ;
+  double arg2 ;
+  
+  arg1 = (styleObj *)jarg1; 
+  arg2 = (double)jarg2; 
+  if (arg1) (arg1)->initialgap = arg2;
+}
+
+
+SWIGEXPORT double SWIGSTDCALL CSharp_styleObj_initialgap_get(void * jarg1) {
+  double jresult ;
+  styleObj *arg1 = (styleObj *) 0 ;
+  double result;
+  
+  arg1 = (styleObj *)jarg1; 
+  result = (double) ((arg1)->initialgap);
+  jresult = result; 
+  return jresult;
+}
+
+
 SWIGEXPORT void SWIGSTDCALL CSharp_styleObj_position_set(void * jarg1, int jarg2) {
   styleObj *arg1 = (styleObj *) 0 ;
   int arg2 ;
@@ -6052,6 +6163,50 @@ SWIGEXPORT double SWIGSTDCALL CSharp_styleObj_offsety_get(void * jarg1) {
   
   arg1 = (styleObj *)jarg1; 
   result = (double) ((arg1)->offsety);
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_styleObj_polaroffsetpixel_set(void * jarg1, double jarg2) {
+  styleObj *arg1 = (styleObj *) 0 ;
+  double arg2 ;
+  
+  arg1 = (styleObj *)jarg1; 
+  arg2 = (double)jarg2; 
+  if (arg1) (arg1)->polaroffsetpixel = arg2;
+}
+
+
+SWIGEXPORT double SWIGSTDCALL CSharp_styleObj_polaroffsetpixel_get(void * jarg1) {
+  double jresult ;
+  styleObj *arg1 = (styleObj *) 0 ;
+  double result;
+  
+  arg1 = (styleObj *)jarg1; 
+  result = (double) ((arg1)->polaroffsetpixel);
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_styleObj_polaroffsetangle_set(void * jarg1, double jarg2) {
+  styleObj *arg1 = (styleObj *) 0 ;
+  double arg2 ;
+  
+  arg1 = (styleObj *)jarg1; 
+  arg2 = (double)jarg2; 
+  if (arg1) (arg1)->polaroffsetangle = arg2;
+}
+
+
+SWIGEXPORT double SWIGSTDCALL CSharp_styleObj_polaroffsetangle_get(void * jarg1) {
+  double jresult ;
+  styleObj *arg1 = (styleObj *) 0 ;
+  double result;
+  
+  arg1 = (styleObj *)jarg1; 
+  result = (double) ((arg1)->polaroffsetangle);
   jresult = result; 
   return jresult;
 }
@@ -6440,6 +6595,126 @@ SWIGEXPORT void SWIGSTDCALL CSharp_styleObj_setGeomTransform(void * jarg1, char 
       msResetErrorList();
     }
   }
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_labelLeaderObj_maxdistance_set(void * jarg1, int jarg2) {
+  labelLeaderObj *arg1 = (labelLeaderObj *) 0 ;
+  int arg2 ;
+  
+  arg1 = (labelLeaderObj *)jarg1; 
+  arg2 = (int)jarg2; 
+  if (arg1) (arg1)->maxdistance = arg2;
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_labelLeaderObj_maxdistance_get(void * jarg1) {
+  int jresult ;
+  labelLeaderObj *arg1 = (labelLeaderObj *) 0 ;
+  int result;
+  
+  arg1 = (labelLeaderObj *)jarg1; 
+  result = (int) ((arg1)->maxdistance);
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_labelLeaderObj_gridstep_set(void * jarg1, int jarg2) {
+  labelLeaderObj *arg1 = (labelLeaderObj *) 0 ;
+  int arg2 ;
+  
+  arg1 = (labelLeaderObj *)jarg1; 
+  arg2 = (int)jarg2; 
+  if (arg1) (arg1)->gridstep = arg2;
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_labelLeaderObj_gridstep_get(void * jarg1) {
+  int jresult ;
+  labelLeaderObj *arg1 = (labelLeaderObj *) 0 ;
+  int result;
+  
+  arg1 = (labelLeaderObj *)jarg1; 
+  result = (int) ((arg1)->gridstep);
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_labelLeaderObj_numstyles_get(void * jarg1) {
+  int jresult ;
+  labelLeaderObj *arg1 = (labelLeaderObj *) 0 ;
+  int result;
+  
+  arg1 = (labelLeaderObj *)jarg1; 
+  result = (int) ((arg1)->numstyles);
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_new_labelLeaderObj() {
+  void * jresult ;
+  labelLeaderObj *result = 0 ;
+  
+  {
+    errorObj *ms_error;
+    result = (labelLeaderObj *)calloc(1, sizeof(labelLeaderObj));
+    ms_error = msGetErrorObj();
+    if (ms_error != NULL && ms_error->code != MS_NOERR) {
+      if (ms_error->code != MS_NOTFOUND && ms_error->code != -1) {
+        char* msg = msGetErrorString(";"); 
+        if (msg) {
+          SWIG_CSharpException(SWIG_SystemError, msg);
+          free(msg);
+        }
+        else SWIG_CSharpException(SWIG_SystemError, "MapScript unknown error");
+        msResetErrorList();
+        return 0;
+      }
+      msResetErrorList();
+    }
+  }
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_delete_labelLeaderObj(void * jarg1) {
+  labelLeaderObj *arg1 = (labelLeaderObj *) 0 ;
+  
+  arg1 = (labelLeaderObj *)jarg1; 
+  {
+    errorObj *ms_error;
+    free((char *) arg1);
+    ms_error = msGetErrorObj();
+    if (ms_error != NULL && ms_error->code != MS_NOERR) {
+      if (ms_error->code != MS_NOTFOUND && ms_error->code != -1) {
+        char* msg = msGetErrorString(";"); 
+        if (msg) {
+          SWIG_CSharpException(SWIG_SystemError, msg);
+          free(msg);
+        }
+        else SWIG_CSharpException(SWIG_SystemError, "MapScript unknown error");
+        msResetErrorList();
+        return ;
+      }
+      msResetErrorList();
+    }
+  }
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_labelObj_refcount_get(void * jarg1) {
+  int jresult ;
+  labelObj *arg1 = (labelObj *) 0 ;
+  int result;
+  
+  arg1 = (labelObj *)jarg1; 
+  result = (int) ((arg1)->refcount);
+  jresult = result; 
+  return jresult;
 }
 
 
@@ -7207,6 +7482,28 @@ SWIGEXPORT int SWIGSTDCALL CSharp_labelObj_priority_get(void * jarg1) {
 }
 
 
+SWIGEXPORT void SWIGSTDCALL CSharp_labelObj_status_set(void * jarg1, int jarg2) {
+  labelObj *arg1 = (labelObj *) 0 ;
+  int arg2 ;
+  
+  arg1 = (labelObj *)jarg1; 
+  arg2 = (int)jarg2; 
+  if (arg1) (arg1)->status = arg2;
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_labelObj_status_get(void * jarg1) {
+  int jresult ;
+  labelObj *arg1 = (labelObj *) 0 ;
+  int result;
+  
+  arg1 = (labelObj *)jarg1; 
+  result = (int) ((arg1)->status);
+  jresult = result; 
+  return jresult;
+}
+
+
 SWIGEXPORT void SWIGSTDCALL CSharp_labelObj_numstyles_set(void * jarg1, int jarg2) {
   labelObj *arg1 = (labelObj *) 0 ;
   int arg2 ;
@@ -7226,6 +7523,154 @@ SWIGEXPORT int SWIGSTDCALL CSharp_labelObj_numstyles_get(void * jarg1) {
   result = (int) ((arg1)->numstyles);
   jresult = result; 
   return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_labelObj_annotext_set(void * jarg1, char * jarg2) {
+  labelObj *arg1 = (labelObj *) 0 ;
+  char *arg2 = (char *) 0 ;
+  
+  arg1 = (labelObj *)jarg1; 
+  arg2 = (char *)jarg2; 
+  {
+    if (arg1->annotext) free((char*)arg1->annotext);
+    if (arg2) {
+      arg1->annotext = (char *) malloc(strlen(arg2)+1);
+      strcpy((char*)arg1->annotext,arg2);
+    } else {
+      arg1->annotext = 0;
+    }
+  }
+}
+
+
+SWIGEXPORT char * SWIGSTDCALL CSharp_labelObj_annotext_get(void * jarg1) {
+  char * jresult ;
+  labelObj *arg1 = (labelObj *) 0 ;
+  char *result = 0 ;
+  
+  arg1 = (labelObj *)jarg1; 
+  result = (char *) ((arg1)->annotext);
+  jresult = SWIG_csharp_string_callback((const char *)result); 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_labelObj_annopoint_set(void * jarg1, void * jarg2) {
+  labelObj *arg1 = (labelObj *) 0 ;
+  pointObj *arg2 = (pointObj *) 0 ;
+  
+  arg1 = (labelObj *)jarg1; 
+  arg2 = (pointObj *)jarg2; 
+  if (arg1) (arg1)->annopoint = *arg2;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_labelObj_annopoint_get(void * jarg1) {
+  void * jresult ;
+  labelObj *arg1 = (labelObj *) 0 ;
+  pointObj *result = 0 ;
+  
+  arg1 = (labelObj *)jarg1; 
+  result = (pointObj *)& ((arg1)->annopoint);
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_labelObj_annopoly_set(void * jarg1, void * jarg2) {
+  labelObj *arg1 = (labelObj *) 0 ;
+  shapeObj *arg2 = (shapeObj *) 0 ;
+  
+  arg1 = (labelObj *)jarg1; 
+  arg2 = (shapeObj *)jarg2; 
+  if (arg1) (arg1)->annopoly = arg2;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_labelObj_annopoly_get(void * jarg1) {
+  void * jresult ;
+  labelObj *arg1 = (labelObj *) 0 ;
+  shapeObj *result = 0 ;
+  
+  arg1 = (labelObj *)jarg1; 
+  result = (shapeObj *) ((arg1)->annopoly);
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_labelObj_leader_set(void * jarg1, void * jarg2) {
+  labelObj *arg1 = (labelObj *) 0 ;
+  labelLeaderObj *arg2 = (labelLeaderObj *) 0 ;
+  
+  arg1 = (labelObj *)jarg1; 
+  arg2 = (labelLeaderObj *)jarg2; 
+  if (arg1) (arg1)->leader = *arg2;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_labelObj_leader_get(void * jarg1) {
+  void * jresult ;
+  labelObj *arg1 = (labelObj *) 0 ;
+  labelLeaderObj *result = 0 ;
+  
+  arg1 = (labelObj *)jarg1; 
+  result = (labelLeaderObj *)& ((arg1)->leader);
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_new_labelObj() {
+  void * jresult ;
+  labelObj *result = 0 ;
+  
+  {
+    errorObj *ms_error;
+    result = (labelObj *)new_labelObj();
+    ms_error = msGetErrorObj();
+    if (ms_error != NULL && ms_error->code != MS_NOERR) {
+      if (ms_error->code != MS_NOTFOUND && ms_error->code != -1) {
+        char* msg = msGetErrorString(";"); 
+        if (msg) {
+          SWIG_CSharpException(SWIG_SystemError, msg);
+          free(msg);
+        }
+        else SWIG_CSharpException(SWIG_SystemError, "MapScript unknown error");
+        msResetErrorList();
+        return 0;
+      }
+      msResetErrorList();
+    }
+  }
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_delete_labelObj(void * jarg1) {
+  labelObj *arg1 = (labelObj *) 0 ;
+  
+  arg1 = (labelObj *)jarg1; 
+  {
+    errorObj *ms_error;
+    delete_labelObj(arg1);
+    ms_error = msGetErrorObj();
+    if (ms_error != NULL && ms_error->code != MS_NOERR) {
+      if (ms_error->code != MS_NOTFOUND && ms_error->code != -1) {
+        char* msg = msGetErrorString(";"); 
+        if (msg) {
+          SWIG_CSharpException(SWIG_SystemError, msg);
+          free(msg);
+        }
+        else SWIG_CSharpException(SWIG_SystemError, "MapScript unknown error");
+        msResetErrorList();
+        return ;
+      }
+      msResetErrorList();
+    }
+  }
 }
 
 
@@ -7351,6 +7796,128 @@ SWIGEXPORT int SWIGSTDCALL CSharp_labelObj_setBinding(void * jarg1, int jarg2, c
     }
   }
   jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_labelObj_setExpression(void * jarg1, char * jarg2) {
+  int jresult ;
+  labelObj *arg1 = (labelObj *) 0 ;
+  char *arg2 = (char *) 0 ;
+  int result;
+  
+  arg1 = (labelObj *)jarg1; 
+  arg2 = (char *)jarg2; 
+  {
+    errorObj *ms_error;
+    result = (int)labelObj_setExpression(arg1,arg2);
+    ms_error = msGetErrorObj();
+    if (ms_error != NULL && ms_error->code != MS_NOERR) {
+      if (ms_error->code != MS_NOTFOUND && ms_error->code != -1) {
+        char* msg = msGetErrorString(";"); 
+        if (msg) {
+          SWIG_CSharpException(SWIG_SystemError, msg);
+          free(msg);
+        }
+        else SWIG_CSharpException(SWIG_SystemError, "MapScript unknown error");
+        msResetErrorList();
+        return 0;
+      }
+      msResetErrorList();
+    }
+  }
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT char * SWIGSTDCALL CSharp_labelObj_getExpressionString(void * jarg1) {
+  char * jresult ;
+  labelObj *arg1 = (labelObj *) 0 ;
+  char *result = 0 ;
+  
+  arg1 = (labelObj *)jarg1; 
+  {
+    errorObj *ms_error;
+    result = (char *)labelObj_getExpressionString(arg1);
+    ms_error = msGetErrorObj();
+    if (ms_error != NULL && ms_error->code != MS_NOERR) {
+      if (ms_error->code != MS_NOTFOUND && ms_error->code != -1) {
+        char* msg = msGetErrorString(";"); 
+        if (msg) {
+          SWIG_CSharpException(SWIG_SystemError, msg);
+          free(msg);
+        }
+        else SWIG_CSharpException(SWIG_SystemError, "MapScript unknown error");
+        msResetErrorList();
+        return 0;
+      }
+      msResetErrorList();
+    }
+  }
+  jresult = SWIG_csharp_string_callback((const char *)result); 
+  free(result);
+  return jresult;
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_labelObj_setText(void * jarg1, char * jarg2) {
+  int jresult ;
+  labelObj *arg1 = (labelObj *) 0 ;
+  char *arg2 = (char *) 0 ;
+  int result;
+  
+  arg1 = (labelObj *)jarg1; 
+  arg2 = (char *)jarg2; 
+  {
+    errorObj *ms_error;
+    result = (int)labelObj_setText(arg1,arg2);
+    ms_error = msGetErrorObj();
+    if (ms_error != NULL && ms_error->code != MS_NOERR) {
+      if (ms_error->code != MS_NOTFOUND && ms_error->code != -1) {
+        char* msg = msGetErrorString(";"); 
+        if (msg) {
+          SWIG_CSharpException(SWIG_SystemError, msg);
+          free(msg);
+        }
+        else SWIG_CSharpException(SWIG_SystemError, "MapScript unknown error");
+        msResetErrorList();
+        return 0;
+      }
+      msResetErrorList();
+    }
+  }
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT char * SWIGSTDCALL CSharp_labelObj_getTextString(void * jarg1) {
+  char * jresult ;
+  labelObj *arg1 = (labelObj *) 0 ;
+  char *result = 0 ;
+  
+  arg1 = (labelObj *)jarg1; 
+  {
+    errorObj *ms_error;
+    result = (char *)labelObj_getTextString(arg1);
+    ms_error = msGetErrorObj();
+    if (ms_error != NULL && ms_error->code != MS_NOERR) {
+      if (ms_error->code != MS_NOTFOUND && ms_error->code != -1) {
+        char* msg = msGetErrorString(";"); 
+        if (msg) {
+          SWIG_CSharpException(SWIG_SystemError, msg);
+          free(msg);
+        }
+        else SWIG_CSharpException(SWIG_SystemError, "MapScript unknown error");
+        msResetErrorList();
+        return 0;
+      }
+      msResetErrorList();
+    }
+  }
+  jresult = SWIG_csharp_string_callback((const char *)result); 
+  free(result);
   return jresult;
 }
 
@@ -7512,58 +8079,6 @@ SWIGEXPORT int SWIGSTDCALL CSharp_labelObj_moveStyleDown(void * jarg1, int jarg2
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_new_labelObj() {
-  void * jresult ;
-  labelObj *result = 0 ;
-  
-  {
-    errorObj *ms_error;
-    result = (labelObj *)calloc(1, sizeof(labelObj));
-    ms_error = msGetErrorObj();
-    if (ms_error != NULL && ms_error->code != MS_NOERR) {
-      if (ms_error->code != MS_NOTFOUND && ms_error->code != -1) {
-        char* msg = msGetErrorString(";"); 
-        if (msg) {
-          SWIG_CSharpException(SWIG_SystemError, msg);
-          free(msg);
-        }
-        else SWIG_CSharpException(SWIG_SystemError, "MapScript unknown error");
-        msResetErrorList();
-        return 0;
-      }
-      msResetErrorList();
-    }
-  }
-  jresult = (void *)result; 
-  return jresult;
-}
-
-
-SWIGEXPORT void SWIGSTDCALL CSharp_delete_labelObj(void * jarg1) {
-  labelObj *arg1 = (labelObj *) 0 ;
-  
-  arg1 = (labelObj *)jarg1; 
-  {
-    errorObj *ms_error;
-    free((char *) arg1);
-    ms_error = msGetErrorObj();
-    if (ms_error != NULL && ms_error->code != MS_NOERR) {
-      if (ms_error->code != MS_NOTFOUND && ms_error->code != -1) {
-        char* msg = msGetErrorString(";"); 
-        if (msg) {
-          SWIG_CSharpException(SWIG_SystemError, msg);
-          free(msg);
-        }
-        else SWIG_CSharpException(SWIG_SystemError, "MapScript unknown error");
-        msResetErrorList();
-        return ;
-      }
-      msResetErrorList();
-    }
-  }
-}
-
-
 SWIGEXPORT void SWIGSTDCALL CSharp_classObj_status_set(void * jarg1, int jarg2) {
   classObj *arg1 = (classObj *) 0 ;
   int arg2 ;
@@ -7586,16 +8101,6 @@ SWIGEXPORT int SWIGSTDCALL CSharp_classObj_status_get(void * jarg1) {
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_classObj_numstyles_set(void * jarg1, int jarg2) {
-  classObj *arg1 = (classObj *) 0 ;
-  int arg2 ;
-  
-  arg1 = (classObj *)jarg1; 
-  arg2 = (int)jarg2; 
-  if (arg1) (arg1)->numstyles = arg2;
-}
-
-
 SWIGEXPORT int SWIGSTDCALL CSharp_classObj_numstyles_get(void * jarg1) {
   int jresult ;
   classObj *arg1 = (classObj *) 0 ;
@@ -7608,14 +8113,24 @@ SWIGEXPORT int SWIGSTDCALL CSharp_classObj_numstyles_get(void * jarg1) {
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_classObj_label_get(void * jarg1) {
-  void * jresult ;
+SWIGEXPORT void SWIGSTDCALL CSharp_classObj_numlabels_set(void * jarg1, int jarg2) {
   classObj *arg1 = (classObj *) 0 ;
-  labelObj *result = 0 ;
+  int arg2 ;
   
   arg1 = (classObj *)jarg1; 
-  result = (labelObj *)& ((arg1)->label);
-  jresult = (void *)result; 
+  arg2 = (int)jarg2; 
+  if (arg1) (arg1)->numlabels = arg2;
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_classObj_numlabels_get(void * jarg1) {
+  int jresult ;
+  classObj *arg1 = (classObj *) 0 ;
+  int result;
+  
+  arg1 = (classObj *)jarg1; 
+  result = (int) ((arg1)->numlabels);
+  jresult = result; 
   return jresult;
 }
 
@@ -7837,10 +8352,10 @@ SWIGEXPORT int SWIGSTDCALL CSharp_classObj_refcount_get(void * jarg1) {
 SWIGEXPORT void * SWIGSTDCALL CSharp_classObj_layer_get(void * jarg1) {
   void * jresult ;
   classObj *arg1 = (classObj *) 0 ;
-  struct layer_obj *result = 0 ;
+  struct layerObj *result = 0 ;
   
   arg1 = (classObj *)jarg1; 
-  result = (struct layer_obj *) ((arg1)->layer);
+  result = (struct layerObj *) ((arg1)->layer);
   jresult = (void *)result; 
   return jresult;
 }
@@ -7924,6 +8439,28 @@ SWIGEXPORT char * SWIGSTDCALL CSharp_classObj_group_get(void * jarg1) {
   arg1 = (classObj *)jarg1; 
   result = (char *) ((arg1)->group);
   jresult = SWIG_csharp_string_callback((const char *)result); 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_classObj_leader_set(void * jarg1, void * jarg2) {
+  classObj *arg1 = (classObj *) 0 ;
+  labelLeaderObj *arg2 = (labelLeaderObj *) 0 ;
+  
+  arg1 = (classObj *)jarg1; 
+  arg2 = (labelLeaderObj *)jarg2; 
+  if (arg1) (arg1)->leader = *arg2;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_classObj_leader_get(void * jarg1) {
+  void * jresult ;
+  classObj *arg1 = (classObj *) 0 ;
+  labelLeaderObj *result = 0 ;
+  
+  arg1 = (classObj *)jarg1; 
+  result = (labelLeaderObj *)& ((arg1)->leader);
+  jresult = (void *)result; 
   return jresult;
 }
 
@@ -8368,6 +8905,99 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_classObj_createLegendIcon(void * jarg1, voi
 }
 
 
+SWIGEXPORT void * SWIGSTDCALL CSharp_classObj_getLabel(void * jarg1, int jarg2) {
+  void * jresult ;
+  classObj *arg1 = (classObj *) 0 ;
+  int arg2 ;
+  labelObj *result = 0 ;
+  
+  arg1 = (classObj *)jarg1; 
+  arg2 = (int)jarg2; 
+  {
+    errorObj *ms_error;
+    result = (labelObj *)classObj_getLabel(arg1,arg2);
+    ms_error = msGetErrorObj();
+    if (ms_error != NULL && ms_error->code != MS_NOERR) {
+      if (ms_error->code != MS_NOTFOUND && ms_error->code != -1) {
+        char* msg = msGetErrorString(";"); 
+        if (msg) {
+          SWIG_CSharpException(SWIG_SystemError, msg);
+          free(msg);
+        }
+        else SWIG_CSharpException(SWIG_SystemError, "MapScript unknown error");
+        msResetErrorList();
+        return 0;
+      }
+      msResetErrorList();
+    }
+  }
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_classObj_addLabel(void * jarg1, void * jarg2) {
+  int jresult ;
+  classObj *arg1 = (classObj *) 0 ;
+  labelObj *arg2 = (labelObj *) 0 ;
+  int result;
+  
+  arg1 = (classObj *)jarg1; 
+  arg2 = (labelObj *)jarg2; 
+  {
+    errorObj *ms_error;
+    result = (int)classObj_addLabel(arg1,arg2);
+    ms_error = msGetErrorObj();
+    if (ms_error != NULL && ms_error->code != MS_NOERR) {
+      if (ms_error->code != MS_NOTFOUND && ms_error->code != -1) {
+        char* msg = msGetErrorString(";"); 
+        if (msg) {
+          SWIG_CSharpException(SWIG_SystemError, msg);
+          free(msg);
+        }
+        else SWIG_CSharpException(SWIG_SystemError, "MapScript unknown error");
+        msResetErrorList();
+        return 0;
+      }
+      msResetErrorList();
+    }
+  }
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_classObj_removeLabel(void * jarg1, int jarg2) {
+  void * jresult ;
+  classObj *arg1 = (classObj *) 0 ;
+  int arg2 ;
+  labelObj *result = 0 ;
+  
+  arg1 = (classObj *)jarg1; 
+  arg2 = (int)jarg2; 
+  {
+    errorObj *ms_error;
+    result = (labelObj *)classObj_removeLabel(arg1,arg2);
+    ms_error = msGetErrorObj();
+    if (ms_error != NULL && ms_error->code != MS_NOERR) {
+      if (ms_error->code != MS_NOTFOUND && ms_error->code != -1) {
+        char* msg = msGetErrorString(";"); 
+        if (msg) {
+          SWIG_CSharpException(SWIG_SystemError, msg);
+          free(msg);
+        }
+        else SWIG_CSharpException(SWIG_SystemError, "MapScript unknown error");
+        msResetErrorList();
+        return 0;
+      }
+      msResetErrorList();
+    }
+  }
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
 SWIGEXPORT void * SWIGSTDCALL CSharp_classObj_getStyle(void * jarg1, int jarg2) {
   void * jresult ;
   classObj *arg1 = (classObj *) 0 ;
@@ -8525,18 +9155,6 @@ SWIGEXPORT int SWIGSTDCALL CSharp_classObj_moveStyleDown(void * jarg1, int jarg2
 }
 
 
-SWIGEXPORT char * SWIGSTDCALL CSharp_labelCacheMemberObj_text_get(void * jarg1) {
-  char * jresult ;
-  labelCacheMemberObj *arg1 = (labelCacheMemberObj *) 0 ;
-  char *result = 0 ;
-  
-  arg1 = (labelCacheMemberObj *)jarg1; 
-  result = (char *) ((arg1)->text);
-  jresult = SWIG_csharp_string_callback((const char *)result); 
-  return jresult;
-}
-
-
 SWIGEXPORT double SWIGSTDCALL CSharp_labelCacheMemberObj_featuresize_get(void * jarg1) {
   double jresult ;
   labelCacheMemberObj *arg1 = (labelCacheMemberObj *) 0 ;
@@ -8573,14 +9191,26 @@ SWIGEXPORT int SWIGSTDCALL CSharp_labelCacheMemberObj_numstyles_get(void * jarg1
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_labelCacheMemberObj_label_get(void * jarg1) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_labelCacheMemberObj_labels_get(void * jarg1) {
   void * jresult ;
   labelCacheMemberObj *arg1 = (labelCacheMemberObj *) 0 ;
   labelObj *result = 0 ;
   
   arg1 = (labelCacheMemberObj *)jarg1; 
-  result = (labelObj *)& ((arg1)->label);
+  result = (labelObj *) ((arg1)->labels);
   jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_labelCacheMemberObj_numlabels_get(void * jarg1) {
+  int jresult ;
+  labelCacheMemberObj *arg1 = (labelCacheMemberObj *) 0 ;
+  int result;
+  
+  arg1 = (labelCacheMemberObj *)jarg1; 
+  result = (int) ((arg1)->numlabels);
+  jresult = result; 
   return jresult;
 }
 
@@ -8604,30 +9234,6 @@ SWIGEXPORT int SWIGSTDCALL CSharp_labelCacheMemberObj_classindex_get(void * jarg
   
   arg1 = (labelCacheMemberObj *)jarg1; 
   result = (int) ((arg1)->classindex);
-  jresult = result; 
-  return jresult;
-}
-
-
-SWIGEXPORT int SWIGSTDCALL CSharp_labelCacheMemberObj_tileindex_get(void * jarg1) {
-  int jresult ;
-  labelCacheMemberObj *arg1 = (labelCacheMemberObj *) 0 ;
-  int result;
-  
-  arg1 = (labelCacheMemberObj *)jarg1; 
-  result = (int) ((arg1)->tileindex);
-  jresult = result; 
-  return jresult;
-}
-
-
-SWIGEXPORT int SWIGSTDCALL CSharp_labelCacheMemberObj_shapeindex_get(void * jarg1) {
-  int jresult ;
-  labelCacheMemberObj *arg1 = (labelCacheMemberObj *) 0 ;
-  int result;
-  
-  arg1 = (labelCacheMemberObj *)jarg1; 
-  result = (int) ((arg1)->shapeindex);
   jresult = result; 
   return jresult;
 }
@@ -8689,6 +9295,30 @@ SWIGEXPORT int SWIGSTDCALL CSharp_labelCacheMemberObj_markerid_get(void * jarg1)
   arg1 = (labelCacheMemberObj *)jarg1; 
   result = (int) ((arg1)->markerid);
   jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_labelCacheMemberObj_leaderline_get(void * jarg1) {
+  void * jresult ;
+  labelCacheMemberObj *arg1 = (labelCacheMemberObj *) 0 ;
+  lineObj *result = 0 ;
+  
+  arg1 = (labelCacheMemberObj *)jarg1; 
+  result = (lineObj *) ((arg1)->leaderline);
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_labelCacheMemberObj_leaderbbox_get(void * jarg1) {
+  void * jresult ;
+  labelCacheMemberObj *arg1 = (labelCacheMemberObj *) 0 ;
+  rectObj *result = 0 ;
+  
+  arg1 = (labelCacheMemberObj *)jarg1; 
+  result = (rectObj *) ((arg1)->leaderbbox);
+  jresult = (void *)result; 
   return jresult;
 }
 
@@ -8964,6 +9594,18 @@ SWIGEXPORT int SWIGSTDCALL CSharp_labelCacheObj_numlabels_get(void * jarg1) {
   
   arg1 = (labelCacheObj *)jarg1; 
   result = (int) ((arg1)->numlabels);
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_labelCacheObj_gutter_get(void * jarg1) {
+  int jresult ;
+  labelCacheObj *arg1 = (labelCacheObj *) 0 ;
+  int result;
+  
+  arg1 = (labelCacheObj *)jarg1; 
+  result = (int) ((arg1)->gutter);
   jresult = result; 
   return jresult;
 }
@@ -9876,10 +10518,10 @@ SWIGEXPORT int SWIGSTDCALL CSharp_referenceMapObj_maxboxsize_get(void * jarg1) {
 SWIGEXPORT void * SWIGSTDCALL CSharp_referenceMapObj_map_get(void * jarg1) {
   void * jresult ;
   referenceMapObj *arg1 = (referenceMapObj *) 0 ;
-  struct map_obj *result = 0 ;
+  struct mapObj *result = 0 ;
   
   arg1 = (referenceMapObj *)jarg1; 
-  result = (struct map_obj *) ((arg1)->map);
+  result = (struct mapObj *) ((arg1)->map);
   jresult = (void *)result; 
   return jresult;
 }
@@ -10646,10 +11288,10 @@ SWIGEXPORT char * SWIGSTDCALL CSharp_legendObj_template_get(void * jarg1) {
 SWIGEXPORT void * SWIGSTDCALL CSharp_legendObj_map_get(void * jarg1) {
   void * jresult ;
   legendObj *arg1 = (legendObj *) 0 ;
-  struct map_obj *result = 0 ;
+  struct mapObj *result = 0 ;
   
   arg1 = (legendObj *)jarg1; 
-  result = (struct map_obj *) ((arg1)->map);
+  result = (struct mapObj *) ((arg1)->map);
   jresult = (void *)result; 
   return jresult;
 }
@@ -10738,6 +11380,239 @@ SWIGEXPORT void SWIGSTDCALL CSharp_delete_legendObj(void * jarg1) {
 }
 
 
+SWIGEXPORT void SWIGSTDCALL CSharp_imageObj_getBytes(void * jarg1, SWIG_CSharpByteArrayHelperCallback jarg2) {
+  imageObj *arg1 = (imageObj *) 0 ;
+  SWIG_CSharpByteArrayHelperCallback arg2 ;
+  
+  arg1 = (imageObj *)jarg1; 
+  arg2 = (SWIG_CSharpByteArrayHelperCallback)jarg2; 
+  {
+    errorObj *ms_error;
+    imageObj_getBytes(arg1,arg2);
+    ms_error = msGetErrorObj();
+    if (ms_error != NULL && ms_error->code != MS_NOERR) {
+      if (ms_error->code != MS_NOTFOUND && ms_error->code != -1) {
+        char* msg = msGetErrorString(";"); 
+        if (msg) {
+          SWIG_CSharpException(SWIG_SystemError, msg);
+          free(msg);
+        }
+        else SWIG_CSharpException(SWIG_SystemError, "MapScript unknown error");
+        msResetErrorList();
+        return ;
+      }
+      msResetErrorList();
+    }
+  }
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_imageObj_width_get(void * jarg1) {
+  int jresult ;
+  imageObj *arg1 = (imageObj *) 0 ;
+  int result;
+  
+  arg1 = (imageObj *)jarg1; 
+  result = (int) ((arg1)->width);
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_imageObj_height_get(void * jarg1) {
+  int jresult ;
+  imageObj *arg1 = (imageObj *) 0 ;
+  int result;
+  
+  arg1 = (imageObj *)jarg1; 
+  result = (int) ((arg1)->height);
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT double SWIGSTDCALL CSharp_imageObj_resolution_get(void * jarg1) {
+  double jresult ;
+  imageObj *arg1 = (imageObj *) 0 ;
+  double result;
+  
+  arg1 = (imageObj *)jarg1; 
+  result = (double) ((arg1)->resolution);
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT double SWIGSTDCALL CSharp_imageObj_resolutionfactor_get(void * jarg1) {
+  double jresult ;
+  imageObj *arg1 = (imageObj *) 0 ;
+  double result;
+  
+  arg1 = (imageObj *)jarg1; 
+  result = (double) ((arg1)->resolutionfactor);
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT char * SWIGSTDCALL CSharp_imageObj_imagepath_get(void * jarg1) {
+  char * jresult ;
+  imageObj *arg1 = (imageObj *) 0 ;
+  char *result = 0 ;
+  
+  arg1 = (imageObj *)jarg1; 
+  result = (char *) ((arg1)->imagepath);
+  jresult = SWIG_csharp_string_callback((const char *)result); 
+  return jresult;
+}
+
+
+SWIGEXPORT char * SWIGSTDCALL CSharp_imageObj_imageurl_get(void * jarg1) {
+  char * jresult ;
+  imageObj *arg1 = (imageObj *) 0 ;
+  char *result = 0 ;
+  
+  arg1 = (imageObj *)jarg1; 
+  result = (char *) ((arg1)->imageurl);
+  jresult = SWIG_csharp_string_callback((const char *)result); 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_imageObj_format_get(void * jarg1) {
+  void * jresult ;
+  imageObj *arg1 = (imageObj *) 0 ;
+  outputFormatObj *result = 0 ;
+  
+  arg1 = (imageObj *)jarg1; 
+  result = (outputFormatObj *) ((arg1)->format);
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_new_imageObj(int jarg1, int jarg2, void * jarg3, char * jarg4, double jarg5, double jarg6) {
+  void * jresult ;
+  int arg1 ;
+  int arg2 ;
+  outputFormatObj *arg3 = (outputFormatObj *) NULL ;
+  char *arg4 = (char *) NULL ;
+  double arg5 = (double) MS_DEFAULT_RESOLUTION ;
+  double arg6 = (double) MS_DEFAULT_RESOLUTION ;
+  imageObj *result = 0 ;
+  
+  arg1 = (int)jarg1; 
+  arg2 = (int)jarg2; 
+  arg3 = (outputFormatObj *)jarg3; 
+  arg4 = (char *)jarg4; 
+  arg5 = (double)jarg5; 
+  arg6 = (double)jarg6; 
+  {
+    errorObj *ms_error;
+    result = (imageObj *)new_imageObj(arg1,arg2,arg3,(char const *)arg4,arg5,arg6);
+    ms_error = msGetErrorObj();
+    if (ms_error != NULL && ms_error->code != MS_NOERR) {
+      if (ms_error->code != MS_NOTFOUND && ms_error->code != -1) {
+        char* msg = msGetErrorString(";"); 
+        if (msg) {
+          SWIG_CSharpException(SWIG_SystemError, msg);
+          free(msg);
+        }
+        else SWIG_CSharpException(SWIG_SystemError, "MapScript unknown error");
+        msResetErrorList();
+        return 0;
+      }
+      msResetErrorList();
+    }
+  }
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_delete_imageObj(void * jarg1) {
+  imageObj *arg1 = (imageObj *) 0 ;
+  
+  arg1 = (imageObj *)jarg1; 
+  {
+    errorObj *ms_error;
+    delete_imageObj(arg1);
+    ms_error = msGetErrorObj();
+    if (ms_error != NULL && ms_error->code != MS_NOERR) {
+      if (ms_error->code != MS_NOTFOUND && ms_error->code != -1) {
+        char* msg = msGetErrorString(";"); 
+        if (msg) {
+          SWIG_CSharpException(SWIG_SystemError, msg);
+          free(msg);
+        }
+        else SWIG_CSharpException(SWIG_SystemError, "MapScript unknown error");
+        msResetErrorList();
+        return ;
+      }
+      msResetErrorList();
+    }
+  }
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_imageObj_save(void * jarg1, char * jarg2, void * jarg3) {
+  imageObj *arg1 = (imageObj *) 0 ;
+  char *arg2 = (char *) 0 ;
+  mapObj *arg3 = (mapObj *) NULL ;
+  
+  arg1 = (imageObj *)jarg1; 
+  arg2 = (char *)jarg2; 
+  arg3 = (mapObj *)jarg3; 
+  {
+    errorObj *ms_error;
+    imageObj_save(arg1,arg2,arg3);
+    ms_error = msGetErrorObj();
+    if (ms_error != NULL && ms_error->code != MS_NOERR) {
+      if (ms_error->code != MS_NOTFOUND && ms_error->code != -1) {
+        char* msg = msGetErrorString(";"); 
+        if (msg) {
+          SWIG_CSharpException(SWIG_SystemError, msg);
+          free(msg);
+        }
+        else SWIG_CSharpException(SWIG_SystemError, "MapScript unknown error");
+        msResetErrorList();
+        return ;
+      }
+      msResetErrorList();
+    }
+  }
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_imageObj_getSize(void * jarg1) {
+  int jresult ;
+  imageObj *arg1 = (imageObj *) 0 ;
+  int result;
+  
+  arg1 = (imageObj *)jarg1; 
+  {
+    errorObj *ms_error;
+    result = (int)imageObj_getSize(arg1);
+    ms_error = msGetErrorObj();
+    if (ms_error != NULL && ms_error->code != MS_NOERR) {
+      if (ms_error->code != MS_NOTFOUND && ms_error->code != -1) {
+        char* msg = msGetErrorString(";"); 
+        if (msg) {
+          SWIG_CSharpException(SWIG_SystemError, msg);
+          free(msg);
+        }
+        else SWIG_CSharpException(SWIG_SystemError, "MapScript unknown error");
+        msResetErrorList();
+        return 0;
+      }
+      msResetErrorList();
+    }
+  }
+  jresult = result; 
+  return jresult;
+}
+
+
 SWIGEXPORT void SWIGSTDCALL CSharp_layerObj_classitem_set(void * jarg1, char * jarg2) {
   layerObj *arg1 = (layerObj *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -10819,10 +11694,10 @@ SWIGEXPORT int SWIGSTDCALL CSharp_layerObj_index_get(void * jarg1) {
 SWIGEXPORT void * SWIGSTDCALL CSharp_layerObj_map_get(void * jarg1) {
   void * jresult ;
   layerObj *arg1 = (layerObj *) 0 ;
-  struct map_obj *result = 0 ;
+  struct mapObj *result = 0 ;
   
   arg1 = (layerObj *)jarg1; 
-  result = (struct map_obj *) ((arg1)->map);
+  result = (struct mapObj *) ((arg1)->map);
   jresult = (void *)result; 
   return jresult;
 }
@@ -11992,6 +12867,36 @@ SWIGEXPORT char * SWIGSTDCALL CSharp_layerObj_classgroup_get(void * jarg1) {
 }
 
 
+SWIGEXPORT void SWIGSTDCALL CSharp_layerObj_mask_set(void * jarg1, char * jarg2) {
+  layerObj *arg1 = (layerObj *) 0 ;
+  char *arg2 = (char *) 0 ;
+  
+  arg1 = (layerObj *)jarg1; 
+  arg2 = (char *)jarg2; 
+  {
+    if (arg1->mask) free((char*)arg1->mask);
+    if (arg2) {
+      arg1->mask = (char *) malloc(strlen(arg2)+1);
+      strcpy((char*)arg1->mask,arg2);
+    } else {
+      arg1->mask = 0;
+    }
+  }
+}
+
+
+SWIGEXPORT char * SWIGSTDCALL CSharp_layerObj_mask_get(void * jarg1) {
+  char * jresult ;
+  layerObj *arg1 = (layerObj *) 0 ;
+  char *result = 0 ;
+  
+  arg1 = (layerObj *)jarg1; 
+  result = (char *) ((arg1)->mask);
+  jresult = SWIG_csharp_string_callback((const char *)result); 
+  return jresult;
+}
+
+
 SWIGEXPORT void * SWIGSTDCALL CSharp_new_layerObj(void * jarg1) {
   void * jresult ;
   mapObj *arg1 = (mapObj *) NULL ;
@@ -12468,6 +13373,39 @@ SWIGEXPORT char * SWIGSTDCALL CSharp_layerObj_getItem(void * jarg1, int jarg2) {
     }
   }
   jresult = SWIG_csharp_string_callback((const char *)result); 
+  return jresult;
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_layerObj_setItems(void * jarg1, void * jarg2, int jarg3) {
+  int jresult ;
+  layerObj *arg1 = (layerObj *) 0 ;
+  char **arg2 = (char **) 0 ;
+  int arg3 ;
+  int result;
+  
+  arg1 = (layerObj *)jarg1; 
+  arg2 = (char **)jarg2; 
+  arg3 = (int)jarg3; 
+  {
+    errorObj *ms_error;
+    result = (int)layerObj_setItems(arg1,arg2,arg3);
+    ms_error = msGetErrorObj();
+    if (ms_error != NULL && ms_error->code != MS_NOERR) {
+      if (ms_error->code != MS_NOTFOUND && ms_error->code != -1) {
+        char* msg = msGetErrorString(";"); 
+        if (msg) {
+          SWIG_CSharpException(SWIG_SystemError, msg);
+          free(msg);
+        }
+        else SWIG_CSharpException(SWIG_SystemError, "MapScript unknown error");
+        msResetErrorList();
+        return 0;
+      }
+      msResetErrorList();
+    }
+  }
+  jresult = result; 
   return jresult;
 }
 
@@ -16729,239 +17667,6 @@ SWIGEXPORT int SWIGSTDCALL CSharp_mapObj_zoomScale(void * jarg1, double jarg2, v
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_imageObj_getBytes(void * jarg1, SWIG_CSharpByteArrayHelperCallback jarg2) {
-  imageObj *arg1 = (imageObj *) 0 ;
-  SWIG_CSharpByteArrayHelperCallback arg2 ;
-  
-  arg1 = (imageObj *)jarg1; 
-  arg2 = (SWIG_CSharpByteArrayHelperCallback)jarg2; 
-  {
-    errorObj *ms_error;
-    imageObj_getBytes(arg1,arg2);
-    ms_error = msGetErrorObj();
-    if (ms_error != NULL && ms_error->code != MS_NOERR) {
-      if (ms_error->code != MS_NOTFOUND && ms_error->code != -1) {
-        char* msg = msGetErrorString(";"); 
-        if (msg) {
-          SWIG_CSharpException(SWIG_SystemError, msg);
-          free(msg);
-        }
-        else SWIG_CSharpException(SWIG_SystemError, "MapScript unknown error");
-        msResetErrorList();
-        return ;
-      }
-      msResetErrorList();
-    }
-  }
-}
-
-
-SWIGEXPORT int SWIGSTDCALL CSharp_imageObj_width_get(void * jarg1) {
-  int jresult ;
-  imageObj *arg1 = (imageObj *) 0 ;
-  int result;
-  
-  arg1 = (imageObj *)jarg1; 
-  result = (int) ((arg1)->width);
-  jresult = result; 
-  return jresult;
-}
-
-
-SWIGEXPORT int SWIGSTDCALL CSharp_imageObj_height_get(void * jarg1) {
-  int jresult ;
-  imageObj *arg1 = (imageObj *) 0 ;
-  int result;
-  
-  arg1 = (imageObj *)jarg1; 
-  result = (int) ((arg1)->height);
-  jresult = result; 
-  return jresult;
-}
-
-
-SWIGEXPORT double SWIGSTDCALL CSharp_imageObj_resolution_get(void * jarg1) {
-  double jresult ;
-  imageObj *arg1 = (imageObj *) 0 ;
-  double result;
-  
-  arg1 = (imageObj *)jarg1; 
-  result = (double) ((arg1)->resolution);
-  jresult = result; 
-  return jresult;
-}
-
-
-SWIGEXPORT double SWIGSTDCALL CSharp_imageObj_resolutionfactor_get(void * jarg1) {
-  double jresult ;
-  imageObj *arg1 = (imageObj *) 0 ;
-  double result;
-  
-  arg1 = (imageObj *)jarg1; 
-  result = (double) ((arg1)->resolutionfactor);
-  jresult = result; 
-  return jresult;
-}
-
-
-SWIGEXPORT char * SWIGSTDCALL CSharp_imageObj_imagepath_get(void * jarg1) {
-  char * jresult ;
-  imageObj *arg1 = (imageObj *) 0 ;
-  char *result = 0 ;
-  
-  arg1 = (imageObj *)jarg1; 
-  result = (char *) ((arg1)->imagepath);
-  jresult = SWIG_csharp_string_callback((const char *)result); 
-  return jresult;
-}
-
-
-SWIGEXPORT char * SWIGSTDCALL CSharp_imageObj_imageurl_get(void * jarg1) {
-  char * jresult ;
-  imageObj *arg1 = (imageObj *) 0 ;
-  char *result = 0 ;
-  
-  arg1 = (imageObj *)jarg1; 
-  result = (char *) ((arg1)->imageurl);
-  jresult = SWIG_csharp_string_callback((const char *)result); 
-  return jresult;
-}
-
-
-SWIGEXPORT void * SWIGSTDCALL CSharp_imageObj_format_get(void * jarg1) {
-  void * jresult ;
-  imageObj *arg1 = (imageObj *) 0 ;
-  outputFormatObj *result = 0 ;
-  
-  arg1 = (imageObj *)jarg1; 
-  result = (outputFormatObj *) ((arg1)->format);
-  jresult = (void *)result; 
-  return jresult;
-}
-
-
-SWIGEXPORT void * SWIGSTDCALL CSharp_new_imageObj(int jarg1, int jarg2, void * jarg3, char * jarg4, double jarg5, double jarg6) {
-  void * jresult ;
-  int arg1 ;
-  int arg2 ;
-  outputFormatObj *arg3 = (outputFormatObj *) NULL ;
-  char *arg4 = (char *) NULL ;
-  double arg5 = (double) MS_DEFAULT_RESOLUTION ;
-  double arg6 = (double) MS_DEFAULT_RESOLUTION ;
-  imageObj *result = 0 ;
-  
-  arg1 = (int)jarg1; 
-  arg2 = (int)jarg2; 
-  arg3 = (outputFormatObj *)jarg3; 
-  arg4 = (char *)jarg4; 
-  arg5 = (double)jarg5; 
-  arg6 = (double)jarg6; 
-  {
-    errorObj *ms_error;
-    result = (imageObj *)new_imageObj(arg1,arg2,arg3,(char const *)arg4,arg5,arg6);
-    ms_error = msGetErrorObj();
-    if (ms_error != NULL && ms_error->code != MS_NOERR) {
-      if (ms_error->code != MS_NOTFOUND && ms_error->code != -1) {
-        char* msg = msGetErrorString(";"); 
-        if (msg) {
-          SWIG_CSharpException(SWIG_SystemError, msg);
-          free(msg);
-        }
-        else SWIG_CSharpException(SWIG_SystemError, "MapScript unknown error");
-        msResetErrorList();
-        return 0;
-      }
-      msResetErrorList();
-    }
-  }
-  jresult = (void *)result; 
-  return jresult;
-}
-
-
-SWIGEXPORT void SWIGSTDCALL CSharp_delete_imageObj(void * jarg1) {
-  imageObj *arg1 = (imageObj *) 0 ;
-  
-  arg1 = (imageObj *)jarg1; 
-  {
-    errorObj *ms_error;
-    delete_imageObj(arg1);
-    ms_error = msGetErrorObj();
-    if (ms_error != NULL && ms_error->code != MS_NOERR) {
-      if (ms_error->code != MS_NOTFOUND && ms_error->code != -1) {
-        char* msg = msGetErrorString(";"); 
-        if (msg) {
-          SWIG_CSharpException(SWIG_SystemError, msg);
-          free(msg);
-        }
-        else SWIG_CSharpException(SWIG_SystemError, "MapScript unknown error");
-        msResetErrorList();
-        return ;
-      }
-      msResetErrorList();
-    }
-  }
-}
-
-
-SWIGEXPORT void SWIGSTDCALL CSharp_imageObj_save(void * jarg1, char * jarg2, void * jarg3) {
-  imageObj *arg1 = (imageObj *) 0 ;
-  char *arg2 = (char *) 0 ;
-  mapObj *arg3 = (mapObj *) NULL ;
-  
-  arg1 = (imageObj *)jarg1; 
-  arg2 = (char *)jarg2; 
-  arg3 = (mapObj *)jarg3; 
-  {
-    errorObj *ms_error;
-    imageObj_save(arg1,arg2,arg3);
-    ms_error = msGetErrorObj();
-    if (ms_error != NULL && ms_error->code != MS_NOERR) {
-      if (ms_error->code != MS_NOTFOUND && ms_error->code != -1) {
-        char* msg = msGetErrorString(";"); 
-        if (msg) {
-          SWIG_CSharpException(SWIG_SystemError, msg);
-          free(msg);
-        }
-        else SWIG_CSharpException(SWIG_SystemError, "MapScript unknown error");
-        msResetErrorList();
-        return ;
-      }
-      msResetErrorList();
-    }
-  }
-}
-
-
-SWIGEXPORT int SWIGSTDCALL CSharp_imageObj_getSize(void * jarg1) {
-  int jresult ;
-  imageObj *arg1 = (imageObj *) 0 ;
-  int result;
-  
-  arg1 = (imageObj *)jarg1; 
-  {
-    errorObj *ms_error;
-    result = (int)imageObj_getSize(arg1);
-    ms_error = msGetErrorObj();
-    if (ms_error != NULL && ms_error->code != MS_NOERR) {
-      if (ms_error->code != MS_NOTFOUND && ms_error->code != -1) {
-        char* msg = msGetErrorString(";"); 
-        if (msg) {
-          SWIG_CSharpException(SWIG_SystemError, msg);
-          free(msg);
-        }
-        else SWIG_CSharpException(SWIG_SystemError, "MapScript unknown error");
-        msResetErrorList();
-        return 0;
-      }
-      msResetErrorList();
-    }
-  }
-  jresult = result; 
-  return jresult;
-}
-
-
 SWIGEXPORT int SWIGSTDCALL CSharp_msSaveImage(void * jarg1, void * jarg2, char * jarg3) {
   int jresult ;
   mapObj *arg1 = (mapObj *) 0 ;
@@ -17047,10 +17752,13 @@ SWIGEXPORT int SWIGSTDCALL CSharp_msSetup() {
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_msCleanup() {
+SWIGEXPORT void SWIGSTDCALL CSharp_msCleanup(int jarg1) {
+  int arg1 ;
+  
+  arg1 = (int)jarg1; 
   {
     errorObj *ms_error;
-    msCleanup();
+    msCleanup(arg1);
     ms_error = msGetErrorObj();
     if (ms_error != NULL && ms_error->code != MS_NOERR) {
       if (ms_error->code != MS_NOTFOUND && ms_error->code != -1) {
@@ -17165,6 +17873,28 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_strokeStyleObj_pattern_get(void * jarg1) {
   
   arg1 = (strokeStyleObj *)jarg1; 
   result = (double *)(double *) ((arg1)->pattern);
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_strokeStyleObj_patternoffset_set(void * jarg1, double jarg2) {
+  strokeStyleObj *arg1 = (strokeStyleObj *) 0 ;
+  double arg2 ;
+  
+  arg1 = (strokeStyleObj *)jarg1; 
+  arg2 = (double)jarg2; 
+  if (arg1) (arg1)->patternoffset = arg2;
+}
+
+
+SWIGEXPORT double SWIGSTDCALL CSharp_strokeStyleObj_patternoffset_get(void * jarg1) {
+  double jresult ;
+  strokeStyleObj *arg1 = (strokeStyleObj *) 0 ;
+  double result;
+  
+  arg1 = (strokeStyleObj *)jarg1; 
+  result = (double) ((arg1)->patternoffset);
   jresult = result; 
   return jresult;
 }
@@ -17832,32 +18562,50 @@ SWIGEXPORT void SWIGSTDCALL CSharp_delete_tileCacheObj(void * jarg1) {
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_labelStyleObj_font_set(void * jarg1, char * jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_labelStyleObj_fonts_set(void * jarg1, void * jarg2) {
   labelStyleObj *arg1 = (labelStyleObj *) 0 ;
-  char *arg2 = (char *) 0 ;
+  char **arg2 ;
   
   arg1 = (labelStyleObj *)jarg1; 
-  arg2 = (char *)jarg2; 
+  arg2 = (char **)jarg2; 
   {
-    if (arg1->font) free((char*)arg1->font);
-    if (arg2) {
-      arg1->font = (char *) malloc(strlen(arg2)+1);
-      strcpy((char*)arg1->font,arg2);
-    } else {
-      arg1->font = 0;
-    }
+    size_t ii;
+    char * *b = (char * *) arg1->fonts;
+    for (ii = 0; ii < (size_t)5; ii++) b[ii] = *((char * *) arg2 + ii);
   }
 }
 
 
-SWIGEXPORT char * SWIGSTDCALL CSharp_labelStyleObj_font_get(void * jarg1) {
-  char * jresult ;
+SWIGEXPORT void * SWIGSTDCALL CSharp_labelStyleObj_fonts_get(void * jarg1) {
+  void * jresult ;
   labelStyleObj *arg1 = (labelStyleObj *) 0 ;
-  char *result = 0 ;
+  char **result = 0 ;
   
   arg1 = (labelStyleObj *)jarg1; 
-  result = (char *) ((arg1)->font);
-  jresult = SWIG_csharp_string_callback((const char *)result); 
+  result = (char **)(char **) ((arg1)->fonts);
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_labelStyleObj_numfonts_set(void * jarg1, int jarg2) {
+  labelStyleObj *arg1 = (labelStyleObj *) 0 ;
+  int arg2 ;
+  
+  arg1 = (labelStyleObj *)jarg1; 
+  arg2 = (int)jarg2; 
+  if (arg1) (arg1)->numfonts = arg2;
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_labelStyleObj_numfonts_get(void * jarg1) {
+  int jresult ;
+  labelStyleObj *arg1 = (labelStyleObj *) 0 ;
+  int result;
+  
+  arg1 = (labelStyleObj *)jarg1; 
+  result = (int) ((arg1)->numfonts);
+  jresult = result; 
   return jresult;
 }
 
@@ -17968,6 +18716,28 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_labelStyleObj_outlinecolor_get(void * jarg1
   arg1 = (labelStyleObj *)jarg1; 
   result = (colorObj *) ((arg1)->outlinecolor);
   jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_labelStyleObj_antialias_set(void * jarg1, int jarg2) {
+  labelStyleObj *arg1 = (labelStyleObj *) 0 ;
+  int arg2 ;
+  
+  arg1 = (labelStyleObj *)jarg1; 
+  arg2 = (int)jarg2; 
+  if (arg1) (arg1)->antialias = arg2;
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_labelStyleObj_antialias_get(void * jarg1) {
+  int jresult ;
+  labelStyleObj *arg1 = (labelStyleObj *) 0 ;
+  int result;
+  
+  arg1 = (labelStyleObj *)jarg1; 
+  result = (int) ((arg1)->antialias);
+  jresult = result; 
   return jresult;
 }
 
@@ -21259,6 +22029,36 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_shapefileObj_getDBF(void * jarg1) {
 }
 
 
+SWIGEXPORT int SWIGSTDCALL CSharp_wkp_none_get() {
+  int jresult ;
+  int result;
+  
+  result = (int) 0;
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_wkp_lonlat_get() {
+  int jresult ;
+  int result;
+  
+  result = (int) 1;
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_wkp_gmerc_get() {
+  int jresult ;
+  int result;
+  
+  result = (int) 2;
+  jresult = result; 
+  return jresult;
+}
+
+
 SWIGEXPORT int SWIGSTDCALL CSharp_projectionObj_numargs_get(void * jarg1) {
   int jresult ;
   projectionObj *arg1 = (projectionObj *) 0 ;
@@ -21278,6 +22078,28 @@ SWIGEXPORT int SWIGSTDCALL CSharp_projectionObj_automatic_get(void * jarg1) {
   
   arg1 = (projectionObj *)jarg1; 
   result = (int) ((arg1)->automatic);
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_projectionObj_wellknownprojection_set(void * jarg1, int jarg2) {
+  projectionObj *arg1 = (projectionObj *) 0 ;
+  int arg2 ;
+  
+  arg1 = (projectionObj *)jarg1; 
+  arg2 = (int)jarg2; 
+  if (arg1) (arg1)->wellknownprojection = arg2;
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_projectionObj_wellknownprojection_get(void * jarg1) {
+  int jresult ;
+  projectionObj *arg1 = (projectionObj *) 0 ;
+  int result;
+  
+  arg1 = (projectionObj *)jarg1; 
+  result = (int) ((arg1)->wellknownprojection);
   jresult = result; 
   return jresult;
 }
@@ -21432,28 +22254,6 @@ SWIGEXPORT int SWIGSTDCALL CSharp_MS_IMAGECACHESIZE_get() {
   int result;
   
   result = (int) 6;
-  jresult = result; 
-  return jresult;
-}
-
-
-SWIGEXPORT void SWIGSTDCALL CSharp_colorObj_pen_set(void * jarg1, int jarg2) {
-  colorObj *arg1 = (colorObj *) 0 ;
-  int arg2 ;
-  
-  arg1 = (colorObj *)jarg1; 
-  arg2 = (int)jarg2; 
-  if (arg1) (arg1)->pen = arg2;
-}
-
-
-SWIGEXPORT int SWIGSTDCALL CSharp_colorObj_pen_get(void * jarg1) {
-  int jresult ;
-  colorObj *arg1 = (colorObj *) 0 ;
-  int result;
-  
-  arg1 = (colorObj *)jarg1; 
-  result = (int) ((arg1)->pen);
   jresult = result; 
   return jresult;
 }
@@ -21950,6 +22750,50 @@ SWIGEXPORT int SWIGSTDCALL CSharp_symbolObj_filled_get(void * jarg1) {
   
   arg1 = (symbolObj *)jarg1; 
   result = (int) ((arg1)->filled);
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_symbolObj_anchorpoint_x_set(void * jarg1, double jarg2) {
+  symbolObj *arg1 = (symbolObj *) 0 ;
+  double arg2 ;
+  
+  arg1 = (symbolObj *)jarg1; 
+  arg2 = (double)jarg2; 
+  if (arg1) (arg1)->anchorpoint_x = arg2;
+}
+
+
+SWIGEXPORT double SWIGSTDCALL CSharp_symbolObj_anchorpoint_x_get(void * jarg1) {
+  double jresult ;
+  symbolObj *arg1 = (symbolObj *) 0 ;
+  double result;
+  
+  arg1 = (symbolObj *)jarg1; 
+  result = (double) ((arg1)->anchorpoint_x);
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_symbolObj_anchorpoint_y_set(void * jarg1, double jarg2) {
+  symbolObj *arg1 = (symbolObj *) 0 ;
+  double arg2 ;
+  
+  arg1 = (symbolObj *)jarg1; 
+  arg2 = (double)jarg2; 
+  if (arg1) (arg1)->anchorpoint_y = arg2;
+}
+
+
+SWIGEXPORT double SWIGSTDCALL CSharp_symbolObj_anchorpoint_y_get(void * jarg1) {
+  double jresult ;
+  symbolObj *arg1 = (symbolObj *) 0 ;
+  double result;
+  
+  arg1 = (symbolObj *)jarg1; 
+  result = (double) ((arg1)->anchorpoint_y);
   jresult = result; 
   return jresult;
 }
@@ -23619,6 +24463,35 @@ SWIGEXPORT void SWIGSTDCALL CSharp_OWSRequest_setParameter(void * jarg1, char * 
 }
 
 
+SWIGEXPORT void SWIGSTDCALL CSharp_OWSRequest_addParameter(void * jarg1, char * jarg2, char * jarg3) {
+  cgiRequestObj *arg1 = (cgiRequestObj *) 0 ;
+  char *arg2 = (char *) 0 ;
+  char *arg3 = (char *) 0 ;
+  
+  arg1 = (cgiRequestObj *)jarg1; 
+  arg2 = (char *)jarg2; 
+  arg3 = (char *)jarg3; 
+  {
+    errorObj *ms_error;
+    cgiRequestObj_addParameter(arg1,arg2,arg3);
+    ms_error = msGetErrorObj();
+    if (ms_error != NULL && ms_error->code != MS_NOERR) {
+      if (ms_error->code != MS_NOTFOUND && ms_error->code != -1) {
+        char* msg = msGetErrorString(";"); 
+        if (msg) {
+          SWIG_CSharpException(SWIG_SystemError, msg);
+          free(msg);
+        }
+        else SWIG_CSharpException(SWIG_SystemError, "MapScript unknown error");
+        msResetErrorList();
+        return ;
+      }
+      msResetErrorList();
+    }
+  }
+}
+
+
 SWIGEXPORT char * SWIGSTDCALL CSharp_OWSRequest_getName(void * jarg1, int jarg2) {
   char * jresult ;
   cgiRequestObj *arg1 = (cgiRequestObj *) 0 ;
@@ -23899,7 +24772,7 @@ SWIGEXPORT void SWIGSTDCALL CSharp_msIO_getStdoutBufferBytes() {
     }
   }
   SWIG_csharp_bytearray_callback((&result)->data, (&result)->size);
-  if( (&result)->owns_data ) gdFree((&result)->data); 
+  if( (&result)->owns_data ) msFree((&result)->data); 
 }
 
 

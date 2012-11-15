@@ -255,6 +255,10 @@
             return NULL;
     }
 
+    int setItems(char **items, int numitems) {
+        return msLayerSetItems(self, items, numitems);
+    }
+
     int draw(mapObj *map, imageObj *image) 
     {
         return msDrawLayer(map, self, image);    
@@ -280,7 +284,10 @@
         map->query.filter = (expressionObj *) malloc(sizeof(expressionObj));
         map->query.filter->string = strdup(string);
 	map->query.filter->type = 2000; /* MS_EXPRESSION: lot's of conflicts in mapfile.h */
-
+        map->query.filter->compiled = MS_FALSE;
+        map->query.filter->flags = 0;
+        map->query.filter->tokens = map->query.filter->curtoken = NULL;
+        
         map->query.layer = self->index;
      	map->query.rect = map->extent;
 
@@ -309,6 +316,7 @@
         self->status = MS_ON;
         retval = msQueryByAttributes(map);
         self->status = status;
+
         return retval;
     }
 
@@ -329,6 +337,7 @@
         self->status = MS_ON;
         retval = msQueryByPoint(map);
         self->status = status;
+
         return retval;
     }
 
@@ -348,6 +357,7 @@
         self->status = MS_ON;
         retval = msQueryByRect(map);
         self->status = status;
+
         return retval;
     }
 
@@ -555,12 +565,12 @@
 
     int applySLD(char *sld, char *stylelayer) 
     {
-        return msSLDApplySLD(self->map, sld, self->index, stylelayer);
+      return msSLDApplySLD(self->map, sld, self->index, stylelayer, NULL);
     }
 
     int applySLDURL(char *sld, char *stylelayer) 
     {
-        return msSLDApplySLDURL(self->map, sld, self->index, stylelayer);
+      return msSLDApplySLDURL(self->map, sld, self->index, stylelayer, NULL);
     }
 
     %newobject generateSLD; 

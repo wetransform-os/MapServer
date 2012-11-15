@@ -96,6 +96,14 @@ public class labelCacheObj : IDisposable {
     } 
   }
 
+  public int gutter {
+    get {
+      int ret = mapscriptPINVOKE.labelCacheObj_gutter_get(swigCPtr);
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
   public void freeCache() {
     mapscriptPINVOKE.labelCacheObj_freeCache(swigCPtr);
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
