@@ -1,3 +1,9 @@
+mapserver (6.2.0-2) unstable; urgency=low
+
+  * Added heikolein's patch to link mapscript-perl to libmapserver
+
+ -- Jerome Villeneuve Larouche <jlarouche@mapgears.com>  Thu, 22 Nov 2012 15:21:55 -0500
+
 mapserver (6.2.0-1) unstable; urgency=low
 
   * New upstream release
