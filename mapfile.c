@@ -2051,13 +2051,17 @@ static int loadLabel(labelObj *label)
   } /* next token */
 }
 
-int msUpdateLabelFromString(labelObj *label, char *string)
+int msUpdateLabelFromString(labelObj *label, char *string, int url_string)
 {
   if(!label || !string) return MS_FAILURE;
 
   msAcquireLock( TLOCK_PARSER );
+  
+  if(url_string)
+    msyystate = MS_TOKENIZE_URL_STRING;
+  else
+    msyystate = MS_TOKENIZE_STRING;
 
-  msyystate = MS_TOKENIZE_STRING;
   msyystring = string;
   msyylex(); /* sets things up, but doesn't process any tokens */
 
@@ -3638,6 +3642,7 @@ static void writeClass(FILE *stream, int indent, classObj *class)
   writeString(stream, indent, "TEMPLATE", NULL, class->template);
   writeExpression(stream, indent, "TEXT", &(class->text));
   writeString(stream, indent, "TITLE", NULL, class->title);
+  writeHashTable(stream, indent, "VALIDATION", &(class->validation));
   writeBlockEnd(stream, indent, "CLASS");
 }
 
@@ -4344,7 +4349,7 @@ static void writeLayer(FILE *stream, int indent, layerObj *layer)
   writeString(stream, indent, "CLASSITEM", NULL, layer->classitem);
   writeCluster(stream, indent, &(layer->cluster));
   writeString(stream, indent, "CONNECTION", NULL, layer->connection);
-  writeKeyword(stream, indent, "CONNECTIONTYPE", layer->connectiontype, 10, MS_SDE, "SDE", MS_OGR, "OGR", MS_POSTGIS, "POSTGIS", MS_WMS, "WMS", MS_ORACLESPATIAL, "ORACLESPATIAL", MS_WFS, "WFS", MS_GRATICULE, "GRATICULE", MS_PLUGIN, "PLUGIN", MS_UNION, "UNION", MS_UVRASTER, "UVRASTER");
+  writeKeyword(stream, indent, "CONNECTIONTYPE", layer->connectiontype, 9, MS_SDE, "SDE", MS_OGR, "OGR", MS_POSTGIS, "POSTGIS", MS_WMS, "WMS", MS_ORACLESPATIAL, "ORACLESPATIAL", MS_WFS, "WFS", MS_PLUGIN, "PLUGIN", MS_UNION, "UNION", MS_UVRASTER, "UVRASTER");
   writeString(stream, indent, "DATA", NULL, layer->data);
   writeNumber(stream, indent, "DEBUG", 0, layer->debug); /* is this right? see loadLayer() */
   writeExtent(stream, indent, "EXTENT", layer->extent);
@@ -5428,6 +5433,7 @@ int initMap(mapObj *map)
 
   msInitSymbolSet(&map->symbolset);
   map->symbolset.fontset =  &(map->fontset);
+  map->symbolset.map = map;
 
   initLegend(&map->legend);
   initScalebar(&map->scalebar);
@@ -5939,6 +5945,10 @@ mapObj *msLoadMapFromString(char *buffer, char *new_mappath)
     if(mappath != NULL) free(mappath);
     return NULL;
   }
+
+  if (mappath != NULL) free(mappath);
+  msyylex_destroy();
+
   msReleaseLock( TLOCK_PARSER );
 
   if (debuglevel >= MS_DEBUGLEVEL_TUNING) {
@@ -5948,9 +5958,6 @@ mapObj *msLoadMapFromString(char *buffer, char *new_mappath)
             (endtime.tv_sec+endtime.tv_usec/1.0e6)-
             (starttime.tv_sec+starttime.tv_usec/1.0e6) );
   }
-
-  if (mappath != NULL) free(mappath);
-  msyylex_destroy();
 
   if (resolveSymbolNames(map) == MS_FAILURE) return NULL;
 
@@ -6186,17 +6193,25 @@ int msUpdateMapFromURL(mapObj *map, char *variable, char *string)
             if(msLookupHashTable(&(GET_LAYER(map, i)->class[j]->validation), "immutable"))
               return(MS_SUCCESS); /* fail silently */
 
-            if(msyylex() == STYLE) {
-              if(getInteger(&k) == -1) return MS_FAILURE;
-
-              if(k>=GET_LAYER(map, i)->class[j]->numstyles || k<0) {
-                msSetError(MS_MISCERR, "Style to be modified not valid.", "msUpdateMapFromURL()");
-                return MS_FAILURE;
-              }
-
-              if(msUpdateStyleFromString((GET_LAYER(map, i))->class[j]->styles[k], string, MS_TRUE) != MS_SUCCESS) return MS_FAILURE;
-            } else {
-              if(msUpdateClassFromString((GET_LAYER(map, i))->class[j], string, MS_TRUE) != MS_SUCCESS) return MS_FAILURE;
+            switch(msyylex()) {
+              case STYLE:
+                if(getInteger(&k) == -1) return MS_FAILURE;
+                if(k>=GET_LAYER(map, i)->class[j]->numstyles || k<0) {
+                  msSetError(MS_MISCERR, "Style to be modified not valid.", "msUpdateMapFromURL()");
+                  return MS_FAILURE;
+                }
+                if(msUpdateStyleFromString((GET_LAYER(map, i))->class[j]->styles[k], string, MS_TRUE) != MS_SUCCESS) return MS_FAILURE;
+                break;
+              case LABEL:
+                if(getInteger(&k) == -1) return MS_FAILURE;
+                if(k>=GET_LAYER(map, i)->class[j]->numlabels || k<0) {
+                  msSetError(MS_MISCERR, "Label to be modified not valid.", "msUpdateMapFromURL()");
+                  return MS_FAILURE;
+                }
+                if(msUpdateLabelFromString((GET_LAYER(map, i))->class[j]->labels[k], string, MS_TRUE) != MS_SUCCESS) return MS_FAILURE;
+                break;
+              default:
+                if(msUpdateClassFromString((GET_LAYER(map, i))->class[j], string, MS_TRUE) != MS_SUCCESS) return MS_FAILURE;
             }
           } else {
             if(msUpdateLayerFromString((GET_LAYER(map, i)), string, MS_TRUE) != MS_SUCCESS) return MS_FAILURE;
@@ -6398,8 +6413,10 @@ void msApplyDefaultSubstitutions(mapObj *map)
 
   for(i=0; i<map->numlayers; i++) {
     layerObj *layer = GET_LAYER(map, i);
-    applyLayerDefaultSubstitutions(layer, &(layer->validation));
+    applyLayerDefaultSubstitutions(layer, &(layer->validation)); /* layer settings take precedence */
     applyLayerDefaultSubstitutions(layer, &(layer->metadata));
+    applyLayerDefaultSubstitutions(layer, &(map->web.validation));
+    applyLayerDefaultSubstitutions(layer, &(map->web.metadata));
   }
 }
 

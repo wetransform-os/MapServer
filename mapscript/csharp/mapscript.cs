@@ -48,7 +48,7 @@ public class mapscript {
 
   public static mapObj msLoadMapFromString(string buffer, string new_mappath) {
     IntPtr cPtr = mapscriptPINVOKE.msLoadMapFromString(buffer, new_mappath);
-    mapObj ret = (cPtr == IntPtr.Zero) ? null : new mapObj(cPtr, false, ThisOwn_false());
+    mapObj ret = (cPtr == IntPtr.Zero) ? null : new mapObj(cPtr, true, ThisOwn_true());
     if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
     return ret;
   }

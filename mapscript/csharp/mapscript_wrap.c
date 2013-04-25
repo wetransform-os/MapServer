@@ -608,7 +608,7 @@ SWIGINTERN void delete_labelObj(labelObj *self){
       freeLabel(self);
     }
 SWIGINTERN int labelObj_updateFromString(labelObj *self,char *snippet){
-    return msUpdateLabelFromString(self, snippet);
+    return msUpdateLabelFromString(self, snippet,0);
   }
 SWIGINTERN int labelObj_removeBinding(labelObj *self,int binding){
     if(binding < 0 || binding >= 9) return MS_FAILURE;
@@ -2394,8 +2394,11 @@ SWIGINTERN int rectObj_draw(rectObj *self,mapObj *map,layerObj *layer,imageObj *
         msInitShape(&shape);
         msRectToPolygon(*self, &shape);
         shape.classindex = classindex;
-        shape.text = strdup(text);
-
+        if(text && layer->class[classindex]->numlabels > 0) {
+          shape.text = strdup(text);
+          msShapeGetAnnotation(layer,&shape);
+        }
+        
         msDrawShape(map, layer, &shape, image, -1, MS_DRAWMODE_FEATURES|MS_DRAWMODE_LABELS);
 
         msFreeShape(&shape);
@@ -3350,7 +3353,7 @@ SWIGEXPORT char * SWIGSTDCALL CSharp_MS_VERSION_get() {
   char * jresult ;
   char *result = 0 ;
   
-  result = (char *) "6.2.0";
+  result = (char *) "6.2.1";
   jresult = SWIG_csharp_string_callback((const char *)result); 
   return jresult;
 }
@@ -3380,7 +3383,7 @@ SWIGEXPORT int SWIGSTDCALL CSharp_MS_VERSION_REV_get() {
   int jresult ;
   int result;
   
-  result = (int) 0;
+  result = (int) 1;
   jresult = result; 
   return jresult;
 }
@@ -3390,7 +3393,7 @@ SWIGEXPORT int SWIGSTDCALL CSharp_MS_VERSION_NUM_get() {
   int jresult ;
   int result;
   
-  result = (int) (6*10000+2*100+0);
+  result = (int) (6*10000+2*100+1);
   jresult = result; 
   return jresult;
 }

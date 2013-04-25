@@ -103,17 +103,27 @@ public class strokeStyleObj : IDisposable {
     } 
   }
 
-  public SWIGTYPE_p_double pattern {
-    set {
-      mapscriptPINVOKE.strokeStyleObj_pattern_set(swigCPtr, SWIGTYPE_p_double.getCPtr(value));
-      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
-    } 
+  public double[] pattern {
     get {
       IntPtr cPtr = mapscriptPINVOKE.strokeStyleObj_pattern_get(swigCPtr);
-      SWIGTYPE_p_double ret = (cPtr == IntPtr.Zero) ? null : new SWIGTYPE_p_double(cPtr, false, ThisOwn_false());
+      double[] ret = new double[patternlength];
+      if (patternlength > 0) {       
+	        System.Runtime.InteropServices.Marshal.Copy(cPtr, ret, 0, patternlength);
+      }
+      
       if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
       return ret;
     } 
+    set {
+      IntPtr cPtr = mapscriptPINVOKE.strokeStyleObj_pattern_get(swigCPtr);
+      if (value.Length > 0) {       
+	        System.Runtime.InteropServices.Marshal.Copy(value, 0, cPtr, value.Length);
+      }
+      patternlength = value.Length;
+      
+      if (mapscriptPINVOKE.SWIGPendingException.Pending) throw mapscriptPINVOKE.SWIGPendingException.Retrieve();
+    }
+    
   }
 
   public double patternoffset {
