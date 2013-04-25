@@ -2177,7 +2177,7 @@ SWIGINTERN void delete_labelObj(labelObj *self){
       freeLabel(self);
     }
 SWIGINTERN int labelObj_updateFromString(labelObj *self,char *snippet){
-    return msUpdateLabelFromString(self, snippet);
+    return msUpdateLabelFromString(self, snippet,0);
   }
 SWIGINTERN int labelObj_removeBinding(labelObj *self,int binding){
     if(binding < 0 || binding >= 9) return MS_FAILURE;
@@ -3989,8 +3989,11 @@ SWIGINTERN int rectObj_draw(rectObj *self,mapObj *map,layerObj *layer,imageObj *
         msInitShape(&shape);
         msRectToPolygon(*self, &shape);
         shape.classindex = classindex;
-        shape.text = strdup(text);
-
+        if(text && layer->class[classindex]->numlabels > 0) {
+          shape.text = strdup(text);
+          msShapeGetAnnotation(layer,&shape);
+        }
+        
         msDrawShape(map, layer, &shape, image, -1, MS_DRAWMODE_FEATURES|MS_DRAWMODE_LABELS);
 
         msFreeShape(&shape);
@@ -32558,7 +32561,7 @@ XS(_wrap_msLoadMapFromString) {
     }
     arg2 = (char *)(buf2);
     result = (mapObj *)msLoadMapFromString(arg1,arg2);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_mapObj, 0 | SWIG_SHADOW); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_mapObj, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
     if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
     if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
     XSRETURN(argvi);
@@ -45421,7 +45424,7 @@ XS(SWIG_init) {
   
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_VERSION", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_FromCharPtr("6.2.0"));
+    sv_setsv(sv, SWIG_FromCharPtr("6.2.1"));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
@@ -45436,12 +45439,12 @@ XS(SWIG_init) {
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_VERSION_REV", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(0)));
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(1)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "MS_VERSION_NUM", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)((6*10000+2*100+0))));
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)((6*10000+2*100+1))));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {

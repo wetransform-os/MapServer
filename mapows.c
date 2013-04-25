@@ -95,7 +95,7 @@ static int msOWSPreParseRequest(cgiRequestObj *request,
                                 owsRequestObj *ows_request)
 {
   /* decide if KVP or XML */
-  if (request->type == MS_GET_REQUEST) {
+  if (request->type == MS_GET_REQUEST || (request->type == MS_POST_REQUEST && strcmp(request->contenttype, "application/x-www-form-urlencoded")==0)) {
     int i;
     /* parse KVP parameters service, version and request */
     for (i = 0; i < request->NumParams; ++i) {
@@ -326,7 +326,7 @@ int msOWSRequestIsEnabled(mapObj *map, layerObj *layer,
     if (disabled) return MS_FALSE;
   }
 
-  if (map && (map->numlayers > 0) && check_all_layers == MS_TRUE) {
+  if (map && check_all_layers == MS_TRUE) {
     int i, globally_enabled = MS_FALSE;
     enable_request = msOWSLookupMetadata(&map->web.metadata, namespaces, "enable_request");
     globally_enabled = msOWSParseRequestMetadata(enable_request, request, &disabled);
@@ -357,6 +357,9 @@ int msOWSRequestIsEnabled(mapObj *map, layerObj *layer,
       if (result || (!disabled && globally_enabled))
         return MS_TRUE;
     }
+
+    if (!disabled && globally_enabled)
+        return MS_TRUE;
   }
 
   return MS_FALSE;

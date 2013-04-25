@@ -702,11 +702,24 @@ int msLayerGetFeatureStyle(mapObj *map, layerObj *layer, classObj *c, shapeObj* 
     /* try to find out the current style format */
     if (strncasecmp(stylestring,"style",5) == 0) {
       resetClassStyle(c);
+      c->layer = layer;
       if (msMaybeAllocateClassStyle(c, 0))
         return(MS_FAILURE);
 
       msUpdateStyleFromString(c->styles[0], stylestring, MS_FALSE);
+      if(c->styles[0]->symbolname) {
+        if((c->styles[0]->symbol =  msGetSymbolIndex(&(map->symbolset), c->styles[0]->symbolname, MS_TRUE)) == -1) {
+          msSetError(MS_MISCERR, "Undefined symbol \"%s\" in class of layer %s.", "msLayerGetFeatureStyle()", 
+              c->styles[0]->symbolname, layer->name);
+          return MS_FAILURE;
+        }
+      }
     } else if (strncasecmp(stylestring,"class",5) == 0) {
+      if (strcasestr(stylestring, " style ") != NULL) {
+        /* reset style if stylestring contains style definitions */
+        resetClassStyle(c);
+        c->layer = layer;
+      }
       msUpdateClassFromString(c, stylestring, MS_FALSE);
     } else if (strncasecmp(stylestring,"pen",3) == 0 || strncasecmp(stylestring,"brush",5) == 0 ||
                strncasecmp(stylestring,"symbol",6) == 0 || strncasecmp(stylestring,"label",5) == 0) {
@@ -880,7 +893,7 @@ makeTimeFilter(layerObj *lp,
     if (&lp->filter) {
       /* if the filter is set and it's a sting type, concatenate it with
          the time. If not just free it */
-      if (lp->filter.type == MS_EXPRESSION) {
+      if (lp->filter.string && lp->filter.type == MS_STRING) {
         pszBuffer = msStringConcatenate(pszBuffer, "((");
         pszBuffer = msStringConcatenate(pszBuffer, lp->filter.string);
         pszBuffer = msStringConcatenate(pszBuffer, ") and ");
@@ -917,7 +930,7 @@ makeTimeFilter(layerObj *lp,
     pszBuffer = msStringConcatenate(pszBuffer, ")");
 
     /* if there was a filter, It was concatenate with an And ans should be closed*/
-    if(&lp->filter && lp->filter.type == MS_EXPRESSION) {
+    if(&lp->filter && lp->filter.string && lp->filter.type == MS_STRING) {
       pszBuffer = msStringConcatenate(pszBuffer, ")");
     }
 
@@ -934,7 +947,7 @@ makeTimeFilter(layerObj *lp,
     return MS_FALSE;
 
   if (numtimes >= 1) {
-    if (&lp->filter && lp->filter.type == MS_EXPRESSION) {
+    if (&lp->filter && lp->filter.string && lp->filter.type == MS_STRING) {
       pszBuffer = msStringConcatenate(pszBuffer, "((");
       pszBuffer = msStringConcatenate(pszBuffer, lp->filter.string);
       pszBuffer = msStringConcatenate(pszBuffer, ") and ");
@@ -1057,7 +1070,7 @@ makeTimeFilter(layerObj *lp,
 
     /* load the string to the filter */
     if (pszBuffer && strlen(pszBuffer) > 0) {
-      if(&lp->filter && lp->filter.type == MS_EXPRESSION)
+      if(&lp->filter && lp->filter.string && lp->filter.type == MS_STRING)
         pszBuffer = msStringConcatenate(pszBuffer, ")");
       /*
       if(lp->filteritem)

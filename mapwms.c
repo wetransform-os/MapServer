@@ -1664,7 +1664,7 @@ this request. Check wms/ows_enable_request settings.",
   ** in by half a pixel.  We wait till here because we want to ensure we
   ** are doing this in terms of the correct WIDTH and HEIGHT.
   */
-  if( adjust_extent ) {
+  if( adjust_extent && map->width>1 && map->height>1 ) {
     double  dx, dy;
 
     dx = (map->extent.maxx - map->extent.minx) / map->width;
@@ -2276,6 +2276,7 @@ int msDumpLayer(mapObj *map, layerObj *lp, int nVersion, const char *script_url_
                       MS_FALSE, MS_FALSE, MS_FALSE, MS_TRUE, MS_TRUE,
                       NULL, NULL, NULL, NULL, NULL, "        ");
 
+
   /* The LegendURL reside in a style. The Web Map Context spec already  */
   /* included the support on this in mapserver. However, it is not in the  */
   /* wms_legendurl_... metadatas it's in the styles metadata, */
@@ -2377,6 +2378,8 @@ int msDumpLayer(mapObj *map, layerObj *lp, int nVersion, const char *script_url_
             group_layers[0] = lp->index;
             if (isUsedInNestedGroup[lp->index]) {
               for (j=0; j < map->numlayers; j++) {
+                if (j == lp->index)
+                    continue;
                 for(k = 0; k < numNestedGroups[j]; k++) {
                   if (strcasecmp(lp->name, nestedGroups[j][k]) == 0) {
                     group_layers[num_layers++] = j;
@@ -2551,6 +2554,7 @@ int msDumpLayer(mapObj *map, layerObj *lp, int nVersion, const char *script_url_
 
   msFree(pszMetadataName);
 
+  /* print Min/Max ScaleDenominator */
   if (nVersion <  OWS_1_3_0)
     msWMSPrintScaleHint("        ", lp->minscaledenom, lp->maxscaledenom, map->resolution);
   else
@@ -2601,6 +2605,7 @@ void msWMSPrintNestedGroups(mapObj* map, int nVersion, char* pabLayerProcessed,
                             int index, int level, char*** nestedGroups, int* numNestedGroups, int* isUsedInNestedGroup, const char *script_url_encoded, const char *validated_language)
 {
   int i, j;
+  int groupAdded = 0;
   char *indent = NULL;
   indent = msStrdup("");
 
@@ -2626,10 +2631,12 @@ void msWMSPrintNestedGroups(mapObj* map, int nVersion, char* pabLayerProcessed,
       if (!pabLayerProcessed[j]) {
         msDumpLayer(map, GET_LAYER(map, j), nVersion, script_url_encoded, indent, validated_language, MS_TRUE);
         pabLayerProcessed[j] = 1; /* done */
+        groupAdded = 1;
       }
     } else {
       msIO_printf("%s    <Layer>\n", indent);
       msIO_printf("%s      <Title>%s</Title>\n", indent, nestedGroups[index][level]);
+      groupAdded = 1;
     }
 
     /* Look for one group deeper in the current layer */
@@ -2656,7 +2663,8 @@ void msWMSPrintNestedGroups(mapObj* map, int nVersion, char* pabLayerProcessed,
       }
     }
     /* Close group layer block */
-    msIO_printf("%s    </Layer>\n", indent);
+    if (groupAdded)
+      msIO_printf("%s    </Layer>\n", indent);
   }
 
   msFree(indent);
@@ -2816,8 +2824,8 @@ int msWMSGetCapabilities(mapObj *map, int nVersion, cgiRequestObj *req, owsReque
     }
 
     msIO_printf("   xsi:schemaLocation=\"http://www.opengis.net/wms %s/wms/%s/capabilities_1_3_0.xsd "
-                " http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/sld_capabilities.xsd ",
-                msOWSGetSchemasLocation(map), msOWSGetVersionString(nVersion, szVersionBuf));
+                " http://www.opengis.net/sld %s/sld/1.1.0/sld_capabilities.xsd ",
+                msOWSGetSchemasLocation(map), msOWSGetVersionString(nVersion, szVersionBuf), msOWSGetSchemasLocation(map));
 
     if ( msOWSLookupMetadata(&(map->web.metadata), "MO", "inspire_capabilities") ) {
       msIO_printf(" http://inspire.ec.europa.eu/schemas/inspire_vs/1.0 "
@@ -2912,7 +2920,7 @@ int msWMSGetCapabilities(mapObj *map, int nVersion, cgiRequestObj *req, owsReque
 #endif
                            "<SVG />"
                            , NULL);
-    if (msOWSRequestIsEnabled(map, NULL, "M", "GetCapabilities", MS_FALSE))
+    if (msOWSRequestIsEnabled(map, NULL, "M", "GetCapabilities", MS_TRUE))
       msWMSPrintRequestCap(nVersion, "Capabilities", script_url_encoded, "<WMS_XML />", NULL);
     if (msOWSRequestIsEnabled(map, NULL, "M", "GetFeatureInfo", MS_FALSE))
       msWMSPrintRequestCap(nVersion, "FeatureInfo", script_url_encoded, "<MIME /><GML.1 />", NULL);
@@ -2923,7 +2931,7 @@ int msWMSGetCapabilities(mapObj *map, int nVersion, cgiRequestObj *req, owsReque
     /* WMS 1.1.0 and later */
     /* Note changes to the request names, their ordering, and to the formats */
 
-    if (msOWSRequestIsEnabled(map, NULL, "M", "GetCapabilities", MS_FALSE)) {
+    if (msOWSRequestIsEnabled(map, NULL, "M", "GetCapabilities", MS_TRUE)) {
       if (nVersion >= OWS_1_3_0)
         msWMSPrintRequestCap(nVersion, "GetCapabilities", script_url_encoded,
                              "text/xml",
@@ -3203,12 +3211,6 @@ int msWMSGetCapabilities(mapObj *map, int nVersion, cgiRequestObj *req, owsReque
                         MS_FALSE, MS_FALSE, MS_FALSE, MS_TRUE, MS_TRUE,
                         NULL, NULL, NULL, NULL, NULL, "    ");
 
-    if (nVersion <  OWS_1_3_0)
-      msWMSPrintScaleHint("    ", map->web.minscaledenom, map->web.maxscaledenom,
-                          map->resolution);
-    else
-      msWMSPrintScaleDenominator("    ", map->web.minscaledenom, map->web.maxscaledenom);
-
     if (map->name && strlen(map->name) > 0 && msOWSLookupMetadata(&(map->web.metadata), "MO", "inspire_capabilities") ) {
       char *pszEncodedName = NULL;
       const char *styleName = NULL;
@@ -3310,6 +3312,12 @@ int msWMSGetCapabilities(mapObj *map, int nVersion, cgiRequestObj *req, owsReque
       msFree(pszEncodedStyleName);
     }
 
+    if (nVersion <  OWS_1_3_0)
+      msWMSPrintScaleHint("    ", map->web.minscaledenom, map->web.maxscaledenom,
+                          map->resolution);
+    else
+      msWMSPrintScaleDenominator("    ", map->web.minscaledenom, map->web.maxscaledenom);
+
     /*  */
     /* Dump list of layers organized by groups.  Layers with no group are listed */
     /* individually, at the same level as the groups in the layer hierarchy */
@@ -3325,6 +3333,12 @@ int msWMSGetCapabilities(mapObj *map, int nVersion, cgiRequestObj *req, owsReque
       /* processed already */
       pabLayerProcessed = (char *)msSmallCalloc(map->numlayers, sizeof(char*));
 
+      /* Mark disabled layers as processed to prevent from being displayed in nested groups (#4533)*/
+      for(i=0; i<map->numlayers; i++) {
+        if (!msIntegerInArray(GET_LAYER(map, i)->index, ows_request->enabled_layers, ows_request->numlayers))
+          pabLayerProcessed[i] = 1;
+      }
+
       nestedGroups = (char***)msSmallCalloc(map->numlayers, sizeof(char**));
       numNestedGroups = (int*)msSmallCalloc(map->numlayers, sizeof(int));
       isUsedInNestedGroup = (int*)msSmallCalloc(map->numlayers, sizeof(int));
@@ -3334,8 +3348,7 @@ int msWMSGetCapabilities(mapObj *map, int nVersion, cgiRequestObj *req, owsReque
         layerObj *lp;
         lp = (GET_LAYER(map, i));
 
-        if (pabLayerProcessed[i] || (lp->status == MS_DELETE) ||
-            (!msIntegerInArray(lp->index, ows_request->enabled_layers, ows_request->numlayers)))
+        if (pabLayerProcessed[i] || (lp->status == MS_DELETE))
           continue;  /* Layer is hidden or has already been handled */
 
         if (numNestedGroups[i] > 0) {

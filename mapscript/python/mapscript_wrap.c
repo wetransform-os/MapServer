@@ -3436,7 +3436,7 @@ SWIGINTERN void delete_labelObj(labelObj *self){
       freeLabel(self);
     }
 SWIGINTERN int labelObj_updateFromString(labelObj *self,char *snippet){
-    return msUpdateLabelFromString(self, snippet);
+    return msUpdateLabelFromString(self, snippet,0);
   }
 SWIGINTERN int labelObj_removeBinding(labelObj *self,int binding){
     if(binding < 0 || binding >= 9) return MS_FAILURE;
@@ -5417,8 +5417,11 @@ SWIGINTERN int rectObj_draw(rectObj *self,mapObj *map,layerObj *layer,imageObj *
         msInitShape(&shape);
         msRectToPolygon(*self, &shape);
         shape.classindex = classindex;
-        shape.text = strdup(text);
-
+        if(text && layer->class[classindex]->numlabels > 0) {
+          shape.text = strdup(text);
+          msShapeGetAnnotation(layer,&shape);
+        }
+        
         msDrawShape(map, layer, &shape, image, -1, MS_DRAWMODE_FEATURES|MS_DRAWMODE_LABELS);
 
         msFreeShape(&shape);
@@ -33881,7 +33884,7 @@ SWIGINTERN PyObject *_wrap_msLoadMapFromString(PyObject *SWIGUNUSEDPARM(self), P
       
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_mapObj, 0 |  0 );
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_mapObj, SWIG_POINTER_OWN |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -48159,11 +48162,11 @@ SWIG_init(void) {
   PyDict_SetItemString(d, "MapServerChildError", MSExc_MapServerChildError);
   
   
-  SWIG_Python_SetConstant(d, "MS_VERSION",SWIG_FromCharPtr("6.2.0"));
+  SWIG_Python_SetConstant(d, "MS_VERSION",SWIG_FromCharPtr("6.2.1"));
   SWIG_Python_SetConstant(d, "MS_VERSION_MAJOR",SWIG_From_int((int)(6)));
   SWIG_Python_SetConstant(d, "MS_VERSION_MINOR",SWIG_From_int((int)(2)));
-  SWIG_Python_SetConstant(d, "MS_VERSION_REV",SWIG_From_int((int)(0)));
-  SWIG_Python_SetConstant(d, "MS_VERSION_NUM",SWIG_From_int((int)((6*10000+2*100+0))));
+  SWIG_Python_SetConstant(d, "MS_VERSION_REV",SWIG_From_int((int)(1)));
+  SWIG_Python_SetConstant(d, "MS_VERSION_NUM",SWIG_From_int((int)((6*10000+2*100+1))));
   SWIG_Python_SetConstant(d, "MS_TRUE",SWIG_From_int((int)(1)));
   SWIG_Python_SetConstant(d, "MS_FALSE",SWIG_From_int((int)(0)));
   SWIG_Python_SetConstant(d, "MS_UNKNOWN",SWIG_From_int((int)(-1)));

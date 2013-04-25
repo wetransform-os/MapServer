@@ -816,7 +816,7 @@ class mapscriptPINVOKE {
   public static extern int styleObj_patternlength_get(HandleRef jarg1);
 
   [DllImport("mapscript", EntryPoint="CSharp_styleObj_pattern_set")]
-  public static extern void styleObj_pattern_set(HandleRef jarg1, HandleRef jarg2);
+  public static extern void styleObj_pattern_set(HandleRef jarg1, IntPtr jarg2);
 
   [DllImport("mapscript", EntryPoint="CSharp_styleObj_pattern_get")]
   public static extern IntPtr styleObj_pattern_get(HandleRef jarg1);
@@ -2805,7 +2805,7 @@ class mapscriptPINVOKE {
   public static extern int strokeStyleObj_patternlength_get(HandleRef jarg1);
 
   [DllImport("mapscript", EntryPoint="CSharp_strokeStyleObj_pattern_set")]
-  public static extern void strokeStyleObj_pattern_set(HandleRef jarg1, HandleRef jarg2);
+  public static extern void strokeStyleObj_pattern_set(HandleRef jarg1, IntPtr jarg2);
 
   [DllImport("mapscript", EntryPoint="CSharp_strokeStyleObj_pattern_get")]
   public static extern IntPtr strokeStyleObj_pattern_get(HandleRef jarg1);

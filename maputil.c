@@ -740,6 +740,9 @@ double msAdjustExtent(rectObj *rect, int width, int height)
 {
   double cellsize, ox, oy;
 
+  if(width == 1 || height == 1)
+    return 0;
+
   cellsize = MS_MAX(MS_CELLSIZE(rect->minx, rect->maxx, width), MS_CELLSIZE(rect->miny, rect->maxy, height));
 
   if(cellsize <= 0) /* avoid division by zero errors */
@@ -1865,7 +1868,7 @@ void msCleanup(int signal)
   msGDALCleanup();
 #endif
 #ifdef USE_PROJ
-#  if PJ_VERSION >= 470
+#  if PJ_VERSION >= 480
   pj_clear_initcache();
 #  endif
   pj_deallocate_grids();
