@@ -1,7 +1,0 @@
-libmapscript-ruby1.8: possible-gpl-code-linked-with-openssl
-mapserver-bin: possible-gpl-code-linked-with-openssl
-php5-mapscript: possible-gpl-code-linked-with-openssl
-perl-mapscript: possible-gpl-code-linked-with-openssl
-cgi-mapserver: possible-gpl-code-linked-with-openssl
-python-mapscript: possible-gpl-code-linked-with-openssl
-libmapscript-ruby1.9.1: possible-gpl-code-linked-with-openss

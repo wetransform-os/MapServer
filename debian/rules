@@ -219,11 +219,6 @@ binary-arch: install-arch
 	dh_python2 -ppython-mapscript
 	dh_compress -a
 	dh_link -a
-	# Overrides a mismatched error from lintian
-	for pkg in $$(cat debian/lintian-overrides|cut -d: -f1); do \
-			echo "$$pkg: possible-gpl-code-linked-with-openssl" >debian/$$pkg.lintian-overrides; \
-			cat debian/$$pkg.lintian-overrides; \
-	done
 	dh_lintian -a
 	dh_strip -a
 	dh_fixperms -a
