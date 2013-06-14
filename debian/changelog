@@ -16,6 +16,8 @@ mapserver (6.2.1-3) UNRELEASED; urgency=low
   * Add mapows-contenttype.patch to handle Content-Type headers with a
     charset appended.
   * Drop debian-changes-6.2.1-1 from patch series.
+  * Update libgd build dependency to libgd-dev for the libgd2 transition,
+    keep alternative to allow backports for wheezy with libgd2-xpm-dev.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Fri, 14 Jun 2013 22:00:07 +0200
 
