@@ -15,7 +15,7 @@ version_major=$(shell expr `pwd` : '.*-\([0-9]*\).[0-9.]*')
 CURDIR := $(shell pwd)
 PYVERS=$(shell pyversions -r debian/control)
 RUBYVERS=1.8 1.9.1
-#PHP5API=$(shell php-config5 --phpapi)
+PHP5API=$(shell php-config5 --phpapi)
 
 # Configure config :
 # Not using non free libpdf
@@ -177,7 +177,7 @@ install-arch-stamp: build-arch
 	-find $(CURDIR)/debian/tmp/usr/bin -type f  -exec chrpath --delete {} \;
 
 	# remove la file in php ext dir
-	-$(RM) -rf $(CURDIR)/debian/tmp/usr/lib/php5/20090626/*.la
+	-$(RM) -rf $(CURDIR)/debian/tmp/usr/lib/php5/$(PHP5API)/*.la
 
 	# empty dependency_libs in la file
 	sed -i "/dependency_libs/ s/'.*'/''/" $(CURDIR)/debian/tmp/usr/lib/libmapserver.la
