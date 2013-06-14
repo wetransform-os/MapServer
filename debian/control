@@ -32,7 +32,7 @@ Description: Shared library for MapServer
 Package: libmapserver-dev
 Section: libdevel
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${misc:Depends}
 Suggests: cgi-mapserver, mapserver-bin, mapserver-doc
 Description: Shared library for MapServer
  This package contains the shared library.
@@ -101,7 +101,7 @@ Description: MapServer utilities
 Package: mapserver-doc
 Section: doc
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${misc:Depends}
 Suggests: perl-mapscript, python-mapscript, php5-mapscript, cgi-mapserver
 Description: documentation for MapServer
  This package provides some brief documentation for MapServer.
