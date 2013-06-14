@@ -179,6 +179,9 @@ install-arch-stamp: build-arch
 	# remove la file in php ext dir
 	-$(RM) -rf $(CURDIR)/debian/tmp/usr/lib/php5/20090626/*.la
 
+	# empty dependency_libs in la file
+	sed -i "/dependency_libs/ s/'.*'/''/" $(CURDIR)/debian/tmp/usr/lib/libmapserver.la
+
 	# CGI mapserver
 	-mkdir -p debian/tmp/usr/lib/cgi-bin
 	install -m755 debian/tmp/usr/bin/mapserv debian/tmp/usr/lib/cgi-bin/mapserv
