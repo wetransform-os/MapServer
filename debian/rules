@@ -174,7 +174,11 @@ install-arch-stamp: build-arch
 	  done
 
 	# removing embedded rpath in binaries
-	-find $(CURDIR)/debian/tmp/usr/bin -type f  -exec chrpath --delete {} \;
+	-find $(CURDIR)/debian/tmp/usr/bin -type f -not -name mapserver-config -exec chrpath --delete {} \;
+
+	# removing embedded rpath in libraries
+	-find $(CURDIR)/debian/python-mapscript/usr/ -name _mapscript.so -type f -exec chrpath --delete {} \;
+	-find $(CURDIR)/debian/libmapscript-ruby*/usr/lib/ruby/ -type f -exec chrpath --delete {} \;
 
 	# remove la file in php ext dir
 	-$(RM) -rf $(CURDIR)/debian/tmp/usr/lib/php5/$(PHP5API)/*.la
