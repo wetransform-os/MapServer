@@ -186,7 +186,7 @@ install-arch-stamp: build-arch
 	-mkdir -p debian/tmp/usr/lib/cgi-bin
 	install -m755 debian/tmp/usr/bin/mapserv debian/tmp/usr/lib/cgi-bin/mapserv
 
-	#echo 'misc:Depends=libapache2-mod-php5' >> debian/php5-mapscript.substvars
+	echo 'misc:Depends=phpapi-'$(PHP5API) >> debian/php5-mapscript.substvars
 
 	# libmapserver-dev headers
 	-mkdir -p debian/tmp/usr/include/mapserver/

@@ -45,7 +45,7 @@ Description: Shared library for MapServer
 Package: php5-mapscript
 Section: php
 Architecture: any
-Depends: ${shlibs:Depends}, libapache2-mod-php5
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Suggests: mapserver-bin, mapserver-doc
 Description: php5-cgi module for MapServer
  PHP MapScript provides MapServer functions for PHP scripts.
