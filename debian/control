@@ -88,8 +88,8 @@ Description: Python library for MapServer
 Package: mapserver-bin
 Section: misc
 Architecture: any
-Depends: ${shlibs:Depends}, ${perl:Depends}, ${misc:Depends}
-Suggests: libdbi-perl, perl-mapscript, python-mapscript, cgi-mapserver, mapserver-doc, php5-mapscript, shapelib
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Suggests: perl-mapscript, python-mapscript, cgi-mapserver, mapserver-doc, php5-mapscript, shapelib
 Description: MapServer utilities
  This package provides command-line utilities for MapServer.
  .
