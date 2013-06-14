@@ -112,12 +112,13 @@ clean-first-build:
 	[ ! -f $(CURDIR)/Makefile ] || $(MAKE) mapscriptvars 
 	touch mapscriptvars
 	[ ! -f $(CURDIR)/mapscript/perl/Makefile ] || $(MAKE) distclean -C $(CURDIR)/mapscript/perl
+	-$(RM) mapscript/perl/Makefile.PL
 	-cd mapscript/python && \
 	  for python in $(PYVERS); do $$python setup.py clean; done
-	-$(RM) -rf mapscript/python/build
+	-$(RM) -rf mapscript/python/build mapscript/python/Makefile
 	[ ! -f $(CURDIR)/mapscript/ruby/Makefile ] || $(MAKE) distclean -C $(CURDIR)/mapscript/ruby
 	-$(RM) -rf $(CURDIR)/mapscript/ruby/mapscript_wrap.c
-	-$(RM) mapscriptvars
+	-$(RM) mapscriptvars libtool
 
 	-$(RM)  mapscript/perl/mapscript.i \
 		mapscript/tcl/mapscript.i \
