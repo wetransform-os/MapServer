@@ -24,17 +24,12 @@ PHP5API=$(shell php-config5 --phpapi)
 
 
 COMMON_CONFIG=	--prefix=/usr \
-		--without-tiff \
-		--without-pdf \
 		--with-gd=/usr \
 		--with-freetype=/usr \
 		--with-fribidi-config \
-		--with-zlib=/usr \
-		--with-xpm=/usr \
 		--with-gdal \
 		--with-ogr \
 		--with-proj \
-		--with-eppl \
 		--with-postgis \
 		--with-wcs \
 		--with-sos \
@@ -45,7 +40,6 @@ COMMON_CONFIG=	--prefix=/usr \
 		--with-threads \
 		--with-geos \
 		--with-fastcgi \
-		--with-agg \
 		--with-php \
 		--with-cairo
 
