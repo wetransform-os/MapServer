@@ -1,3 +1,4 @@
 fixmapscriptvars.patch
 php_segfault
 debian-changes-6.2.1-1
+mapows-contenttype.patch

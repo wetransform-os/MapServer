@@ -13,6 +13,8 @@ mapserver (6.2.1-3) UNRELEASED; urgency=low
   * shp2mysql was removed, no more perl in mapserver-bin.
   * Use --install-layout=deb for python setup.py.
   * Update configure arguments (several no longer supported).
+  * Add mapows-contenttype.patch to handle Content-Type headers with a
+    charset appended.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Fri, 14 Jun 2013 22:00:07 +0200
 
