@@ -7,6 +7,16 @@
 
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
+
+# Enable hardening build flags
+export DEB_BUILD_MAINT_OPTIONS=hardening=+all
+
+CPPFLAGS:=$(shell dpkg-buildflags --get CPPFLAGS)
+CFLAGS:=$(shell dpkg-buildflags --get CFLAGS)
+LDFLAGS:=$(shell dpkg-buildflags --get LDFLAGS)
+
+CFLAGS+=$(CPPFLAGS)
+CFLAGS+=$(LDFLAGS)
  
 package=mapserver
 
@@ -45,12 +55,14 @@ COMMON_CONFIG=	--prefix=/usr \
 
 rstoptions=--stylesheet=mapscript.css --link-stylesheet 
 
-MS_CFLAGS=-O2
+MS_CFLAGS=$(CFLAGS)
 MS_CXXFLAGS=$(MS_CFLAGS)
+MS_CPPFLAGS=$(CPPFLAGS)
+MS_LDFLAGS=$(LDFLAGS)
 
 configure-stamp:
 	dh_testdir
-	./configure $(COMMON_CONFIG) CFLAGS="$(MS_CFLAGS)" CXXFLAGS="$(MS_CXXFLAGS)"
+	./configure $(COMMON_CONFIG) CFLAGS="$(MS_CFLAGS)" CXXFLAGS="$(MS_CXXFLAGS)" CPPFLAGS="$(MS_CPPFLAGS)" LDFLAGS="$(MS_LDFLAGS)"
 
 	touch configure-stamp
 
@@ -77,11 +89,11 @@ build-arch-stamp: configure-stamp
 	# Build Perl mapscript
 	cd $(CURDIR)/mapscript/perl && \
 	  perl Makefile.PL INSTALLDIRS=vendor \
-	  && $(MAKE) LD_RUN_PATH="" OPTIMIZE="-O2 -g -W -Wall"
+	  && $(MAKE) LD_RUN_PATH="" OPTIMIZE="$(CFLAGS) -W -Wall"
 
 	# Build python
 	cd $(CURDIR)/mapscript/python && \
-	  set -e; for python in $(PYVERS); do $$python setup.py build; done
+	  set -e; for python in $(PYVERS); do CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" $$python setup.py build; done
 
 	# Build ruby
 	cd $(CURDIR)/mapscript/ruby && set -e ; \
