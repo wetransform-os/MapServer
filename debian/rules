@@ -26,6 +26,7 @@ CURDIR := $(shell pwd)
 PYVERS=$(shell pyversions -r debian/control)
 RUBYVERS=1.8 1.9.1
 PHP5API=$(shell php-config5 --phpapi)
+MANPAGES:=$(wildcard debian/man/*.*.xml)
 
 # Configure config :
 # Not using non free libpdf
@@ -81,6 +82,12 @@ build-indep-stamp:
 build-arch: build-arch-stamp
 build-arch-stamp: configure-stamp
 	dh_testdir
+
+	# Create man pages from DocBook XML
+	for x in $(MANPAGES) ; do \
+	  docbook2x-man $$x ; \
+	  mv `basename $$x | sed 's/.xml$$//'` `dirname $$x` ; \
+	done
 
 	# Build binary lib
 	$(MAKE) mapscriptvars || touch mapscriptvars
@@ -212,6 +219,7 @@ binary-indep: install-indep
 	dh_installdocs -i
 	dh_installexamples -i
 	dh_installdebconf -i
+	dh_installman
 	dh_compress -i -X.xml -X.xsd -X.xsl
 	dh_link -i
 	dh_lintian -i
@@ -230,6 +238,7 @@ binary-arch: install-arch
 	dh_installexamples -a
 	chmod a-x debian/php*-mapscript/usr/share/doc/php*-mapscript/examples/*.phtml
 	dh_installdebconf -a
+	dh_installman
 	dh_python2 -ppython-mapscript
 	dh_compress -a
 	dh_link -a
