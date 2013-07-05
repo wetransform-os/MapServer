@@ -21,6 +21,7 @@ mapserver (6.2.1-3) UNRELEASED; urgency=low
   * Enable hardening build flags.
   * Add man page for mapserver utilities:
     - legend
+    - msencrypt
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Fri, 14 Jun 2013 22:00:07 +0200
 
