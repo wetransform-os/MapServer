@@ -1,30 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN" "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
-<refentry id='legend'>
+<refentry id='scalebar'>
 
   <refmeta>
-    <refentrytitle>legend</refentrytitle>
+    <refentrytitle>scalebar</refentrytitle>
     <manvolnum>1</manvolnum>
   </refmeta>
 
   <refnamediv>
-    <refname>legend</refname>
-    <refpurpose>generate legend image for mapfile</refpurpose>
+    <refname>scalebar</refname>
+    <refpurpose>create a scalebar from a mapfile</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv id='synopsis'>
     <cmdsynopsis>
-      <command>legend</command>
-      <arg choice='plain'><replaceable>mapfile</replaceable></arg>
-      <arg choice='plain'><replaceable>outputfile</replaceable></arg>
+      <command>scalebar</command>
+      <group>
+        <arg choice='plain'><replaceable>mapfile</replaceable> <replaceable>outputimage</replaceable></arg>
+        <arg choice='opt'>-v</arg>
+      </group>
     </cmdsynopsis>
   </refsynopsisdiv>
 
   <refsect1 id='description'>
     <title>DESCRIPTION</title>
     <para>
-      <command>legend</command> creates a legend image from a mapfile.
-      Output format depends on the graphics library used for rendering.
+      <command>scalebar</command> creates a scalebar from a mapfile. Output is
+      either PNG or GIF depending on what version of the GD library used.
     </para>
   </refsect1>
 
@@ -33,16 +35,16 @@
     <variablelist>
 
       <varlistentry>
-        <term><replaceable>mapfile</replaceable></term>
+        <term><replaceable>mapfile</replaceable> <replaceable>outputimage</replaceable></term>
         <listitem>
-          <para>Path to the mapfile.</para>
+          <para>Creates a scalebar from a mapfile.</para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
-        <term><replaceable>outputfile</replaceable></term>
+        <term>-v</term>
         <listitem>
-          <para>Path for the output image file.</para>
+          <para>Display mapserver version and build options.</para>
         </listitem>
       </varlistentry>
 
@@ -54,7 +56,7 @@
     <title>SEE ALSO</title>
 
     <citerefentry>
-      <refentrytitle>scalebar</refentrytitle>
+      <refentrytitle>legend</refentrytitle>
       <manvolnum>1</manvolnum>
     </citerefentry>
   </refsect1>

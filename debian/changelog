@@ -22,6 +22,7 @@ mapserver (6.2.1-3) UNRELEASED; urgency=low
   * Add man page for mapserver utilities:
     - legend
     - msencrypt
+    - scalebar
     - shp2img
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Fri, 14 Jun 2013 22:00:07 +0200
