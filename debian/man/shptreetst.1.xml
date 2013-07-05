@@ -122,6 +122,11 @@ shptreetst esp 879827.480246 4317203.699447 884286.289767 4321662.508967
     <citerefentry>
       <refentrytitle>shptreevis</refentrytitle>
       <manvolnum>1</manvolnum>
+    </citerefentry>,
+
+    <citerefentry>
+      <refentrytitle>sortshp</refentrytitle>
+      <manvolnum>1</manvolnum>
     </citerefentry>
   </refsect1>
 

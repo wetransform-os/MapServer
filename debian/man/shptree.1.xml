@@ -194,6 +194,11 @@ shptree us_states.shp
     <citerefentry>
       <refentrytitle>shptreevis</refentrytitle>
       <manvolnum>1</manvolnum>
+    </citerefentry>,
+
+    <citerefentry>
+      <refentrytitle>sortshp</refentrytitle>
+      <manvolnum>1</manvolnum>
     </citerefentry>
 
     <para>
