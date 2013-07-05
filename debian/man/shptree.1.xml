@@ -186,6 +186,11 @@ shptree us_states.shp
   <refsect1 id='see-also'>
     <title>SEE ALSO</title>
 
+    <citerefentry>
+      <refentrytitle>shptreevis</refentrytitle>
+      <manvolnum>1</manvolnum>
+    </citerefentry>
+
     <para>
       The
       <ulink url="https://github.com/mapserver/mapserver/wiki/ShpTree">

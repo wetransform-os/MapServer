@@ -3,3 +3,4 @@ debian/man/msencrypt.1
 debian/man/scalebar.1
 debian/man/shp2img.1
 debian/man/shptree.1
+debian/man/shptreevis.1
