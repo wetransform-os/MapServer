@@ -9,14 +9,18 @@
 
   <refnamediv>
     <refname>legend</refname>
-    <refpurpose>generate legend image for mapfile</refpurpose>
+    <refpurpose>create a legend image from a mapfile</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv id='synopsis'>
     <cmdsynopsis>
       <command>legend</command>
-      <arg choice='plain'><replaceable>mapfile</replaceable></arg>
-      <arg choice='plain'><replaceable>outputfile</replaceable></arg>
+      <group>
+        <arg choice='plain'><replaceable>mapfile</replaceable>
+          <arg choice='plain'><replaceable>outputimage</replaceable></arg>
+        </arg>
+        <arg choice='plain'><option>-v</option></arg>
+      </group>
     </cmdsynopsis>
   </refsynopsisdiv>
 
@@ -40,9 +44,16 @@
       </varlistentry>
 
       <varlistentry>
-        <term><replaceable>outputfile</replaceable></term>
+        <term><replaceable>outputimage</replaceable></term>
         <listitem>
-          <para>Path for the output image file.</para>
+          <para>Path to the output image file.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>-v</term>
+        <listitem>
+          <para>Display mapserver version and build options.</para>
         </listitem>
       </varlistentry>
 
