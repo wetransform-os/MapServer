@@ -78,6 +78,11 @@ This new LSB index supports a shapefile with 2895 shapes, 10 depth
     <citerefentry>
       <refentrytitle>shptree</refentrytitle>
       <manvolnum>1</manvolnum>
+    </citerefentry>,
+
+    <citerefentry>
+      <refentrytitle>shptreetst</refentrytitle>
+      <manvolnum>1</manvolnum>
     </citerefentry>
   </refsect1>
 

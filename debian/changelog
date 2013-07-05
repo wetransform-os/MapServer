@@ -25,6 +25,7 @@ mapserver (6.2.1-3) UNRELEASED; urgency=low
     - scalebar
     - shp2img
     - shptree
+    - shptreetst
     - shptreevis
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Fri, 14 Jun 2013 22:00:07 +0200
