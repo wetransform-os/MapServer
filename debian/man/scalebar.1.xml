@@ -9,14 +9,16 @@
 
   <refnamediv>
     <refname>scalebar</refname>
-    <refpurpose>create a scalebar from a mapfile</refpurpose>
+    <refpurpose>create a scalebar image from a mapfile</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv id='synopsis'>
     <cmdsynopsis>
       <command>scalebar</command>
       <group>
-        <arg choice='plain'><replaceable>mapfile</replaceable> <replaceable>outputimage</replaceable></arg>
+        <arg choice='plain'><replaceable>mapfile</replaceable>
+          <arg choice='plain'><replaceable>outputimage</replaceable></arg>
+        </arg>
         <arg choice='opt'>-v</arg>
       </group>
     </cmdsynopsis>
@@ -25,8 +27,9 @@
   <refsect1 id='description'>
     <title>DESCRIPTION</title>
     <para>
-      <command>scalebar</command> creates a scalebar from a mapfile. Output is
-      either PNG or GIF depending on what version of the GD library used.
+      <command>scalebar</command> creates a scalebar image from a mapfile.
+      Output is either PNG or GIF depending on what version of the GD library
+      used.
     </para>
   </refsect1>
 
@@ -35,9 +38,16 @@
     <variablelist>
 
       <varlistentry>
-        <term><replaceable>mapfile</replaceable> <replaceable>outputimage</replaceable></term>
+        <term><replaceable>mapfile</replaceable></term>
         <listitem>
-          <para>Creates a scalebar from a mapfile.</para>
+          <para>Path to the mapfile.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>outputimage</replaceable></term>
+        <listitem>
+          <para>Path to the output image file.</para>
         </listitem>
       </varlistentry>
 
