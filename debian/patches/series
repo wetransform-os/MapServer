@@ -2,3 +2,4 @@ fixmapscriptvars.patch
 php_segfault
 mapows-contenttype.patch
 hardening.patch
+shp2img-typo.patch
