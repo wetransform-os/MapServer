@@ -1,3 +1,6 @@
+Description: Add support for hardening build flags.
+Author: Bas Couwenberg <sebastic@xs4all.nl>
+Last-Update: 2013-06-30
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -254,6 +254,9 @@ FLAGS = @DEBUG_FLAGS@ $(DEFINES) $(INCLU
