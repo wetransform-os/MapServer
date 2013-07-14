@@ -79,7 +79,7 @@
 
     <informalexample>
       <para>
-        To suppress the HTTP headers, you can use the "-nh" switch, such as:
+        To suppress the HTTP headers, you can use the "<option>-nh</option>" switch, such as:
       </para>
 
       <screen>

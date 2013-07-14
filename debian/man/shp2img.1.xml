@@ -15,18 +15,18 @@
   <refsynopsisdiv id='synopsis'>
     <cmdsynopsis>
       <command>shp2img</command>
-      <arg choice='plain'>-m <replaceable>mapfile</replaceable></arg>
-      <arg choice='opt'>-o <replaceable>image</replaceable></arg>
-      <arg choice='opt'>-e <replaceable>minx</replaceable> <replaceable>miny</replaceable> <replaceable>maxx</replaceable> <replaceable>maxy</replaceable></arg>
-      <arg choice='opt'>-s <replaceable>sizex</replaceable> <replaceable>sizey</replaceable></arg>
-      <arg choice='opt'>-l "<replaceable>layer1</replaceable> <arg choice='opt'><replaceable>layer2</replaceable>...</arg>"</arg>
-      <arg choice='opt'>-i <replaceable>format</replaceable></arg>
-      <arg choice='opt'>-all_debug <replaceable>n</replaceable></arg>
-      <arg choice='opt'>-map_debug <replaceable>n</replaceable></arg>
-      <arg choice='opt'>-layer_debug <replaceable>layername</replaceable> <replaceable>n</replaceable></arg>
-      <arg choice='opt'>-p <replaceable>n</replaceable></arg>
-      <arg choice='opt'>-c <replaceable>n</replaceable></arg>
-      <arg choice='opt'>-d <replaceable>layername</replaceable> <replaceable>datavalue</replaceable></arg>
+      <arg choice='plain'><option>-m</option> <replaceable>mapfile</replaceable></arg>
+      <arg choice='opt'><option>-o</option> <replaceable>image</replaceable></arg>
+      <arg choice='opt'><option>-e</option> <replaceable>minx</replaceable> <replaceable>miny</replaceable> <replaceable>maxx</replaceable> <replaceable>maxy</replaceable></arg>
+      <arg choice='opt'><option>-s</option> <replaceable>sizex</replaceable> <replaceable>sizey</replaceable></arg>
+      <arg choice='opt'><option>-l</option> "<replaceable>layer1</replaceable> <arg choice='opt'><replaceable>layer2</replaceable>...</arg>"</arg>
+      <arg choice='opt'><option>-i</option> <replaceable>format</replaceable></arg>
+      <arg choice='opt'><option>-all_debug</option> <replaceable>n</replaceable></arg>
+      <arg choice='opt'><option>-map_debug</option> <replaceable>n</replaceable></arg>
+      <arg choice='opt'><option>-layer_debug</option> <replaceable>layername</replaceable> <replaceable>n</replaceable></arg>
+      <arg choice='opt'><option>-p</option> <replaceable>n</replaceable></arg>
+      <arg choice='opt'><option>-c</option> <replaceable>n</replaceable></arg>
+      <arg choice='opt'><option>-d</option> <replaceable>layername</replaceable> <replaceable>datavalue</replaceable></arg>
     </cmdsynopsis>
   </refsynopsisdiv>
 

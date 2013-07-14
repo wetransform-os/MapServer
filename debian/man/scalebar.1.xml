@@ -19,7 +19,7 @@
         <arg choice='plain'><replaceable>mapfile</replaceable>
           <arg choice='plain'><replaceable>outputimage</replaceable></arg>
         </arg>
-        <arg choice='opt'>-v</arg>
+        <arg choice='opt'><option>-v</option></arg>
       </group>
     </cmdsynopsis>
   </refsynopsisdiv>
@@ -52,7 +52,7 @@
       </varlistentry>
 
       <varlistentry>
-        <term>-v</term>
+        <term><option>-v</option></term>
         <listitem>
           <para>Display mapserver version and build options.</para>
         </listitem>

@@ -16,8 +16,8 @@
     <cmdsynopsis>
       <command>msencrypt</command>
       <group>
-        <arg choice='plain'>-keygen <replaceable>file</replaceable></arg>
-        <arg choice='plain'>-key <replaceable>file</replaceable> <replaceable>string</replaceable></arg>
+        <arg choice='plain'><option>-keygen</option> <replaceable>file</replaceable></arg>
+        <arg choice='plain'><option>-key</option> <replaceable>file</replaceable> <replaceable>string</replaceable></arg>
       </group>
     </cmdsynopsis>
   </refsynopsisdiv>

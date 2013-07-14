@@ -19,9 +19,9 @@
         <arg choice='plain'>
           <replaceable>metafile</replaceable>
           <arg choice='plain'><replaceable>tilefile</replaceable></arg>
-          <arg choice='opt'>-tile-path-only</arg>
+          <arg choice='opt'><option>-tile-path-only</option></arg>
         </arg>
-        <arg choice='plain'>-h</arg>
+        <arg choice='plain'><option>-h</option></arg>
       </group>
     </cmdsynopsis>
   </refsynopsisdiv>

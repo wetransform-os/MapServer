@@ -15,12 +15,12 @@
   <refsynopsisdiv id='synopsis'>
     <cmdsynopsis>
       <command>mapserver-config</command>
-      <arg choice='opt'>--libs</arg>
-      <arg choice='opt'>--dep-libs</arg>
-      <arg choice='opt'>--cflags</arg>
-      <arg choice='opt'>--defines</arg>
-      <arg choice='opt'>--includes</arg>
-      <arg choice='opt'>--version</arg>
+      <arg choice='opt'><option>--libs</option></arg>
+      <arg choice='opt'><option>--dep-libs</option></arg>
+      <arg choice='opt'><option>--cflags</option></arg>
+      <arg choice='opt'><option>--defines</option></arg>
+      <arg choice='opt'><option>--includes</option></arg>
+      <arg choice='opt'><option>--version</option></arg>
     </cmdsynopsis>
   </refsynopsisdiv>
 

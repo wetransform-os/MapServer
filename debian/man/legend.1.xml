@@ -51,7 +51,7 @@
       </varlistentry>
 
       <varlistentry>
-        <term>-v</term>
+        <term><option>-v</option></term>
         <listitem>
           <para>Display mapserver version and build options.</para>
         </listitem>
