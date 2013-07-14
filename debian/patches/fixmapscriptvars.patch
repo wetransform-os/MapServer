@@ -1,3 +1,6 @@
+Description: Fix mapscriptvars to send the right argument to ld.
+Author: Jerome Villeneuve Larouche <jlarouche@mapgears.com>
+Last-Update: 2012-11-15
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -415,7 +415,7 @@ mapscriptvars:	Makefile
