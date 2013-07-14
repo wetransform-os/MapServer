@@ -136,24 +136,37 @@ Package: libmapscript-ruby
 Section: ruby
 Architecture: all
 Depends: libmapscript-ruby1.9.1, ${misc:Depends}
-Description: Ruby MapServer library
+Description: MapServer library for Ruby
  Ruby MapScript provides MapServer functions for Ruby scripts.
  .
  This package contains examples and depends on package for Debian
  default version of Ruby.
+ .
+ MapServer is a CGI-based framework for Internet map services which
+ supports Open Geospatial Consortium (OGC) standards.
 
 Package: libmapscript-ruby1.8
 Section: ruby
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Suggests: mapserver-bin, mapserver-doc
-Description: Ruby MapServer library
+Description: MapServer library for Ruby 1.8
  Ruby MapScript provides MapServer functions for Ruby scripts.
+ .
+ This package contains the MapServer functions for Ruby 1.8.
+ .
+ MapServer is a CGI-based framework for Internet map services which
+ supports Open Geospatial Consortium (OGC) standards.
 
 Package: libmapscript-ruby1.9.1
 Section: ruby
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Suggests: mapserver-bin, mapserver-doc
-Description: Ruby MapServer library
+Description: MapServer library for Ruby 1.9.1
  Ruby MapScript provides MapServer functions for Ruby scripts.
+ .
+ This package contains the MapServer functions for Ruby 1.9.1.
+ .
+ MapServer is a CGI-based framework for Internet map services which
+ supports Open Geospatial Consortium (OGC) standards.
