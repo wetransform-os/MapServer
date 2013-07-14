@@ -135,7 +135,7 @@ Description: documentation for MapServer
 Package: libmapscript-ruby
 Section: ruby
 Architecture: all
-Depends: libmapscript-ruby1.8, ${misc:Depends}
+Depends: libmapscript-ruby1.9.1, ${misc:Depends}
 Description: Ruby MapServer library
  Ruby MapScript provides MapServer functions for Ruby scripts.
  .
