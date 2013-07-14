@@ -1,3 +1,7 @@
+Description: Fix segfault in ms_newMapObjFromString (PHP/MapScript).
+Author: Alan Boudreault <aboudreault@mapgears.com>
+Applied-Upstream: 6.2.2, https://github.com/mapserver/mapserver/commit/dc3915db24d73d00e188c0537476eac6639853a6
+Last-Update: 2013-06-14
 --- a/mapscript/php/php_mapscript.c
 +++ b/mapscript/php/php_mapscript.c
 @@ -169,7 +169,7 @@
