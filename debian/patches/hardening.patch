@@ -88,3 +88,14 @@ Last-Update: 2013-06-30
  MS_LIB =   $(top_builddir)/libmapserver.la
  
  
+--- a/mapscript/ruby/extconf.rb
++++ b/mapscript/ruby/extconf.rb
+@@ -14,7 +14,7 @@ MAPSERVER_LOCAL_LIBS=Pathname.new(File.d
+ 
+ # $CFLAGS works only with 1.8 ??? -> the -Wall argument is not needed !!!
+ $CFLAGS = ""
+-$CPPFLAGS = make_inc + " -idirafter $(rubylibdir)/$(arch) " + make_define
++$CPPFLAGS += make_inc + " -idirafter $(rubylibdir)/$(arch) " + make_define
+ $LDFLAGS += " -fPIC -Wl,-rpath,#{MAPSERVER_LOCAL_LIBS}"
+ #$LOCAL_LIBS += " -L../../.libs/ " + " -lmapserver " + make_static_libs
+ $LOCAL_LIBS += " -L#{MAPSERVER_LOCAL_LIBS} " + " -lmapserver "

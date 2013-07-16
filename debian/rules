@@ -17,6 +17,9 @@ LDFLAGS:=$(shell dpkg-buildflags --get LDFLAGS)
 
 CFLAGS+=$(CPPFLAGS)
 CFLAGS+=$(LDFLAGS)
+
+# mapscript.so for ruby1.9.1 fails to build with -Werror=format-security
+RUBY_CPPFLAGS=$(subst -Werror=format-security,,$(CFLAGS))
  
 package=mapserver
 
@@ -105,7 +108,7 @@ build-arch-stamp: configure-stamp
 	# Build ruby
 	cd $(CURDIR)/mapscript/ruby && set -e ; \
 	  for v in $(RUBYVERS) ; do \
-	    ruby$$v extconf.rb && $(MAKE) && \
+	    ruby$$v extconf.rb --with-cppflags="$(RUBY_CPPFLAGS) " && $(MAKE) && \
 	      mv mapscript.so ruby$$v-mapscript.so ; \
 	  done
 
@@ -182,7 +185,7 @@ install-arch-stamp: build-arch
 	# Ruby mapscript
 	cd $(CURDIR)/mapscript/ruby && set -e ; \
 	  for v in $(RUBYVERS) ; do \
-	    ruby$$v extconf.rb ; \
+	    ruby$$v extconf.rb --with-cppflags="$(RUBY_CPPFLAGS) " ; \
 	      $(MAKE) install sitedir=$(CURDIR)/debian/libmapscript-ruby$$v/usr/lib/ruby ; \
 	      $(MAKE) distclean ; \
 	  done
