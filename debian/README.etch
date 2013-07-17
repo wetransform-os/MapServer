@@ -1,7 +1,0 @@
-Note for packagers
-------------------
-
-Starting from >=4.10.2-1 a separate tree is maintained for Etch compatibility
-in order to develop both a clean sid tree and a backporting tree. In practice,
-the etch tree retains PHP4 compatibility, which is instead dropped in lenny,
-due to PHP4 removal.
