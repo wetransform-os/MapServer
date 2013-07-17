@@ -1,9 +1,0 @@
-README for mapserver's debian package
-=====================================
-
-This build of mapscript PHP extension can't be load as a 'cgi-fcgi' module for
-stability reason, but only with PHP as an apache DSO. If you need the cgi-fcgi
-support, feel free to build your own package but note that according upstream
-it will not be stable.
-
- -- Fabio Tranchitella <kobold@debian.org>  Sun, 24 Jun 2007 11:44:44 +0200
