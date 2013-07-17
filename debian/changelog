@@ -41,6 +41,7 @@ mapserver (6.2.1-3) UNRELEASED; urgency=low
   * Replace dpatch with quilt in README.source.
   * Drop README.etch, no longer relevant.
   * Drop README.Debian, no longer used for PHP mapscript.
+  * Update TODO.Debian to reflect current status.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Fri, 14 Jun 2013 22:00:07 +0200
 
