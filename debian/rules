@@ -248,7 +248,7 @@ binary-arch: install-arch
 	dh_lintian -a
 	dh_strip -a
 	dh_fixperms -a
-	dh_makeshlibs -a
+	dh_makeshlibs -a -Xphp_mapscript
 	dh_installdeb -a
 	dh_shlibdeps -a
 	dh_perl -plibmapscript-perl

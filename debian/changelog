@@ -42,6 +42,8 @@ mapserver (6.2.1-3) UNRELEASED; urgency=low
   * Drop README.etch, no longer relevant.
   * Drop README.Debian, no longer used for PHP mapscript.
   * Update TODO.Debian to reflect current status.
+  * Add maintainer scripts for libmapserver-6.2.1 to call ldconfig,
+    don't call ldconfig for php5-mapscript.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Fri, 14 Jun 2013 22:00:07 +0200
 
