@@ -3,21 +3,23 @@ Author: Bas Couwenberg <sebastic@xs4all.nl>
 Last-Update: 2013-06-30
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -254,6 +254,9 @@ FLAGS = @DEBUG_FLAGS@ $(DEFINES) $(INCLU
+@@ -254,6 +254,11 @@ FLAGS = @DEBUG_FLAGS@ $(DEFINES) $(INCLU
  
  CFLAGS   = @CFLAGS@ $(FLAGS)
  CXXFLAGS = @CXXFLAGS@ $(FLAGS)
 +LDFLAGS = @LDFLAGS@
 +
++HARDENING_FLAGS = @CFLAGS@ @LDFLAGS@
++
 +LINK+=$(LDFLAGS)
  
  # Link flags and shared libs only
  SUP_LIBS =  $(FT_LIB) $(GD_LIB) $(OGL_LIB) $(FTGL_LIB) $(PROJ_LIBS) \
-@@ -417,6 +420,7 @@ mapscriptvars:	Makefile
+@@ -417,6 +422,7 @@ mapscriptvars:	Makefile
  	echo $(LIBMAP) >> mapscriptvars
  	echo -Wl,$(EXE_LDFLAGS) >> mapscriptvars
  	grep '#define MS_VERSION ' mapserver.h >> mapscriptvars
-+	echo $(CFLAGS) >> mapscriptvars
++	echo $(HARDENING_FLAGS) >> mapscriptvars
  
  mapserver-config: Makefile
  	rm -f mapserver-config
@@ -34,14 +36,14 @@ Last-Update: 2013-06-30
  # Default is 4.3
  else { $ms_version = '4.3'; }
  
-+$cflags = <STREAM>;
-+chomp $cflags;
++$hardening_flags = <STREAM>;
++chomp $hardening_flags;
 +
  print $inc."\n";
  print $libs."\n";
  print $static_libs."\n";
  print $ms_version."\n";
-+print $cflags."\n";
++print $hardening_flags."\n";
  
  my $swigInterfaceFile = "../mapscript.i";
  my $swigWrapperFile   = "mapscript_wrap.c";
@@ -49,8 +51,8 @@ Last-Update: 2013-06-30
  	      'DEFINE' 		=> $define,
  	      'INC' 		=> $inc,
  	      'LIBS' 		=> [$libs,$static_libs],
-+	      'OPTIMIZE' 	=> $cflags,
-+	      'LD'	 	=> "$Config{ld} $cflags",
++	      'OPTIMIZE' 	=> $hardening_flags,
++	      'LD'	 	=> "$Config{ld} $hardening_flags",
  	      'OBJECT' 		=> 'mapscript_wrap.o',
  		  'VERSION' 	=> $ms_version
  	      );
