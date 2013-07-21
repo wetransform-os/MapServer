@@ -58,7 +58,7 @@ MS_CPPFLAGS=$(CPPFLAGS)
 MS_LDFLAGS=$(LDFLAGS)
 
 %:
-	dh $@ --with python2
+	dh $@ --with autoreconf,python2
 
 override_dh_auto_clean:
 	dh_testdir
