@@ -192,7 +192,7 @@ override_dh_compress:
 	dh_compress -X.xml -X.xsd -X.xsl
 
 override_dh_makeshlibs:
-	dh_makeshlibs -Xphp_mapscript
+	dh_makeshlibs -Xphp_mapscript -- -c0
 
 override_dh_python2:
 	dh_python2 -ppython-mapscript
