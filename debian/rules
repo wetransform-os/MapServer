@@ -12,7 +12,6 @@ export DH_OPTIONS
 #  pie: causes build failure
 export DEB_BUILD_MAINT_OPTIONS=hardening=+all,-pie
 
-
 CPPFLAGS:=$(shell dpkg-buildflags --get CPPFLAGS)
 CFLAGS:=$(shell dpkg-buildflags --get CFLAGS)
 LDFLAGS:=$(shell dpkg-buildflags --get LDFLAGS)
@@ -31,6 +30,8 @@ PYVERS=$(shell pyversions -r debian/control)
 RUBYVERS=1.8 1.9.1
 PHP5API=$(shell php-config5 --phpapi)
 MANPAGES:=$(wildcard debian/man/*.*.xml)
+
+MS_VERSION=$(shell dpkg-parsechangelog | sed -ne 's/^Version: \(.*\)-.*/\1/p')
 
 COMMON_CONFIG=	--prefix=/usr \
 		--with-gd=/usr \
@@ -58,7 +59,7 @@ MS_CPPFLAGS=$(CPPFLAGS)
 MS_LDFLAGS=$(LDFLAGS)
 
 %:
-	dh $@ --with autoreconf,python2
+	dh $@ --with autoreconf,python2,pkgkde_symbolshelper
 
 override_dh_auto_clean:
 	dh_testdir
@@ -192,7 +193,7 @@ override_dh_compress:
 	dh_compress -X.xml -X.xsd -X.xsl
 
 override_dh_makeshlibs:
-	dh_makeshlibs -Xphp_mapscript -- -c0
+	dh_makeshlibs -Xphp_mapscript -- -c0 -v$(MS_VERSION)
 
 override_dh_python2:
 	dh_python2 -ppython-mapscript
