@@ -1,3 +1,10 @@
+mapserver (6.2.1-4) unstable; urgency=low
+
+  * Use pkgkde-gensymbols & pkgkde-symbolshelper to handle C++ symbols.
+  * Use upstream version without debian revision when generating symbols.
+
+ -- Bas Couwenberg <sebastic@xs4all.nl>  Thu, 25 Jul 2013 20:25:18 +0200
+
 mapserver (6.2.1-3) unstable; urgency=low
 
   [ Bas Couwenberg ]
@@ -46,8 +53,6 @@ mapserver (6.2.1-3) unstable; urgency=low
   * Add maintainer scripts for libmapserver-6.2.1 to call ldconfig,
     don't call ldconfig for php5-mapscript.
   * Use dh_autoreconf for retooling.
-  * Use pkgkde-gensymbols & pkgkde-symbolshelper to handle C++ symbols.
-  * Use upstream version without debian revision when generating symbols.
 
   [ Francesco Paolo Lovergine ]
   * Relaxing dh_makeshlibs checking to avoid failure but document
