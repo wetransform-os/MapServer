@@ -1,5 +1,7 @@
 Description: Fix typo in usage information.
 Author: Bas Couwenberg <sebastic@xs4all.nl>
+Bug: https://github.com/mapserver/mapserver/pull/4740
+Applied-Upstream: https://github.com/mapserver/mapserver/commit/cbc9683b3a3fd07059312583aaa10b267907e711
 Last-Update: 2013-06-14
 --- a/shp2img.c
 +++ b/shp2img.c
