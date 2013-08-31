@@ -27,7 +27,7 @@ RUBY_CPPFLAGS=$(subst -Werror=format-security,,$(CFLAGS))
 RUBY_CPPFLAGS+=$(LDFLAGS)
  
 PYVERS=$(shell pyversions -r debian/control)
-RUBYVERS=1.8 1.9.1
+RUBYVERS=1.9.1
 PHP5API=$(shell php-config5 --phpapi)
 MANPAGES:=$(wildcard debian/man/*.*.xml)
 
@@ -151,7 +151,7 @@ override_dh_auto_install:
 	cd $(CURDIR)/mapscript/ruby && set -e ; \
 	  for v in $(RUBYVERS) ; do \
 	    ruby$$v extconf.rb --with-cppflags="$(RUBY_CPPFLAGS) " ; \
-	      $(MAKE) install sitedir=$(CURDIR)/debian/libmapscript-ruby$$v/usr/lib/ruby ; \
+	      $(MAKE) install sitedir=$(CURDIR)/debian/ruby-mapscript/usr/lib/ruby/vendor_ruby ; \
 	      $(MAKE) distclean ; \
 	  done
 
@@ -160,7 +160,7 @@ override_dh_auto_install:
 
 	# removing embedded rpath in libraries
 	-find $(CURDIR)/debian/python-mapscript/usr/ -name _mapscript.so -type f -exec chrpath --delete {} \;
-	-find $(CURDIR)/debian/libmapscript-ruby*/usr/lib/ruby/ -type f -exec chrpath --delete {} \;
+	-find $(CURDIR)/debian/ruby-mapscript/usr/lib/ruby/vendor_ruby/ -type f -exec chrpath --delete {} \;
 
 	# remove la file in php ext dir
 	-$(RM) -rf $(CURDIR)/debian/tmp/usr/lib/php5/$(PHP5API)/*.la

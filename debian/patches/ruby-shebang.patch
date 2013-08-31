@@ -1,0 +1,11 @@
+Description: Explicitly use ruby1.9.1 in shebang.
+Author: Bas Couwenberg <sebastic@xs4all.nl>
+Last-Update: 2013-09-10
+--- a/mapscript/ruby/examples/shp2img.rb
++++ b/mapscript/ruby/examples/shp2img.rb
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env ruby 
++#!/usr/bin/ruby1.9.1
+ 
+ require "mapscript"
+ include Mapscript

@@ -2,6 +2,9 @@ mapserver (6.2.1-4) unstable; urgency=low
 
   * Use pkgkde-gensymbols & pkgkde-symbolshelper to handle C++ symbols.
   * Use upstream version without debian revision when generating symbols.
+  * Drop ruby1.8 mapscript package for ruby1.8-removal transition.
+  * Rename libruby-mapscript to ruby-mapscript. (closes: #722394)
+  * Don't install Ruby mapscript in /usr/lib/ruby, use vendor_ruby instead.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Thu, 25 Jul 2013 20:25:18 +0200
 
