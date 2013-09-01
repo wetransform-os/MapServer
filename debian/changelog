@@ -7,6 +7,7 @@ mapserver (6.4.0~beta2-1) UNRELEASED; urgency=low
   * Drop patches:
     - fixmapscriptvars.patch (mapscriptvars no longer used)
     - php_segfault.patch (applied upstream)
+    - mapows-contenttype.patch (applied upstream)
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Sun, 01 Sep 2013 14:14:54 +0200
 
