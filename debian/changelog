@@ -4,6 +4,8 @@ mapserver (6.4.0~beta2-1) UNRELEASED; urgency=low
   * Build system changed from autotools to cmake.
   * Update Build-Depends to include: libgif-dev, librsvg2-dev, pkg-config.
   * Update hardening.patch for CMake build.
+  * Drop patches:
+    - fixmapscriptvars.patch (mapscriptvars no longer used)
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Sun, 01 Sep 2013 14:14:54 +0200
 
