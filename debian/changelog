@@ -15,6 +15,7 @@ mapserver (6.4.0~beta2-1) UNRELEASED; urgency=low
     perl-mapscript-install.patch
   * SONAME of libmapserver changed from libmapserver-6.2.1.so to
     libmapserver.so.1.
+  * Update libmapserver symbols file for 6.4.0 on amd64.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Sun, 01 Sep 2013 14:14:54 +0200
 
