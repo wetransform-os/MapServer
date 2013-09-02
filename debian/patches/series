@@ -1,2 +1,3 @@
 hardening.patch
 ruby-shebang.patch
+install-ruby-mapscript.patch

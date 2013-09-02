@@ -1,0 +1,20 @@
+Description: Install Ruby mapscript with CMake
+Author: Bas Couwenberg <sebastic@xs4all.nl>
+Bug: https://github.com/mapserver/mapserver/pull/4749
+Applied-Upstream: 6.4.0, https://github.com/mapserver/mapserver/commit/1cfdd59ff246d7c8b74a1894a30232600ea67fe2
+Last-Update: 2013-09-02
+--- a/mapscript/ruby/CMakeLists.txt
++++ b/mapscript/ruby/CMakeLists.txt
+@@ -12,9 +12,6 @@ SWIG_LINK_LIBRARIES(rubymapscript ${RUBY
+ set_target_properties(${SWIG_MODULE_rubymapscript_REAL_NAME} PROPERTIES PREFIX "")
+ set_target_properties(${SWIG_MODULE_rubymapscript_REAL_NAME} PROPERTIES OUTPUT_NAME mapscript)
+ 
+-#get_target_property(LOC_MAPSCRIPT_LIB ${SWIG_MODULE_mapscript_REAL_NAME} LOCATION)
+-#set(mapscript_files ${LOC_MAPSCRIPT_LIB} ${CMAKE_CURRENT_BINARY_DIR}/mapscript.py)
+-#install(FILES ${mapscript_files} DESTINATION ${PYTHON_SITE_PACKAGES})
+-
+-#install(FILES ${CMAKE_CURRENT_BINARY_DIR}/mapscript.py DESTINATION ${PYTHON_SITE_PACKAGES})
+-#install(TARGETS mapscript DESTINATION ${PYTHON_SITE_PACKAGES})
++get_target_property(LOC_MAPSCRIPT_LIB ${SWIG_MODULE_rubymapscript_REAL_NAME} LOCATION)
++execute_process(COMMAND ${RUBY_EXECUTABLE} -r rbconfig -e "puts RbConfig::CONFIG['archdir']" OUTPUT_VARIABLE RUBY_ARCHDIR OUTPUT_STRIP_TRAILING_WHITESPACE)
++install(FILES ${LOC_MAPSCRIPT_LIB} DESTINATION ${RUBY_ARCHDIR})
