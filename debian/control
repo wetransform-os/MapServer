@@ -24,16 +24,26 @@ Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-grass/mapserver.git
 Vcs-Git: git://anonscm.debian.org/pkg-grass/mapserver.git
 
 Package: libmapserver
-Depends: libmapserver-6.2.1, ${misc:Depends}
+Depends: libmapserver1, ${misc:Depends}
 Architecture: all
 Section: oldlibs
-Description: Transitional dummy package for libmapserver-6.2.1
- This is a transitional dummy package to ease upgrades to the
- libmapserver-6.2.1 package. It can safely be removed.
+Description: Dummy package for libmapserver to libmapserver1 transition
+ This is a transitional dummy package to ease upgrades from the
+ libmapserver package to the libmapserver1 package.
+ It can safely be removed.
 
 Package: libmapserver-6.2.1
-Replaces: libmapserver (<< 6.2.1-3~)
-Breaks: libmapserver (<< 6.2.1-3~)
+Depends: libmapserver1, ${misc:Depends}
+Architecture: all
+Section: oldlibs
+Description: Dummy package for libmapserver-6.2.1 to libmapserver1 transition
+ This is a transitional dummy package to ease upgrades from the
+ libmapserver-6.2.1 package to the libmapserver1 package.
+ It can safely be removed.
+
+Package: libmapserver1
+Replaces: libmapserver (<< 6.2.1-3~), libmapserver-6.2.1
+Breaks: libmapserver (<< 6.2.1-3~), libmapserver-6.2.1
 Section: libs
 Architecture: any
 Pre-Depends: ${misc:Pre-Depends}
@@ -49,19 +59,29 @@ Description: Shared library for MapServer
  library packages.
 
 Package: libmapserver-dev
-Depends: libmapserver-6.2.1-dev, ${misc:Depends}
+Depends: libmapserver1-dev, ${misc:Depends}
 Architecture: all
 Section: oldlibs
-Description: Transitional dummy package for libmapserver-6.2.1-dev
- This is a transitional dummy package to ease upgrades to the
- libmapserver-6.2.1-dev package. It can safely be removed.
+Description: Transitional dummy package for libmapserver1-dev
+ This is a transitional dummy package to ease upgrades from the
+ libmapserver-dev package to the libmapserver1-dev package.
+ It can safely be removed.
 
 Package: libmapserver-6.2.1-dev
-Replaces: libmapserver-dev (<< 6.2.1-3~)
-Breaks: libmapserver-dev (<< 6.2.1-3~)
+Depends: libmapserver1-dev, ${misc:Depends}
+Architecture: all
+Section: oldlibs
+Description: Dummy package for libmapserver1-dev transition
+ This is a transitional dummy package to ease upgrades from the
+ libmapserver-6.2.1-dev package to the libmapserver1-dev package.
+ It can safely be removed.
+
+Package: libmapserver1-dev
+Replaces: libmapserver-dev (<< 6.2.1-3~), libmapserver-6.2.1-dev
+Breaks: libmapserver-dev (<< 6.2.1-3~), libmapserver-6.2.1-dev
 Section: libdevel
 Architecture: any
-Depends: libmapserver-6.2.1 (=${binary:Version}), ${misc:Depends}
+Depends: libmapserver1 (=${binary:Version}), ${misc:Depends}
 Suggests: cgi-mapserver, mapserver-bin, mapserver-doc,
  libmapscript-perl, php5-mapscript, python-mapscript, ruby-mapscript
 Description: Shared library development files for MapServer
