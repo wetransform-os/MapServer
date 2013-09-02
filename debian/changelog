@@ -11,6 +11,8 @@ mapserver (6.4.0~beta2-1) UNRELEASED; urgency=low
     - shp2img-typo.patch (applied upstream)
   * Add patch to install the Ruby mapscript extension:
     install-ruby-mapscript.patch
+  * Add patch to fix the Perl mapscript module installation directory:
+    perl-mapscript-install.patch
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Sun, 01 Sep 2013 14:14:54 +0200
 
