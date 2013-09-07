@@ -1,3 +1,4 @@
 hardening.patch
 ruby-shebang.patch
 perl-mapscript-install.patch
+install-threads.patch
