@@ -64,7 +64,7 @@ int readPostBody( cgiRequestObj *request, char **data )
     if( *data == NULL ) {
       msIO_setHeader("Content-Type","text/html");
       msIO_sendHeaders();
-      msIO_printf("malloc() failed, Content-Length: %u unreasonably large?\n", data_max );
+      msIO_printf("malloc() failed, Content-Length: %u unreasonably large?\n", (unsigned int)data_max );
       return MS_FAILURE;
     }
 
@@ -104,7 +104,7 @@ int readPostBody( cgiRequestObj *request, char **data )
     }
   }
 
-  *data[data_len] = '\0';
+  (*data)[data_len] = '\0';
   return MS_SUCCESS;
 }
 

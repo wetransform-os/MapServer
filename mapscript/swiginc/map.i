@@ -184,6 +184,17 @@
                                  MS_NOOVERRIDE, MS_NOOVERRIDE );
         }
     }
+
+  %newobject getOutputFormat;
+  outputFormatObj *getOutputFormat(int i) {
+    if(i >= 0 && i < self->numoutputformats) {
+    	MS_REFCNT_INCR(self->outputformatlist[i]);
+        return (self->outputformatlist[i]); 
+    } else {
+      return NULL;
+    }
+  }
+
         
   void setOutputFormat( outputFormatObj *format ) {
       msApplyOutputFormat( &(self->outputformat), format, MS_NOOVERRIDE, 
@@ -202,7 +213,7 @@
 
   %newobject drawLegend;
   imageObj *drawLegend() {
-    return msDrawLegend(self, MS_FALSE);
+    return msDrawLegend(self, MS_FALSE, NULL);
   }
 
   %newobject drawScalebar;
@@ -490,6 +501,12 @@
     int OWSDispatch( cgiRequestObj *req )
     {
 	return msOWSDispatch( self, req, MS_TRUE );
+    }
+    
+    %newobject convertToString;
+    char* convertToString()
+    {
+        return msWriteMapToString(self);
     }
 
 }

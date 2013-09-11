@@ -69,7 +69,7 @@ PHP_METHOD(symbolObj, __construct)
 {
   zval *zmap;
   char *symbolName;
-  long symbolName_len;
+  long symbolName_len = 0;
   int symbolId = -1;
   php_symbol_object *php_symbol;
   php_map_object *php_map;
@@ -105,7 +105,7 @@ PHP_METHOD(symbolObj, __construct)
 PHP_METHOD(symbolObj, __get)
 {
   char *property;
-  long property_len;
+  long property_len = 0;
   zval *zobj = getThis();
   php_symbol_object *php_symbol;
 
@@ -130,7 +130,6 @@ PHP_METHOD(symbolObj, __get)
                 else IF_GET_LONG("transparent", php_symbol->symbol->transparent)
                   else IF_GET_LONG("transparentcolor", php_symbol->symbol->transparentcolor)
                     else IF_GET_STRING("character", php_symbol->symbol->character)
-                      else IF_GET_STRING("svg_text", php_symbol->symbol->svg_text)
                         else IF_GET_LONG("antialias", php_symbol->symbol->antialias)
                           else IF_GET_DOUBLE("anchorpoint_y", php_symbol->symbol->anchorpoint_y)
                             else IF_GET_DOUBLE("anchorpoint_x", php_symbol->symbol->anchorpoint_x)
@@ -147,7 +146,7 @@ PHP_METHOD(symbolObj, __get)
 PHP_METHOD(symbolObj, __set)
 {
   char *property;
-  long property_len;
+  long property_len = 0;
   zval *value;
   zval *zobj = getThis();
   php_symbol_object *php_symbol;
@@ -171,7 +170,6 @@ PHP_METHOD(symbolObj, __set)
             else IF_SET_LONG("transparent", php_symbol->symbol->transparent, value)
               else IF_SET_LONG("transparentcolor", php_symbol->symbol->transparentcolor, value)
                 else IF_SET_STRING("character", php_symbol->symbol->character, value)
-                  else IF_SET_STRING("svg_text", php_symbol->symbol->svg_text, value)
                     else IF_SET_LONG("antialias", php_symbol->symbol->antialias, value)
                       else IF_SET_STRING("font", php_symbol->symbol->font, value)
                         else IF_SET_DOUBLE("anchorpoint_y", php_symbol->symbol->anchorpoint_y, value)
@@ -280,7 +278,7 @@ PHP_METHOD(symbolObj, setImagePath)
   zval *zobj = getThis();
   php_symbol_object *php_symbol;
   char *filename;
-  long filename_len;
+  long filename_len = 0;
   int status = MS_FAILURE;
 
   PHP_MAPSCRIPT_ERROR_HANDLING(TRUE);

@@ -68,11 +68,126 @@ void msLayerFreeItemInfo(layerObj *layer)
   layer->vtable->LayerFreeItemInfo(layer);
 }
 
+int msLayerRestoreFromScaletokens(layerObj *layer)
+{
+  if(!layer->scaletokens) {
+    return MS_SUCCESS;
+  }
+  if(layer->orig_data) {
+    msFree(layer->data);
+    layer->data = layer->orig_data;
+    layer->orig_data = NULL;
+  }
+  if(layer->orig_tileindex) {
+    msFree(layer->tileindex);
+    layer->tileindex = layer->orig_tileindex;
+    layer->orig_tileindex = NULL;
+  }
+  if(layer->orig_tileitem) {
+    msFree(layer->tileitem);
+    layer->tileitem = layer->orig_tileitem;
+    layer->orig_tileitem = NULL;
+  }
+  if(layer->orig_filter) {
+    msLoadExpressionString(&(layer->filter),layer->orig_filter);
+    msFree(layer->orig_filter);
+    layer->orig_filter = NULL;
+  }
+  if(layer->orig_filteritem) {
+    msFree(layer->filteritem);
+    layer->filteritem = layer->orig_filteritem;
+    layer->orig_filteritem = NULL;
+  }
+  return MS_SUCCESS; 
+}
+
+int msLayerApplyScaletokens(layerObj *layer, double scale)
+{
+  int i;
+  if(!layer->scaletokens) {
+    return MS_SUCCESS;
+  }
+  msLayerRestoreFromScaletokens(layer);
+  for(i=0;i<layer->numscaletokens;i++) {
+    scaleTokenObj *st = &layer->scaletokens[i];
+    scaleTokenEntryObj *ste = NULL;
+    if(scale<=0) {
+       ste = &(st->tokens[0]);
+      /* no scale defined, use first entry */
+    } else {
+      int tokenindex=0;
+      while(tokenindex<st->n_entries) {
+        ste = &(st->tokens[tokenindex]);
+        if(scale < ste->maxscale && scale >= ste->minscale) break; /* current token is the correct one */
+        tokenindex++;
+        ste = NULL;
+      }
+    }
+    assert(ste);
+    if(layer->data && strstr(layer->data,st->name)) {
+      if(layer->debug >= MS_DEBUGLEVEL_DEBUG) {
+        msDebug("replacing scaletoken (%s) with (%s) in layer->data (%s) for scale=%f\n",
+                st->name,ste->value,layer->name,scale);
+      }
+      layer->orig_data = layer->data;
+      layer->data = msStrdup(layer->data);
+      layer->data = msReplaceSubstring(layer->data,st->name,ste->value);
+    }
+    if(layer->tileindex && strstr(layer->tileindex,st->name)) {
+      if(layer->debug >= MS_DEBUGLEVEL_DEBUG) {
+        msDebug("replacing scaletoken (%s) with (%s) in layer->tileindex (%s) for scale=%f\n",
+                st->name,ste->value,layer->name,scale);
+      }
+      layer->orig_tileindex = layer->tileindex;
+      layer->tileindex = msStrdup(layer->tileindex);
+      layer->tileindex = msReplaceSubstring(layer->tileindex,st->name,ste->value);
+    }
+    if(layer->tileitem && strstr(layer->tileitem,st->name)) {
+      if(layer->debug >= MS_DEBUGLEVEL_DEBUG) {
+        msDebug("replacing scaletoken (%s) with (%s) in layer->tileitem (%s) for scale=%f\n",
+                st->name,ste->value,layer->name,scale);
+      }
+      layer->orig_tileitem = layer->tileitem;
+      layer->tileitem = msStrdup(layer->tileitem);
+      layer->tileitem = msReplaceSubstring(layer->tileitem,st->name,ste->value);
+    }
+    if(layer->filteritem && strstr(layer->filteritem,st->name)) {
+      if(layer->debug >= MS_DEBUGLEVEL_DEBUG) {
+        msDebug("replacing scaletoken (%s) with (%s) in layer->filteritem (%s) for scale=%f\n",
+                st->name,ste->value,layer->name,scale);
+      }
+      layer->orig_filteritem = layer->filteritem;
+      layer->filteritem = msStrdup(layer->filteritem);
+      layer->filteritem = msReplaceSubstring(layer->filteritem,st->name,ste->value);
+    }
+    if(layer->filter.string && strstr(layer->filter.string,st->name)) {
+      char *tmpval;
+      if(layer->debug >= MS_DEBUGLEVEL_DEBUG) {
+        msDebug("replacing scaletoken (%s) with (%s) in layer->filter (%s) for scale=%f\n",
+                st->name,ste->value,layer->name,scale);
+      }
+      layer->orig_filter = msStrdup(layer->filter.string);
+      tmpval = msStrdup(layer->filter.string);
+      tmpval = msReplaceSubstring(tmpval,st->name,ste->value);
+      if(msLoadExpressionString(&(layer->filter),tmpval) == -1) return(MS_FAILURE); /* loadExpression() cleans up previously allocated expression */
+      msFree(tmpval);
+    }
+  }
+  return MS_SUCCESS;
+}
+
+
 /*
 ** Does exactly what it implies, readies a layer for processing.
 */
 int msLayerOpen(layerObj *layer)
 {
+  int rv;
+
+  /* RFC-86 Scale dependant token replacements*/
+  rv = msLayerApplyScaletokens(layer,(layer->map)?layer->map->scaledenom:-1);
+  if (rv != MS_SUCCESS) return rv;
+
   /* RFC-69 clustering support */
   if (layer->cluster.region)
     return msClusterLayerOpen(layer);
@@ -87,7 +202,7 @@ int msLayerOpen(layerObj *layer)
     layer->connectiontype = MS_RASTER;
 
   if ( ! layer->vtable) {
-    int rv =  msInitializeVirtualTable(layer);
+    rv =  msInitializeVirtualTable(layer);
     if (rv != MS_SUCCESS)
       return rv;
   }
@@ -148,8 +263,10 @@ int msLayerWhichShapes(layerObj *layer, rectObj rect, int isQuery)
 */
 int msLayerNextShape(layerObj *layer, shapeObj *shape)
 {
+  int rv;
+  
   if ( ! layer->vtable) {
-    int rv =  msInitializeVirtualTable(layer);
+    rv =  msInitializeVirtualTable(layer);
     if (rv != MS_SUCCESS)
       return rv;
   }
@@ -161,7 +278,14 @@ int msLayerNextShape(layerObj *layer, shapeObj *shape)
   /* tagged on to the main attributes with the naming scheme [join name].[item name]. */
   /* We need to leverage the iteminfo (I think) at this point */
 
-  return layer->vtable->LayerNextShape(layer, shape);
+  rv = layer->vtable->LayerNextShape(layer, shape);
+
+  /* RFC89 Apply Layer GeomTransform */
+  if(layer->_geomtransform.type != MS_GEOMTRANSFORM_NONE && rv == MS_SUCCESS) {
+    rv = msGeomTransformShape(layer->map, layer, shape);      
+  }
+  
+  return rv;
 }
 
 /*
@@ -185,8 +309,10 @@ int msLayerNextShape(layerObj *layer, shapeObj *shape)
 */
 int msLayerGetShape(layerObj *layer, shapeObj *shape, resultObj *record)
 {
+  int rv;
+  
   if( ! layer->vtable) {
-    int rv =  msInitializeVirtualTable(layer);
+    rv =  msInitializeVirtualTable(layer);
     if(rv != MS_SUCCESS)
       return rv;
   }
@@ -196,7 +322,14 @@ int msLayerGetShape(layerObj *layer, shapeObj *shape, resultObj *record)
   ** tagged on to the main attributes with the naming scheme [join name].[item name].
   */
 
-  return layer->vtable->LayerGetShape(layer, shape, record);
+  rv = layer->vtable->LayerGetShape(layer, shape, record);
+  
+  /* RFC89 Apply Layer GeomTransform */
+  if(layer->_geomtransform.type != MS_GEOMTRANSFORM_NONE && rv == MS_SUCCESS) {
+    rv = msGeomTransformShape(layer->map, layer, shape); 
+  }
+
+  return rv;
 }
 
 /*
@@ -232,6 +365,7 @@ void msLayerClose(layerObj *layer)
   if (layer->vtable) {
     layer->vtable->LayerClose(layer);
   }
+  msLayerRestoreFromScaletokens(layer);
 }
 
 /*
@@ -399,6 +533,12 @@ int msTokenizeExpression(expressionObj *expression, char **list, int *listsize)
       case MS_TOKEN_BINDING_SHAPE:
         node->token = token;
         break;
+      case MS_TOKEN_BINDING_MAP_CELLSIZE:
+        node->token = token;
+        break;
+      case MS_TOKEN_BINDING_DATA_CELLSIZE:
+        node->token = token;
+        break;        
       case MS_TOKEN_FUNCTION_FROMTEXT: /* we want to process a shape from WKT once and not for every feature being evaluated */
         if((token = msyylex()) != 40) { /* ( */
           msSetError(MS_PARSEERR, "Parsing fromText function failed.", "msTokenizeExpression()");
@@ -502,6 +642,9 @@ int msLayerWhichItems(layerObj *layer, int get_all, char *metadata)
 
   if(layer->labelitem) nt++;
 
+  if(layer->_geomtransform.type == MS_GEOMTRANSFORM_EXPRESSION)
+    msTokenizeExpression(&layer->_geomtransform, layer->items, &(layer->numitems));
+  
   /* class level counts */
   for(i=0; i<layer->numclasses; i++) {
 
@@ -835,7 +978,7 @@ int msLayerGetMaxFeaturesToDraw(layerObj *layer, outputFormatObj *format)
 {
   int nMaxFeatures = -1;
   const char *pszTmp = NULL;
-  if (layer && format) {
+  if (layer) {
     pszTmp = msLookupHashTable(&layer->metadata, "maxfeaturestodraw");
     if (pszTmp)
       nMaxFeatures = atoi(pszTmp);
@@ -844,6 +987,8 @@ int msLayerGetMaxFeaturesToDraw(layerObj *layer, outputFormatObj *format)
       if (pszTmp)
         nMaxFeatures = atoi(pszTmp);
     }
+  }
+  if(format) {
     if (nMaxFeatures < 0)
       nMaxFeatures = atoi(msGetOutputFormatOption( format, "maxfeaturestodraw", "-1"));
   }
@@ -1173,7 +1318,7 @@ int
 msLayerApplyCondSQLFilterToLayer(FilterEncodingNode *psNode, mapObj *map,
                                  int iLayerIndex)
 {
-#if USE_OGR
+#ifdef USE_OGR
   return FLTLayerApplyCondSQLFilterToLayer(psNode, map, iLayerIndex);
 
 #else
@@ -1195,7 +1340,7 @@ int
 msLayerApplyPlainFilterToLayer(FilterEncodingNode *psNode, mapObj *map,
                                int iLayerIndex)
 {
-#if USE_OGR
+#ifdef USE_OGR
   return FLTLayerApplyPlainFilterToLayer(psNode, map, iLayerIndex);
 #else
   return MS_FAILURE;
@@ -1493,6 +1638,9 @@ int msInitializeVirtualTable(layerObj *layer)
     case(MS_UVRASTER):
       return(msUVRASTERLayerInitializeVirtualTable(layer));
       break;
+    case(MS_CONTOUR):
+      return(msContourLayerInitializeVirtualTable(layer));
+      break;      
     default:
       msSetError(MS_MISCERR, "Unknown connectiontype, it was %d", "msInitializeVirtualTable()", layer->connectiontype);
       return MS_FAILURE;
@@ -1507,6 +1655,12 @@ int msInitializeVirtualTable(layerObj *layer)
  * INLINE: Virtual table functions
  */
 
+typedef struct {
+  rectObj searchrect;
+  int is_relative; /* relative coordinates? */
+}
+msINLINELayerInfo;
+
 int msINLINELayerIsOpen(layerObj *layer)
 {
   if (layer->currentfeature)
@@ -1515,11 +1669,59 @@ int msINLINELayerIsOpen(layerObj *layer)
     return(MS_FALSE);
 }
 
+msINLINELayerInfo *msINLINECreateLayerInfo(void)
+{
+  msINLINELayerInfo *layerinfo = msSmallMalloc(sizeof(msINLINELayerInfo));
+  layerinfo->searchrect.minx = -1.0;
+  layerinfo->searchrect.miny = -1.0;
+  layerinfo->searchrect.maxx = -1.0;
+  layerinfo->searchrect.maxy = -1.0;
+  layerinfo->is_relative = MS_FALSE;
+  return layerinfo;  
+}
 
 int msINLINELayerOpen(layerObj *layer)
 {
+  msINLINELayerInfo  *layerinfo;
+
+  if (layer->layerinfo) {
+    if (layer->debug) {
+      msDebug("msINLINELayerOpen: Layer is already open!\n");
+    }
+    return MS_SUCCESS;  /* already open */
+  }
+  
+  /*
+  ** Initialize the layerinfo
+  **/
+  layerinfo = msINLINECreateLayerInfo();
+  
   layer->currentfeature = layer->features; /* point to the begining of the feature list */
+
+  layer->layerinfo = (void*)layerinfo;
+  
   return(MS_SUCCESS);
+}
+
+int msINLINELayerClose(layerObj *layer)
+{
+  if (layer->layerinfo) {
+    free(layer->layerinfo);
+    layer->layerinfo = NULL;
+  }
+
+  return MS_SUCCESS;
+}
+
+int msINLINELayerWhichShapes(layerObj *layer, rectObj rect, int isQuery)
+{
+  msINLINELayerInfo *layerinfo = NULL;  
+  layerinfo = (msINLINELayerInfo*) layer->layerinfo;
+
+  layerinfo->searchrect = rect;
+  layerinfo->is_relative = (layer->transform != MS_FALSE && layer->transform != MS_TRUE);
+  
+  return MS_SUCCESS;
 }
 
 /* Author: Cristoph Spoerri and Sean Gillies */
@@ -1556,23 +1758,38 @@ int msINLINELayerGetShape(layerObj *layer, shapeObj *shape, resultObj *record)
 
 int msINLINELayerNextShape(layerObj *layer, shapeObj *shape)
 {
-  if( ! (layer->currentfeature)) {
-    /* out of features */
-    return(MS_DONE);
+  msINLINELayerInfo *layerinfo = NULL;  
+  shapeObj * s;
+  
+  layerinfo = (msINLINELayerInfo*) layer->layerinfo;
+  
+  while (1) {
+
+    if( ! (layer->currentfeature)) {
+      /* out of features */
+      return(MS_DONE);
+    }
+
+    s = &(layer->currentfeature->shape);
+    layer->currentfeature = layer->currentfeature->next;
+    msComputeBounds(s);
+
+    if (layerinfo->is_relative || msRectOverlap(&s->bounds, &layerinfo->searchrect)) {
+   
+      msCopyShape(s, shape);
+
+      /* check for the expected size of the values array */
+      if (layer->numitems > shape->numvalues) {
+        int i;
+        shape->values = (char **)msSmallRealloc(shape->values, sizeof(char *)*(layer->numitems));
+        for (i = shape->numvalues; i < layer->numitems; i++)
+          shape->values[i] = msStrdup("");
+      }
+
+      break;
+    }
+    
   }
-
-  msCopyShape(&(layer->currentfeature->shape), shape);
-
-  layer->currentfeature = layer->currentfeature->next;
-
-  /* check for the expected size of the values array */
-  if (layer->numitems > shape->numvalues) {
-    int i;
-    shape->values = (char **)msSmallRealloc(shape->values, sizeof(char *)*(layer->numitems));
-    for (i = shape->numvalues; i < layer->numitems; i++)
-      shape->values[i] = msStrdup("");
-  }
-  msComputeBounds(shape);
 
   return(MS_SUCCESS);
 }
@@ -1626,10 +1843,10 @@ msINLINELayerInitializeVirtualTable(layerObj *layer)
   /* layer->vtable->LayerFreeItemInfo, use default */
   layer->vtable->LayerOpen = msINLINELayerOpen;
   layer->vtable->LayerIsOpen = msINLINELayerIsOpen;
-  /* layer->vtable->LayerWhichShapes, use default */
+  layer->vtable->LayerWhichShapes = msINLINELayerWhichShapes;
   layer->vtable->LayerNextShape = msINLINELayerNextShape;
   layer->vtable->LayerGetShape = msINLINELayerGetShape;
-  /* layer->vtable->LayerClose, use default */
+  layer->vtable->LayerClose = msINLINELayerClose;
   /* layer->vtable->LayerGetItems, use default */
 
   /*
