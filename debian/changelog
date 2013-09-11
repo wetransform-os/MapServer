@@ -4,6 +4,7 @@ mapserver (6.4.0~rc1-1) UNRELEASED; urgency=low
   * Rename WITH_THREADS to WITH_THREAD_SAFETY.
   * Drop patch install-ruby-mapscript.patch, applied upstream.
   * Add patch to rename WITH_THREADS to WITH_THREAD_SAFETY in INSTALL.CMAKE.
+  * Add patch to install ruby mapscript into vendorarchdir instead of archdir.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Sat, 07 Sep 2013 20:56:16 +0200
 

@@ -1,0 +1,13 @@
+Description: Install Ruby mapscript to vendorarchdir instead of archdir.
+Author: Bas Couwenberg <sebastic@xs4all.nl>
+Last-Update: 2013-09-11
+--- a/mapscript/ruby/CMakeLists.txt
++++ b/mapscript/ruby/CMakeLists.txt
+@@ -30,5 +30,5 @@ set_target_properties(${SWIG_MODULE_ruby
+ set_target_properties(${SWIG_MODULE_rubymapscript_REAL_NAME} PROPERTIES OUTPUT_NAME mapscript)
+ 
+ get_target_property(LOC_MAPSCRIPT_LIB ${SWIG_MODULE_rubymapscript_REAL_NAME} LOCATION)
+-execute_process(COMMAND ${RUBY_EXECUTABLE} -r rbconfig -e "puts RbConfig::CONFIG['archdir']" OUTPUT_VARIABLE RUBY_ARCHDIR OUTPUT_STRIP_TRAILING_WHITESPACE)
+-install(FILES ${LOC_MAPSCRIPT_LIB} DESTINATION ${RUBY_ARCHDIR})
++execute_process(COMMAND ${RUBY_EXECUTABLE} -r rbconfig -e "puts RbConfig::CONFIG['vendorarchdir']" OUTPUT_VARIABLE RUBY_VENDORARCHDIR OUTPUT_STRIP_TRAILING_WHITESPACE)
++install(FILES ${LOC_MAPSCRIPT_LIB} DESTINATION ${RUBY_VENDORARCHDIR})
