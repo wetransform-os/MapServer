@@ -12,8 +12,38 @@ the top of the list.)
 
 For a complete change history, please see the Git log comments.
 
-Version 6.2.1 (2013-04-19):
+6.4 release (2013/09/xx)
 ---------------------------
+
+- RFC 101: Support for Content Dependant Legend Rendering
+
+- Add Support for librsvg as an alternative to libsvg-cairo
+
+- RFC100: Add support for raster tile index with tiles of mixed SRS (TILESRS keyword)
+
+- RFC94: Shape Smoothing
+
+- RFC95 : add EXPRESSION {value1,value2,...} support to parser (#4648)
+
+- RFC92: Migration from autotools to cmake (#4617)
+
+- RFC88: Saving MapServer Objects to Strings (#4563)
+
+- RFC90: Enable/Disable Layers in OGC Web Services by IP Lists
+
+- RFC85,89 Added Simplify,SimplityPT and Generalize geomtransform, implementation of
+  geomtransform at the layer level
+
+- RFC86: Scale-dependant token replacements (#4538)
+
+- Fix symbol scaling for vector symbols with no height (#4497,#3511)
+
+- Implementation of layer masking for WCS coverages (#4469)
+
+- Implementation of offsets on follow labels (#4399)
+
+6.2.0 release (git branch-6-2) 2012/11/14:
+--------------------------------------------------
 
 - Fix WFS GetFeature result bounds are not written in requested projection (#4494)
 
@@ -39,6 +69,11 @@ Version 6.2.1 (2013-04-19):
   commit message and not appear here.
   
 - Fixed the OGR driver to use point or line spatial filter geometries in degenerated cases (#4420)
+
+- implement OFFSET x -99 on ANGLE FOLLOW labels (#4399)
+
+Version 6.2 (beta1: 20120629): 
+-------------------------------------------------
 
 - Fix WFS filter is produced as non-standard XML (#4171)
 

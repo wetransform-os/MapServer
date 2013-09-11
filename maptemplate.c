@@ -97,8 +97,8 @@ static int isValidTemplate(FILE *stream, const char *filename)
 int msRedirect(char *url)
 {
   msIO_setHeader("Status","302 Found");
-  msIO_setHeader("Uri",url);
-  msIO_setHeader("Location",url);
+  msIO_setHeader("Uri","%s",url);
+  msIO_setHeader("Location","%s",url);
   msIO_setHeader("Content-Type","text/html");
   msIO_sendHeaders();
   return MS_SUCCESS;
@@ -274,7 +274,7 @@ int msReturnTemplateQuery(mapservObj *mapserv, char *queryFormat, char **papszBu
       map->outputformat = tempOutputFormat; /* restore format */
 
       if(mapserv == NULL || mapserv->sendheaders) {
-        msIO_setHeader("Content-Type", MS_IMAGE_MIME_TYPE(outputFormat));
+        msIO_setHeader("Content-Type", "%s", MS_IMAGE_MIME_TYPE(outputFormat));
         msIO_sendHeaders();
       }
       status = msSaveImage(map, img, NULL);
@@ -306,7 +306,7 @@ int msReturnTemplateQuery(mapservObj *mapserv, char *queryFormat, char **papszBu
       const char *attachment = msGetOutputFormatOption( outputFormat, "ATTACHMENT", NULL );
       if(attachment)
         msIO_setHeader("Content-disposition","attachment; filename=%s", attachment);
-      msIO_setHeader("Content-Type", outputFormat->mimetype);
+      msIO_setHeader("Content-Type", "%s", outputFormat->mimetype);
       msIO_sendHeaders();
     }
     if((status = msReturnPage(mapserv, (char *) file, BROWSE, papszBuffer)) != MS_SUCCESS)
@@ -1131,7 +1131,7 @@ static int processIncludeTag(mapservObj *mapserv, char **line, FILE *stream, int
     if(!src) return(MS_SUCCESS); /* don't process the tag, could be something else so return MS_SUCCESS */
 
     if((includeStream = fopen(msBuildPath(path, mapserv->map->mappath, src), "r")) == NULL) {
-      msSetError(MS_IOERR, src, "processIncludeTag()");
+      msSetError(MS_IOERR, "%s", "processIncludeTag()", src);
       return MS_FAILURE;
     }
 
@@ -2058,7 +2058,7 @@ static int processShpxyTag(layerObj *layer, char **line, shapeObj *shape)
     }
 
     /* build the per point format strings (version 1 contains the coordinate seperator, version 2 doesn't) */
-    pointFormatLength = strlen("xh") + strlen("xf") + strlen("yh") + strlen("yf") + strlen("cs") + 10 + 1;
+    pointFormatLength = strlen(xh) + strlen(xf) + strlen(yh) + strlen(yf) + strlen(cs) + 12 + 1;
     pointFormat1 = (char *) msSmallMalloc(pointFormatLength);
     snprintf(pointFormat1, pointFormatLength, "%s%%.%dlf%s%s%%.%dlf%s%s", xh, precision, xf, yh, precision, yf, cs);
     pointFormat2 = (char *) msSmallMalloc(pointFormatLength);
@@ -2407,10 +2407,10 @@ int processIcon(mapObj *map, int nIdxLayer, int nIdxClass, char** pszInstr, char
 
       if(thisClass == NULL) {
         /* Nonexistent class.  Create an empty image */
-        img = msCreateLegendIcon(map, NULL, NULL, nWidth, nHeight);
+        img = msCreateLegendIcon(map, NULL, NULL, nWidth, nHeight, MS_TRUE);
       } else {
         img = msCreateLegendIcon(map, GET_LAYER(map, nIdxLayer),
-                                 thisClass, nWidth, nHeight);
+                                 thisClass, nWidth, nHeight, MS_TRUE);
       }
 
       if(!img) {
@@ -3172,6 +3172,9 @@ char *generateLegendTemplate(mapservObj *mapserv)
                 continue;
             }
           }
+          if(mapserv->hittest && mapserv->hittest->layerhits[mapserv->map->layerorder[j]].status == 0) {
+            continue;
+          }
 
           if(GET_LAYER(mapserv->map, mapserv->map->layerorder[j])->group && strcmp(GET_LAYER(mapserv->map, mapserv->map->layerorder[j])->group, papszGroups[i]) == 0) {
             /* process all layer tags */
@@ -3198,6 +3201,9 @@ char *generateLegendTemplate(mapservObj *mapserv)
                 /* process all class tags */
                 if(!GET_LAYER(mapserv->map, mapserv->map->layerorder[j])->class[k]->name)
                   continue;
+                if(mapserv->hittest && mapserv->hittest->layerhits[mapserv->map->layerorder[j]].classhits[k].status == 0) {
+                  continue;
+                }
 
                 if(generateClassTemplate(legClassHtml, mapserv->map, mapserv->map->layerorder[j], k, classArgs, &legClassHtmlCopy, pszPrefix) != MS_SUCCESS) {
                   if(pszResult)
@@ -3233,6 +3239,9 @@ char *generateLegendTemplate(mapservObj *mapserv)
                 continue;
             }
           }
+          if(mapserv->hittest && mapserv->hittest->layerhits[mapserv->map->layerorder[j]].status == 0) {
+            continue;
+          }
 
           if(GET_LAYER(mapserv->map, mapserv->map->layerorder[j])->group && strcmp(GET_LAYER(mapserv->map, mapserv->map->layerorder[j])->group, papszGroups[i]) == 0) {
             /* for all classes in layer */
@@ -3241,6 +3250,9 @@ char *generateLegendTemplate(mapservObj *mapserv)
                 /* process all class tags */
                 if(!GET_LAYER(mapserv->map, mapserv->map->layerorder[j])->class[k]->name)
                   continue;
+                if(mapserv->hittest && mapserv->hittest->layerhits[mapserv->map->layerorder[j]].classhits[k].status == 0) {
+                  continue;
+                }
 
                 if(generateClassTemplate(legClassHtml, mapserv->map, mapserv->map->layerorder[j], k, classArgs, &legClassHtmlCopy, pszPrefix) != MS_SUCCESS) {
                   if(pszResult)
@@ -3281,6 +3293,9 @@ char *generateLegendTemplate(mapservObj *mapserv)
           } else
             nLegendOrder=0;
         }
+        if(mapserv->hittest && mapserv->hittest->layerhits[mapserv->map->layerorder[j]].status == 0) {
+          continue;
+        }
 
         /* process a layer tags */
         if(generateLayerTemplate(legLayerHtml, mapserv->map, mapserv->map->layerorder[j], layerArgs, &legLayerHtmlCopy, pszPrefix) != MS_SUCCESS) {
@@ -3304,6 +3319,9 @@ char *generateLegendTemplate(mapservObj *mapserv)
             /* process all class tags */
             if(!GET_LAYER(mapserv->map, mapserv->map->layerorder[j])->class[k]->name)
               continue;
+            if(mapserv->hittest && mapserv->hittest->layerhits[mapserv->map->layerorder[j]].classhits[k].status == 0) {
+              continue;
+            }
 
             if(generateClassTemplate(legClassHtml, mapserv->map, mapserv->map->layerorder[j], k, classArgs, &legClassHtmlCopy, pszPrefix) != MS_SUCCESS) {
               if(pszResult)
@@ -3339,10 +3357,16 @@ char *generateLegendTemplate(mapservObj *mapserv)
                 continue;
             }
           }
+          if(mapserv->hittest && mapserv->hittest->layerhits[mapserv->map->layerorder[j]].status == 0) {
+            continue;
+          }
 
           for (k=0; k<GET_LAYER(mapserv->map, mapserv->map->layerorder[j])->numclasses; k++) {
             if(!GET_LAYER(mapserv->map, mapserv->map->layerorder[j])->class[k]->name)
               continue;
+            if(mapserv->hittest && mapserv->hittest->layerhits[mapserv->map->layerorder[j]].classhits[k].status == 0) {
+              continue;
+            }
 
             if(generateClassTemplate(legClassHtml, mapserv->map, mapserv->map->layerorder[j], k, classArgs, &legClassHtmlCopy, pszPrefix) != MS_SUCCESS) {
               if(pszResult)
@@ -4002,16 +4026,18 @@ static char *processLine(mapservObj *mapserv, char *instr, FILE *stream, int mod
 
   for(i=0; i<mapserv->request->NumParams; i++) {
     /* Replace [variable] tags using values from URL. We cannot offer a
-     * [variable_raw] option here due to the risk of XSS
+     * [variable_raw] option here due to the risk of XSS.
+     *
+     * Replacement is case-insensitive. (#4511)
      */
     snprintf(substr, PROCESSLINE_BUFLEN, "[%s]", mapserv->request->ParamNames[i]);
     encodedstr = msEncodeHTMLEntities(mapserv->request->ParamValues[i]);
-    outstr = msReplaceSubstring(outstr, substr, encodedstr);
+    outstr = msCaseReplaceSubstring(outstr, substr, encodedstr);
     free(encodedstr);
 
     snprintf(substr, PROCESSLINE_BUFLEN, "[%s_esc]", mapserv->request->ParamNames[i]);
     encodedstr = msEncodeUrl(mapserv->request->ParamValues[i]);
-    outstr = msReplaceSubstring(outstr, substr, encodedstr);
+    outstr = msCaseReplaceSubstring(outstr, substr, encodedstr);
     free(encodedstr);
   }
 
@@ -4049,7 +4075,7 @@ int msReturnPage(mapservObj *mapserv, char *html, int mode, char **papszBuffer)
   ms_regfree(&re);
 
   if((stream = fopen(msBuildPath(szPath, mapserv->map->mappath, html), "r")) == NULL) {
-    msSetError(MS_IOERR, html, "msReturnPage()");
+    msSetError(MS_IOERR, "%s", "msReturnPage()", html);
     return MS_FAILURE;
   }
 
@@ -4245,7 +4271,7 @@ int msReturnNestedTemplateQuery(mapservObj* mapserv, char* pszMimeType, char **p
     strcat((*papszBuffer), buffer);
     nCurrentSize += strlen(buffer);
   } else if(mapserv->sendheaders) {
-    msIO_setHeader("Content-Type",pszMimeType);
+    msIO_setHeader("Content-Type","%s",pszMimeType);
     msIO_sendHeaders();
   }
 
@@ -4471,6 +4497,8 @@ mapservObj *msAllocMapServObj()
   mapserv->QueryCoordSource=NONE;
   mapserv->ZoomSize=0; /* zoom absolute magnitude (i.e. > 0) */
 
+  mapserv->hittest = NULL;
+
   return mapserv;
 }
 
@@ -4480,6 +4508,10 @@ void msFreeMapServObj(mapservObj* mapserv)
 
   if(mapserv) {
     if( mapserv->map ) {
+      if(mapserv->hittest) {
+        freeMapHitTests(mapserv->map,mapserv->hittest);
+        free(mapserv->hittest);
+      }
       msFreeMap(mapserv->map);
       mapserv->map = NULL;
     }
@@ -4577,7 +4609,7 @@ int msGenerateImages(mapservObj *mapserv, int bQueryMap, int bReturnOnError)
     /* render the legend */
     if(mapserv->map->legend.status == MS_ON) {
       imageObj *image = NULL;
-      image = msDrawLegend(mapserv->map, MS_FALSE);
+      image = msDrawLegend(mapserv->map, MS_FALSE, NULL);
       if(image) {
         snprintf(buffer, sizeof(buffer), "%s%sleg%s.%s", mapserv->map->web.imagepath, mapserv->map->name, mapserv->Id, MS_IMAGE_EXTENSION(mapserv->map->outputformat));
 

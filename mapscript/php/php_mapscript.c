@@ -122,9 +122,9 @@ ZEND_END_ARG_INFO()
 PHP_FUNCTION(ms_newMapObj)
 {
   char *filename;
-  long filename_len;
+  long filename_len = 0;
   char *path = NULL;
-  long path_len;
+  long path_len = 0;
   mapObj *map = NULL;
 
   PHP_MAPSCRIPT_ERROR_HANDLING(TRUE);
@@ -152,9 +152,9 @@ PHP_FUNCTION(ms_newMapObj)
 PHP_FUNCTION(ms_newMapObjFromString)
 {
   char *string;
-  long string_len;
+  long string_len = 0;
   char *path = NULL;
-  long path_len;
+  long path_len = 0;
   mapObj *map = NULL;
 
   PHP_MAPSCRIPT_ERROR_HANDLING(TRUE);
@@ -169,7 +169,7 @@ PHP_FUNCTION(ms_newMapObjFromString)
   map = mapObj_newFromString(string, path);
 
   if (map == NULL) {
-    mapscript_throw_mapserver_exception("Failed to open map file \"%s\", or map file error." TSRMLS_CC,  string);
+    mapscript_throw_mapserver_exception("Error while loading map file from string." TSRMLS_CC);
     return;
   }
 
@@ -224,7 +224,7 @@ PHP_FUNCTION(ms_newLayerObj)
 PHP_FUNCTION(ms_newProjectionObj)
 {
   char *projString;
-  long projString_len;
+  long projString_len = 0;
   projectionObj *projection = NULL;
   parent_object parent;
 
@@ -396,7 +396,7 @@ PHP_FUNCTION(ms_newSymbolObj)
 {
   zval *zmap;
   char *symbolName;
-  long symbolName_len;
+  long symbolName_len = 0;
   int retval = 0;
   php_map_object *php_map;
 
@@ -451,7 +451,7 @@ PHP_FUNCTION(ms_shapeObjFromWkt)
 {
   php_shape_object * php_shape;
   char *wkt;
-  long str_len;
+  long str_len = 0;
 
   PHP_MAPSCRIPT_ERROR_HANDLING(TRUE);
   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
@@ -479,7 +479,7 @@ PHP_FUNCTION(ms_shapeObjFromWkt)
 PHP_FUNCTION(ms_newShapeFileObj)
 {
   char *filename;
-  long filename_len;
+  long filename_len = 0;
   long type;
   shapefileObj *shapefile;
 
@@ -846,7 +846,7 @@ PHP_FUNCTION(ms_getScale)
 PHP_FUNCTION(ms_tokenizeMap)
 {
   char *filename;
-  long filename_len;
+  long filename_len = 0;
   char  **tokens;
   int i, numtokens=0;
 

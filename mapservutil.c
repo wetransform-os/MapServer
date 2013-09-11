@@ -35,11 +35,11 @@
 /*
 ** Enumerated types, keep the query modes in sequence and at the end of the enumeration (mode enumeration is in maptemplate.h).
 */
-static int numModes = 21;
-static char *modeStrings[21] = {"BROWSE","ZOOMIN","ZOOMOUT","MAP","LEGEND","LEGENDICON","REFERENCE","SCALEBAR","COORDINATE",
+static int numModes = 23;
+static char *modeStrings[23] = {"BROWSE","ZOOMIN","ZOOMOUT","MAP","LEGEND","LEGENDICON","REFERENCE","SCALEBAR","COORDINATE",
                                 "QUERY","NQUERY","ITEMQUERY","ITEMNQUERY",
                                 "FEATUREQUERY","FEATURENQUERY","ITEMFEATUREQUERY","ITEMFEATURENQUERY",
-                                "INDEXQUERY","TILE","OWS", "WFS"
+                                "INDEXQUERY","TILE","OWS", "WFS", "MAPLEGEND", "MAPLEGENDICON"
                                };
 
 
@@ -57,7 +57,7 @@ int msCGIWriteLog(mapservObj *mapserv, int show_error)
 
   if((stream = fopen(msBuildPath(szPath, mapserv->map->mappath,
                                  mapserv->map->web.log),"a")) == NULL) {
-    msSetError(MS_IOERR, mapserv->map->web.log, "msCGIWriteLog()");
+    msSetError(MS_IOERR, "%s", "msCGIWriteLog()", mapserv->map->web.log);
     return(MS_FAILURE);
   }
 
@@ -318,6 +318,18 @@ int msCGISetMode(mapservObj *mapserv)
 
     if(j == numModes) {
       msSetError(MS_WEBERR, "Invalid mode.", "msCGISetMode()");
+      return MS_FAILURE;
+    }
+  }
+
+  if (mapserv->Mode >= 0)
+  {
+    int disabled = MS_FALSE;
+    const char* enable_modes = msLookupHashTable(&mapserv->map->web.metadata, "ms_enable_modes");
+
+    if (!msOWSParseRequestMetadata(enable_modes, mode, &disabled) && disabled) {
+      /* the current mode is disabled */
+      msSetError(MS_WEBERR, "The specified mode '%s' is not supported by the current map configuration", "msCGISetMode()", mode);
       return MS_FAILURE;
     }
   }
@@ -1118,7 +1130,7 @@ int msCGIDispatchBrowseRequest(mapservObj *mapserv)
   } else {
     if(TEMPLATE_TYPE(mapserv->map->web.template) == MS_FILE) { /* if thers's an html template, then use it */
       if(mapserv->sendheaders) {
-        msIO_setHeader("Content-Type",mapserv->map->web.browseformat); /* write MIME header */
+        msIO_setHeader("Content-Type","%s", mapserv->map->web.browseformat); /* write MIME header */
         msIO_sendHeaders();
       }
       if(msReturnPage(mapserv, mapserv->map->web.template, BROWSE, NULL) != MS_SUCCESS)
@@ -1172,7 +1184,7 @@ int msCGIDispatchQueryRequest(mapservObj *mapserv)
         /* validate the qstring parameter */
         if(msValidateParameter(mapserv->QueryString, msLookupHashTable(&(GET_LAYER(mapserv->map, mapserv->SelectLayerIndex)->validation), "qstring"),
                                msLookupHashTable(&(mapserv->map->web.validation), "qstring"),
-                               msLookupHashTable(&(GET_LAYER(mapserv->map, mapserv->SelectLayerIndex)->metadata), "qstring_validation_pattern"), NULL) != MS_SUCCESS) {
+                               NULL, NULL) != MS_SUCCESS) {
           msSetError(MS_WEBERR, "Parameter 'qstring' value fails to validate.", "mapserv()");
           return MS_FAILURE;
         }
@@ -1264,7 +1276,7 @@ int msCGIDispatchQueryRequest(mapservObj *mapserv)
         /* validate the qstring parameter */
         if(msValidateParameter(mapserv->QueryString, msLookupHashTable(&(GET_LAYER(mapserv->map, mapserv->QueryLayerIndex)->validation), "qstring"),
                                msLookupHashTable(&(mapserv->map->web.validation), "qstring"),
-                               msLookupHashTable(&(GET_LAYER(mapserv->map, mapserv->QueryLayerIndex)->metadata), "qstring_validation_pattern"), NULL) != MS_SUCCESS) {
+                               NULL, NULL) != MS_SUCCESS) {
           msSetError(MS_WEBERR, "Parameter 'qstring' value fails to validate.", "mapserv()");
           return MS_FAILURE;
         }
@@ -1459,7 +1471,11 @@ int msCGIDispatchImageRequest(mapservObj *mapserv)
       img = msTileDraw(mapserv);
       break;
     case LEGEND:
-      img = msDrawLegend(mapserv->map, MS_FALSE);
+    case MAPLEGEND:
+      img = msDrawLegend(mapserv->map, MS_FALSE, mapserv->hittest);
+      break;
+    default:
+      msSetError(MS_CGIERR,"Invalid CGI mode", "msCGIDispatchImageRequest()");
       break;
   }
 
@@ -1476,7 +1492,7 @@ int msCGIDispatchImageRequest(mapservObj *mapserv)
     const char *attachment = msGetOutputFormatOption(mapserv->map->outputformat, "ATTACHMENT", NULL );
     if(attachment)
       msIO_setHeader("Content-disposition","attachment; filename=%s", attachment);
-    msIO_setHeader("Content-Type",MS_IMAGE_MIME_TYPE(mapserv->map->outputformat));
+    msIO_setHeader("Content-Type","%s", MS_IMAGE_MIME_TYPE(mapserv->map->outputformat));
     msIO_sendHeaders();
   }
 
@@ -1494,12 +1510,21 @@ int msCGIDispatchImageRequest(mapservObj *mapserv)
 
 int msCGIDispatchLegendRequest(mapservObj *mapserv)
 {
+  int status;
+  if(mapserv->Mode == MAPLEGEND) {
+    if(setExtent(mapserv) != MS_SUCCESS) return MS_FAILURE;
+    if(checkWebScale(mapserv) != MS_SUCCESS) return MS_FAILURE;
+    mapserv->hittest = msSmallMalloc(sizeof(map_hittest));
+    initMapHitTests(mapserv->map,mapserv->hittest);
+    status = msHitTestMap(mapserv->map,mapserv->hittest);
+    if(status != MS_SUCCESS) return MS_FAILURE;
+  }
   if(mapserv->map->legend.template) {
     char *legendTemplate;
     legendTemplate = generateLegendTemplate(mapserv);
     if(legendTemplate) {
       if(mapserv->sendheaders) {
-        msIO_setHeader("Content-Type",mapserv->map->web.legendformat);
+        msIO_setHeader("Content-Type","%s",mapserv->map->web.legendformat);
         msIO_sendHeaders();
       }
       msIO_fwrite(legendTemplate, strlen(legendTemplate), 1, stdout);
@@ -1518,7 +1543,7 @@ int msCGIDispatchLegendIconRequest(mapservObj *mapserv)
 {
   char **tokens;
   int numtokens=0;
-  int layerindex=-1, classindex=0;
+  int layerindex=-1, classindex=0, status;
   outputFormatObj *format = NULL;
   imageObj *img;
 
@@ -1551,6 +1576,15 @@ int msCGIDispatchLegendIconRequest(mapservObj *mapserv)
     }
   }
 
+  if(mapserv->Mode == MAPLEGENDICON) {
+    if(setExtent(mapserv) != MS_SUCCESS) return MS_FAILURE;
+    if(checkWebScale(mapserv) != MS_SUCCESS) return MS_FAILURE;
+    mapserv->hittest = msSmallMalloc(sizeof(map_hittest));
+    initMapHitTests(mapserv->map,mapserv->hittest);
+    status = msHitTestLayer(mapserv->map, GET_LAYER(mapserv->map,layerindex),&mapserv->hittest->layerhits[layerindex]);
+    if(status != MS_SUCCESS) return MS_FAILURE;
+  }
+
   /* ensure we have an image format representing the options for the legend. */
   msApplyOutputFormat(&format, mapserv->map->outputformat, mapserv->map->legend.transparent, mapserv->map->legend.interlace, MS_NOOVERRIDE);
 
@@ -1566,11 +1600,12 @@ int msCGIDispatchLegendIconRequest(mapservObj *mapserv)
   /* drop this reference to output format */
   msApplyOutputFormat(&format, NULL, MS_NOOVERRIDE, MS_NOOVERRIDE, MS_NOOVERRIDE);
 
-  if(msDrawLegendIcon(mapserv->map, GET_LAYER(mapserv->map, layerindex), GET_LAYER(mapserv->map, layerindex)->class[classindex], mapserv->map->legend.keysizex,  mapserv->map->legend.keysizey, img, 0, 0) != MS_SUCCESS)
+  if(msDrawLegendIcon(mapserv->map, GET_LAYER(mapserv->map, layerindex), GET_LAYER(mapserv->map, layerindex)->class[classindex], mapserv->map->legend.keysizex,  mapserv->map->legend.keysizey, img, 0, 0, MS_TRUE,
+      ((mapserv->hittest)?(&mapserv->hittest->layerhits[layerindex].classhits[classindex]):(NULL))) != MS_SUCCESS)
     return MS_FAILURE;
 
   if(mapserv->sendheaders) {
-    msIO_setHeader("Content-Type",MS_IMAGE_MIME_TYPE(mapserv->map->outputformat));
+    msIO_setHeader("Content-Type","%s",MS_IMAGE_MIME_TYPE(mapserv->map->outputformat));
     msIO_sendHeaders();
   }
   /*
@@ -1688,9 +1723,9 @@ int msCGIDispatchRequest(mapservObj *mapserv)
     if(setExtent(mapserv) != MS_SUCCESS) return MS_FAILURE;
     if(checkWebScale(mapserv) != MS_SUCCESS) return MS_FAILURE;
     return msCGIDispatchImageRequest(mapserv);
-  } else if(mapserv->Mode == LEGEND) {
+  } else if(mapserv->Mode == LEGEND || mapserv->Mode == MAPLEGEND) {
     return msCGIDispatchLegendRequest(mapserv);
-  } else if(mapserv->Mode == LEGENDICON) {
+  } else if(mapserv->Mode == LEGENDICON || mapserv->Mode == MAPLEGENDICON) {
     return msCGIDispatchLegendIconRequest(mapserv);
   } else if(mapserv->Mode >= QUERY) {
     return msCGIDispatchQueryRequest(mapserv);

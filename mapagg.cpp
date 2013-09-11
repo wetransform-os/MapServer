@@ -28,7 +28,6 @@
  *****************************************************************************/
 
 #include "mapserver.h"
-#include "mapagg.h"
 #include <assert.h>
 #include "renderers/agg/include/agg_color_rgba.h"
 #include "renderers/agg/include/agg_pixfmt_rgba.h"
@@ -110,6 +109,123 @@ fontMetrics rasterfont_sizes[] = {
   {7,mapserver::mcs7x12_mono_high[0]}
 };
 
+/*
+ * interface to a shapeObj representing lines, providing the functions
+ * needed by the agg rasterizer. treats shapeObjs with multiple linestrings.
+ */
+class line_adaptor
+{
+public:
+  line_adaptor(shapeObj *shape):s(shape) {
+    m_line=s->line; /*first line*/
+    m_point=m_line->point; /*current vertex is first vertex of first line*/
+    m_lend=&(s->line[s->numlines]); /*pointer to after last line*/
+    m_pend=&(m_line->point[m_line->numpoints]); /*pointer to after last vertex of first line*/
+  }
+
+  /* a class with virtual functions should also provide a virtual destructor */
+  virtual ~line_adaptor() {}
+
+  void rewind(unsigned) {
+    m_line=s->line; /*first line*/
+    m_point=m_line->point; /*current vertex is first vertex of first line*/
+    m_pend=&(m_line->point[m_line->numpoints]); /*pointer to after last vertex of first line*/
+  }
+
+  virtual unsigned vertex(double* x, double* y) {
+    if(m_point < m_pend) {
+      /*here we treat the case where a real vertex is returned*/
+      bool first = m_point == m_line->point; /*is this the first vertex of a line*/
+      *x = m_point->x;
+      *y = m_point->y;
+      m_point++;
+      return first ? mapserver::path_cmd_move_to : mapserver::path_cmd_line_to;
+    }
+    /*if here, we're at the end of a line*/
+    m_line++;
+    *x = *y = 0.0;
+    if(m_line>=m_lend) /*is this the last line of the shapObj. normally,
+        (m_line==m_lend) should be a sufficient test, as the caller should not call
+        this function if a previous call returned path_cmd_stop.*/
+      return mapserver::path_cmd_stop; /*no more points to process*/
+
+    /*if here, there are more lines in the shapeObj, continue with next one*/
+    m_point=m_line->point; /*pointer to first point of next line*/
+    m_pend=&(m_line->point[m_line->numpoints]); /*pointer to after last point of next line*/
+
+    return vertex(x,y); /*this will return the first point of the next line*/
+  }
+private:
+  shapeObj *s;
+  lineObj *m_line, /*current line pointer*/
+          *m_lend; /*points to after the last line*/
+  pointObj *m_point, /*current point*/
+           *m_pend; /*points to after last point of current line*/
+};
+
+class polygon_adaptor
+{
+public:
+  polygon_adaptor(shapeObj *shape):s(shape),m_stop(false) {
+    m_line=s->line; /*first lines*/
+    m_point=m_line->point; /*first vertex of first line*/
+    m_lend=&(s->line[s->numlines]); /*pointer to after last line*/
+    m_pend=&(m_line->point[m_line->numpoints]); /*pointer to after last vertex of first line*/
+  }
+
+  /* a class with virtual functions should also provide a virtual destructor */
+  virtual ~polygon_adaptor() {}
+
+  void rewind(unsigned) {
+    /*reset pointers*/
+    m_stop=false;
+    m_line=s->line;
+    m_point=m_line->point;
+    m_pend=&(m_line->point[m_line->numpoints]);
+  }
+
+  virtual unsigned vertex(double* x, double* y) {
+    if(m_point < m_pend) {
+      /*if here, we have a real vertex*/
+      bool first = m_point == m_line->point;
+      *x = m_point->x;
+      *y = m_point->y;
+      m_point++;
+      return first ? mapserver::path_cmd_move_to : mapserver::path_cmd_line_to;
+    }
+    *x = *y = 0.0;
+    if(!m_stop) {
+      /*if here, we're after the last vertex of the current line
+       * we return the command to close the current polygon*/
+      m_line++;
+      if(m_line>=m_lend) {
+        /*if here, we've finished all the vertexes of the shape.
+         * we still return the command to close the current polygon,
+         * but set m_stop so the subsequent call to vertex() will return
+         * the stop command*/
+        m_stop=true;
+        return mapserver::path_cmd_end_poly;
+      }
+      /*if here, there's another line in the shape, so we set the pointers accordingly
+       * and return the command to close the current polygon*/
+      m_point=m_line->point; /*first vertex of next line*/
+      m_pend=&(m_line->point[m_line->numpoints]); /*pointer to after last vertex of next line*/
+      return mapserver::path_cmd_end_poly;
+    }
+    /*if here, a previous call to vertex informed us that we'd consumed all the vertexes
+     * of the shape. return the command to stop processing this shape*/
+    return mapserver::path_cmd_stop;
+  }
+private:
+  shapeObj *s;
+  double ox,oy;
+  lineObj *m_line, /*pointer to current line*/
+          *m_lend; /*pointer to after last line of the shape*/
+  pointObj *m_point, /*pointer to current vertex*/
+           *m_pend; /*pointer to after last vertex of current line*/
+  bool m_stop; /*should next call return stop command*/
+};
+
 #define aggColor(c) mapserver::rgba8_pre(c->red, c->green, c->blue, c->alpha)
 
 class aggRendererCache
@@ -130,7 +246,23 @@ public:
     m_renderer_primitives(m_renderer_base),
     m_rasterizer_primitives(m_renderer_primitives)
 #endif
-  {}
+  {
+    stroke = NULL;
+    dash = NULL;
+    stroke_dash = NULL;
+  }
+
+  ~AGG2Renderer() {
+    if(stroke) {
+      delete stroke;
+    }
+    if(dash) {
+      delete dash;
+    }
+    if(stroke_dash) {
+      delete stroke_dash;
+    }
+  }
 
   band_type* buffer;
   rendering_buffer m_rendering_buffer;
@@ -148,6 +280,9 @@ public:
   mapserver::scanline_u8 sl_line; /*unpacked scanlines, works faster if the area is roughly
     equal to the perimeter, in number of pixels*/
   bool use_alpha;
+  mapserver::conv_stroke<line_adaptor> *stroke;
+  mapserver::conv_dash<line_adaptor> *dash;
+  mapserver::conv_stroke<mapserver::conv_dash<line_adaptor> > *stroke_dash;
 };
 
 #define AGG_RENDERER(image) ((AGG2Renderer*) (image)->img.plugin)
@@ -220,22 +355,36 @@ int agg2RenderLine(imageObj *img, shapeObj *p, strokeStyleObj *style)
   r->m_renderer_scanline.color(aggColor(style->color));
 
   if (style->patternlength <= 0) {
-    mapserver::conv_stroke<line_adaptor> stroke(lines);
-    stroke.width(style->width);
-    if(style->width>1) {
-      applyCJC(stroke, style->linecap, style->linejoin);
+    if(!r->stroke) {
+      r->stroke = new mapserver::conv_stroke<line_adaptor>(lines);
     } else {
-      stroke.inner_join(mapserver::inner_bevel);
-      stroke.line_join(mapserver::bevel_join);
+      r->stroke->attach(lines);
     }
-    r->m_rasterizer_aa.add_path(stroke);
+    r->stroke->width(style->width);
+    if(style->width>1) {
+      applyCJC(*r->stroke, style->linecap, style->linejoin);
+    } else {
+      r->stroke->inner_join(mapserver::inner_bevel);
+      r->stroke->line_join(mapserver::bevel_join);
+    }
+    r->m_rasterizer_aa.add_path(*r->stroke);
   } else {
-    mapserver::conv_dash<line_adaptor> dash(lines);
-    mapserver::conv_stroke<mapserver::conv_dash<line_adaptor> > stroke_dash(dash);
+    if(!r->dash) {
+      r->dash = new mapserver::conv_dash<line_adaptor>(lines);
+    } else {
+      r->dash->remove_all_dashes();
+      r->dash->dash_start(0.0);
+      r->dash->attach(lines);
+    }
+    if(!r->stroke_dash) {
+      r->stroke_dash = new mapserver::conv_stroke<mapserver::conv_dash<line_adaptor> > (*r->dash);
+    } else {
+      r->stroke_dash->attach(*r->dash);
+    }
     int patt_length = 0;
     for (int i = 0; i < style->patternlength; i += 2) {
       if (i < style->patternlength - 1) {
-        dash.add_dash(MS_MAX(1,MS_NINT(style->pattern[i])),
+        r->dash->add_dash(MS_MAX(1,MS_NINT(style->pattern[i])),
                       MS_MAX(1,MS_NINT(style->pattern[i + 1])));
         if(style->patternoffset) {
           patt_length += MS_MAX(1,MS_NINT(style->pattern[i])) +
@@ -244,16 +393,16 @@ int agg2RenderLine(imageObj *img, shapeObj *p, strokeStyleObj *style)
       }
     }
     if(style->patternoffset > 0) {
-      dash.dash_start(patt_length - style->patternoffset);
+      r->dash->dash_start(patt_length - style->patternoffset);
     }
-    stroke_dash.width(style->width);
+    r->stroke_dash->width(style->width);
     if(style->width>1) {
-      applyCJC(stroke_dash, style->linecap, style->linejoin);
+      applyCJC(*r->stroke_dash, style->linecap, style->linejoin);
     } else {
-      stroke_dash.inner_join(mapserver::inner_bevel);
-      stroke_dash.line_join(mapserver::bevel_join);
+      r->stroke_dash->inner_join(mapserver::inner_bevel);
+      r->stroke_dash->line_join(mapserver::bevel_join);
     }
-    r->m_rasterizer_aa.add_path(stroke_dash);
+    r->m_rasterizer_aa.add_path(*r->stroke_dash);
   }
   mapserver::render_scanlines(r->m_rasterizer_aa, r->sl_line, r->m_renderer_scanline);
   return MS_SUCCESS;
@@ -793,7 +942,7 @@ imageObj *agg2CreateImage(int width, int height, outputFormatObj *format, colorO
   r->buffer = (band_type*)malloc(width * height * 4 * sizeof(band_type));
   if (r->buffer == NULL) {
     msSetError(MS_MEMERR, "%s: %d: Out of memory allocating %u bytes.\n", "agg2CreateImage()",
-               __FILE__, __LINE__, width * height * 4 * sizeof(band_type));
+               __FILE__, __LINE__, (unsigned int)(width * height * 4 * sizeof(band_type)));
     free(image);
     return NULL;
   }

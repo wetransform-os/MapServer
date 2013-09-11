@@ -34,6 +34,7 @@
 
 /* There is a dependency to GDAL/OGR for the GML driver and MiniXML parser */
 #include "cpl_minixml.h"
+#include "cpl_conv.h"
 
 #include "mapogcfilter.h"
 #include "mapowscommon.h"
@@ -615,7 +616,7 @@ int msWFSGetCapabilities(mapObj *map, wfsParamsObj *wfsparams, cgiRequestObj *re
       iVersion = msOWSParseVersionString(tokens[i]);
 
       if (iVersion == -1) {
-        msSetError(MS_WFSERR, "Invalid version format.", "msWFSGetCapabilities()", tokens[i]);
+        msSetError(MS_WFSERR, "Invalid version format : %s.", "msWFSGetCapabilities()", tokens[i]);
         msFreeCharArray(tokens, j);
         return msWFSException(map, "acceptversions", "VersionNegotiationFailed",wmtver);
       }
@@ -1117,7 +1118,7 @@ this request. Check wfs/ows_enable_request settings.", "msWFSDescribeFeatureType
   if (value)
     msIO_setHeader("Content-Type","%s; charset=%s",mimetype, value);
   else
-    msIO_setHeader("Content-Type",mimetype);
+    msIO_setHeader("Content-Type","%s",mimetype);
   msIO_sendHeaders();
 
   if (mimetype)
@@ -1540,7 +1541,7 @@ static int msWFSGetFeature_GMLPostfix( mapObj *map,
     msIO_printf("</wfs:FeatureCollection>\n\n");
   else {
     if(paramsObj->pszVersion && strncmp(paramsObj->pszVersion,"1.1",3) == 0)
-      msIO_printf("</wfs:FeatureCollection>\n\n", gmlinfo->user_namespace_prefix, gmlinfo->collection_name);
+      msIO_printf("</wfs:FeatureCollection>\n\n");
     else
       msIO_printf("</%s:%s>\n\n", gmlinfo->user_namespace_prefix, gmlinfo->collection_name);
   }
@@ -1952,13 +1953,15 @@ int msWFSGetFeature(mapObj *map, wfsParamsObj *paramsObj, cgiRequestObj *req, ow
     layerObj *lp;
     lp = GET_LAYER(map, j);
     if (lp->status == MS_ON) {
+      /* No reason to handle tolerances for WFS GetFeature */
+      lp->tolerance = 0;
       lpQueried = GET_LAYER(map, j);
       nQueriedLayers++;
     }
   }
 
-  if (paramsObj->nStartIndex > 0) {
-    startindex = paramsObj->nStartIndex;
+  if (paramsObj->nStartIndex > -1) {
+    startindex = 1 + paramsObj->nStartIndex;
     map->query.startindex = startindex;    
   } 
 
@@ -2125,7 +2128,7 @@ this request. Check wfs/ows_enable_request settings.", "msWFSGetFeature()", laye
         ms_error = msGetErrorObj();
 
         if(ms_error->code != MS_NOTFOUND) {
-          msSetError(MS_WFSERR, "FLTApplyFilterToLayer() failed", "msWFSGetFeature()", pszFilter);
+          msSetError(MS_WFSERR, "FLTApplyFilterToLayer() failed", "msWFSGetFeature()");
           return msWFSException(map, "mapserv", "NoApplicableCode", paramsObj->pszVersion);
         }
       }
@@ -2397,7 +2400,7 @@ this request. Check wfs/ows_enable_request settings.", "msWFSGetFeature()",
     if (value)
       msIO_setHeader("Content-Type","%s; charset=%s", output_mime_type,value);
     else
-      msIO_setHeader("Content-Type",output_mime_type);
+      msIO_setHeader("Content-Type","%s",output_mime_type);
     msIO_sendHeaders();
 
     status = msWFSGetFeature_GMLPreamble( map, req, &gmlinfo, paramsObj,
@@ -3170,7 +3173,7 @@ int msWFSParseRequest(mapObj *map, cgiRequestObj *request, owsRequestObj *ows_re
           while (psQuery &&  psQuery->pszValue &&
                  strcasecmp(psQuery->pszValue, "Query") == 0) {
             /* get SRS */
-            pszValue = CPLGetXMLValue(psGetFeature,  "srsName",
+            pszValue = CPLGetXMLValue(psQuery,  "srsName",
                                       NULL);
             if (pszValue)
               wfsparams->pszSrs = msStrdup(pszValue);
@@ -3245,14 +3248,17 @@ int msWFSParseRequest(mapObj *map, cgiRequestObj *request, owsRequestObj *ows_re
             psFilter = CPLGetXMLNode(psQuery, "Filter");
 
             if (psFilter) {
-              if (!bMultiLayer)
-                wfsparams->pszFilter = CPLSerializeXMLTree(psFilter);
+              if (!bMultiLayer) {
+                char* pszCPLTmp = CPLSerializeXMLTree(psFilter);
+                wfsparams->pszFilter = msStrdup(pszCPLTmp);
+                CPLFree(pszCPLTmp);
+              }
               else {
                 pszSerializedFilter = CPLSerializeXMLTree(psFilter);
                 pszTmp = (char *)msSmallMalloc(sizeof(char)*
                                                (strlen(pszSerializedFilter)+3));
                 sprintf(pszTmp, "(%s)", pszSerializedFilter);
-                free(pszSerializedFilter);
+                CPLFree(pszSerializedFilter);
 
                 if (wfsparams->pszFilter == NULL)
                   wfsparams->pszFilter = msStrdup(pszTmp);
@@ -3352,7 +3358,7 @@ int msWFSParseRequest(mapObj *map, cgiRequestObj *request, owsRequestObj *ows_re
 
       }/* end of DescibeFeatureType */
     }
-#endif /*USE_LIBXML2_WFS*/
+#endif /*WFS_USE_LIBXML2*/
 
   }
 #endif

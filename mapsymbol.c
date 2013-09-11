@@ -85,13 +85,13 @@ double msSymbolGetDefaultSize(symbolObj *s)
       break;
     case(MS_SYMBOL_SVG):
       size = 1;
-#ifdef USE_SVG_CAIRO
+#if defined(USE_SVG_CAIRO) || defined (USE_RSVG)
       assert(s->renderer_cache != NULL);
       size = s->sizey;
 #endif
       break;
     default: /* vector and ellipses, scalable */
-      size = s->sizey;
+      size = (s->sizey<=0)?s->sizex:s->sizey;
       break;
   }
 
@@ -112,6 +112,7 @@ void initSymbol(symbolObj *s)
   s->filled = MS_FALSE;
   s->numpoints=0;
   s->renderer=NULL;
+  s->renderer_free_func = NULL;
   s->renderer_cache = NULL;
   s->pixmap_buffer=NULL;
   s->imagepath = NULL;
@@ -124,8 +125,6 @@ void initSymbol(symbolObj *s)
   s->character = NULL;
   s->anchorpoint_x = s->anchorpoint_y = 0.5;
 
-  s->svg_text = NULL;
-
 }
 
 int msFreeSymbol(symbolObj *s)
@@ -136,8 +135,12 @@ int msFreeSymbol(symbolObj *s)
   }
 
   if(s->name) free(s->name);
-  if(s->renderer!=NULL) {
-    s->renderer->freeSymbol(s);
+  if(s->renderer_free_func) {
+    s->renderer_free_func(s);
+  } else {
+    if(s->renderer!=NULL) {
+      s->renderer->freeSymbol(s);
+    }
   }
   if(s->pixmap_buffer) {
     msFreeRasterBuffer(s->pixmap_buffer);
@@ -150,9 +153,6 @@ int msFreeSymbol(symbolObj *s)
   msFree(s->full_pixmap_path);
   if(s->imagepath) free(s->imagepath);
   if(s->character) free(s->character);
-
-  if (s->svg_text)
-    msFree(s->svg_text);
 
   return MS_SUCCESS;
 }
@@ -291,49 +291,49 @@ void writeSymbol(symbolObj *s, FILE *stream)
 {
   int i;
 
-  fprintf(stream, "  SYMBOL\n");
-  if(s->name != NULL) fprintf(stream, "    NAME \"%s\"\n", s->name);
+  msIO_fprintf(stream, "  SYMBOL\n");
+  if(s->name != NULL) msIO_fprintf(stream, "    NAME \"%s\"\n", s->name);
 
   switch (s->type) {
     case(MS_SYMBOL_HATCH):
-      fprintf(stream, "    TYPE HATCH\n");
+      msIO_fprintf(stream, "    TYPE HATCH\n");
       break;
     case(MS_SYMBOL_PIXMAP):
-      fprintf(stream, "    TYPE PIXMAP\n");
-      if(s->imagepath != NULL) fprintf(stream, "    IMAGE \"%s\"\n", s->imagepath);
-      fprintf(stream, "    TRANSPARENT %d\n", s->transparentcolor);
+      msIO_fprintf(stream, "    TYPE PIXMAP\n");
+      if(s->imagepath != NULL) msIO_fprintf(stream, "    IMAGE \"%s\"\n", s->imagepath);
+      msIO_fprintf(stream, "    TRANSPARENT %d\n", s->transparentcolor);
       break;
     case(MS_SYMBOL_TRUETYPE):
-      fprintf(stream, "    TYPE TRUETYPE\n");
-      if(s->antialias == MS_TRUE) fprintf(stream, "    ANTIALIAS TRUE\n");
-      if (s->character != NULL) fprintf(stream, "    CHARACTER \"%s\"\n", s->character);
-      if (s->font != NULL) fprintf(stream, "    FONT \"%s\"\n", s->font);
+      msIO_fprintf(stream, "    TYPE TRUETYPE\n");
+      if(s->antialias == MS_TRUE) msIO_fprintf(stream, "    ANTIALIAS TRUE\n");
+      if (s->character != NULL) msIO_fprintf(stream, "    CHARACTER \"%s\"\n", s->character);
+      if (s->font != NULL) msIO_fprintf(stream, "    FONT \"%s\"\n", s->font);
       break;
     default:
       if(s->type == MS_SYMBOL_ELLIPSE)
-        fprintf(stream, "    TYPE ELLIPSE\n");
+        msIO_fprintf(stream, "    TYPE ELLIPSE\n");
       else if(s->type == MS_SYMBOL_VECTOR)
-        fprintf(stream, "    TYPE VECTOR\n");
+        msIO_fprintf(stream, "    TYPE VECTOR\n");
       else if(s->type == MS_SYMBOL_SVG)
-        fprintf(stream, "    TYPE SVG\n");
+        msIO_fprintf(stream, "    TYPE SVG\n");
       else
-        fprintf(stream, "    TYPE SIMPLE\n");
+        msIO_fprintf(stream, "    TYPE SIMPLE\n");
 
-      if(s->filled == MS_TRUE) fprintf(stream, "    FILLED TRUE\n");
-      if(s->imagepath != NULL) fprintf(stream, "    IMAGE \"%s\"\n", s->imagepath);
+      if(s->filled == MS_TRUE) msIO_fprintf(stream, "    FILLED TRUE\n");
+      if(s->imagepath != NULL) msIO_fprintf(stream, "    IMAGE \"%s\"\n", s->imagepath);
 
       /* POINTS */
       if(s->numpoints != 0) {
-        fprintf(stream, "    POINTS\n");
+        msIO_fprintf(stream, "    POINTS\n");
         for(i=0; i<s->numpoints; i++) {
-          fprintf(stream, "      %g %g\n", s->points[i].x, s->points[i].y);
+          msIO_fprintf(stream, "      %g %g\n", s->points[i].x, s->points[i].y);
         }
-        fprintf(stream, "    END\n");
+        msIO_fprintf(stream, "    END\n");
       }
       break;
   }
 
-  fprintf(stream, "  END\n\n");
+  msIO_fprintf(stream, "  END\n\n");
 }
 
 
@@ -375,9 +375,14 @@ int msAddImageSymbol(symbolSetObj *symbolset, char *filename)
       tmpfullfilename = msBuildPath(szPath, tmppath, tmpfilename);
       if (tmpfullfilename) {
         /*use the url for now as a caching mechanism*/
-        if (msHTTPGetFile(filename, tmpfullfilename, &status, -1, bCheckLocalCache, 0) == MS_SUCCESS) {
+        if (msHTTPGetFile(filename, tmpfullfilename, &status, -1, bCheckLocalCache, 0, 1024*1024 /* 1 MegaByte */) == MS_SUCCESS) {
           symbol->imagepath = msStrdup(tmpfullfilename);
           symbol->full_pixmap_path = msStrdup(tmpfullfilename);
+        } else {
+          unlink(tmpfullfilename); 
+          msFree(tmpfilename);
+          msFree(tmppath);
+          return MS_FAILURE;
         }
       }
       msFree(tmpfilename);
@@ -628,7 +633,7 @@ int msGetMarkerSize(symbolSetObj *symbolset, styleObj *style, double *width, dou
       return MS_FAILURE;
   }
   if(symbol->type == MS_SYMBOL_SVG && !symbol->renderer_cache) {
-#ifdef USE_SVG_CAIRO
+#if defined(USE_SVG_CAIRO) || defined (USE_RSVG)
     if(MS_SUCCESS != msPreloadSVGSymbol(symbol))
       return MS_FAILURE;
 #else
@@ -748,6 +753,33 @@ symbolObj *msRemoveSymbol(symbolSetObj *symbolset, int nSymbolIndex)
     symbolset->symbol[i-1]=NULL;
     symbolset->numsymbols--;
     MS_REFCNT_DECR(symbol);
+    /* update symbol references in the map */
+    if (symbolset->map) {
+        int l,c,s,lb;
+        layerObj *layer;
+        classObj *cl;
+        styleObj *style;
+        labelObj *label;
+        for (l = 0; l < symbolset->map->numlayers; l++) {
+            layer = GET_LAYER(symbolset->map, l);
+            for (c = 0; c < layer->numclasses; c++) {
+                cl = layer->class[c];
+                for (s = 0; s < cl->numstyles; s++) {
+                    style = cl->styles[s];
+                    if (style->symbol >= nSymbolIndex)
+                        --style->symbol;
+                }
+                for (lb = 0; lb < cl->numlabels; lb++) {
+                    label = cl->labels[lb];
+                    for (s = 0; s < label->numstyles; s++) {
+                        style = label->styles[s];
+                        if (style->symbol >= nSymbolIndex)
+                            --style->symbol;
+                    }
+                }
+            }
+        }
+    }
     return symbol;
   }
 }
