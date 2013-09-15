@@ -28,6 +28,8 @@ MANPAGES:=$(wildcard debian/man/*.*.xml)
 
 MS_VERSION=$(shell dpkg-parsechangelog | sed -ne 's/^Version: \(.*\)-.*/\1/p' | sed -ne 's/^\(.*\)~.*/\1/p')
 
+MAKE_VERBOSE=1
+
 COMMON_CONFIG=	-DCMAKE_INSTALL_PREFIX=/usr \
 		-DWITH_PROJ=1 \
 		-DWITH_KML=1 \
@@ -100,13 +102,13 @@ override_dh_auto_build:
 	  mv `basename $$x | sed 's/.xml$$//'` `dirname $$x` ; \
 	done
 
-	cd build && $(MAKE)
+	$(MAKE) -C build VERBOSE=$(MAKE_VERBOSE)
 
 override_dh_auto_test:
 	# msautotest submodule is not used
 
 override_dh_auto_install:
-	cd build && $(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
+	$(MAKE) -C build install DESTDIR=$(CURDIR)/debian/tmp VERBOSE=$(MAKE_VERBOSE)
 
 	-mkdir -p $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/
 	-mv -v $(CURDIR)/debian/tmp/usr/lib/libmapserver*.so* $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/
