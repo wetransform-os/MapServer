@@ -11,21 +11,16 @@ mapserver (6.4.0-1) unstable; urgency=low
     - shp2img-typo.patch (applied upstream)
   * Add patch to fix the Perl mapscript module installation directory:
     perl-mapscript-install.patch
-  * SONAME of libmapserver changed from libmapserver-6.2.1.so to
-    libmapserver.so.1.
-  * Update libmapserver symbols file for 6.4.0 on amd64.
-  * Add patch to install ruby mapscript into vendorarchdir instead of archdir.
-  * Enable verbose make output.
-
- -- Bas Couwenberg <sebastic@xs4all.nl>  Tue, 17 Sep 2013 17:16:30 +0200
-
-mapserver (6.2.1-4) unstable; urgency=low
-
-  * Use pkgkde-gensymbols & pkgkde-symbolshelper to handle C++ symbols.
-  * Use upstream version without debian revision when generating symbols.
   * Drop ruby1.8 mapscript package for ruby1.8-removal transition.
   * Rename libruby-mapscript to ruby-mapscript. (closes: #722394)
   * Don't install Ruby mapscript in /usr/lib/ruby, use vendor_ruby instead.
+  * SONAME of libmapserver changed from libmapserver-6.2.1.so to
+    libmapserver.so.1.
+  * Use pkgkde-gensymbols & pkgkde-symbolshelper to handle C++ symbols.
+  * Use upstream version without debian revision when generating symbols.
+  * Update libmapserver symbols file for 6.4.0 on amd64.
+  * Add patch to install ruby mapscript into vendorarchdir instead of archdir.
+  * Enable verbose make output.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Thu, 25 Jul 2013 20:25:18 +0200
 
