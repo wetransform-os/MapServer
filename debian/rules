@@ -26,7 +26,7 @@ RUBYVERS=1.9.1
 PHP5API=$(shell php-config5 --phpapi)
 MANPAGES:=$(wildcard debian/man/*.*.xml)
 
-MS_VERSION=$(shell dpkg-parsechangelog | sed -ne 's/^Version: \(.*\)-.*/\1/p' | sed -ne 's/^\(.*\)~.*/\1/p')
+MS_VERSION=$(shell dpkg-parsechangelog | sed -ne 's/^Version: \(.*\)-.*/\1/p')
 
 MAKE_VERBOSE=1
 
