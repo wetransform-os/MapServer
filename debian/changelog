@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-mapserver (6.4.0~rc1-1) unstable; urgency=low
-=======
-mapserver (6.4.0-1) UNRELEASED; urgency=low
+mapserver (6.4.0-1) unstable; urgency=low
 
   * New upstream release: 6.4.0.
   * Drop install-threads.patch, applied upstream.
@@ -9,7 +6,6 @@ mapserver (6.4.0-1) UNRELEASED; urgency=low
  -- Bas Couwenberg <sebastic@xs4all.nl>  Tue, 17 Sep 2013 17:16:30 +0200
 
 mapserver (6.4.0~rc1-1) UNRELEASED; urgency=low
->>>>>>> 41e88c4988b8e884fe99caa68fb2f8d3bee640a0
 
   * New upstream release: 6.4.0-rc1.
   * Rename WITH_THREADS to WITH_THREAD_SAFETY.
