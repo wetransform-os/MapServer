@@ -1,24 +1,6 @@
 mapserver (6.4.0-1) unstable; urgency=low
 
   * New upstream release: 6.4.0.
-  * Drop install-threads.patch, applied upstream.
-
- -- Bas Couwenberg <sebastic@xs4all.nl>  Tue, 17 Sep 2013 17:16:30 +0200
-
-mapserver (6.4.0~rc1-1) UNRELEASED; urgency=low
-
-  * New upstream release: 6.4.0-rc1.
-  * Rename WITH_THREADS to WITH_THREAD_SAFETY.
-  * Drop patch install-ruby-mapscript.patch, applied upstream.
-  * Add patch to rename WITH_THREADS to WITH_THREAD_SAFETY in INSTALL.CMAKE.
-  * Add patch to install ruby mapscript into vendorarchdir instead of archdir.
-  * Enable verbose make output.
-
- -- Bas Couwenberg <sebastic@xs4all.nl>  Sat, 07 Sep 2013 20:56:16 +0200
-
-mapserver (6.4.0~beta2-1) UNRELEASED; urgency=low
-
-  * New upstream release: 6.4.0-beta2.
   * Build system changed from autotools to cmake.
   * Update Build-Depends to include: libgif-dev, librsvg2-dev, pkg-config.
   * Update hardening.patch for CMake build.
@@ -27,15 +9,15 @@ mapserver (6.4.0~beta2-1) UNRELEASED; urgency=low
     - php_segfault.patch (applied upstream)
     - mapows-contenttype.patch (applied upstream)
     - shp2img-typo.patch (applied upstream)
-  * Add patch to install the Ruby mapscript extension:
-    install-ruby-mapscript.patch
   * Add patch to fix the Perl mapscript module installation directory:
     perl-mapscript-install.patch
   * SONAME of libmapserver changed from libmapserver-6.2.1.so to
     libmapserver.so.1.
   * Update libmapserver symbols file for 6.4.0 on amd64.
+  * Add patch to install ruby mapscript into vendorarchdir instead of archdir.
+  * Enable verbose make output.
 
- -- Bas Couwenberg <sebastic@xs4all.nl>  Sun, 01 Sep 2013 14:14:54 +0200
+ -- Bas Couwenberg <sebastic@xs4all.nl>  Tue, 17 Sep 2013 17:16:30 +0200
 
 mapserver (6.2.1-4) unstable; urgency=low
 
