@@ -14,8 +14,8 @@ Build-Depends: debhelper (>= 9), dpkg-dev (>= 1.16.1.1),
  ruby1.9.1, ruby1.9.1-dev,
  sharutils, libsdl1.2-dev,
  libfcgi-dev, libxml2-dev, libogdi3.2-dev, libxslt1-dev, libpam0g-dev, libreadline-dev,
- libedit-dev, libepsilon-dev, pkg-kde-tools,
- chrpath, cmake (>= 2.8.0), pkg-config,
+ libedit-dev, libepsilon-dev,
+ chrpath, cmake (>= 2.8.0), pkg-config, pkg-kde-tools,
  docbook2x, docbook-xsl, docbook-xml, xsltproc
 Build-Conflicts: libcurl3-openssl-dev
 XS-Ruby-Versions: ruby1.9.1
