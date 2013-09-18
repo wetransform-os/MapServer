@@ -3,11 +3,11 @@ Upstream-Name: MapServer
 Upstream-Contact: The MapServer team
 Source: http://mapserver.org
 Copyright: 1996-2007 Regents of the University of Minnesota.
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: *
 Copyright: 1996-2007 Regents of the University of Minnesota.
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: cgiutil.c
  cgiutil.h
@@ -87,12 +87,12 @@ Files: cgiutil.c
  mapscript/mapscript.i
  mapscript/php/php_regex.c
 Copyright: 1996-2005, Regents of the University of Minnesota
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapcrypto.c
  msencrypt.c
 Copyright: 1996-2006, Regents of the University of Minnesota
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: configure.in
  mapagg.cpp
@@ -108,7 +108,7 @@ Files: configure.in
  mapscript/swiginc/referencemap.i
  mapscript/swiginc/scalebar.i
 Copyright: 1996-2007, Regents of the University of Minnesota
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapoglcontext.cpp
  mapoglcontext.h
@@ -132,7 +132,7 @@ Files: mapoglcontext.cpp
  mapscript/csharp/examples/shapeinfo.cs
  mapscript/csharp/examples/shpdump.cs
 Copyright: 1996-2008, Regents of the University of Minnesota
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapcairo.c
  mapgd.c
@@ -140,54 +140,54 @@ Files: mapcairo.c
  mapkmlrenderer.cpp
  mapkmlrenderer.h
 Copyright: 1996-2009, Regents of the University of Minnesota
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapraster.c
 Copyright: 1996-2010, Regents of the University of Minnesota
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapgeomutil.cpp
  maprendering.c
 Copyright: 1996-2011, Regents of the University of Minnesota
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapbits.c
 Copyright: 1996-2005, Regents of the University of Minnesota
-License: MIT/X11 (BSD like)
+License: MIT/X11
 Comment: Derived from code placed in the public domain by Bob Stout, for more
  information see http://c.snippets.org/snip_lister.php?fname=bitarray.c.
 
 Files: mapuvraster.c
 Copyright: 2011, Alan Boudreault, MapGears
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapscript/php/php_mapscript_util.h
 Copyright: 2000, 2001, Daniel Morissette, DM Solutions Group Inc.
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapscript/php/mapscript_i.c
 Copyright: 2000, 2007, Daniel Morissette, DM Solutions Group Inc.
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: maphttp.c
 Copyright: 2001-2003, Daniel Morissette, DM Solutions Group Inc
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapwmslayer.c
 Copyright: 2001-2004, Daniel Morissette, DM Solutions Group Inc
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapwfs.c
  mapwfslayer.c
 Copyright: 2002, Daniel Morissette, DM Solutions Group Inc
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapogr.cpp
  mapscript/php/php_mapscript.c
  mapscript/php/php_mapscript.h
  mapscript/php/php_mapscript_util.h
 Copyright: 2000-2005, Daniel Morissette, DM Solutions Group Inc
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapscript/php/class.c
  mapscript/php/cluster.c
@@ -220,65 +220,65 @@ Files: mapscript/php/class.c
  mapscript/php/symbol.c
  mapscript/php/web.c
 Copyright: 2000-2010, Daniel Morissette, DM Solutions Group Inc.
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapscript/php/php_mapscript_util.c
 Copyright: 2000-2005, DM Solutions Group
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapwcs20.c
 Copyright: 2010-2011, EOX IT Services GmbH, Austria
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapresample.h
 Copyright: 2001, Frank Warmerdam, DM Solutions Group Inc
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapgdal.c
  mapoutput.c
 Copyright: 2002, Frank Warmerdam
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapobject.c
 Copyright: 2004, Frank Warmerdam
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapio.c
  mapio.h
  mapscript/swiginc/msio.i
 Copyright: 2004, Frank Warmerdam <warmerdam@pobox.com>
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapwcs11.c
 Copyright: 2007, Frank Warmerdam
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapogroutput.c
 Copyright: 2010, Frank Warmerdam <warmerdam@pobox.com>
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapmssql2008.c
 Copyright: 2007, IS Consulting (www.mapdotnet.com)
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapgraticule.c
 Copyright: 2003, John Novak, Novacell Technologies
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapcontext.c
 Copyright: 2002-2003, Julien-Samuel Lacroix, DM Solutions Group Inc
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: maptile.c
  maptile.h
 Copyright: 2008, Paul Ramsey
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mappostgis.c
  mappostgis.h
 Copyright: 2002, Refractions Research
            2010, Paul Ramsey
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: classobject.c
  layerobject.c
@@ -312,38 +312,38 @@ Files: classobject.c
  mapscript/python/tests/cases/zoomtest.py
  mapscript/python/tests/timing/testing.py
 Copyright: 2004, Sean Gillies
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: tests/makefile_postgis
 Copyright: 2005, Sean Gillies - sgillies@frii.com
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapimageio.c
 Copyright: 2009, Thomas Bonfort
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapdummyrenderer.c
 Copyright: 2010, Thomas Bonfort
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapowscommon.c
  mapowscommon.h
 Copyright: 2006, Tom Kralidis
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: maplibxml2.c
  maplibxml2.h
  mapscript/perl/examples/wxs.pl
 Copyright: 2007, Tom Kralidis
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapscript/php/php_proj.c
 Copyright: 2000-2005, Y. Assefa, DM Solutions Group inc.
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapprojhack.c
 Copyright: 2001, Y. Assefa, DM Solutions Group Inc
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapogcfilter.c
  mapogcfilter.h
@@ -351,27 +351,27 @@ Files: mapogcfilter.c
  mapogcsld.c
  mapogcsld.h
 Copyright: 2003, Y. Assefa, DM Solutions Group Inc
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapogcsos.c
 Copyright: 2006, Y. Assefa, DM Solutions Group Inc
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapwfs11.c
 Copyright: 2008, Y. Assefa, DM Solutions Group Inc
-License: MIT/X11 (BSD like)
+License: MIT/X11
 
 Files: mapquantization.c
 Copyright:  1996-2005, Regents of the University of Minnesota
            1989, 1991, Jef Poskanzer
      1997, 2000, 2002, Greg Roelofs
-License: MIT/X11 (BSD like) mapquantization
+License: MIT/X11-mapquantization
 Comment: Contains code derived from pngquant.c and libpam3.c.
 
 Files: maptclutf.c
 Copyright: 1996-2007, Regents of the University of Minnesota
            1997-1998, Sun Microsystems, Inc
-License: MIT/X11 (BSD like) maptclutf
+License: MIT/X11-maptclutf
 Comment: Contains code derived from tclUtf.c.
 
 Files: mapstring.c
@@ -380,17 +380,17 @@ Copyright: 1996-2005, Regents of the University of Minnesota
            2000-2004, University of Illinois Board of Trustees
            2000-2005, Mark D. Roth
           1990, 1993, The Regents of the University of California
-License: MIT/X11 (BSD like) mapstring
+License: MIT/X11-mapstring
 Comment: Contains string functions from various sources.
 
 Files: strptime.c
 Copyright: 1999, Kungliga Tekniska Högskolan
-License: BSD-3-clause (KTH)
+License: BSD-3-clause-KTH
 
 Files: mapscript/python/pygdioctx/pygdioctx.c
  mapscript/python/pygdioctx/pygdioctx.h
 Copyright: 1995, Richard Jones, Bureau of Meteorology Australia
-License: BSD-3-clause (GDMODULE LICENSE)
+License: BSD-3-clause-GDMODULE-LICENSE
 
 Files: ltmain.sh
 Copyright: 1996-2001, 2003-2011, Free Software Foundation, Inc.
@@ -404,7 +404,7 @@ License: GPL-2+ with Bison exception
 Files: opengl/glext.h
 Copyright: 1991-2004, Silicon Graphics, Inc
                 2005, NVIDIA Corporation
-License: SGI-B-1.1 with NVIDIA
+License: SGI-B-1.1-with-NVIDIA
 
 Files: opengl/wglext.h
 Copyright: 1991-2004, Silicon Graphics, Inc
@@ -412,14 +412,14 @@ License: SGI-B-1.1
 
 Files: renderers/agg/*
 Copyright: 2002-2005, Maxim Shemanarev (http://www.antigrain.com)
-License: AGGPL or BSD-3-clause (AGG)
+License: AGGPL or BSD-3-clause-AGG
 Comment: Note that AGG changed license to GPL-2+ from v2.5 onwards,
  but the embedded copy is the dual licensed v2.4.
 
 Files: renderers/agg/include/agg_curves.h
 Copyright: 2002-2005, Maxim Shemanarev (http://www.antigrain.com)
                 2005, Tony Juricic (tonygeek@yahoo.com)
-License: AGGPL or BSD-3-clause (AGG)
+License: AGGPL or BSD-3-clause-AGG
 
 Files: renderers/agg/include/agg_conv_clipper.h
  renderers/agg/include/clipper.hpp
@@ -427,7 +427,7 @@ Files: renderers/agg/include/agg_conv_clipper.h
 Copyright: 2010-2011, Angus Johnson
 License: BSL-1.0
 
-License: MIT/X11 (BSD like)
+License: MIT/X11
  Permission is hereby granted, free of charge, to any person obtaining
  a copy of this software and associated documentation files (the
  "Software"), to deal in the Software without restriction, including
@@ -448,7 +448,7 @@ License: MIT/X11 (BSD like)
  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-License: MIT/X11 (BSD like) mapquantization
+License: MIT/X11-mapquantization
  Permission is hereby granted, free of charge, to any person obtaining a
  copy of this software and associated documentation files (the "Software"),
  to deal in the Software without restriction, including without limitation
@@ -480,7 +480,7 @@ License: MIT/X11 (BSD like) mapquantization
  documentation.  This software is provided "as is" without express or
  implied warranty.
 
-License: MIT/X11 (BSD like) maptclutf
+License: MIT/X11-maptclutf
  Permission is hereby granted, free of charge, to any person obtaining a
  copy of this software and associated documentation files (the "Software"),
  to deal in the Software without restriction, including without limitation
@@ -546,7 +546,7 @@ License: MIT/X11 (BSD like) maptclutf
  permission to use and distribute the software in accordance with the
  terms specified in this license.
 
-License: MIT/X11 (BSD like) mapstring
+License: MIT/X11-mapstring
  Permission is hereby granted, free of charge, to any person obtaining a
  copy of this software and associated documentation files (the "Software"),
  to deal in the Software without restriction, including without limitation
@@ -669,7 +669,7 @@ License: MIT/X11 (BSD like) mapstring
  OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  SUCH DAMAGE.
 
-License: BSD-3-clause (GDMODULE LICENSE)
+License: BSD-3-clause-GDMODULE-LICENSE
  All rights reserved.
  .
  Redistribution and use in source and binary forms, with or without
@@ -698,7 +698,7 @@ License: BSD-3-clause (GDMODULE LICENSE)
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-License: BSD-3-clause (KTH)
+License: BSD-3-clause-KTH
  All rights reserved.
  .
  Redistribution and use in source and binary forms, with or without
@@ -737,7 +737,7 @@ License: AGGPL
  This software is provided "as is" without express or implied
  warranty, and with no claim as to its suitability for any purpose.
 
-License: BSD-3-clause (AGG)
+License: BSD-3-clause-AGG
  Anti-Grain Geometry - Version 2.4
  Copyright (C) 2002-2005 Maxim Shemanarev (McSeem)
  .
@@ -881,7 +881,7 @@ License: SGI-B-1.1
  not been independently verified as being compliant with the OpenGL(R)
  version 1.2.1 Specification.
 
-License: SGI-B-1.1 with NVIDIA
+License: SGI-B-1.1-with-NVIDIA
  Copyright NVIDIA Corporation 2005
  .
  TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THIS SOFTWARE IS PROVIDED
