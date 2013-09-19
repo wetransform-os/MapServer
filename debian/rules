@@ -21,8 +21,6 @@ LDFLAGS:=$(shell dpkg-buildflags --get LDFLAGS)
 CFLAGS+=$(CPPFLAGS)
 CFLAGS+=$(LDFLAGS)
 
-PYVERS=$(shell pyversions -r debian/control)
-RUBYVERS=1.9.1
 PHP5API=$(shell php-config5 --phpapi)
 MANPAGES:=$(wildcard debian/man/*.*.xml)
 
