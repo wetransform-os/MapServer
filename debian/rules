@@ -123,7 +123,9 @@ override_dh_auto_install:
 	-mkdir -p debian/tmp/usr/lib/cgi-bin
 	install -m755 debian/tmp/usr/bin/mapserv debian/tmp/usr/lib/cgi-bin/mapserv
 
+	# PHP mapscript
 	echo 'misc:Depends=phpapi-'$(PHP5API) >> debian/php5-mapscript.substvars
+	install -m755 debian/mapscript.ini /etc/php5/mods-available/
 
 	# libmapserver-dev headers
 	-mkdir -p debian/tmp/usr/include/mapserver/
