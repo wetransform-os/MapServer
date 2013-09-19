@@ -128,6 +128,7 @@ override_dh_auto_install:
 	# libmapserver-dev headers
 	-mkdir -p debian/tmp/usr/include/mapserver/
 	install -m755 *.h debian/tmp/usr/include/mapserver/
+	install -m755 build/*.h debian/tmp/usr/include/mapserver/
 
 override_dh_installchangelogs:
 	dh_installchangelogs HISTORY.TXT
