@@ -76,13 +76,10 @@ HARDENING_CONFIG= \
 	dh $@ --with python2,pkgkde_symbolshelper
 
 override_dh_auto_clean:
-	-$(RM) -rf build/
+	dh_clean
 
-	-$(RM) debian/.#* .#*
-
-	-$(RM) -rf $(CURDIR)/debian/files
-	-$(RM) -f $(CURDIR)/debian/*.debhelper.log
 	-$(RM) -f $(CURDIR)/debian/man/*.1
+	-$(RM) -rf build/
 
 override_dh_auto_configure:
 	mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Release $(HARDENING_CONFIG) $(COMMON_CONFIG)
