@@ -110,6 +110,7 @@ override_dh_auto_install:
 
 	-mkdir -p $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/
 	-mv -v $(CURDIR)/debian/tmp/usr/lib/libmapserver*.so* $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/
+	-sed -i "s/lib\/libmapserver/lib\/$(DEB_HOST_MULTIARCH)\/libmapserver/g" $(CURDIR)/debian/tmp/usr/share/*/cmake/*.cmake
 
 	# removing embedded rpath in binaries
 	-find $(CURDIR)/debian/tmp/usr/bin -type f -exec chrpath --delete {} \;

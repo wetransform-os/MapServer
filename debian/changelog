@@ -4,6 +4,7 @@ mapserver (6.4.0-2) UNRELEASED; urgency=low
     Required to build MapCache with MapServer support.
   * Use php5enmod and php5dismod instead of installing the ini directly.
     (closes: #667771)
+  * Add patch to export mapserver.cmake for external projects.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Thu, 19 Sep 2013 19:52:12 +0200
 

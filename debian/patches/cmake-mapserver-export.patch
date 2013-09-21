@@ -1,0 +1,17 @@
+Description: Export mapserver.cmake for outside projects.
+Author: Bas Couwenberg <sebastic@xs4all.nl>
+Last-Update: 2013-10-21
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -885,8 +885,9 @@ if(USE_SDE92)
+    INSTALL(TARGETS msplugin_sde92 DESTINATION lib)
+ endif(USE_SDE92)
+ 
+-INSTALL(TARGETS sortshp shptree shptreevis msencrypt legend scalebar tile4ms shptreetst shp2img mapserv mapserver RUNTIME DESTINATION bin LIBRARY DESTINATION lib)
++INSTALL(TARGETS sortshp shptree shptreevis msencrypt legend scalebar tile4ms shptreetst shp2img mapserv RUNTIME DESTINATION bin)
++INSTALL(TARGETS mapserver EXPORT mapserver LIBRARY DESTINATION lib)
+ if(BUILD_STATIC)
+    INSTALL(TARGETS mapserver_static DESTINATION lib)
+ endif(BUILD_STATIC)
+-
++INSTALL(EXPORT mapserver DESTINATION share/mapserver/cmake)
