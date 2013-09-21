@@ -86,9 +86,9 @@ Suggests: cgi-mapserver,
           ruby-mapscript
 Pre-Depends: ${misc:Pre-Depends}
 Breaks: libmapserver (<< 6.2.1-3~),
-        libmapserver-6.2.1
+        libmapserver-6.2.1 (<< 6.4.0-1~)
 Replaces: libmapserver (<< 6.2.1-3~),
-          libmapserver-6.2.1
+          libmapserver-6.2.1 (<< 6.4.0-1~)
 Description: Shared library for MapServer
  This package contains the shared library.
  .
@@ -130,9 +130,9 @@ Suggests: cgi-mapserver,
           python-mapscript,
           ruby-mapscript
 Breaks: libmapserver-dev (<< 6.2.1-3~),
-        libmapserver-6.2.1-dev
+        libmapserver-6.2.1-dev (<< 6.4.0-1~)
 Replaces: libmapserver-dev (<< 6.2.1-3~),
-          libmapserver-6.2.1-dev
+          libmapserver-6.2.1-dev (<< 6.4.0-1~)
 Description: Shared library development files for MapServer
  This package contains the development files for the shared library.
  .
@@ -281,14 +281,15 @@ Depends: ruby1.9.1,
          ${misc:Depends}
 Suggests: mapserver-bin,
           mapserver-doc
-Breaks: libmapscript-ruby,
-        libmapscript-ruby1.8
+Breaks: libmapscript-ruby (<< 6.4.0-1~),
+        libmapscript-ruby1.8 (<< 6.4.0-1~),
+        libmapscript-ruby1.9.1 (<< 6.4.0-1~)
 Provides: libmapscript-ruby,
           libmapscript-ruby1.8,
           libmapscript-ruby1.9.1
-Replaces: libmapscript-ruby,
-          libmapscript-ruby1.8,
-          libmapscript-ruby1.9.1
+Replaces: libmapscript-ruby (<< 6.4.0-1~),
+          libmapscript-ruby1.8 (<< 6.4.0-1~),
+          libmapscript-ruby1.9.1 (<< 6.4.0-1~)
 XB-Ruby-Versions: ruby1.9.1
 Description: MapServer library for Ruby
  Ruby MapScript provides MapServer functions for Ruby scripts.

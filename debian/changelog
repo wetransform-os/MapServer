@@ -5,6 +5,7 @@ mapserver (6.4.0-2) UNRELEASED; urgency=low
   * Use php5enmod and php5dismod instead of installing the ini directly.
     (closes: #667771)
   * Add patch to export mapserver.cmake for external projects.
+  * Add versioned Breaks/Replaces for transitional packages. (closes: #723979)
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Thu, 19 Sep 2013 19:52:12 +0200
 
