@@ -8,6 +8,7 @@ mapserver (6.4.0-2) unstable; urgency=low
   * Add versioned Breaks/Replaces for dev package.
   * Drop transitional packages and Breaks/Replaces for libmapserver.
     (closes: #723979)
+  * Drop unused lintian-overrides for php5-mapscript.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Thu, 19 Sep 2013 19:52:12 +0200
 
