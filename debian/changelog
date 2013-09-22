@@ -1,3 +1,9 @@
+mapserver (6.4.0-3) UNRELEASED; urgency=low
+
+  * Improve patch to export mapserver.cmake for external projects.
+
+ -- Bas Couwenberg <sebastic@xs4all.nl>  Sun, 22 Sep 2013 22:27:32 +0200
+
 mapserver (6.4.0-2) unstable; urgency=low
 
   * Also include mapserver-config.h and mapserver-version.h in dev package.
