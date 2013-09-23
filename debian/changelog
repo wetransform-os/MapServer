@@ -9,6 +9,8 @@ mapserver (6.4.0-2) unstable; urgency=low
   * Drop transitional packages and Breaks/Replaces for libmapserver.
     (closes: #723979)
   * Drop unused lintian-overrides for php5-mapscript.
+  * Build-Depend on libperl-dev so cmake can find PerlLibs.
+    (closes: #724259)
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Thu, 19 Sep 2013 19:52:12 +0200
 
