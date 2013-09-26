@@ -1,3 +1,16 @@
+mapserver (6.4.0-3) UNRELEASED; urgency=low
+
+  * Drop obsolete Build-Depends:
+    - sharutils (AGG no longer built separately)
+    - libsdl1.2-dev (AGG examples no longer built)
+    - libogdi3.2-dev (no longer used)
+    - libpam0g-dev (no longer used),
+    - libreadline-dev (no longer used),
+    - libedit-dev (no longer used),
+    - libepsilon-dev (no longer used),
+
+ -- Bas Couwenberg <sebastic@xs4all.nl>  Thu, 26 Sep 2013 16:16:20 +0200
+
 mapserver (6.4.0-2) unstable; urgency=low
 
   * Also include mapserver-config.h and mapserver-version.h in dev package.
