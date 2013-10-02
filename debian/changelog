@@ -11,6 +11,7 @@ mapserver (6.4.0-3) UNRELEASED; urgency=low
   * Update debian watch file:
     - Drop uupdate action
     - Handle common mistakes
+  * Remove debconf translations, debconf template no longer used.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Thu, 26 Sep 2013 16:16:20 +0200
 
