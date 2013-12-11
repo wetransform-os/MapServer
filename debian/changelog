@@ -1,5 +1,6 @@
-mapserver (6.4.0-3) UNRELEASED; urgency=low
+mapserver (6.4.0-3) unstable; urgency=low
 
+  [ Bas Couwenberg ]
   * Drop obsolete Build-Depends:
     - sharutils (AGG no longer built separately)
     - libsdl1.2-dev (AGG examples no longer built)
@@ -13,7 +14,10 @@ mapserver (6.4.0-3) UNRELEASED; urgency=low
     - Handle common mistakes
   * Remove debconf translations, debconf template no longer used.
 
- -- Bas Couwenberg <sebastic@xs4all.nl>  Thu, 26 Sep 2013 16:16:20 +0200
+  [ Francesco Paolo Lovergine ]
+  * Now build-dep on (versioned) libgdal-dev instead of (obsolete) libgdal1-dev. 
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Wed, 11 Dec 2013 14:42:31 +0100
 
 mapserver (6.4.0-2) unstable; urgency=low
 
