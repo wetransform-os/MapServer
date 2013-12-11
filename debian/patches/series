@@ -3,3 +3,4 @@ ruby-shebang.patch
 perl-mapscript-install.patch
 ruby-mapscript-install.patch
 cmake-mapserver-export.patch
+freetype2-include-dir.patch

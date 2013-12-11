@@ -16,6 +16,9 @@ mapserver (6.4.0-3) unstable; urgency=low
 
   [ Francesco Paolo Lovergine ]
   * Now build-dep on (versioned) libgdal-dev instead of (obsolete) libgdal1-dev. 
+  * Added a new patch freetype2-include-dir.patch to fix problem in
+    determining the correct FreeType2 include directory (why is it not using
+    freetype-config?).
 
  -- Francesco Paolo Lovergine <frankie@debian.org>  Wed, 11 Dec 2013 14:42:31 +0100
 
