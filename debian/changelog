@@ -1,3 +1,9 @@
+mapserver (6.4.0-4) UNRELEASED; urgency=low
+
+  * Bump Standards-Version to 3.9.5, no changes required.
+
+ -- Bas Couwenberg <sebastic@xs4all.nl>  Sat, 14 Dec 2013 18:05:28 +0100
+
 mapserver (6.4.0-3) unstable; urgency=low
 
   [ Bas Couwenberg ]
