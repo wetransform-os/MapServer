@@ -3,7 +3,7 @@ Author: Bas Couwenberg <sebastic@xs4all.nl>
 Last-Update: 2013-10-21
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -31,6 +31,24 @@ if (APPLE)
+@@ -37,6 +37,24 @@ if (APPLE)
    set(CMAKE_FIND_FRAMEWORK "LAST")
  endif (APPLE)
  
@@ -28,7 +28,7 @@ Last-Update: 2013-10-21
  
  macro (ms_link_libraries)
    target_link_libraries(mapserver ${ARGV})
-@@ -198,11 +216,20 @@ mapgeomtransform.c mapogroutput.c mapsde
+@@ -230,11 +248,20 @@ mapgeomtransform.c mapogroutput.c mapsde
  mapgeomutil.cpp mapkmlrenderer.cpp
  mapogr.cpp mapcontour.c mapsmoothing.c ${REGEX_SOURCES})
  
@@ -50,7 +50,7 @@ Last-Update: 2013-10-21
  if(BUILD_STATIC)
    add_library(mapserver_static STATIC ${mapserver_SOURCES} ${agg_SOURCES})
    set_target_properties( mapserver_static PROPERTIES
-@@ -244,6 +271,7 @@ find_package(PNG)
+@@ -276,6 +303,7 @@ find_package(PNG)
  if(PNG_FOUND)
    include_directories(${PNG_INCLUDE_DIR})
    ms_link_libraries( ${PNG_LIBRARIES})
@@ -58,7 +58,7 @@ Last-Update: 2013-10-21
    set(USE_PNG 1)
  else(PNG_FOUND)
    report_mandatory_not_found(PNG)
-@@ -253,6 +281,7 @@ find_package(JPEG)
+@@ -285,6 +313,7 @@ find_package(JPEG)
  if(JPEG_FOUND)
    include_directories(${JPEG_INCLUDE_DIR})
    ms_link_libraries( ${JPEG_LIBRARY})
@@ -66,7 +66,7 @@ Last-Update: 2013-10-21
    set(USE_JPEG 1)
  else(JPEG_FOUND)
    report_mandatory_not_found(JPEG)
-@@ -264,6 +293,7 @@ if(NOT FREETYPE_FOUND)
+@@ -296,6 +325,7 @@ if(NOT FREETYPE_FOUND)
  endif(NOT FREETYPE_FOUND)
  include_directories(${FREETYPE_INCLUDE_DIR})
  ms_link_libraries( ${FREETYPE_LIBRARY})
@@ -74,7 +74,7 @@ Last-Update: 2013-10-21
  
  
  if(WITH_PROJ)
-@@ -273,6 +303,7 @@ if(WITH_PROJ)
+@@ -305,6 +335,7 @@ if(WITH_PROJ)
   else(NOT PROJ_FOUND)
      include_directories(${PROJ_INCLUDE_DIR})
      ms_link_libraries( ${PROJ_LIBRARY})
@@ -82,7 +82,7 @@ Last-Update: 2013-10-21
      set (USE_PROJ 1)
   endif(NOT PROJ_FOUND)
  endif (WITH_PROJ)
-@@ -293,6 +324,7 @@ if(WITH_GD)
+@@ -325,6 +356,7 @@ if(WITH_GD)
   else(NOT GD_FOUND)
      include_directories(${GD_INCLUDE_DIR})
      ms_link_libraries( ${GD_LIBRARY})
@@ -90,7 +90,7 @@ Last-Update: 2013-10-21
      set (USE_GD 1)
      if(GD_SUPPORTS_PNG)
        set(USE_GD_PNG 1)
-@@ -316,6 +348,7 @@ if(WITH_FRIBIDI)
+@@ -348,6 +380,7 @@ if(WITH_FRIBIDI)
   else(NOT FRIBIDI_FOUND)
      include_directories(${FRIBIDI_INCLUDE_DIR})
      ms_link_libraries( ${FRIBIDI_LIBRARY})
@@ -98,7 +98,7 @@ Last-Update: 2013-10-21
      set (USE_FRIBIDI 1)
      if(FRIBIDI_LEGACY)
        message(WARNING "Old Fribidi found, upgrade recommended")
-@@ -328,6 +361,7 @@ if(WITH_ICONV)
+@@ -360,6 +393,7 @@ if(WITH_ICONV)
    if(ICONV_FOUND)
      include_directories(${ICONV_INCLUDE_DIR})
      ms_link_libraries( ${ICONV_LIBRARY})
@@ -106,7 +106,7 @@ Last-Update: 2013-10-21
      set (USE_ICONV 1)
    else(ICONV_FOUND)
      report_optional_not_found(ICONV)
-@@ -344,6 +378,7 @@ if(WITH_CAIRO)
+@@ -376,6 +410,7 @@ if(WITH_CAIRO)
    if(CAIRO_FOUND)
      include_directories(${CAIRO_INCLUDE_DIRS})
      ms_link_libraries( ${CAIRO_LIBRARY})
@@ -114,7 +114,7 @@ Last-Update: 2013-10-21
      set (USE_CAIRO 1)
    else(CAIRO_FOUND)
      report_optional_not_found(CAIRO)
-@@ -355,6 +390,7 @@ if(WITH_MYSQL)
+@@ -387,6 +422,7 @@ if(WITH_MYSQL)
    if(MYSQL_FOUND)
      include_directories(${MYSQL_INCLUDE_DIR})
      ms_link_libraries( ${MYSQL_LIBRARY})
@@ -122,7 +122,7 @@ Last-Update: 2013-10-21
      set (USE_MYSQL 1)
    else(MYSQL_FOUND)
      report_optional_not_found(MYSQL)
-@@ -372,6 +408,7 @@ if(WITH_ORACLESPATIAL OR WITH_ORACLE_PLU
+@@ -404,6 +440,7 @@ if(WITH_ORACLESPATIAL OR WITH_ORACLE_PLU
    find_package(Oracle)
    if(ORACLE_FOUND)
      include_directories(${ORACLE_INCLUDE_DIR})
@@ -130,7 +130,7 @@ Last-Update: 2013-10-21
    else(ORACLE_FOUND)
      report_optional_not_found(ORACLESPATIAL)
      #FIXME: error message here could be misleading, only states ORACLESPATIAL whereas
-@@ -398,6 +435,7 @@ if(WITH_MSSQL2008)
+@@ -430,6 +467,7 @@ if(WITH_MSSQL2008)
  	add_library(msplugin_mssql2008 MODULE mapmssql2008.c)
  	target_link_libraries(msplugin_mssql2008 ${ODBC_LIBRARY} ${MAPSERVER_LIBMAPSERVER})
      set_target_properties(msplugin_mssql2008 PROPERTIES COMPILE_FLAGS "-DUSE_MSSQL2008_PLUGIN -DUSE_MSSQL2008")
@@ -138,7 +138,7 @@ Last-Update: 2013-10-21
  	set (USE_MSSQL2008 1)
    else(ODBC_FOUND)
      report_optional_not_found(ODBC)
-@@ -419,6 +457,7 @@ if(WITH_SDE_PLUGIN)
+@@ -451,6 +489,7 @@ if(WITH_SDE_PLUGIN)
        target_link_libraries(msplugin_sde92 ${SDE_LIBRARY_DIR}/pe.lib ${SDE_LIBRARY_DIR}/sg.lib ${SDE_LIBRARY_DIR}/sde.lib ${MAPSERVER_LIBMAPSERVER})
        set_target_properties(msplugin_sde92 PROPERTIES COMPILE_FLAGS "-DUSE_SDE")
      endif(SDE_VERSION STREQUAL "91")
@@ -146,7 +146,7 @@ Last-Update: 2013-10-21
      set(USE_SDE_PLUGIN 1)
    else(SDE_INCLUDE_DIR AND SDE_LIBRARY_DIR)
       MESSAGE( SEND_ERROR "Must specify SDE_INCLUDE_DIR and SDE_LIBRARY_DIR for WITH_SDE_PLUGIN")
-@@ -430,6 +469,7 @@ if(WITH_SDE)
+@@ -462,6 +501,7 @@ if(WITH_SDE)
    if(SDE_FOUND)
      include_directories(${SDE_INCLUDE_DIRS})
      ms_link_libraries(${SDE_LIBRARIES})
@@ -154,7 +154,7 @@ Last-Update: 2013-10-21
      set (USE_SDE 1)
      if(CMAKE_SIZEOF_VOID_P EQUAL 8)
        set(SDE64 1)
-@@ -445,6 +485,7 @@ if(WITH_FCGI)
+@@ -477,6 +517,7 @@ if(WITH_FCGI)
    if(FCGI_FOUND)
      include_directories(${FCGI_INCLUDE_DIR})
      target_link_libraries(mapserv ${FCGI_LIBRARY})
@@ -162,7 +162,7 @@ Last-Update: 2013-10-21
      set (USE_FASTCGI 1)
    else(FCGI_FOUND)
      report_optional_not_found(FCGI)
-@@ -456,6 +497,7 @@ if(WITH_GEOS)
+@@ -488,6 +529,7 @@ if(WITH_GEOS)
    if(GEOS_FOUND)
      include_directories(${GEOS_INCLUDE_DIR})
      ms_link_libraries( ${GEOS_LIBRARY})
@@ -170,7 +170,7 @@ Last-Update: 2013-10-21
      set (USE_GEOS 1)
    else(GEOS_FOUND)
      report_optional_not_found(GEOS)
-@@ -475,6 +517,7 @@ if(WITH_POSTGIS)
+@@ -507,6 +549,7 @@ if(WITH_POSTGIS)
      include_directories(${POSTGRESQL_INCLUDE_DIR})
      ms_link_libraries( ${POSTGRESQL_LIBRARY})
      CHECK_LIBRARY_EXISTS(pq "PQserverVersion" POSTGRESQL_LIBRARY POSTGIS_HAS_SERVER_VERSION)
@@ -178,7 +178,7 @@ Last-Update: 2013-10-21
      set (USE_POSTGIS 1)
    else(POSTGRESQL_FOUND)
      report_optional_not_found(POSTGIS)
-@@ -486,6 +529,7 @@ if(WITH_GDAL)
+@@ -518,6 +561,7 @@ if(WITH_GDAL)
    if(GDAL_FOUND)
      include_directories(${GDAL_INCLUDE_DIR})
      ms_link_libraries( ${GDAL_LIBRARY})
@@ -186,7 +186,7 @@ Last-Update: 2013-10-21
      set (USE_GDAL 1)
    else(GDAL_FOUND)
      report_optional_not_found(GDAL)
-@@ -500,6 +544,7 @@ if(WITH_SVGCAIRO)
+@@ -532,6 +576,7 @@ if(WITH_SVGCAIRO)
    if(SVGCAIRO_FOUND)
      include_directories(${SVGCAIRO_INCLUDE_DIR})
      ms_link_libraries( ${SVG_LIBRARY} ${SVGCAIRO_LIBRARY})
@@ -194,7 +194,7 @@ Last-Update: 2013-10-21
      set (USE_SVG_CAIRO 1)
    else(SVGCAIRO_FOUND)
      report_optional_not_found(SVGCAIRO)
-@@ -514,8 +559,10 @@ if(WITH_RSVG)
+@@ -546,8 +591,10 @@ if(WITH_RSVG)
    if(RSVG_FOUND AND GOBJECT_FOUND)
      include_directories(${RSVG_INCLUDE_DIRS})
      ms_link_libraries( ${RSVG_LIBRARY} )
@@ -205,7 +205,7 @@ Last-Update: 2013-10-21
      set (USE_RSVG 1)
    else(RSVG_FOUND AND GOBJECT_FOUND)
      report_optional_not_found(RSVG)
-@@ -530,6 +577,7 @@ if(WITH_OGR)
+@@ -562,6 +609,7 @@ if(WITH_OGR)
      if(GDAL_FOUND)
        include_directories(${GDAL_INCLUDE_DIR})
        ms_link_libraries( ${GDAL_LIBRARY})
@@ -213,7 +213,7 @@ Last-Update: 2013-10-21
        set (USE_OGR 1)
      else(GDAL_FOUND)
        message(SEND_ERROR "GDAL library could not be found and is needed for OGR support.
-@@ -549,6 +597,7 @@ if(WITH_CURL)
+@@ -581,6 +629,7 @@ if(WITH_CURL)
     if(CURL_FOUND)
       include_directories(${CURL_INCLUDE_DIR})
       ms_link_libraries( ${CURL_LIBRARY})
@@ -221,7 +221,7 @@ Last-Update: 2013-10-21
       set(USE_CURL 1)
     else(CURL_FOUND)
       report_optional_not_found(CURL)
-@@ -687,6 +736,7 @@ if(WITH_XMLMAPFILE)
+@@ -719,6 +768,7 @@ if(WITH_XMLMAPFILE)
      endif()
      include_directories(${LIBXSLT_INCLUDE_DIR})
      ms_link_libraries( ${LIBXSLT_LIBRARY} ${LIBXSLT_EXSLT_LIBRARY})
@@ -229,7 +229,7 @@ Last-Update: 2013-10-21
      set(USE_XMLMAPFILE 1)
    else(LIBXSLT_FOUND)
      message(SEND_ERROR "Xml Mapfile support requires XSLT support which was not found.
-@@ -702,6 +752,7 @@ if(WITH_GIF)
+@@ -734,6 +784,7 @@ if(WITH_GIF)
    if(GIF_FOUND)
      include_directories(${GIF_INCLUDE_DIR})
      ms_link_libraries( ${GIF_LIBRARY})
@@ -237,7 +237,7 @@ Last-Update: 2013-10-21
      set(USE_GIF 1)
    else(GIF_FOUND)
      report_optional_not_found(GIF)
-@@ -713,6 +764,7 @@ if(WITH_EXEMPI)
+@@ -745,6 +796,7 @@ if(WITH_EXEMPI)
    if(LIBEXEMPI_FOUND)
      include_directories(${LIBEXEMPI_INCLUDE_DIR})
      ms_link_libraries( ${LIBEXEMPI_LIBRARY})
@@ -245,7 +245,7 @@ Last-Update: 2013-10-21
      set(USE_EXEMPI 1)
    else(LIBEXEMPI_FOUND)
      report_optional_not_found(EXEMPI)
-@@ -773,7 +825,9 @@ configure_file (
+@@ -805,7 +857,9 @@ configure_file (
    "${PROJECT_BINARY_DIR}/mapserver-version.h"
    )
  
@@ -256,30 +256,30 @@ Last-Update: 2013-10-21
  
  macro(status_optional_component component enabled libpath)
    if("${enabled}" EQUAL "1")
-@@ -870,23 +924,68 @@ endif(WIN32)
+@@ -903,23 +957,68 @@ endif(WIN32)
  
  #INSTALL(FILES mapserver-api.h ${PROJECT_BINARY_DIR}/mapserver-version.h DESTINATION include)
  if(USE_ORACLE_PLUGIN)
--   INSTALL(TARGETS msplugin_oracle DESTINATION lib)
+-   INSTALL(TARGETS msplugin_oracle DESTINATION ${CMAKE_INSTALL_LIBDIR})
 +   INSTALL(TARGETS msplugin_oracle DESTINATION ${INSTALL_LIB_DIR})
  endif(USE_ORACLE_PLUGIN)
  
  if(USE_MSSQL2008)
--   INSTALL(TARGETS msplugin_mssql2008 DESTINATION lib)
+-   INSTALL(TARGETS msplugin_mssql2008 DESTINATION ${CMAKE_INSTALL_LIBDIR})
 +   INSTALL(TARGETS msplugin_mssql2008 DESTINATION ${INSTALL_LIB_DIR})
  endif(USE_MSSQL2008)
  
  if(USE_SDE91)
--   INSTALL(TARGETS msplugin_sde91 DESTINATION lib)
+-   INSTALL(TARGETS msplugin_sde91 DESTINATION ${CMAKE_INSTALL_LIBDIR})
 +   INSTALL(TARGETS msplugin_sde91 DESTINATION ${INSTALL_LIB_DIR})
  endif(USE_SDE91)
  
  if(USE_SDE92)
--   INSTALL(TARGETS msplugin_sde92 DESTINATION lib)
+-   INSTALL(TARGETS msplugin_sde92 DESTINATION ${CMAKE_INSTALL_LIBDIR})
 +   INSTALL(TARGETS msplugin_sde92 DESTINATION ${INSTALL_LIB_DIR})
  endif(USE_SDE92)
  
--INSTALL(TARGETS sortshp shptree shptreevis msencrypt legend scalebar tile4ms shptreetst shp2img mapserv mapserver RUNTIME DESTINATION bin LIBRARY DESTINATION lib)
+-INSTALL(TARGETS sortshp shptree shptreevis msencrypt legend scalebar tile4ms shptreetst shp2img mapserv mapserver RUNTIME DESTINATION bin LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 +INSTALL(TARGETS sortshp shptree shptreevis msencrypt legend scalebar tile4ms shptreetst shp2img mapserv
 +        RUNTIME DESTINATION ${INSTALL_BIN_DIR} COMPONENT bin
 +)
@@ -289,7 +289,7 @@ Last-Update: 2013-10-21
 +        PUBLIC_HEADER DESTINATION ${INSTALL_INCLUDE_DIR}/mapserver COMPONENT dev
 +)
  if(BUILD_STATIC)
--   INSTALL(TARGETS mapserver_static DESTINATION lib)
+-   INSTALL(TARGETS mapserver_static DESTINATION ${CMAKE_INSTALL_LIBDIR})
 +   INSTALL(TARGETS mapserver_static DESTINATION ${INSTALL_LIB_DIR})
  endif(BUILD_STATIC)
  

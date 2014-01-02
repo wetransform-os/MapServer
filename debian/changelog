@@ -2,6 +2,7 @@ mapserver (6.4.1-1) UNRELEASED; urgency=low
 
   * New upstream release, fixes a vulnerability leading to potential leakage of
     information when using TIME filtering on postgis layers.
+  * Refresh patches.
   * Bump Standards-Version to 3.9.5, no changes required.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Thu, 02 Jan 2014 16:08:30 +0100
