@@ -7,6 +7,7 @@ mapserver (6.4.1-1) UNRELEASED; urgency=low
   * Bump Standards-Version to 3.9.5, no changes required.
   * Add lintian override for debian-watch-may-check-gpg-signature,
     upstream doesn't provide signatures for verification.
+  * Update copyright file.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Thu, 02 Jan 2014 16:08:30 +0100
 
