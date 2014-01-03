@@ -1,4 +1,4 @@
-# SymbolsHelper-Confirmed: 6.4.0 amd64 armel armhf ia64 kfreebsd-amd64 kfreebsd-i386 mips mipsel powerpc s390 s390x sparc
+# SymbolsHelper-Confirmed: 6.4.1 amd64 i386
 libmapserver.so.1 #PACKAGE# #MINVER#
  BuildExpressionTree@Base 6.2.1
  CleanVSIDir@Base 6.2.1
@@ -628,7 +628,7 @@ libmapserver.so.1 #PACKAGE# #MINVER#
 #MISSING: 6.4.0# (optional=templinst)_ZSt16__insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN10ClipperLib6OutRecESt6vectorIS4_SaIS4_EEEEPFbS4_S4_EEvT_SC_T0_@Base 6.2.1
  (optional=templinst|arch=armel armhf i386 kfreebsd-i386 mips mipsel)_ZSt16__introsort_loopIN9__gnu_cxx17__normal_iteratorIPPN10ClipperLib6OutRecESt6vectorIS4_SaIS4_EEEEiPFbS4_S4_EEvT_SC_T0_T1_@Base 6.2.1
  (optional=templinst|arch=amd64 kfreebsd-amd64)_ZSt16__introsort_loopIN9__gnu_cxx17__normal_iteratorIPPN10ClipperLib6OutRecESt6vectorIS4_SaIS4_EEEElPFbS4_S4_EEvT_SC_T0_T1_@Base 6.2.1
- (optional=templinst|arch=!powerpc !s390 !s390x)_ZSt19__move_median_firstIN9__gnu_cxx17__normal_iteratorIPPN10ClipperLib6OutRecESt6vectorIS4_SaIS4_EEEEPFbS4_S4_EEvT_SC_SC_T0_@Base 6.2.1
+#MISSING: 6.4.1# (optional=templinst|arch=!powerpc !s390 !s390x)_ZSt19__move_median_firstIN9__gnu_cxx17__normal_iteratorIPPN10ClipperLib6OutRecESt6vectorIS4_SaIS4_EEEEPFbS4_S4_EEvT_SC_SC_T0_@Base 6.2.1
 #MISSING: 6.4.0# (optional=templinst)_ZSt25__unguarded_linear_insertIN9__gnu_cxx17__normal_iteratorIPPN10ClipperLib6OutRecESt6vectorIS4_SaIS4_EEEEPFbS4_S4_EEvT_T0_@Base 6.2.1
  (optional=templinst|arch=ia64 powerpc s390 s390x sparc)_ZSt8_DestroyIPSt6vectorIN10ClipperLib8IntPointESaIS2_EEEvT_S6_@Base 6.4.0
  _ZTI11KmlRenderer@Base 6.4.0

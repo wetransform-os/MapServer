@@ -8,6 +8,7 @@ mapserver (6.4.1-1) UNRELEASED; urgency=low
   * Add lintian override for debian-watch-may-check-gpg-signature,
     upstream doesn't provide signatures for verification.
   * Update copyright file.
+  * Update symbols file.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Thu, 02 Jan 2014 16:08:30 +0100
 
