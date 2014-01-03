@@ -1,4 +1,4 @@
-mapserver (6.4.1-1) UNRELEASED; urgency=low
+mapserver (6.4.1-1) unstable; urgency=low
 
   * New upstream release, fixes a vulnerability leading to potential leakage of
     information when using TIME filtering on postgis layers.
@@ -10,7 +10,7 @@ mapserver (6.4.1-1) UNRELEASED; urgency=low
   * Update copyright file.
   * Update symbols file.
 
- -- Bas Couwenberg <sebastic@xs4all.nl>  Thu, 02 Jan 2014 16:08:30 +0100
+ -- Bas Couwenberg <sebastic@xs4all.nl>  Fri, 03 Jan 2014 02:28:02 +0100
 
 mapserver (6.4.0-3) unstable; urgency=low
 
