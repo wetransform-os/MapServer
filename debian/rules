@@ -26,9 +26,12 @@ MANPAGES:=$(wildcard debian/man/*.*.xml)
 
 MS_VERSION=$(shell dpkg-parsechangelog | sed -ne 's/^Version: \(.*\)-.*/\1/p')
 
-MAKE_VERBOSE=1
-
-COMMON_CONFIG=	-DCMAKE_INSTALL_PREFIX=/usr \
+CMAKE_OPTS:= \
+		-DCMAKE_EXE_LINKER_FLAGS="$(LDFLAGS)" \
+		-DCMAKE_MODULE_LINKER_FLAGS="$(LDFLAGS)" \
+		-DCMAKE_SHARED_LINKER_FLAGS="$(LDFLAGS)" \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_VERBOSE_MAKEFILE=1 \
 		-DWITH_PROJ=1 \
 		-DWITH_KML=1 \
 		-DWITH_SOS=1 \
@@ -67,22 +70,18 @@ COMMON_CONFIG=	-DCMAKE_INSTALL_PREFIX=/usr \
 		-DWITH_EXEMPI=0 \
 		-DWITH_XMLMAPFILE=0
 
-HARDENING_CONFIG= \
-		-DCMAKE_EXE_LINKER_FLAGS="$(LDFLAGS)" \
-		-DCMAKE_MODULE_LINKER_FLAGS="$(LDFLAGS)" \
-		-DCMAKE_SHARED_LINKER_FLAGS="$(LDFLAGS)"
-
 %:
-	dh $@ --with python2,pkgkde_symbolshelper
+	dh $@ --with python2,pkgkde_symbolshelper \
+	      --buildsystem cmake
 
 override_dh_auto_clean:
 	dh_clean
 
 	-$(RM) -f $(CURDIR)/debian/man/*.1
-	-$(RM) -rf build/
+	-$(RM) -rf obj-*/
 
 override_dh_auto_configure:
-	mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Release $(HARDENING_CONFIG) $(COMMON_CONFIG)
+	dh_auto_configure -- $(CMAKE_OPTS)
 
 override_dh_auto_build:
 	# Create man pages from DocBook XML
@@ -91,13 +90,13 @@ override_dh_auto_build:
 	  mv `basename $$x | sed 's/.xml$$//'` `dirname $$x` ; \
 	done
 
-	$(MAKE) -C build VERBOSE=$(MAKE_VERBOSE)
+	dh_auto_build
 
 override_dh_auto_test:
 	# msautotest submodule is not used
 
 override_dh_auto_install:
-	$(MAKE) -C build install DESTDIR=$(CURDIR)/debian/tmp VERBOSE=$(MAKE_VERBOSE)
+	dh_auto_install
 
 	-mkdir -p $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/
 	-mv -v $(CURDIR)/debian/tmp/usr/lib/libmapserver*.so* $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/
