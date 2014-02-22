@@ -3,6 +3,8 @@ mapserver (6.4.1-2) UNRELEASED; urgency=low
   * Add gpb.conf to use pristine-tar by default.
   * Use dh commands instead of CMake directly.
   * Enable parallel builds.
+  * Drop lintian override for debian-watch-may-check-gpg-signature,
+    shouldn't override pedantic tags.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Sat, 22 Feb 2014 16:26:42 +0100
 
