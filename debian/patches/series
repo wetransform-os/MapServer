@@ -3,3 +3,4 @@ ruby-shebang.patch
 perl-mapscript-install.patch
 ruby-mapscript-install.patch
 cmake-mapserver-export.patch
+cmake-ruby2.patch
