@@ -1,3 +1,11 @@
+mapserver (6.4.1-3) UNRELEASED; urgency=low
+
+  * Also build mapscript for Java.
+    Thanks Ezequiel Lara Gómez for the patch.
+    (closes: #740351)
+
+ -- Bas Couwenberg <sebastic@xs4all.nl>  Fri, 28 Feb 2014 20:38:22 +0100
+
 mapserver (6.4.1-2) unstable; urgency=low
 
   * Add gpb.conf to use pristine-tar by default.

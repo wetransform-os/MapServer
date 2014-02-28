@@ -29,6 +29,8 @@ Build-Depends: debhelper (>= 9),
                ruby,
                ruby-all-dev,
                gem2deb,
+               default-jdk,
+               ant,
                libfcgi-dev,
                libxml2-dev,
                libxslt1-dev,
@@ -249,3 +251,17 @@ Description: MapServer library for Ruby
  .
  MapServer is a CGI-based framework for Internet map services which
  supports Open Geospatial Consortium (OGC) standards.
+
+Package: libmapscript-java
+Architecture: any
+Section: java
+Depends: ${shlibs:Depends},
+         ${misc:Depends}
+Suggests: mapserver-bin,
+          mapserver-doc
+Description: Java library for MapServer
+ Java MapScript provides MapServer functions for Java applications.
+ .
+ MapServer is a CGI-based framework for Internet map services which
+ supports Open Geospatial Consortium (OGC) standards.
+
