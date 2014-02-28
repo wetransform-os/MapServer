@@ -10,6 +10,7 @@ Description: Update FindRuby.cmake module to support Ruby 2.0 and 2.1.
  .
 Author: Bas Couwenberg <sebastic@xs4all.nl>
 Bug-Debian: https://bugs.debian.org/739773
+Bug: https://github.com/Kitware/CMake/pull/92
 --- /dev/null
 +++ b/cmake/FindRuby.cmake
 @@ -0,0 +1,318 @@
