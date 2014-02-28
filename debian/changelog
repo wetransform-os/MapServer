@@ -6,6 +6,7 @@ mapserver (6.4.1-2) UNRELEASED; urgency=low
   * Drop lintian override for debian-watch-may-check-gpg-signature,
     shouldn't override pedantic tags.
   * Add patched FindRuby.cmake to also support Ruby 2.0 and 2.1.
+  * Build mapscript extension for all supported Ruby versions.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Sat, 22 Feb 2014 16:26:42 +0100
 

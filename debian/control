@@ -26,8 +26,9 @@ Build-Depends: debhelper (>= 9),
                libperl-dev,
                python-all (>= 2.6.6-3~),
                python-all-dev (>= 2.6.6-3~),
-               ruby1.9.1,
-               ruby1.9.1-dev,
+               ruby,
+               ruby-all-dev,
+               gem2deb,
                libfcgi-dev,
                libxml2-dev,
                libxslt1-dev,
@@ -40,7 +41,7 @@ Build-Depends: debhelper (>= 9),
                docbook-xml,
                xsltproc
 Build-Conflicts: libcurl3-openssl-dev
-XS-Ruby-Versions: ruby1.9.1
+XS-Ruby-Versions: all
 Standards-Version: 3.9.5
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-grass/mapserver.git
 Vcs-Git: git://anonscm.debian.org/pkg-grass/mapserver.git
@@ -226,7 +227,7 @@ Description: Transitional package from libmapscript-ruby1.9.1 to ruby-mapscript
 Package: ruby-mapscript
 Architecture: any
 Section: ruby
-Depends: ruby1.9.1,
+Depends: ruby | ruby-interpreter,
          ${shlibs:Depends},
          ${misc:Depends}
 Suggests: mapserver-bin,
@@ -240,7 +241,7 @@ Provides: libmapscript-ruby,
 Replaces: libmapscript-ruby (<< 6.4.0-1~),
           libmapscript-ruby1.8 (<< 6.4.0-1~),
           libmapscript-ruby1.9.1 (<< 6.4.0-1~)
-XB-Ruby-Versions: ruby1.9.1
+XB-Ruby-Versions: all
 Description: MapServer library for Ruby
  Ruby MapScript provides MapServer functions for Ruby scripts.
  .

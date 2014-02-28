@@ -1,5 +1,5 @@
 hardening.patch
-ruby-shebang.patch
+#ruby-shebang.patch
 perl-mapscript-install.patch
 ruby-mapscript-install.patch
 cmake-mapserver-export.patch
