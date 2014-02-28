@@ -7,6 +7,7 @@ mapserver (6.4.1-2) unstable; urgency=low
     shouldn't override pedantic tags.
   * Add patched FindRuby.cmake to also support Ruby 2.0 and 2.1.
   * Build mapscript extension for all supported Ruby versions.
+    (closes: #739773)
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Fri, 28 Feb 2014 12:28:23 +0100
 
