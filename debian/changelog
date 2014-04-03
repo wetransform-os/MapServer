@@ -4,6 +4,8 @@ mapserver (6.4.1-3) UNRELEASED; urgency=low
     Thanks Ezequiel Lara Gómez for the patch.
     (closes: #740351)
   * Don't install ruby mapscript for Ruby 1.9, only built for 2.x now.
+  * Drop patched FindRuby.cmake, build depend on the cmake version
+    containing the updated module.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Fri, 28 Feb 2014 20:38:22 +0100
 
