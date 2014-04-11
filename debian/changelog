@@ -1,4 +1,4 @@
-mapserver (6.4.1-3) unstable; urgency=low
+mapserver (6.4.1-3) unstable; urgency=medium
 
   * Also build mapscript for Java.
     Thanks Ezequiel Lara Gómez for the patch.
