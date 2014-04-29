@@ -1,9 +1,9 @@
-mapserver (6.4.1-4) UNRELEASED; urgency=low
+mapserver (6.4.1-4) unstable; urgency=medium
 
   * Add patch to support building mapscript for PHP 5.6.
     (closes: #745600)
 
- -- Bas Couwenberg <sebastic@xs4all.nl>  Sat, 26 Apr 2014 13:29:33 +0200
+ -- Bas Couwenberg <sebastic@xs4all.nl>  Wed, 30 Apr 2014 01:34:47 +0200
 
 mapserver (6.4.1-3) unstable; urgency=medium
 
