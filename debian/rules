@@ -28,6 +28,7 @@ MANPAGES:=$(wildcard debian/man/*.*.xml)
 MS_VERSION=$(shell dpkg-parsechangelog | sed -ne 's/^Version: \(.*\)-.*/\1/p')
 
 CMAKE_OPTS:= \
+		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 		-DCMAKE_EXE_LINKER_FLAGS="$(LDFLAGS)" \
 		-DCMAKE_MODULE_LINKER_FLAGS="$(LDFLAGS)" \
 		-DCMAKE_SHARED_LINKER_FLAGS="$(LDFLAGS)" \
@@ -69,6 +70,9 @@ CMAKE_OPTS:= \
 	dh $@ --with python2,pkgkde_symbolshelper \
 	      --parallel \
 	      --buildsystem cmake
+
+override_dh_strip:
+	dh_strip --dbg-package=libmapserver1-dbg
 
 override_dh_auto_clean:
 	dh_clean

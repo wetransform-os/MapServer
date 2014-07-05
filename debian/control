@@ -70,6 +70,20 @@ Description: Shared library for MapServer
  functionality in MapScript is provided by the suggested mapscript
  library packages.
 
+Package: libmapserver1-dbg
+Architecture: any
+Section: debug
+Priority: extra
+Depends: ${misc:Depends},
+         libmapserver1 (= ${binary:Version})
+Description: Debugging symbols for libmapserver1
+ MapServer is a CGI-based framework for Internet map services which
+ supports Open Geospatial Consortium (OGC) standards. Scripting
+ functionality in MapScript is provided by the suggested mapscript
+ library packages.
+ .
+ This package contains the debugging symbols for libmapserver.
+
 Package: libmapserver1-dev
 Architecture: any
 Section: libdevel

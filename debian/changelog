@@ -1,3 +1,10 @@
+mapserver (6.4.1-5) UNRELEASED; urgency=medium
+
+  * Add debug package for libmapserver. Thanks to Frederic Junod for the patch.
+    (closes: #753586)
+
+ -- Bas Couwenberg <sebastic@xs4all.nl>  Sat, 05 Jul 2014 15:57:20 +0200
+
 mapserver (6.4.1-4) unstable; urgency=medium
 
   * Add patch to support building mapscript for PHP 5.6.
