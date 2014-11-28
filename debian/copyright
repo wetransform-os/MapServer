@@ -1,6 +1,6 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: MapServer
-Upstream-Contact: The MapServer team
+Upstream-Contact: The MapServer team <mapserver-dev@lists.osgeo.org>
 Source: http://mapserver.org
 Copyright: 1996-2007 Regents of the University of Minnesota.
 License: MIT/X11
