@@ -1,5 +1,5 @@
 Description: Install Ruby mapscript to vendorarchdir instead of archdir.
-Author: Bas Couwenberg <sebastic@xs4all.nl>
+Author: Bas Couwenberg <sebastic@debian.org>
 Last-Update: 2013-09-11
 --- a/mapscript/ruby/CMakeLists.txt
 +++ b/mapscript/ruby/CMakeLists.txt

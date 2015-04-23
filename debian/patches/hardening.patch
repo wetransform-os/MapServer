@@ -1,5 +1,5 @@
 Description: Add support for hardening build flags.
-Author: Bas Couwenberg <sebastic@xs4all.nl>
+Author: Bas Couwenberg <sebastic@debian.org>
 Last-Update: 2013-09-02
 --- a/mapscript/ruby/CMakeLists.txt
 +++ b/mapscript/ruby/CMakeLists.txt

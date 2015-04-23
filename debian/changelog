@@ -4,8 +4,9 @@ mapserver (6.4.1-6) UNRELEASED; urgency=medium
   * Make build reproducible by setting the date embedded in man pages.
     Thanks to Reiner Herrmann for the patch.
     (closes: #783146)
+  * Update my email to @debian.org address.
 
- -- Bas Couwenberg <sebastic@xs4all.nl>  Fri, 28 Nov 2014 21:07:43 +0100
+ -- Bas Couwenberg <sebastic@debian.org>  Fri, 28 Nov 2014 21:07:43 +0100
 
 mapserver (6.4.1-5) unstable; urgency=medium
 

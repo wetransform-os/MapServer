@@ -1,5 +1,5 @@
 Description: Fix the Perl mapscript module installation directory.
-Author: Bas Couwenberg <sebastic@xs4all.nl>
+Author: Bas Couwenberg <sebastic@debian.org>
 Last-Update: 2013-09-02
 --- a/mapscript/perl/CMakeLists.txt
 +++ b/mapscript/perl/CMakeLists.txt

@@ -1,5 +1,5 @@
 Description: Install headers and export cmake package for outside projects.
-Author: Bas Couwenberg <sebastic@xs4all.nl>
+Author: Bas Couwenberg <sebastic@debian.org>
 Last-Update: 2013-10-21
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt

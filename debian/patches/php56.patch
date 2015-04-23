@@ -25,7 +25,7 @@ Description: Use php://input instead of raw_post_data to support PHP 5.6.
  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-Author: Bas Couwenberg <sebastic@xs4all.nl>
+Author: Bas Couwenberg <sebastic@debian.org>
 Bug-Debian: https://bugs.debian.org/745600
 Forwarded: https://github.com/mapserver/mapserver/issues/4911
 Applied-Upstream: https://github.com/mapserver/mapserver/commit/fc99472b8b2fc837148f71755f23349a71e307bf

@@ -2,7 +2,7 @@ Source: mapserver
 Maintainer: Debian GIS Project <pkg-grass-devel@lists.alioth.debian.org>
 Uploaders: Francesco Paolo Lovergine <frankie@debian.org>,
            Alan Boudreault <aboudreault@mapgears.com>,
-           Bas Couwenberg <sebastic@xs4all.nl>
+           Bas Couwenberg <sebastic@debian.org>
 Section: devel
 Priority: optional
 Build-Depends: debhelper (>= 9),
