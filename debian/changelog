@@ -6,6 +6,7 @@ mapserver (6.4.1-6) UNRELEASED; urgency=medium
     (closes: #783146)
   * Update my email to @debian.org address.
   * Update Vcs-Browser URL to use cgit instead of gitweb.
+  * Bump Standards-Version to 3.9.6, no changes.
 
  -- Bas Couwenberg <sebastic@debian.org>  Fri, 28 Nov 2014 21:07:43 +0100
 
