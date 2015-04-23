@@ -1,6 +1,9 @@
 mapserver (6.4.1-6) UNRELEASED; urgency=medium
 
   * Add upstream metadata.
+  * Make build reproducible by setting the date embedded in man pages.
+    Thanks to Reiner Herrmann for the patch.
+    (closes: #783146)
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Fri, 28 Nov 2014 21:07:43 +0100
 
