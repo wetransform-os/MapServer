@@ -58,10 +58,6 @@ Files: mapscript/python/pygdioctx/pygdioctx.c
 Copyright: 1995, Richard Jones, Bureau of Meteorology Australia
 License: BSD-3-clause-GDMODULE-LICENSE
 
-Files: ltmain.sh
-Copyright: 1996-2001, 2003-2011, Free Software Foundation, Inc.
-License: GPL-2+ with Libtool exception
-
 Files: mapparser.c
  mapparser.h
 Copyright: 1984, 1989-1990, 2000-2006, Free Software Foundation, Inc.
@@ -459,32 +455,6 @@ License: BSL-1.0
  FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  DEALINGS IN THE SOFTWARE.
-
-License: GPL-2+ with Libtool exception
- GNU Libtool is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
- .
- As a special exception to the GNU General Public License,
- if you distribute this file as part of a program or library that
- is built using GNU Libtool, you may include this file under the
- same distribution terms that you use for the rest of that program.
- .
- GNU Libtool is distributed in the hope that it will be useful, but
- WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- General Public License for more details.
- .
- You should have received a copy of the GNU General Public License
- along with GNU Libtool; see the file COPYING.  If not, a copy
- can be downloaded from http://www.gnu.org/licenses/gpl.html,
- or obtained by writing to the Free Software Foundation, Inc.,
- 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- .
- On Debian systems, the full text of the GNU General Public
- License version 2 can be found in the file
- `/usr/share/common-licenses/GPL-2'.
 
 License: GPL-3+ with Bison exception
  This program is free software: you can redistribute it and/or modify
