@@ -5,6 +5,7 @@ mapserver (6.4.1-6) UNRELEASED; urgency=medium
     Thanks to Reiner Herrmann for the patch.
     (closes: #783146)
   * Update my email to @debian.org address.
+  * Update Vcs-Browser URL to use cgit instead of gitweb.
 
  -- Bas Couwenberg <sebastic@debian.org>  Fri, 28 Nov 2014 21:07:43 +0100
 
