@@ -1,388 +1,43 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: MapServer
 Upstream-Contact: The MapServer team <mapserver-dev@lists.osgeo.org>
-Source: http://mapserver.org
-Copyright: 1996-2007 Regents of the University of Minnesota.
-License: MIT/X11
+Source: http://download.osgeo.org/mapserver/
 
 Files: *
-Copyright: 1996-2007 Regents of the University of Minnesota.
-License: MIT/X11
-
-Files: cgiutil.c
- cgiutil.h
- legend.c
- mapaxisorder.h
- mapcluster.c
- mapcopy.c
- mapcopy.h
- mapcpl.c
- mapdraw.c
- mapdrawgdal.c
- mapentities.h
- maperror.c
- maperror.h
- mapfile.c
- mapfile.h
- mapgeomtransform.c
- mapgeos.c
- mapgml.c
- mapgml.h
- maphash.c
- maphash.h
- maphttp.h
- mapimagemap.c
- mapjoin.c
- maplabel.c
- maplayer.c
- maplegend.c
- mapows.c
- mapows.h
- mappluginlayer.c
- mappool.c
- mappostgresql.c
- mapprimitive.h
- mapproject.c
- mapproject.h
- mapquery.c
- maprasterquery.c
- mapregex.c
- mapregex.h
- mapresample.c
- mapscale.c
- mapsde.c
- mapsearch.c
- mapserv.c
- mapserv.h
- mapserver.h
- mapservutil.c
- mapshape.c
- mapshape.h
- mapsmoothing.c
- mapsymbol.c
- mapsymbol.h
- maptemplate.h
- mapthread.c
- mapthread.h
- maptime.c
- maptime.h
- maptree.c
- maptree.h
- mapunion.c
- maputil.c
- mapwcs.c
- mapwcs.h
- mapwms.c
- mapxbase.c
- mapxml.c
- scalebar.c
- shp2img.c
- shptree.c
- shptreetst.c
- shptreevis.c
- sortshp.c
- sym2img.c
- testcopy.c
- testexpr.c
- tile4ms.c
- mapscript/mapscript.i
- mapscript/php/php_regex.c
-Copyright: 1996-2005, Regents of the University of Minnesota
-License: MIT/X11
-
-Files: mapcrypto.c
- msencrypt.c
-Copyright: 1996-2006, Regents of the University of Minnesota
-License: MIT/X11
-
-Files: configure.in
- mapagg.cpp
- mapagg.h
- mapchart.c
- mapdebug.c
- mapxmp.c
- mapscript/swiginc/cluster.i
- mapscript/swiginc/label.i
- mapscript/swiginc/legend.i
- mapscript/swiginc/owsrequest.i
- mapscript/swiginc/querymap.i
- mapscript/swiginc/referencemap.i
- mapscript/swiginc/scalebar.i
-Copyright: 1996-2007, Regents of the University of Minnesota
-License: MIT/X11
-
-Files: mapoglcontext.cpp
- mapoglcontext.h
- mapogl.cpp
- mapoglrenderer.cpp
- mapoglrenderer.h
- maporaclespatial.c
- mapprimitive.c
- maptemplate.c
- mapscript/csharp/csmodule.i
- mapscript/csharp/swig_csharp_extensions.i
- mapscript/csharp/config/AssemblyInfo.cs
- mapscript/csharp/examples/drawmap.cs
- mapscript/csharp/examples/drawmapDirect.cs
- mapscript/csharp/examples/drawmapDirectPrint.cs
- mapscript/csharp/examples/drawquery.cs
- mapscript/csharp/examples/getbytes.cs
- mapscript/csharp/examples/HTMLtemplate.cs
- mapscript/csharp/examples/inline.cs
- mapscript/csharp/examples/RFC24.cs
- mapscript/csharp/examples/shapeinfo.cs
- mapscript/csharp/examples/shpdump.cs
-Copyright: 1996-2008, Regents of the University of Minnesota
-License: MIT/X11
-
-Files: mapcairo.c
- mapgd.c
- mapkml.cpp
- mapkmlrenderer.cpp
- mapkmlrenderer.h
-Copyright: 1996-2009, Regents of the University of Minnesota
-License: MIT/X11
-
-Files: mapraster.c
-Copyright: 1996-2010, Regents of the University of Minnesota
-License: MIT/X11
-
-Files: mapgeomutil.cpp
- maprendering.c
-Copyright: 1996-2011, Regents of the University of Minnesota
-License: MIT/X11
-
-Files: hittest.c
- hittest.h
-Copyright: 1996-2013, Regents of the University of Minnesota
-License: MIT/X11
+Copyright:         1996-2013, Regents of the University of Minnesota.
+                   2010-2011, EOX IT Services GmbH, Austria
+                        2011, Alan Boudreault, MapGears
+                   2000-2010, Daniel Morissette, DM Solutions Group Inc.
+ 2001-2002, 2004, 2007, 2010, Frank Warmerdam <warmerdam@pobox.com>
+                  2008, 2010, Paul Ramsey
+                   2009-2010, Thomas Bonfort
+             2000-2006, 2008, Y. Assefa, DM Solutions Group inc.
+                   2006-2007, Tom Kralidis
+                        2007, IS Consulting (www.mapdotnet.com)
+                   2000-2005, DM Solutions Group
+                   2004-2005, Sean Gillies <sgillies@frii.com>
+                   2002-2003, Julien-Samuel Lacroix, DM Solutions Group Inc
+                        2003, John Novak, Novacell Technologies
+                        2002, Refractions Research
+License: MIT
 
 Files: mapbits.c
 Copyright: 1996-2005, Regents of the University of Minnesota
-License: MIT/X11
+License: MIT
 Comment: Derived from code placed in the public domain by Bob Stout, for more
  information see http://c.snippets.org/snip_lister.php?fname=bitarray.c.
-
-Files: mapraster.h
-Copyright: 2013, Regents of the University of Minnesota
-License: MIT/X11
-
-Files: mapcontour.c
- mapuvraster.c
-Copyright: 2011, Alan Boudreault, MapGears
-License: MIT/X11
-
-Files: mapscript/php/php_mapscript_util.h
-Copyright: 2000, 2001, Daniel Morissette, DM Solutions Group Inc.
-License: MIT/X11
-
-Files: mapscript/php/mapscript_i.c
-Copyright: 2000, 2007, Daniel Morissette, DM Solutions Group Inc.
-License: MIT/X11
-
-Files: maphttp.c
-Copyright: 2001-2003, Daniel Morissette, DM Solutions Group Inc
-License: MIT/X11
-
-Files: mapwmslayer.c
-Copyright: 2001-2004, Daniel Morissette, DM Solutions Group Inc
-License: MIT/X11
-
-Files: mapwfs.c
- mapwfslayer.c
-Copyright: 2002, Daniel Morissette, DM Solutions Group Inc
-License: MIT/X11
-
-Files: mapogr.cpp
- mapscript/php/php_mapscript.c
- mapscript/php/php_mapscript.h
- mapscript/php/php_mapscript_util.h
-Copyright: 2000-2005, Daniel Morissette, DM Solutions Group Inc
-License: MIT/X11
-
-Files: mapscript/php/class.c
- mapscript/php/cluster.c
- mapscript/php/color.c
- mapscript/php/error.c
- mapscript/php/grid.c
- mapscript/php/hashtable.c
- mapscript/php/image.c
- mapscript/php/label.c
- mapscript/php/labelcache.c
- mapscript/php/labelcachemember.c
- mapscript/php/labelleader.c
- mapscript/php/layer.c
- mapscript/php/legend.c
- mapscript/php/line.c
- mapscript/php/map.c
- mapscript/php/mapscript_error.c
- mapscript/php/outputformat.c
- mapscript/php/owsrequest.c
- mapscript/php/point.c
- mapscript/php/projection.c
- mapscript/php/querymap.c
- mapscript/php/rect.c
- mapscript/php/referencemap.c
- mapscript/php/result.c
- mapscript/php/scalebar.c
- mapscript/php/shape.c
- mapscript/php/shapefile.c
- mapscript/php/style.c
- mapscript/php/symbol.c
- mapscript/php/web.c
-Copyright: 2000-2010, Daniel Morissette, DM Solutions Group Inc.
-License: MIT/X11
-
-Files: mapscript/php/php_mapscript_util.c
-Copyright: 2000-2005, DM Solutions Group
-License: MIT/X11
-
-Files: mapwcs20.c
-Copyright: 2010-2011, EOX IT Services GmbH, Austria
-License: MIT/X11
-
-Files: mapresample.h
-Copyright: 2001, Frank Warmerdam, DM Solutions Group Inc
-License: MIT/X11
-
-Files: mapgdal.c
- mapoutput.c
-Copyright: 2002, Frank Warmerdam
-License: MIT/X11
-
-Files: mapobject.c
-Copyright: 2004, Frank Warmerdam
-License: MIT/X11
-
-Files: mapio.c
- mapio.h
- mapscript/swiginc/msio.i
-Copyright: 2004, Frank Warmerdam <warmerdam@pobox.com>
-License: MIT/X11
-
-Files: mapwcs11.c
-Copyright: 2007, Frank Warmerdam
-License: MIT/X11
-
-Files: mapogroutput.c
-Copyright: 2010, Frank Warmerdam <warmerdam@pobox.com>
-License: MIT/X11
-
-Files: mapmssql2008.c
-Copyright: 2007, IS Consulting (www.mapdotnet.com)
-License: MIT/X11
-
-Files: mapgraticule.c
-Copyright: 2003, John Novak, Novacell Technologies
-License: MIT/X11
-
-Files: mapcontext.c
-Copyright: 2002-2003, Julien-Samuel Lacroix, DM Solutions Group Inc
-License: MIT/X11
-
-Files: maptile.c
- maptile.h
-Copyright: 2008, Paul Ramsey
-License: MIT/X11
-
-Files: mappostgis.c
- mappostgis.h
-Copyright: 2002, Refractions Research
-           2010, Paul Ramsey
-License: MIT/X11
-
-Files: classobject.c
- layerobject.c
- mapscript/python/tests/runtests.py
- mapscript/python/tests/cases/classtest.py
- mapscript/python/tests/cases/clonetest.py
- mapscript/python/tests/cases/colortest.py
- mapscript/python/tests/cases/fonttest.py
- mapscript/python/tests/cases/hashtest.py
- mapscript/python/tests/cases/imagetest.py
- mapscript/python/tests/cases/labeltest.py
- mapscript/python/tests/cases/layertest.py
- mapscript/python/tests/cases/linetest.py
- mapscript/python/tests/cases/maptest.py
- mapscript/python/tests/cases/outputformattest.py
- mapscript/python/tests/cases/owstest.py
- mapscript/python/tests/cases/parentreference.py
- mapscript/python/tests/cases/pgtest.py
- mapscript/python/tests/cases/pointtest.py
- mapscript/python/tests/cases/recttest.py
- mapscript/python/tests/cases/refcount.py
- mapscript/python/tests/cases/resultcachetest.py
- mapscript/python/tests/cases/runalltests.py
- mapscript/python/tests/cases/shapefiletest.py
- mapscript/python/tests/cases/shapetest.py
- mapscript/python/tests/cases/styletest.py
- mapscript/python/tests/cases/symbolsettest.py
- mapscript/python/tests/cases/symboltest.py
- mapscript/python/tests/cases/testing.py
- mapscript/python/tests/cases/threadtest.py
- mapscript/python/tests/cases/zoomtest.py
- mapscript/python/tests/timing/testing.py
-Copyright: 2004, Sean Gillies
-License: MIT/X11
-
-Files: tests/makefile_postgis
-Copyright: 2005, Sean Gillies - sgillies@frii.com
-License: MIT/X11
-
-Files: mapimageio.c
-Copyright: 2009, Thomas Bonfort
-License: MIT/X11
-
-Files: mapdummyrenderer.c
-Copyright: 2010, Thomas Bonfort
-License: MIT/X11
-
-Files: mapowscommon.c
- mapowscommon.h
-Copyright: 2006, Tom Kralidis
-License: MIT/X11
-
-Files: maplibxml2.c
- maplibxml2.h
- mapscript/perl/examples/wxs.pl
-Copyright: 2007, Tom Kralidis
-License: MIT/X11
-
-Files: mapscript/php/php_proj.c
-Copyright: 2000-2005, Y. Assefa, DM Solutions Group inc.
-License: MIT/X11
-
-Files: mapprojhack.c
-Copyright: 2001, Y. Assefa, DM Solutions Group Inc
-License: MIT/X11
-
-Files: mapogcfilter.c
- mapogcfilter.h
- mapogcfiltercommon.c
- mapogcsld.c
- mapogcsld.h
-Copyright: 2003, Y. Assefa, DM Solutions Group Inc
-License: MIT/X11
-
-Files: mapogcsos.c
-Copyright: 2006, Y. Assefa, DM Solutions Group Inc
-License: MIT/X11
-
-Files: mapwfs11.c
-Copyright: 2008, Y. Assefa, DM Solutions Group Inc
-License: MIT/X11
 
 Files: mapquantization.c
 Copyright:  1996-2005, Regents of the University of Minnesota
            1989, 1991, Jef Poskanzer
      1997, 2000, 2002, Greg Roelofs
-License: MIT/X11-mapquantization
+License: MIT-mapquantization
 Comment: Contains code derived from pngquant.c and libpam3.c.
 
 Files: maptclutf.c
 Copyright: 1996-2007, Regents of the University of Minnesota
            1997-1998, Sun Microsystems, Inc
-License: MIT/X11-maptclutf
+License: MIT-maptclutf
 Comment: Contains code derived from tclUtf.c.
 
 Files: mapstring.c
@@ -391,7 +46,7 @@ Copyright: 1996-2005, Regents of the University of Minnesota
            2000-2004, University of Illinois Board of Trustees
            2000-2005, Mark D. Roth
           1990, 1993, The Regents of the University of California
-License: MIT/X11-mapstring
+License: MIT-mapstring
 Comment: Contains string functions from various sources.
 
 Files: strptime.c
@@ -438,7 +93,7 @@ Files: renderers/agg/include/agg_conv_clipper.h
 Copyright: 2010-2011, Angus Johnson
 License: BSL-1.0
 
-License: MIT/X11
+License: MIT
  Permission is hereby granted, free of charge, to any person obtaining
  a copy of this software and associated documentation files (the
  "Software"), to deal in the Software without restriction, including
@@ -459,7 +114,7 @@ License: MIT/X11
  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-License: MIT/X11-mapquantization
+License: MIT-mapquantization
  Permission is hereby granted, free of charge, to any person obtaining a
  copy of this software and associated documentation files (the "Software"),
  to deal in the Software without restriction, including without limitation
@@ -491,7 +146,7 @@ License: MIT/X11-mapquantization
  documentation.  This software is provided "as is" without express or
  implied warranty.
 
-License: MIT/X11-maptclutf
+License: MIT-maptclutf
  Permission is hereby granted, free of charge, to any person obtaining a
  copy of this software and associated documentation files (the "Software"),
  to deal in the Software without restriction, including without limitation
@@ -557,7 +212,7 @@ License: MIT/X11-maptclutf
  permission to use and distribute the software in accordance with the
  terms specified in this license.
 
-License: MIT/X11-mapstring
+License: MIT-mapstring
  Permission is hereby granted, free of charge, to any person obtaining a
  copy of this software and associated documentation files (the "Software"),
  to deal in the Software without restriction, including without limitation
