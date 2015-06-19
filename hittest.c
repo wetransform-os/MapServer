@@ -58,7 +58,6 @@ void initClassHitTests(classObj *c, class_hittest *ch, int default_status) {
 void initLayerHitTests(layerObj *l, layer_hittest *lh) {
   int i,default_status;
   lh->classhits = msSmallCalloc(l->numclasses,sizeof(class_hittest));
-  lh->status = default_status;
 
   switch(l->type) {
     case MS_LAYER_POLYGON:
@@ -71,6 +70,7 @@ void initLayerHitTests(layerObj *l, layer_hittest *lh) {
       default_status = 1; /* no hittesting needed, use traditional mode */
       break;
   }
+  lh->status = default_status;
   for(i=0; i<l->numclasses; i++) {
     initClassHitTests(l->class[i],&lh->classhits[i], default_status);
   }
@@ -124,7 +124,7 @@ int msHitTestShape(mapObj *map, layerObj *layer, shapeObj *shape, int drawmode, 
   if(MS_DRAW_LABELS(drawmode)) {
     for(i=0;i<cp->numlabels;i++) {
       labelObj *l = cp->labels[i];
-      if(l->status == MS_ON) {
+      if(msGetLabelStatus(map,layer,shape,l) == MS_ON) {
         int s;
         hittest->labelhits[i].status = 1;
         for(s=0; s<l->numstyles;s++) {
@@ -251,7 +251,6 @@ int msHitTestLayer(mapObj *map, layerObj *layer, layer_hittest *hittest) {
       featuresdrawn++;
 
       if(annotate && layer->class[shape.classindex]->numlabels > 0) {
-        msShapeGetAnnotation(layer, &shape);
         drawmode |= MS_DRAWMODE_LABELS;
       }
 

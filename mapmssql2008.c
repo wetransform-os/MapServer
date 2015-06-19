@@ -151,6 +151,7 @@ typedef struct ms_MSSQL2008_layer_info_t {
   char        *urid_name;     /* name of user-specified unique identifier or OID */
   char        *user_srid;     /* zero length = calculate, non-zero means using this value! */
   char    *index_name;  /* hopefully this isn't necessary - but if the optimizer ain't cuttin' it... */
+  char    *sort_spec;  /* the sort by specification which should be applied to the generated select statement */
 
   msODBCconn * conn;          /* Connection to db */
   msGeometryParserInfo gpi;   /* struct for the geometry parser */
@@ -451,7 +452,7 @@ static char *strstrIgnoreCase(const char *haystack, const char *needle)
   return (char *) (match < 0 ? NULL : haystack + match);
 }
 
-static int msMSSQL2008LayerParseData(layerObj *layer, char **geom_column_name, char **geom_column_type, char **table_name, char **urid_name, char **user_srid, char **index_name, int debug);
+static int msMSSQL2008LayerParseData(layerObj *layer, char **geom_column_name, char **geom_column_type, char **table_name, char **urid_name, char **user_srid, char **index_name, char **sort_spec, int debug);
 
 /* Close connection and handles */
 static void msMSSQL2008CloseConnection(void *conn_handle)
@@ -626,6 +627,7 @@ int msMSSQL2008LayerOpen(layerObj *layer)
   layerinfo->urid_name = NULL;
   layerinfo->user_srid = NULL;
   layerinfo->index_name = NULL;
+  layerinfo->sort_spec = NULL;
   layerinfo->conn = NULL;
 
   layerinfo->conn = (msODBCconn *) msConnPoolRequest(layer);
@@ -688,7 +690,7 @@ int msMSSQL2008LayerOpen(layerObj *layer)
 
   setMSSQL2008LayerInfo(layer, layerinfo);
 
-  if (msMSSQL2008LayerParseData(layer, &layerinfo->geom_column, &layerinfo->geom_column_type, &layerinfo->geom_table, &layerinfo->urid_name, &layerinfo->user_srid, &layerinfo->index_name, layer->debug) != MS_SUCCESS) {
+  if (msMSSQL2008LayerParseData(layer, &layerinfo->geom_column, &layerinfo->geom_column_type, &layerinfo->geom_table, &layerinfo->urid_name, &layerinfo->user_srid, &layerinfo->index_name, &layerinfo->sort_spec, layer->debug) != MS_SUCCESS) {
     msSetError( MS_QUERYERR, "Could not parse the layer data", "msMSSQL2008LayerOpen()");
     return MS_FAILURE;
   }
@@ -902,22 +904,25 @@ static int prepare_database(layerObj *layer, rectObj rect, char **query_string)
   }
 
   /* test whether we should omit spatial filtering */
+  /* TODO: once this driver supports expression translation then filter->native_string will need to be considered here */
   msMSSQL2008LayerGetExtent(layer, &extent);
-  if (rect.minx <= extent.minx && rect.miny <= extent.miny && 
-      rect.maxx >= extent.maxx && rect.maxy >= extent.maxy) {
+  if (rect.minx <= extent.minx && rect.miny <= extent.miny && rect.maxx >= extent.maxx && rect.maxy >= extent.maxy) {
       /* no spatial filter used */
-      if(!layer->filter.string) {
-        snprintf(query_string_temp, sizeof(query_string_temp),  "SELECT %s from %s", columns_wanted, data_source );
+      if(msLayerGetProcessingKey(layer, "NATIVE_FILTER") == NULL) {
+        snprintf(query_string_temp, sizeof(query_string_temp), "SELECT %s from %s", columns_wanted, data_source );
       } else {
-        snprintf(query_string_temp, sizeof(query_string_temp), "SELECT %s from %s WHERE (%s)", columns_wanted, data_source, layer->filter.string );
+        snprintf(query_string_temp, sizeof(query_string_temp), "SELECT %s from %s WHERE (%s)", columns_wanted, data_source, msLayerGetProcessingKey(layer, "NATIVE_FILTER"));
+      }
+  } else {
+      if(msLayerGetProcessingKey(layer, "NATIVE_FILTER") == NULL) {
+        snprintf(query_string_temp, sizeof(query_string_temp), "SELECT %s from %s WHERE %s.STIntersects(%s) = 1 ", columns_wanted, data_source, layerinfo->geom_column, box3d );
+      } else {
+        snprintf(query_string_temp, sizeof(query_string_temp), "SELECT %s from %s WHERE (%s) and %s.STIntersects(%s) = 1 ", columns_wanted, data_source, msLayerGetProcessingKey(layer, "NATIVE_FILTER"), layerinfo->geom_column, box3d );
       }
   }
-  else {
-      if(!layer->filter.string) {
-        snprintf(query_string_temp, sizeof(query_string_temp),  "SELECT %s from %s WHERE %s.STIntersects(%s) = 1 ", columns_wanted, data_source, layerinfo->geom_column, box3d );
-      } else {
-        snprintf(query_string_temp, sizeof(query_string_temp), "SELECT %s from %s WHERE (%s) and %s.STIntersects(%s) = 1 ", columns_wanted, data_source, layer->filter.string, layerinfo->geom_column, box3d );
-      }
+
+  if (layerinfo->sort_spec) {
+      strcat(query_string_temp, layerinfo->sort_spec);
   }
 
   msFree(data_source);
@@ -1019,6 +1024,11 @@ int msMSSQL2008LayerClose(layerObj *layer)
     if(layerinfo->index_name) {
       msFree(layerinfo->index_name);
       layerinfo->index_name = NULL;
+    }
+
+    if(layerinfo->sort_spec) {
+      msFree(layerinfo->sort_spec);
+      layerinfo->sort_spec = NULL;
     }
 
     if(layerinfo->sql) {
@@ -1640,7 +1650,6 @@ int msMSSQL2008LayerGetShapeRandom(layerObj *layer, shapeObj *shape, long *recor
               result = force_to_polygons(wkbBuffer, shape);
               break;
 
-            case MS_LAYER_ANNOTATION:
             case MS_LAYER_QUERY:
             case MS_LAYER_CHART:
               result = dont_force(wkbBuffer, shape);
@@ -1996,9 +2005,9 @@ int msMSSQL2008LayerRetrievePK(layerObj *layer, char **urid_name, char* table_na
  * column name, table name and name of a column to serve as a
  * unique record id
  */
-static int msMSSQL2008LayerParseData(layerObj *layer, char **geom_column_name, char **geom_column_type, char **table_name, char **urid_name, char **user_srid, char **index_name, int debug)
+static int msMSSQL2008LayerParseData(layerObj *layer, char **geom_column_name, char **geom_column_type, char **table_name, char **urid_name, char **user_srid, char **index_name, char **sort_spec, int debug)
 {
-  char    *pos_opt, *pos_scn, *tmp, *pos_srid, *pos_urid, *pos_geomtype, *pos_geomtype2, *pos_indexHint, *data;
+  char    *pos_opt, *pos_scn, *tmp, *pos_srid, *pos_urid, *pos_geomtype, *pos_geomtype2, *pos_indexHint, *data, *pos_order;
   int     slength;
 
   data = msStrdup(layer->data);
@@ -2117,6 +2126,13 @@ static int msMSSQL2008LayerParseData(layerObj *layer, char **geom_column_name, c
     }
   }
 
+  /* Find the order by */
+  pos_order = strstrIgnoreCase(pos_opt, " order by ");
+  
+  if (pos_order) {
+    *sort_spec = msStrdup(pos_order);
+  }
+
   if(debug) {
     msDebug("msMSSQL2008LayerParseData: unique column = %s, srid='%s', geom_column_name = %s, table_name=%s\n", *urid_name, *user_srid, *geom_column_name, *table_name);
   }
@@ -2194,17 +2210,17 @@ int msMSSQL2008LayerGetItems(layerObj *layer)
   return MS_FAILURE;
 }
 
-
 /* end above's #ifdef USE_MSSQL2008 */
 #endif
 
 #ifdef USE_MSSQL2008_PLUGIN
 
-MS_DLL_EXPORT  int
-PluginInitializeVirtualTable(layerVTableObj* vtable, layerObj *layer)
+MS_DLL_EXPORT int PluginInitializeVirtualTable(layerVTableObj* vtable, layerObj *layer)
 {
   assert(layer != NULL);
   assert(vtable != NULL);
+
+  /* vtable->LayerTranslateFilter, use default - need to add this... */
 
   vtable->LayerInitItemInfo = msMSSQL2008LayerInitItemInfo;
   vtable->LayerFreeItemInfo = msMSSQL2008LayerFreeItemInfo;

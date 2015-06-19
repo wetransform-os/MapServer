@@ -169,12 +169,13 @@ int mapObj_embedLegend(mapObj* self, imageObj *img)
 
 int mapObj_drawLabelCache(mapObj* self, imageObj *img)
 {
-  return msDrawLabelCache(img, self);
+  return msDrawLabelCache(self, img);
 }
 
 labelCacheMemberObj* mapObj_getLabel(mapObj* self, int i)
 {
-  return msGetLabelCacheMember(&(self->labelcache), i);
+  msSetError(MS_MISCERR, "LabelCacheMember access is not available", "getLabel()");
+  return NULL;
 }
 
 int mapObj_queryByPoint(mapObj* self, pointObj *point, int mode, double buffer)
@@ -211,13 +212,10 @@ int mapObj_queryByFilter(mapObj* self, char *string)
   msInitQuery(&(self->query));
 
   self->query.type = MS_QUERY_BY_FILTER;
+  self->query.mode = MS_QUERY_MULTIPLE;
 
-  self->query.filter = (expressionObj *) malloc(sizeof(expressionObj));
-  self->query.filter->compiled = MS_FALSE;
-  self->query.filter->flags = 0;
-  self->query.filter->tokens = self->query.filter->curtoken = NULL;
-  self->query.filter->string = strdup(string);
-  self->query.filter->type = 2000; /* MS_EXPRESSION: lot's of conflicts in mapfile.h */
+  self->query.filter.string = strdup(string);
+  self->query.filter.type = MS_EXPRESSION;
 
   self->query.rect = self->extent;
 
@@ -602,17 +600,22 @@ int layerObj_queryByAttributes(layerObj *self, mapObj *map, char *qitem, char *q
   int retval;
 
   msInitQuery(&(map->query));
-
-  map->query.type = MS_QUERY_BY_ATTRIBUTE;
+  
+  map->query.type = MS_QUERY_BY_FILTER;
   map->query.mode = mode;
-  if(qitem) map->query.item = strdup(qitem);
-  if(qstring) map->query.str = strdup(qstring);
+
+  if(qitem) map->query.filteritem = msStrdup(qitem);
+  if(qstring) {
+    msInitExpression(&map->query.filter);
+    msLoadExpressionString(&map->query.filter, qstring);
+  }
+
   map->query.layer = self->index;
   map->query.rect = map->extent;
 
   status = self->status;
   self->status = MS_ON;
-  retval = msQueryByAttributes(map);
+  retval = msQueryByFilter(map);
   self->status = status;
 
   return retval;
@@ -705,13 +708,10 @@ int layerObj_queryByFilter(layerObj *self, mapObj *map, char *string)
   msInitQuery(&(map->query));
 
   map->query.type = MS_QUERY_BY_FILTER;
+  map->query.mode = MS_QUERY_MULTIPLE;
 
-  map->query.filter = (expressionObj *) malloc(sizeof(expressionObj));
-  map->query.filter->string = strdup(string);
-  map->query.filter->type = 2000; /* MS_EXPRESSION: lot's of conflicts in mapfile.h */
-  map->query.filter->compiled = MS_FALSE;
-  map->query.filter->flags = 0;
-  map->query.filter->tokens = map->query.filter->curtoken = NULL;
+  map->query.filter.string = strdup(string);
+  map->query.filter.type = MS_EXPRESSION;
 
   map->query.layer = self->index;
   map->query.rect = map->extent;
@@ -749,7 +749,7 @@ int layerObj_queryByIndex(layerObj *self, mapObj *map, int tileindex, int shapei
 int layerObj_setFilter(layerObj *self, char *string)
 {
   if (!string || strlen(string) == 0) {
-    freeExpression(&self->filter);
+    msFreeExpression(&self->filter);
     return MS_SUCCESS;
   } else return msLoadExpressionString(&self->filter, string);
 }
@@ -927,7 +927,7 @@ int labelObj_deleteStyle(labelObj *self, int index)
 int labelObj_setExpression(labelObj *self, char *string)
 {
   if (!string || strlen(string) == 0) {
-    freeExpression(&self->expression);
+    msFreeExpression(&self->expression);
     return MS_SUCCESS;
   } else return msLoadExpressionString(&self->expression, string);
 }
@@ -940,7 +940,7 @@ char *labelObj_getExpressionString(labelObj *self)
 int labelObj_setText(labelObj *self, layerObj *layer, char *string)
 {
   if (!string || strlen(string) == 0) {
-    freeExpression(&self->text);
+    msFreeExpression(&self->text);
     return MS_SUCCESS;
   }
   return msLoadExpressionString(&self->text, string);
@@ -1035,7 +1035,6 @@ classObj *classObj_new(layerObj *layer, classObj *class)
     layer->class[layer->numclasses]->layer = layer;
   }
 
-  layer->class[layer->numclasses]->type = layer->type;
   layer->class[layer->numclasses]->layer = layer;
 
   layer->numclasses++;
@@ -1079,7 +1078,7 @@ void  classObj_destroy(classObj *self)
 int classObj_setExpression(classObj *self, char *string)
 {
   if (!string || strlen(string) == 0) {
-    freeExpression(&self->expression);
+    msFreeExpression(&self->expression);
     return MS_SUCCESS;
   } else return msLoadExpressionString(&self->expression, string);
 }
@@ -1092,7 +1091,7 @@ char *classObj_getExpressionString(classObj *self)
 int classObj_setText(classObj *self, layerObj *layer, char *string)
 {
   if (!string || strlen(string) == 0) {
-    freeExpression(&self->text);
+    msFreeExpression(&self->text);
     return MS_SUCCESS;
   }
   return msLoadExpressionString(&self->text, string);
@@ -1143,8 +1142,6 @@ classObj *classObj_clone(classObj *class, layerObj *layer)
 
   initClass(dstClass);
   msCopyClass(dstClass, class, layer);
-
-  dstClass->type = layer->type;
 
   return dstClass;
 }
@@ -1554,7 +1551,6 @@ int rectObj_draw(rectObj *self, mapObj *map, layerObj *layer,
 
   if(text && layer->class[classindex]->numlabels > 0) {
     shape.text = strdup(text);
-    msShapeGetAnnotation(layer,&shape);
   }
   
   msDrawShape(map, layer, &shape, img, -1, MS_DRAWMODE_FEATURES|MS_DRAWMODE_LABELS);
@@ -1963,7 +1959,7 @@ char *clusterObj_convertToString(clusterObj *self)
 int clusterObj_setGroup(clusterObj *self, char *string)
 {
   if (!string || strlen(string) == 0) {
-    freeExpression(&self->group);
+    msFreeExpression(&self->group);
     return MS_SUCCESS;
   } else return msLoadExpressionString(&self->group, string);
 }
@@ -1976,7 +1972,7 @@ char *clusterObj_getGroupString(clusterObj *self)
 int clusterObj_setFilter(clusterObj *self, char *string)
 {
   if (!string || strlen(string) == 0) {
-    freeExpression(&self->filter);
+    msFreeExpression(&self->filter);
     return MS_SUCCESS;
   } else return msLoadExpressionString(&self->filter, string);
 }
