@@ -211,35 +211,6 @@ Description: Python library for MapServer
  MapServer is a CGI-based framework for Internet map services which
  supports Open Geospatial Consortium (OGC) standards.
 
-Package: libmapscript-ruby
-Architecture: all
-Section: oldlibs
-Depends: ruby-mapscript,
-         ${misc:Depends}
-Description: Transitional dummy package for ruby-mapscript
- This is a transitional dummy package to ease upgrades to the
- ruby-mapscript package. It can safely be removed.
-
-Package: libmapscript-ruby1.8
-Architecture: any
-Section: oldlibs
-Depends: ruby-mapscript,
-         ${misc:Depends}
-Description: Transitional package from libmapscript-ruby1.8 to ruby-mapscript
- This is a transitional dummy package to ease upgrades from the
- libmapscript-ruby1.8 package to the ruby-mapscript package.
- It can safely be removed.
-
-Package: libmapscript-ruby1.9.1
-Architecture: any
-Section: oldlibs
-Depends: ruby-mapscript,
-         ${misc:Depends}
-Description: Transitional package from libmapscript-ruby1.9.1 to ruby-mapscript
- This is a transitional dummy package to ease upgrades from the
- libmapscript-ruby1.9.1 package to the ruby-mapscript package.
- It can safely be removed.
-
 Package: ruby-mapscript
 Architecture: any
 Section: ruby
