@@ -1,3 +1,7 @@
-version=2
-opts=dversionmangle=s/\+(debian|dfsg|ds|deb)\d*$//,uversionmangle=s/(\d)[_\.\-\+]?((RC|rc|pre|dev|beta|alpha)\d*)$/$1~$2/ \
-http://download.osgeo.org/mapserver/ (?:.*/)?mapserver[\-\_](\d+[\.\d+]+)\.(?:zip|tgz|tbz|txz|(?:tar\.(?:gz|bz2|xz)))
+version=3
+opts=\
+dversionmangle=s/\+(debian|dfsg|ds|deb)\d*$//,\
+uversionmangle=s/(\d)[_\.\-\+]?((RC|rc|pre|dev|beta|alpha)\d*)$/$1~$2/;s/RC/rc/;s/-/./g,\
+filenamemangle=s/(?:.*)?(?:rel|v|mapserver)[\-\_]?(\d\S+)\.(tgz|tbz|txz|(?:tar\.(?:gz|bz2|xz)))/mapserver-$1.$2/ \
+https://github.com/mapserver/mapserver/releases \
+(?:.*/)?(?:rel|v|mapserver)[\-\_]?(\d\S+)\.(?:tgz|tbz|txz|(?:tar\.(?:gz|bz2|xz)))
