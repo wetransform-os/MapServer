@@ -25,7 +25,7 @@ RUBYVERSIONS=$(shell dh_ruby --print-supported)
 PHP5API=$(shell php-config5 --phpapi)
 MANPAGES:=$(wildcard debian/man/*.*.xml)
 
-MS_VERSION=$(shell dpkg-parsechangelog | sed -ne 's/^Version: \(.*\)-.*/\1/p')
+MS_VERSION=$(shell dpkg-parsechangelog | sed -ne 's/^Version: \(.*\)-.*/\1/p' | sed -e 's/[~+].*//; s/^[0-9]://')
 BUILD_DATE=$(shell dpkg-parsechangelog | sed -ne 's/^Date: //p' | LC_ALL=C date -u "+%d %B %Y" -f -)
 
 CMAKE_OPTS:= \
