@@ -2,6 +2,9 @@ mapserver (7.0.0~beta1-1) UNRELEASED; urgency=medium
 
   * Update watch file to use GitHub releases instead of download.osgeo.org.
   * New upstream beta release.
+  * Update copyright file, changes:
+    - Update Source URL for GitHub
+    - Add license & copyright for new files
 
  -- Bas Couwenberg <sebastic@debian.org>  Fri, 19 Jun 2015 23:47:49 +0200
 
