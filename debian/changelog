@@ -7,6 +7,9 @@ mapserver (7.0.0~beta1-1) UNRELEASED; urgency=medium
     - Add license & copyright for new files
   * Drop transitional packages for libmapscript-ruby.
   * Drop patches applied upstream, refresh remaining patches.
+  * Update build dependencies:
+    - drop libgd-dev
+    - add libharfbuzz-dev & libpixman-1-dev
 
  -- Bas Couwenberg <sebastic@debian.org>  Fri, 19 Jun 2015 23:47:49 +0200
 
