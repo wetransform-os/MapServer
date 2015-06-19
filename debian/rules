@@ -72,9 +72,6 @@ CMAKE_OPTS:= \
 	      --parallel \
 	      --buildsystem cmake
 
-override_dh_strip:
-	dh_strip --dbg-package=libmapserver1-dbg
-
 override_dh_auto_clean:
 	dh_clean
 
@@ -175,4 +172,7 @@ override_dh_perl:
 
 override_dh_java:
 	dh_java -plibmapscript-java
+
+override_dh_strip:
+	dh_strip --dbg-package=libmapserver-dbg
 
