@@ -43,11 +43,11 @@ Build-Depends: debhelper (>= 9),
                docbook-xml,
                xsltproc
 Build-Conflicts: libcurl3-openssl-dev
-XS-Ruby-Versions: all
 Standards-Version: 3.9.6
 Vcs-Browser: http://anonscm.debian.org/cgit/pkg-grass/mapserver.git
 Vcs-Git: git://anonscm.debian.org/pkg-grass/mapserver.git -b experimental
 Homepage: http://www.mapserver.org
+XS-Ruby-Versions: all
 
 Package: libmapserver1
 Architecture: any
