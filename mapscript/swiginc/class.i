@@ -55,7 +55,6 @@
                 return NULL;
             if (initClass(layer->class[layer->numclasses]) == -1)
                 return NULL;
-            layer->class[layer->numclasses]->type = layer->type;
             layer->class[layer->numclasses]->layer = layer;
 	    MS_REFCNT_INCR(layer->class[layer->numclasses]);
             layer->numclasses++;
@@ -125,7 +124,7 @@
   int setExpression(char *expression) 
   {
     if (!expression || strlen(expression) == 0) {
-       freeExpression(&self->expression);
+       msFreeExpression(&self->expression);
        return MS_SUCCESS;
     }
     else return msLoadExpressionString(&self->expression, expression);
@@ -138,7 +137,7 @@
 
   int setText(char *text) {
     if (!text || strlen(text) == 0) {
-      freeExpression(&self->text);
+      msFreeExpression(&self->text);
       return MS_SUCCESS;
     }	
     else return msLoadExpressionString(&self->text, text);

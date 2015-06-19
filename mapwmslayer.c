@@ -285,17 +285,13 @@ static int msBuildWMSLayerURLBase(mapObj *map, layerObj *lp,
 
     for(i=0; pszFormat==NULL && i<n; i++) {
       if (0
-#if defined USE_GD_PNG || defined USE_PNG
+#if defined USE_PNG
           || strcasecmp(papszTok[i], "PNG")
           || strcasecmp(papszTok[i], "image/png")
 #endif
-#if defined USE_GD_JPEG || defined USE_JPEG
+#if defined USE_JPEG
           || strcasecmp(papszTok[i], "JPEG")
           || strcasecmp(papszTok[i], "image/jpeg")
-#endif
-#ifdef USE_GD_GIF
-          || strcasecmp(papszTok[i], "GIF")
-          || strcasecmp(papszTok[i], "image/gif")
 #endif
          ) {
         pszFormat = papszTok[i];
@@ -707,6 +703,11 @@ msBuildWMSLayerURL(mapObj *map, layerObj *lp, int nRequestType,
 
         bbox_width = ceil((bbox.maxx - bbox.minx) / cellsize);
         bbox_height = ceil((bbox.maxy - bbox.miny) / cellsize);
+
+        /* Force going through the resampler if we're going to receive a clipped BBOX (#4931) */
+        if(msLayerGetProcessingKey(lp, "RESAMPLE") == NULL) {
+          msLayerSetProcessingKey(lp, "RESAMPLE", "nearest");
+        }
       }
     }
   }
@@ -756,7 +757,7 @@ msBuildWMSLayerURL(mapObj *map, layerObj *lp, int nRequestType,
 
     if (nVersion >= OWS_1_1_0)
       pszExceptionsParam = "application/vnd.ogc.se_xml";
-    else if (nVersion > OWS_1_1_0)  /* 1.0.1 to 1.0.7 */
+    else if (nVersion > OWS_1_0_0)  /* 1.0.1 to 1.0.7 */
       pszExceptionsParam = "SE_XML";
     else
       pszExceptionsParam = "WMS_XML";

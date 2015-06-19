@@ -392,19 +392,16 @@ int msLoadMapContextLayerFormat(CPLXMLNode *psFormat, layerObj *layer)
   pszValue = msLookupHashTable(&(layer->metadata), "wms_format");
 
   if (
-#if !(defined USE_GD_PNG || defined USE_PNG)
+    pszValue && (
+#if !(defined USE_PNG)
     strcasecmp(pszValue, "image/png") == 0 ||
     strcasecmp(pszValue, "PNG") == 0 ||
 #endif
-#if !(defined USE_GD_JPEG || defined USE_JPEG)
+#if !(defined USE_JPEG)
     strcasecmp(pszValue, "image/jpeg") == 0 ||
     strcasecmp(pszValue, "JPEG") == 0 ||
 #endif
-#ifndef USE_GD_GIF
-    strcasecmp(pszValue, "image/gif") == 0 ||
-    strcasecmp(pszValue, "GIF") == 0 ||
-#endif
-    0 ) {
+    0 )) {
     char **papszList=NULL;
     int i, numformats=0;
 
@@ -414,11 +411,11 @@ int msLoadMapContextLayerFormat(CPLXMLNode *psFormat, layerObj *layer)
     papszList = msStringSplit(pszValue, ',', &numformats);
     for(i=0; i < numformats; i++) {
       if (
-#if (defined USE_GD_PNG || defined USE_PNG)
+#if (defined USE_PNG)
         strcasecmp(papszList[i], "image/png") == 0 ||
         strcasecmp(papszList[i], "PNG") == 0 ||
 #endif
-#if (defined USE_GD_JPEG || defined USE_JPEG)
+#if (defined USE_JPEG)
         strcasecmp(papszList[i], "image/jpeg") == 0 ||
         strcasecmp(papszList[i], "JPEG") == 0 ||
 #endif
@@ -1035,7 +1032,11 @@ int msLoadMapContextLayer(mapObj *map, CPLXMLNode *psLayer, int nVersion,
   if (psExtension != NULL) {
     pszValue = (char*)CPLGetXMLValue(psExtension, "ol:opacity", NULL);
     if(pszValue != NULL) {
-      layer->opacity = atof(pszValue)*100;
+      if(!layer->compositer) {
+        layer->compositer = msSmallMalloc(sizeof(LayerCompositer));
+        initLayerCompositer(layer->compositer);
+      }
+      layer->compositer->opacity = atof(pszValue)*100;
     }
   }
 
@@ -1337,10 +1338,7 @@ int msWriteMapContext(mapObj *map, FILE *stream)
   }
 
   /* file header */
-  msOWSPrintEncodeMetadata(stream, &(map->web.metadata),
-                           NULL, "wms_encoding", OWS_NOERR,
-                           "<?xml version='1.0' encoding=\"%s\" standalone=\"no\" ?>\n",
-                           "ISO-8859-1");
+  msIO_fprintf( stream, "<?xml version='1.0' encoding=\"UTF-8\" standalone=\"no\" ?>\n");
 
   /* set the WMS_Viewer_Context information */
   pszEncodedVal = msEncodeHTMLEntities(version);

@@ -34,8 +34,6 @@
 #include "cpl_string.h"
 #endif
 
-
-
 #define SLD_LINE_SYMBOL_NAME "sld_line_symbol"
 #define SLD_LINE_SYMBOL_DASH_NAME "sld_line_symbol_dash"
 #define SLD_MARK_SYMBOL_SQUARE "sld_mark_symbol_square"
@@ -92,11 +90,15 @@ int msSLDApplySLDURL(mapObj *map, char *szURL, int iLayer,
           int   nBufsize=0;
           fseek(fp, 0, SEEK_END);
           nBufsize = ftell(fp);
-          rewind(fp);
-          pszSLDbuf = (char*)malloc((nBufsize+1)*sizeof(char));
-          fread(pszSLDbuf, 1, nBufsize, fp);
+          if(nBufsize > 0) {
+            rewind(fp);
+            pszSLDbuf = (char*)malloc((nBufsize+1)*sizeof(char));
+            fread(pszSLDbuf, 1, nBufsize, fp);
+            pszSLDbuf[nBufsize] = '\0';
+          } else {
+            msSetError(MS_WMSERR, "Could not open SLD %s as it appears empty", "msSLDApplySLDURL", szURL);
+          }
           fclose(fp);
-          pszSLDbuf[nBufsize] = '\0';
           unlink(pszSLDTmpFile);
         }
       } else {
@@ -135,8 +137,7 @@ int msSLDApplySLDURL(mapObj *map, char *szURL, int iLayer,
 /*      they have the same name, copy the classes asscoaited with       */
 /*      the SLD layers onto the map layers.                             */
 /************************************************************************/
-int msSLDApplySLD(mapObj *map, char *psSLDXML, int iLayer,
-                  char *pszStyleLayerName, char **ppszLayerNames)
+int msSLDApplySLD(mapObj *map, char *psSLDXML, int iLayer, char *pszStyleLayerName, char **ppszLayerNames)
 {
 #if defined(USE_WMS_SVR) || defined (USE_WFS_SVR) || defined (USE_WCS_SVR) || defined(USE_SOS_SVR)
 
@@ -160,7 +161,6 @@ int msSLDApplySLD(mapObj *map, char *psSLDXML, int iLayer,
   layerObj *lp = NULL;
   char *pszSqlExpression=NULL;
   FilterEncodingNode *psExpressionNode =NULL;
-  int bFailedExpression=0;
 
   pasLayers = msSLDParseSLD(map, psSLDXML, &nLayers);
   /* -------------------------------------------------------------------- */
@@ -202,9 +202,6 @@ int msSLDApplySLD(mapObj *map, char *psSLDXML, int iLayer,
         }
       }
     }
-  }
-
-  if (pasLayers && nLayers > 0) {
     for (i=0; i<map->numlayers; i++) {
       if (iLayer >=0 && iLayer< map->numlayers) {
         i = iLayer;
@@ -231,7 +228,8 @@ int msSLDApplySLD(mapObj *map, char *psSLDXML, int iLayer,
           pszSLDNotSupported = msOWSLookupMetadata(&(GET_LAYER(map, i)->metadata), "M", "SLD_NOT_SUPPORTED");
           if (pszSLDNotSupported) {
             msSetError(MS_WMSERR, "Layer %s does not support SLD", "msSLDApplySLD", pasLayers[j].name);
-            return MS_FAILURE;
+            nsStatus = MS_FAILURE;
+            goto sld_cleanup;
           }
 #endif
 
@@ -264,7 +262,6 @@ int msSLDApplySLD(mapObj *map, char *psSLDXML, int iLayer,
               msCopyClass(GET_LAYER(map, i)->class[iClass],
                           pasLayers[j].class[k], NULL);
               GET_LAYER(map, i)->class[iClass]->layer = GET_LAYER(map, i);
-              GET_LAYER(map, i)->class[iClass]->type = GET_LAYER(map, i)->type;
               GET_LAYER(map, i)->numclasses++;
 
               /*aliases may have been used as part of the sld text symbolizer for
@@ -326,8 +323,8 @@ int msSLDApplySLD(mapObj *map, char *psSLDXML, int iLayer,
 
           /* opacity for sld raster */
           if (GET_LAYER(map, i)->type == MS_LAYER_RASTER &&
-              pasLayers[j].opacity != -1)
-            GET_LAYER(map, i)->opacity = pasLayers[j].opacity;
+              pasLayers[i].compositer && pasLayers[j].compositer->opacity != 100)
+            msSetLayerOpacity(GET_LAYER(map, i), pasLayers[j].compositer->opacity);
 
           /* mark as auto-generate SLD */
           if (GET_LAYER(map, i)->connectiontype == MS_WMS)
@@ -343,7 +340,6 @@ int msSLDApplySLD(mapObj *map, char *psSLDXML, int iLayer,
               (GET_LAYER(map, i)->type ==  MS_LAYER_POINT ||
                GET_LAYER(map, i)->type == MS_LAYER_LINE ||
                GET_LAYER(map, i)->type == MS_LAYER_POLYGON ||
-               GET_LAYER(map, i)->type == MS_LAYER_ANNOTATION ||
                GET_LAYER(map, i)->type == MS_LAYER_TILEINDEX)) {
             FilterEncodingNode *psNode = NULL;
 
@@ -392,56 +388,43 @@ int msSLDApplySLD(mapObj *map, char *psSLDXML, int iLayer,
 
             pasLayers[j].layerinfo=NULL;
 
-            if( nStatus != MS_SUCCESS )
-              return nStatus;
+            if( nStatus != MS_SUCCESS ) {
+              goto sld_cleanup;
+            }
           } else {
             /*in some cases it would make sense to concatenate all the class
               expressions and use it to set the filter on the layer. This
               could increase performace. Will do it for db types layers #2840*/
             lp = GET_LAYER(map, i);
-            if (lp->filter.string == NULL ||
-                (lp->filter.string && lp->filter.type == MS_EXPRESSION)) {
-              if (lp->connectiontype == MS_POSTGIS || lp->connectiontype ==  MS_ORACLESPATIAL ||
-                  lp->connectiontype == MS_SDE || lp->connectiontype == MS_PLUGIN) {
+            if (lp->filter.string == NULL || (lp->filter.string && lp->filter.type == MS_STRING && !lp->filteritem)) {
+              if (lp->connectiontype == MS_POSTGIS || lp->connectiontype ==  MS_ORACLESPATIAL || lp->connectiontype == MS_PLUGIN) {
                 if (lp->numclasses > 0) {
-                  /*check first that all classes have an expression type. That is
+                  /* check first that all classes have an expression type. That is
                     the only way we can concatenate them and set the filter
-                    expression*/
+                    expression */
                   for (k=0; k<lp->numclasses; k++) {
                     if (lp->class[k]->expression.type != MS_EXPRESSION)
                       break;
                   }
                   if (k == lp->numclasses) {
-                    bFailedExpression = 0;
                     for (k=0; k<lp->numclasses; k++) {
                       if (pszBuffer == NULL)
-                        snprintf(szTmp, sizeof(szTmp), "%s", "((");
+                        snprintf(szTmp, sizeof(szTmp), "%s", "(("); /* we a building a string expression, explicitly set type below */
                       else
                         snprintf(szTmp, sizeof(szTmp), "%s", " OR ");
 
-                      pszBuffer =msStringConcatenate(pszBuffer, szTmp);
-                      psExpressionNode = BuildExpressionTree(lp->class[k]->expression.string,NULL);
-                      if (psExpressionNode) {
-                        pszSqlExpression = FLTGetSQLExpression(psExpressionNode,lp);
-                        if (pszSqlExpression) {
-                          pszBuffer =
-                            msStringConcatenate(pszBuffer, pszSqlExpression);
-                          msFree(pszSqlExpression);
-                        } else {
-                          bFailedExpression =1;
-                          break;
-                        }
-                        FLTFreeFilterEncodingNode(psExpressionNode);
-                      } else {
-                        bFailedExpression =1;
-                        break;
-                      }
+                      pszBuffer = msStringConcatenate(pszBuffer, szTmp);
+                      pszBuffer = msStringConcatenate(pszBuffer, lp->class[k]->expression.string);
                     }
-                    if (!bFailedExpression) {
-                      snprintf(szTmp, sizeof(szTmp), "%s", "))");
-                      pszBuffer =msStringConcatenate(pszBuffer, szTmp);
-                      msLoadExpressionString(&lp->filter, pszBuffer);
-                    }
+
+                    snprintf(szTmp, sizeof(szTmp), "%s", "))");
+                    pszBuffer =msStringConcatenate(pszBuffer, szTmp);
+                    
+                    msFreeExpression(&lp->filter);
+                    msInitExpression(&lp->filter);
+                    lp->filter.string = msStrdup(pszBuffer);
+                    lp->filter.type = MS_EXPRESSION;
+
                     msFree(pszBuffer);
                     pszBuffer = NULL;
                   }
@@ -474,10 +457,15 @@ int msSLDApplySLD(mapObj *map, char *psSLDXML, int iLayer,
       *ppszLayerNames = pszTmp;
 
     }
-    for (i=0; i<nLayers; i++)
-      freeLayer(&pasLayers[i]);
-    msFree(pasLayers);
   }
+  
+  nStatus = MS_SUCCESS;
+
+sld_cleanup:
+  for (i=0; i<nLayers; i++)
+     freeLayer(&pasLayers[i]);
+  msFree(pasLayers);
+
   if(map->debug == MS_DEBUGLEVEL_VVV) {
     tmpfilename = msTmpFile(map, map->mappath, NULL, "_sld.map");
     if (tmpfilename == NULL) {
@@ -489,7 +477,7 @@ int msSLDApplySLD(mapObj *map, char *psSLDXML, int iLayer,
       msFree(tmpfilename);
     }
   }
-  return MS_SUCCESS;
+  return nStatus;
 
 
 #else
@@ -784,8 +772,7 @@ int msSLDParseNamedLayer(CPLXMLNode *psRoot, layerObj *psLayer)
           /*      NOTE : Spatial Filter is not supported.                         */
           /* -------------------------------------------------------------------- */
           psFilter = CPLGetXMLNode(psRule, "Filter");
-          if (psFilter && psFilter->psChild &&
-              psFilter->psChild->pszValue) {
+          if (psFilter && psFilter->psChild && psFilter->psChild->pszValue) {
             CPLXMLNode *psTmpNextNode = NULL;
             /* clone the tree and set the next node to null */
             /* so we only have the Filter node */
@@ -839,7 +826,7 @@ int msSLDParseNamedLayer(CPLXMLNode *psRoot, layerObj *psLayer)
                     msInsertHashTable(&psLayer->metadata, key,
                                       msLookupHashTable(&psCurrentLayer->metadata, key));
                 }
-                FLTPreParseFilterForAlias(psNode, psLayer->map, j, "G");
+                FLTPreParseFilterForAliasAndGroup(psNode, psLayer->map, j, "G");
               }
 
               pszExpression = FLTGetCommonExpression(psNode, psLayer);
@@ -850,9 +837,13 @@ int msSLDParseNamedLayer(CPLXMLNode *psRoot, layerObj *psLayer)
                 nNewClasses =
                   nClassAfterFilter - nClassBeforeFilter;
                 for (i=0; i<nNewClasses; i++) {
-                  msLoadExpressionString(&psLayer->
+                  expressionObj* exp = &(psLayer->
                                          class[psLayer->numclasses-1-i]->
-                                         expression, pszExpression);
+                                         expression);
+                  msFreeExpression(exp);
+                  msInitExpression(exp);
+                  exp->string = msStrdup(pszExpression);
+                  exp->type = MS_EXPRESSION;
                 }
                 msFree(pszExpression);
                 pszExpression = NULL;
@@ -1027,7 +1018,7 @@ int msSLDParseRule(CPLXMLNode *psRoot, layerObj *psLayer)
       continue;
     }
     if (nSymbolizer == 0)
-      psLayer->type = MS_LAYER_ANNOTATION;
+      psLayer->type = MS_LAYER_POINT;
     msSLDParseTextSymbolizer(psTextSymbolizer, psLayer, bSymbolizer);
     psTextSymbolizer = psTextSymbolizer->psNext;
   }
@@ -1207,6 +1198,7 @@ int msSLDParseStroke(CPLXMLNode *psStroke, styleObj *psStyle,
           int nDash = 0, i;
           char **aszValues = NULL;
           int nMaxDash;
+          if(pszDashValue) free(pszDashValue); /* free previous if multiple stroke-dasharray attributes were found */
           pszDashValue =
             msStrdup(psCssParam->psChild->psNext->pszValue);
           aszValues = msStringSplit(pszDashValue, ' ', &nDash);
@@ -1219,10 +1211,9 @@ int msSLDParseStroke(CPLXMLNode *psStroke, styleObj *psStyle,
             for (i=0; i<nMaxDash; i++)
               psStyle->pattern[i] = atof(aszValues[i]);
 
-            msFreeCharArray(aszValues, nDash);
             psStyle->linecap = MS_CJC_BUTT;
           }
-
+          msFreeCharArray(aszValues, nDash);
         }
       } else if (strcasecmp(psStrkName, "stroke-opacity") == 0) {
         if(psCssParam->psChild &&  psCssParam->psChild->psNext &&
@@ -1247,10 +1238,10 @@ int msSLDParseStroke(CPLXMLNode *psStroke, styleObj *psStyle,
   /* then again the fill parameter can be used inside both elements. */
   psGraphicFill =  CPLGetXMLNode(psStroke, "GraphicFill");
   if (psGraphicFill)
-    msSLDParseGraphicFillOrStroke(psGraphicFill, pszDashValue, psStyle, map, 0);
+    msSLDParseGraphicFillOrStroke(psGraphicFill, pszDashValue, psStyle, map);
   psGraphicFill =  CPLGetXMLNode(psStroke, "GraphicStroke");
   if (psGraphicFill)
-    msSLDParseGraphicFillOrStroke(psGraphicFill, pszDashValue, psStyle, map, 0);
+    msSLDParseGraphicFillOrStroke(psGraphicFill, pszDashValue, psStyle, map);
 
   if (pszDashValue)
     free(pszDashValue);
@@ -1486,10 +1477,10 @@ int msSLDParsePolygonFill(CPLXMLNode *psFill, styleObj *psStyle,
   /* then again the fill parameter can be used inside both elements. */
   psGraphicFill =  CPLGetXMLNode(psFill, "GraphicFill");
   if (psGraphicFill)
-    msSLDParseGraphicFillOrStroke(psGraphicFill, NULL, psStyle, map, 0);
+    msSLDParseGraphicFillOrStroke(psGraphicFill, NULL, psStyle, map);
   psGraphicFill =  CPLGetXMLNode(psFill, "GraphicStroke");
   if (psGraphicFill)
-    msSLDParseGraphicFillOrStroke(psGraphicFill, NULL, psStyle, map, 0);
+    msSLDParseGraphicFillOrStroke(psGraphicFill, NULL, psStyle, map);
 
 
   return MS_SUCCESS;
@@ -1504,10 +1495,9 @@ int msSLDParsePolygonFill(CPLXMLNode *psFill, styleObj *psStyle,
 /************************************************************************/
 int msSLDParseGraphicFillOrStroke(CPLXMLNode *psRoot,
                                   char *pszDashValue,
-                                  styleObj *psStyle, mapObj *map,
-                                  int bPointLayer)
+                                  styleObj *psStyle, mapObj *map)
 {
-  CPLXMLNode  *psCssParam, *psGraphic, *psExternalGraphic, *psMark, *psSize;
+  CPLXMLNode  *psCssParam, *psGraphic, *psExternalGraphic, *psMark, *psSize, *psGap, *psInitialGap;
   CPLXMLNode *psWellKnownName, *psStroke, *psFill;
   CPLXMLNode *psDisplacement=NULL, *psDisplacementX=NULL, *psDisplacementY=NULL;
   CPLXMLNode *psOpacity=NULL, *psRotation=NULL;
@@ -1517,8 +1507,6 @@ int msSLDParseGraphicFillOrStroke(CPLXMLNode *psRoot,
   int bFilled = 0;
   CPLXMLNode *psPropertyName=NULL;
   char szTmp[256];
-
-  bPointLayer=0;
 
   if (!psRoot || !psStyle || !map)
     return MS_FAILURE;
@@ -1731,6 +1719,14 @@ int msSLDParseGraphicFillOrStroke(CPLXMLNode *psRoot,
         msSLDParseExternalGraphic(psExternalGraphic, psStyle, map);
     }
     msFree(pszSymbolName);
+  }
+  psGap =  CPLGetXMLNode(psRoot, "Gap");
+  if (psGap && psGap->psChild && psGap->psChild->pszValue) {
+    psStyle->gap = atof(psGap->psChild->pszValue);
+  }
+  psInitialGap =  CPLGetXMLNode(psRoot, "InitialGap");
+  if (psInitialGap && psInitialGap->psChild && psInitialGap->psChild->pszValue) {
+    psStyle->initialgap = atof(psInitialGap->psChild->pszValue);
   }
 
   return MS_SUCCESS;
@@ -2059,7 +2055,7 @@ int msSLDParsePointSymbolizer(CPLXMLNode *psRoot, layerObj *psLayer,
 
   msSLDParseGraphicFillOrStroke(psRoot, NULL,
                                 psLayer->class[nClassId]->styles[iStyle],
-                                psLayer->map, 1);
+                                psLayer->map);
 
   return MS_SUCCESS;
 }
@@ -2075,9 +2071,6 @@ int msSLDParsePointSymbolizer(CPLXMLNode *psRoot, layerObj *psLayer,
 int msSLDParseExternalGraphic(CPLXMLNode *psExternalGraphic,
                               styleObj *psStyle,  mapObj *map)
 {
-  /* needed for libcurl function msHTTPGetFile in maphttp.c */
-#if defined(USE_CURL)
-
   char *pszFormat = NULL;
   CPLXMLNode *psURL=NULL, *psFormat=NULL, *psTmp=NULL;
   char *pszURL=NULL;
@@ -2089,12 +2082,13 @@ int msSLDParseExternalGraphic(CPLXMLNode *psExternalGraphic,
   if (psFormat && psFormat->psChild && psFormat->psChild->pszValue)
     pszFormat = psFormat->psChild->pszValue;
 
-  /* supports GIF and PNG */
+  /* supports GIF and PNG and SVG */
   if (pszFormat &&
       (strcasecmp(pszFormat, "GIF") == 0 ||
        strcasecmp(pszFormat, "image/gif") == 0 ||
        strcasecmp(pszFormat, "PNG") == 0 ||
-       strcasecmp(pszFormat, "image/png") == 0)) {
+       strcasecmp(pszFormat, "image/png") == 0 ||
+       strcasecmp(pszFormat, "image/svg+xml") == 0)) {
 
     /* <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://www.vendor.com/geosym/2267.svg"/> */
     psURL = CPLGetXMLNode(psExternalGraphic, "OnlineResource");
@@ -2107,6 +2101,14 @@ int msSLDParseExternalGraphic(CPLXMLNode *psExternalGraphic,
       }
       if (psTmp && psTmp->psChild) {
         pszURL = (char*)psTmp->psChild->pszValue;
+
+        /* validate the ExternalGraphic parameter */
+        if(msValidateParameter(pszURL, msLookupHashTable(&(map->web.validation), "sld_external_graphic"),
+                               NULL, NULL, NULL) != MS_SUCCESS) {
+          msSetError(MS_WEBERR, "SLD ExternalGraphic OnlineResource value fails to validate against sld_external_graphic VALIDATION", "mapserv()");
+          return MS_FAILURE;
+        }
+
 
         /*external symbols using http will be automaticallly downloaded. The file should be
           saved in a temporary directory (msAddImageSymbol) #2305*/
@@ -2129,9 +2131,6 @@ int msSLDParseExternalGraphic(CPLXMLNode *psExternalGraphic,
   }
 
   return MS_SUCCESS;
-#else
-  return MS_FAILURE;
-#endif
 }
 
 
@@ -2370,14 +2369,6 @@ int msSLDParseRasterSymbolizer(CPLXMLNode *psRoot, layerObj *psLayer)
   if (!psRoot || !psLayer)
     return MS_FAILURE;
 
-  /* ==================================================================== */
-  /*      The default opacity value is 0 : we set it here to -1           */
-  /*      so that when testing the values in msSLDApplySLD (to be         */
-  /*      applied on the layer), we can assume that a value of 0 comes    */
-  /*      from the sld.                                                   */
-  /* ==================================================================== */
-  psLayer->opacity = -1;
-
   psOpacity = CPLGetXMLNode(psRoot, "Opacity");
   if (psOpacity) {
     if (psOpacity->psChild && psOpacity->psChild->pszValue)
@@ -2385,7 +2376,7 @@ int msSLDParseRasterSymbolizer(CPLXMLNode *psRoot, layerObj *psLayer)
 
     /* values in sld goes from 0.0 (for transparent) to 1.0 (for full opacity); */
     if (dfOpacity >=0.0 && dfOpacity <=1.0)
-      psLayer->opacity = (int)(dfOpacity * 100);
+      msSetLayerOpacity(psLayer,(int)(dfOpacity * 100));
     else {
       msSetError(MS_WMSERR, "Invalid opacity value. Values should be between 0.0 and 1.0", "msSLDParseRasterSymbolizer()");
       return MS_FAILURE;
@@ -2556,7 +2547,7 @@ int msSLDParseRasterSymbolizer(CPLXMLNode *psRoot, layerObj *psLayer)
         psNode = psNode->psNext;
       }
 
-      if (nValues == nThresholds+1) {
+      if (nThresholds > 0 && nValues == nThresholds+1) {
         /*free existing classes*/
         for(i=0; i<psLayer->numclasses; i++) {
           if (psLayer->class[i] != NULL) {
@@ -2760,6 +2751,22 @@ int msSLDParseTextParams(CPLXMLNode *psRoot, layerObj *psLayer,
           psCssParam = psCssParam->psNext;
         }
       }
+
+      /* -------------------------------------------------------------------- */
+      /*      parse the label placement.                                      */
+      /* -------------------------------------------------------------------- */
+      psLabelPlacement = CPLGetXMLNode(psRoot, "LabelPlacement");
+      if (psLabelPlacement) {
+        psPointPlacement = CPLGetXMLNode(psLabelPlacement,
+                                         "PointPlacement");
+        psLinePlacement = CPLGetXMLNode(psLabelPlacement,
+                                        "LinePlacement");
+        if (psPointPlacement)
+          ParseTextPointPlacement(psPointPlacement, psClass);
+        if (psLinePlacement)
+          ParseTextLinePlacement(psLinePlacement, psClass);
+      }
+
       /* -------------------------------------------------------------------- */
       /*      build the font name using the font font-family, font-style      */
       /*      and font-weight. The name building uses a - between these       */
@@ -2781,28 +2788,9 @@ int msSLDParseTextParams(CPLXMLNode *psRoot, layerObj *psLayer,
         if ((msLookupHashTable(&(psLayer->map->fontset.fonts), szFontName) !=NULL)) {
           bFontSet = 1;
           psLabelObj->font = msStrdup(szFontName);
-          psLabelObj->type = MS_TRUETYPE;
-          psLabelObj->size = dfFontSize;
         }
       }
-      if (!bFontSet) {
-        psLabelObj->type = MS_BITMAP;
-        psLabelObj->size = MS_MEDIUM;
-      }
-      /* -------------------------------------------------------------------- */
-      /*      parse the label placement.                                      */
-      /* -------------------------------------------------------------------- */
-      psLabelPlacement = CPLGetXMLNode(psRoot, "LabelPlacement");
-      if (psLabelPlacement) {
-        psPointPlacement = CPLGetXMLNode(psLabelPlacement,
-                                         "PointPlacement");
-        psLinePlacement = CPLGetXMLNode(psLabelPlacement,
-                                        "LinePlacement");
-        if (psPointPlacement)
-          ParseTextPointPlacement(psPointPlacement, psClass);
-        if (psLinePlacement)
-          ParseTextLinePlacement(psLinePlacement, psClass);
-      }
+      psLabelObj->size = dfFontSize;
 
       /* -------------------------------------------------------------------- */
       /*      parse the halo parameter.                                       */
@@ -3536,6 +3524,15 @@ char *msSLDGenerateLineSLD(styleObj *psStyle, layerObj *psLayer, int nVersion)
 
     pszSLD = msStringConcatenate(pszSLD, pszGraphicSLD);
 
+    if(nVersion >= OWS_1_1_0) {
+      if(psStyle->gap > 0) {
+        snprintf(szTmp, sizeof(szTmp), "<%sGap>%.2f</%sGap>\n",  sNameSpace,psStyle->gap,sNameSpace);
+      }
+      if(psStyle->initialgap > 0) {
+        snprintf(szTmp, sizeof(szTmp), "<%sInitialGap>%.2f</%sInitialGap>\n",  sNameSpace,psStyle->initialgap,sNameSpace);
+      }
+    }
+
     snprintf(szTmp, sizeof(szTmp), "</%sGraphicStroke>\n",  sNameSpace);
 
     pszSLD = msStringConcatenate(pszSLD, szTmp);
@@ -3604,6 +3601,7 @@ char *msSLDGenerateLineSLD(styleObj *psStyle, layerObj *psLayer, int nVersion)
              "<%s name=\"stroke-dasharray\">%s</%s>\n",
              sCssParam, pszDashArray, sCssParam);
     pszSLD = msStringConcatenate(pszSLD, szTmp);
+    msFree(pszDashArray);
   }
 
   snprintf(szTmp, sizeof(szTmp), "</%sStroke>\n",  sNameSpace);
@@ -3835,7 +3833,7 @@ char *msSLDGenerateTextSLD(classObj *psClass, layerObj *psLayer, int nVersion)
     snprintf(szTmp, sizeof(szTmp), "<%sTextSymbolizer>\n",  sNameSpace);
     pszSLD = msStringConcatenate(pszSLD, szTmp);
 
-    snprintf(szTmp, sizeof(szTmp), "<%sLabel>%s</%sLabel>\n",  sNameSpace,
+    snprintf(szTmp, sizeof(szTmp), "<%sLabel><ogc:PropertyName>%s</ogc:PropertyName></%sLabel>\n",  sNameSpace,
              psLayer->labelitem, sNameSpace);
     pszSLD = msStringConcatenate(pszSLD, szTmp);
 
@@ -3846,7 +3844,7 @@ char *msSLDGenerateTextSLD(classObj *psClass, layerObj *psLayer, int nVersion)
     /*      font-weight (bold, normal). These 3 elements are separated      */
     /*      with -.                                                         */
     /* -------------------------------------------------------------------- */
-    if (psLabelObj->type == MS_TRUETYPE && psLabelObj->font) {
+    if (psLabelObj->font) {
       aszFontsParts = msStringSplit(psLabelObj->font, '-', &nFontParts);
       if (nFontParts > 0) {
         snprintf(szTmp, sizeof(szTmp), "<%sFont>\n",  sNameSpace);
@@ -3875,15 +3873,14 @@ char *msSLDGenerateTextSLD(classObj *psClass, layerObj *psLayer, int nVersion)
         /* size */
         if (psLabelObj->size > 0) {
           snprintf(szTmp, sizeof(szTmp),
-                   "<%s name=\"font-size\">%.2f</%s>\n",
+                   "<%s name=\"font-size\">%d</%s>\n",
                    sCssParam, psLabelObj->size, sCssParam);
           pszSLD = msStringConcatenate(pszSLD, szTmp);
         }
         snprintf(szTmp, sizeof(szTmp), "</%sFont>\n",  sNameSpace);
         pszSLD = msStringConcatenate(pszSLD, szTmp);
-
-        msFreeCharArray(aszFontsParts, nFontParts);
       }
+      msFreeCharArray(aszFontsParts, nFontParts);
     }
 
 
@@ -4037,8 +4034,7 @@ char *msSLDGenerateSLDLayer(layerObj *psLayer, int nVersion)
       (psLayer->status == MS_ON || psLayer->status == MS_DEFAULT) &&
       (psLayer->type == MS_LAYER_POINT ||
        psLayer->type == MS_LAYER_LINE ||
-       psLayer->type == MS_LAYER_POLYGON ||
-       psLayer->type == MS_LAYER_ANNOTATION)) {
+       psLayer->type == MS_LAYER_POLYGON )) {
     snprintf(szTmp, sizeof(szTmp), "%s\n",  "<NamedLayer>");
     pszFinalSLD = msStringConcatenate(pszFinalSLD, szTmp);
 
@@ -4191,16 +4187,6 @@ char *msSLDGenerateSLDLayer(layerObj *psLayer, int nVersion)
           }
 
         } else if (psLayer->type == MS_LAYER_POINT) {
-          for (j=0; j<psLayer->class[i]->numstyles; j++) {
-            psStyle = psLayer->class[i]->styles[j];
-            pszSLD = msSLDGeneratePointSLD(psStyle, psLayer, nVersion);
-            if (pszSLD) {
-              pszFinalSLD = msStringConcatenate(pszFinalSLD, pszSLD);
-              free(pszSLD);
-            }
-          }
-
-        } else if (psLayer->type == MS_LAYER_ANNOTATION) {
           for (j=0; j<psLayer->class[i]->numstyles; j++) {
             psStyle = psLayer->class[i]->styles[j];
             pszSLD = msSLDGeneratePointSLD(psStyle, psLayer, nVersion);
@@ -4410,8 +4396,10 @@ char *msSLDGetLeftExpressionOfOperator(char *pszExpression)
       }
       pszReturn[iReturn] = '\0';
     }
-  } else
+  } else {
+    msFree(pszReturn);
     return NULL;
+  }
 
   return pszReturn;
 }
@@ -4551,7 +4539,6 @@ char *msSLDGetAttributeNameOrValue(char *pszExpression,
     if (nTokens > 1) {
       pszAttributeName = msStrdup(aszValues[0]);
       pszAttributeValue =  msStrdup(aszValues[1]);
-      msFreeCharArray(aszValues, nTokens);
     } else {
       nLength = strlen(pszExpression);
       pszAttributeName = (char *)malloc(sizeof(char)*(nLength+1));
@@ -4572,9 +4559,8 @@ char *msSLDGetAttributeNameOrValue(char *pszExpression,
         }
         pszAttributeName[iValue] = '\0';
       }
-
-
     }
+    msFreeCharArray(aszValues, nTokens);
   } else if (bOneCharCompare == 0) {
     nLength = strlen(pszExpression);
     pszAttributeName = (char *)malloc(sizeof(char)*(nLength+1));
@@ -4608,8 +4594,10 @@ char *msSLDGetAttributeNameOrValue(char *pszExpression,
   /*      inside []                                                       */
   /* -------------------------------------------------------------------- */
   if (bReturnName) {
-    if (!pszAttributeName)
+    if (!pszAttributeName) {
+      msFree(pszAttributeValue);
       return NULL;
+    }
 
     nLength = strlen(pszAttributeName);
     pszFinalAttributeName = (char *)malloc(sizeof(char)*(nLength+1));
@@ -4631,13 +4619,18 @@ char *msSLDGetAttributeNameOrValue(char *pszExpression,
       pszFinalAttributeName[iAtt] = '\0';
     }
 
+    msFree(pszAttributeName);
+    msFree(pszAttributeValue);
     return pszFinalAttributeName;
   } else {
 
-    if (!pszAttributeValue)
+    if (!pszAttributeValue) {
+      msFree(pszAttributeName);
       return NULL;
+    }
     nLength = strlen(pszAttributeValue);
     pszFinalAttributeValue = (char *)malloc(sizeof(char)*(nLength+1));
+    pszFinalAttributeValue[0] = '\0';
     bStartCopy= 0;
     iAtt = 0;
     for (i=0; i<nLength; i++) {
@@ -4668,8 +4661,7 @@ char *msSLDGetAttributeNameOrValue(char *pszExpression,
     }
 
     /*trim  for regular expressions*/
-    if (pszFinalAttributeValue && strlen(pszFinalAttributeValue) > 2 &&
-        strcasecmp(pszComparionValue, "PropertyIsLike") == 0) {
+    if (strlen(pszFinalAttributeValue) > 2 && strcasecmp(pszComparionValue, "PropertyIsLike") == 0) {
       int len = strlen(pszFinalAttributeValue);
       msStringTrimBlanks(pszFinalAttributeValue);
       if (pszFinalAttributeValue[0] == '/' &&
@@ -4688,6 +4680,8 @@ char *msSLDGetAttributeNameOrValue(char *pszExpression,
         pszFinalAttributeValue = msReplaceSubstring(pszFinalAttributeValue, ".*", "*");
       }
     }
+    msFree(pszAttributeName);
+    msFree(pszAttributeValue);
     return pszFinalAttributeValue;
   }
 }
@@ -4853,8 +4847,10 @@ FilterEncodingNode *BuildExpressionTree(char *pszExpression,
     }
 
     return psNode;
-  } else
+  } else {
+    msFree(pszFinalExpression);
     return NULL;
+  }
 }
 
 char *msSLDBuildFilterEncoding(FilterEncodingNode *psNode)
@@ -5014,10 +5010,12 @@ char *msSLDParseExpression(char *pszExpression)
       if (strlen(szFinalAtt) > 0 && strlen(szFinalValue) >0) {
         snprintf(szBuffer, sizeof(szBuffer), "<ogc:Filter><ogc:PropertyIsEqualTo><ogc:PropertyName>%s</ogc:PropertyName><ogc:Literal>%s</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>",
                  szFinalAtt, szFinalValue);
+        msFree(pszFilter); /*FIXME: we are possibly discarding a previously set pszFilter */
         pszFilter = msStrdup(szBuffer);
       }
     }
   }
+  msFreeCharArray(aszElements, nElements);
 
   return pszFilter;
 }
@@ -5082,8 +5080,6 @@ char *msSLDConvertRegexExpToOgcIsLike(char *pszRegex)
   return msStrdup(szBuffer);
 }
 
-
-
 /************************************************************************/
 /*                              msSLDGetFilter                          */
 /*                                                                      */
@@ -5110,8 +5106,7 @@ char *msSLDGetFilter(classObj *psClass, const char *pszWfsFilter)
         pszFilter = msStrdup(szBuffer);
       }
     } else if (psClass->expression.type == MS_EXPRESSION) {
-      pszFilter = msSLDParseLogicalExpression(psClass->expression.string,
-                                              pszWfsFilter);
+      pszFilter = msSLDParseLogicalExpression(psClass->expression.string, pszWfsFilter);
     } else if (psClass->expression.type == MS_REGEX) {
       if (psClass->layer && psClass->layer->classitem && psClass->expression.string) {
         pszOgcFilter = msSLDConvertRegexExpToOgcIsLike(psClass->expression.string);
