@@ -11,6 +11,7 @@ mapserver (7.0.0~beta1-1) UNRELEASED; urgency=medium
     - drop libgd-dev
     - add libharfbuzz-dev & libpixman-1-dev
   * Drop SOVERSION from -dbg & -dev package name.
+  * Add libcurl-ssl-dev as alternative for libcurl-gnutls-dev build dependency.
 
  -- Bas Couwenberg <sebastic@debian.org>  Fri, 19 Jun 2015 23:47:49 +0200
 
