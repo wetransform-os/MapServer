@@ -4,6 +4,7 @@ mapserver (6.4.2-1) UNRELEASED; urgency=medium
   * Use upstream-6.4 branch in gbp.conf.
   * New upstream release.
   * Drop php56.patch, applied upstream; refresh remaining patches.
+  * Update symbols for amd64.
 
  -- Bas Couwenberg <sebastic@debian.org>  Tue, 07 Jul 2015 19:24:57 +0200
 
