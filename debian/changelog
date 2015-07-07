@@ -1,4 +1,4 @@
-mapserver (6.4.2-1) UNRELEASED; urgency=medium
+mapserver (6.4.2-1) unstable; urgency=medium
 
   * Update watch file to use GitHub releases instead of download.osgeo.org.
   * Use upstream-6.4 branch in gbp.conf.
@@ -6,7 +6,7 @@ mapserver (6.4.2-1) UNRELEASED; urgency=medium
   * Drop php56.patch, applied upstream; refresh remaining patches.
   * Update symbols for amd64.
 
- -- Bas Couwenberg <sebastic@debian.org>  Tue, 07 Jul 2015 19:24:57 +0200
+ -- Bas Couwenberg <sebastic@debian.org>  Tue, 07 Jul 2015 21:15:56 +0200
 
 mapserver (6.4.1-6) unstable; urgency=medium
 
