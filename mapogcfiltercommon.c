@@ -51,9 +51,7 @@ char *FLTGetIsLikeComparisonCommonExpression(FilterEncodingNode *psFilterNode)
 
   int nLength=0, i=0, iTmp=0;
 
-
-  if (!psFilterNode || !psFilterNode->pOther || !psFilterNode->psLeftNode ||
-      !psFilterNode->psRightNode || !psFilterNode->psRightNode->pszValue)
+  if (!psFilterNode || !psFilterNode->pOther || !psFilterNode->psLeftNode || !psFilterNode->psRightNode || !psFilterNode->psRightNode->pszValue)
     return NULL;
 
   propIsLike = (FEPropertyIsLike *)psFilterNode->pOther;
@@ -62,11 +60,8 @@ char *FLTGetIsLikeComparisonCommonExpression(FilterEncodingNode *psFilterNode)
   pszEscape = propIsLike->pszEscapeChar;
   bCaseInsensitive = propIsLike->bCaseInsensitive;
 
-  if (!pszWild || strlen(pszWild) == 0 ||
-      !pszSingle || strlen(pszSingle) == 0 ||
-      !pszEscape || strlen(pszEscape) == 0)
+  if (!pszWild || strlen(pszWild) == 0 || !pszSingle || strlen(pszSingle) == 0 || !pszEscape || strlen(pszEscape) == 0)
     return NULL;
-
 
   /* -------------------------------------------------------------------- */
   /*      Use operand with regular expressions.                           */
@@ -81,8 +76,8 @@ char *FLTGetIsLikeComparisonCommonExpression(FilterEncodingNode *psFilterNode)
   strlcat(szBuffer, psFilterNode->psLeftNode->pszValue, bufferSize);
   szBuffer[strlen(szBuffer)] = '\0';
 
-  /*#3521 */
-  if(bCaseInsensitive == 1)
+  /* #3521 */
+  if (bCaseInsensitive == 1)
     sprintf(szTmp, "%s", "]\" ~* \"");
   else
     sprintf(szTmp, "%s", "]\" ~ \"");
@@ -90,35 +85,28 @@ char *FLTGetIsLikeComparisonCommonExpression(FilterEncodingNode *psFilterNode)
   strlcat(szBuffer, szTmp, bufferSize);
   szBuffer[strlen(szBuffer)] = '\0';
 
-
   pszValue = psFilterNode->psRightNode->pszValue;
   nLength = strlen(pszValue);
 
   iTmp =0;
-  if (nLength > 0 && pszValue[0] != pszWild[0] &&
-      pszValue[0] != pszSingle[0] &&
-      pszValue[0] != pszEscape[0]) {
+  if (nLength > 0 && pszValue[0] != pszWild[0] && pszValue[0] != pszSingle[0] && pszValue[0] != pszEscape[0]) {
     szTmp[iTmp]= '^';
     iTmp++;
   }
   for (i=0; i<nLength; i++) {
-    if (pszValue[i] != pszWild[0] &&
-        pszValue[i] != pszSingle[0] &&
-        pszValue[i] != pszEscape[0]) {
+    if (pszValue[i] != pszWild[0] && pszValue[i] != pszSingle[0] && pszValue[i] != pszEscape[0]) {
       szTmp[iTmp] = pszValue[i];
       iTmp++;
       szTmp[iTmp] = '\0';
-    } else if  (pszValue[i] == pszSingle[0]) {
+    } else if (pszValue[i] == pszSingle[0]) {
       szTmp[iTmp] = '.';
       iTmp++;
       szTmp[iTmp] = '\0';
-    } else if  (pszValue[i] == pszEscape[0]) {
+    } else if (pszValue[i] == pszEscape[0]) {
       szTmp[iTmp] = '\\';
       iTmp++;
       szTmp[iTmp] = '\0';
     } else if (pszValue[i] == pszWild[0]) {
-      /* strcat(szBuffer, "[0-9,a-z,A-Z,\\s]*"); */
-      /* iBuffer+=17; */
       szTmp[iTmp++] = '.';
       szTmp[iTmp++] = '*';
       szTmp[iTmp] = '\0';
@@ -139,10 +127,10 @@ char *FLTGetIsBetweenComparisonCommonExpresssion(FilterEncodingNode *psFilterNod
   char **aszBounds = NULL;
   int nBounds = 0;
   int bString=0;
+  int bDateTime = 0;
   char *pszExpression=NULL, *pszTmpEscaped;
 
-  if (!psFilterNode ||
-      !(strcasecmp(psFilterNode->pszValue, "PropertyIsBetween") == 0))
+  if (!psFilterNode || !(strcasecmp(psFilterNode->pszValue, "PropertyIsBetween") == 0))
     return NULL;
 
   if (psFilterNode->psLeftNode == NULL || psFilterNode->psRightNode == NULL )
@@ -156,26 +144,29 @@ char *FLTGetIsBetweenComparisonCommonExpresssion(FilterEncodingNode *psFilterNod
     msFreeCharArray(aszBounds, nBounds);
     return NULL;
   }
+
   /* -------------------------------------------------------------------- */
   /*      check if the value is a numeric value or alphanumeric. If it    */
   /*      is alphanumeric, add quotes around attribute and values.        */
   /* -------------------------------------------------------------------- */
   bString = 0;
   if (aszBounds[0]) {
+    const char* pszType;
     snprintf(szBuffer,  bufferSize, "%s_type",  psFilterNode->psLeftNode->pszValue);
-    if (msOWSLookupMetadata(&(lp->metadata), "OFG", szBuffer) != NULL &&
-        (strcasecmp(msOWSLookupMetadata(&(lp->metadata), "OFG", szBuffer), "Character") == 0))
+    pszType = msOWSLookupMetadata(&(lp->metadata), "OFG", szBuffer);
+    if (pszType != NULL && (strcasecmp(pszType, "Character") == 0))
       bString = 1;
+    else if (pszType != NULL && (strcasecmp(pszType, "Date") == 0))
+      bDateTime = 1;
     else if (FLTIsNumeric(aszBounds[0]) == MS_FALSE)
       bString = 1;
   }
-  if (!bString) {
+  if (!bString && !bDateTime) {
     if (aszBounds[1]) {
       if (FLTIsNumeric(aszBounds[1]) == MS_FALSE)
         bString = 1;
     }
   }
-
 
   /* -------------------------------------------------------------------- */
   /*      build expresssion.                                              */
@@ -199,8 +190,10 @@ char *FLTGetIsBetweenComparisonCommonExpresssion(FilterEncodingNode *psFilterNod
   pszExpression = msStringConcatenate(pszExpression, szBuffer);
 
   if (bString) {
-    sprintf(szBuffer,"%s", "\"");
-    pszExpression = msStringConcatenate(pszExpression, szBuffer);
+    pszExpression = msStringConcatenate(pszExpression, "\"");
+  }
+  else if (bDateTime) {
+    pszExpression = msStringConcatenate(pszExpression, "`");
   }
 
   pszTmpEscaped = msStringEscape(aszBounds[0]);
@@ -208,8 +201,10 @@ char *FLTGetIsBetweenComparisonCommonExpresssion(FilterEncodingNode *psFilterNod
   if(pszTmpEscaped != aszBounds[0] ) msFree(pszTmpEscaped);
   pszExpression = msStringConcatenate(pszExpression, szBuffer);
   if (bString) {
-    sprintf(szBuffer, "%s", "\"");
-    pszExpression = msStringConcatenate(pszExpression, szBuffer);
+    pszExpression = msStringConcatenate(pszExpression, "\"");
+  }
+  else if (bDateTime) {
+    pszExpression = msStringConcatenate(pszExpression, "`");
   }
 
   sprintf(szBuffer, "%s", " AND ");
@@ -233,17 +228,21 @@ char *FLTGetIsBetweenComparisonCommonExpresssion(FilterEncodingNode *psFilterNod
   sprintf(szBuffer, "%s", " <= ");
   pszExpression = msStringConcatenate(pszExpression, szBuffer);
   if (bString) {
-    sprintf(szBuffer,"%s", "\"");
-    pszExpression = msStringConcatenate(pszExpression, szBuffer);
+    pszExpression = msStringConcatenate(pszExpression, "\"");
+  }
+  else if (bDateTime) {
+    pszExpression = msStringConcatenate(pszExpression, "`");
   }
   pszTmpEscaped = msStringEscape(aszBounds[1]);
   snprintf(szBuffer, bufferSize, "%s", pszTmpEscaped);
-  if(pszTmpEscaped != aszBounds[1] ) msFree(pszTmpEscaped);
+  if (pszTmpEscaped != aszBounds[1]) msFree(pszTmpEscaped);
   pszExpression = msStringConcatenate(pszExpression, szBuffer);
 
   if (bString) {
-    sprintf(szBuffer,"\"");
-    pszExpression = msStringConcatenate(pszExpression, szBuffer);
+    pszExpression = msStringConcatenate(pszExpression, "\"");
+  }
+  else if (bDateTime) {
+    pszExpression = msStringConcatenate(pszExpression, "`");
   }
   sprintf(szBuffer, "%s", ")");
   pszExpression = msStringConcatenate(pszExpression, szBuffer);
@@ -258,6 +257,7 @@ char *FLTGetBinaryComparisonCommonExpression(FilterEncodingNode *psFilterNode, l
   char szTmp[1024];
   char *pszExpression = NULL, *pszTmpEscaped;
   int bString;
+  int bDateTime;
 
   if (psFilterNode == NULL)
     return NULL;
@@ -267,22 +267,23 @@ char *FLTGetBinaryComparisonCommonExpression(FilterEncodingNode *psFilterNode, l
   /*      is alphanumeric, add quotes around attribute and values.        */
   /* -------------------------------------------------------------------- */
   bString = 0;
+  bDateTime = 0;
   if (psFilterNode->psRightNode->pszValue) {
+    const char* pszType;
     snprintf(szTmp, sizeof(szTmp), "%s_type",  psFilterNode->psLeftNode->pszValue);
-    if (msOWSLookupMetadata(&(lp->metadata), "OFG", szTmp) != NULL &&
-        (strcasecmp(msOWSLookupMetadata(&(lp->metadata), "OFG", szTmp), "Character") == 0))
+    pszType = msOWSLookupMetadata(&(lp->metadata), "OFG", szTmp);
+    if (pszType!= NULL && (strcasecmp(pszType, "Character") == 0))
       bString = 1;
+    else if (pszType!= NULL && (strcasecmp(pszType, "Date") == 0))
+      bDateTime = 1;
     else if (FLTIsNumeric(psFilterNode->psRightNode->pszValue) == MS_FALSE)
       bString = 1;
   }
 
   /* specical case to be able to have empty strings in the expression. */
-  /*propertyislike is always treated as string*/
-  if (psFilterNode->psRightNode->pszValue == NULL ||
-      strcasecmp(psFilterNode->pszValue, "PropertyIsLike") == 0)
+  /* propertyislike is always treated as string */
+  if (psFilterNode->psRightNode->pszValue == NULL || strcasecmp(psFilterNode->pszValue, "PropertyIsLike") == 0)
     bString = 1;
-
-
 
   /* attribute */
   if (bString)
@@ -298,32 +299,23 @@ char *FLTGetBinaryComparisonCommonExpression(FilterEncodingNode *psFilterNode, l
     sprintf(szTmp,  "%s", "] ");
   pszExpression = msStringConcatenate(pszExpression, szTmp);
 
-  if (strcasecmp(psFilterNode->pszValue,
-                 "PropertyIsEqualTo") == 0) {
-    /*case insensitive set ? */
-    if (psFilterNode->psRightNode->pOther &&
-        (*(int *)psFilterNode->psRightNode->pOther) == 1) {
+  if (strcasecmp(psFilterNode->pszValue, "PropertyIsEqualTo") == 0) {
+    /* case insensitive set ? */
+    if (psFilterNode->psRightNode->pOther && (*(int *)psFilterNode->psRightNode->pOther) == 1)
       sprintf(szTmp,  "%s", "=*");
-    } else
+    else
       sprintf(szTmp,  "%s", "=");
-
-  } else if (strcasecmp(psFilterNode->pszValue,
-                        "PropertyIsNotEqualTo") == 0)
+  } else if (strcasecmp(psFilterNode->pszValue, "PropertyIsNotEqualTo") == 0)
     sprintf(szTmp,  "%s", " != ");
-  else if (strcasecmp(psFilterNode->pszValue,
-                      "PropertyIsLessThan") == 0)
+  else if (strcasecmp(psFilterNode->pszValue, "PropertyIsLessThan") == 0)
     sprintf(szTmp,  "%s", " < ");
-  else if (strcasecmp(psFilterNode->pszValue,
-                      "PropertyIsGreaterThan") == 0)
+  else if (strcasecmp(psFilterNode->pszValue, "PropertyIsGreaterThan") == 0)
     sprintf(szTmp,  "%s", " > ");
-  else if (strcasecmp(psFilterNode->pszValue,
-                      "PropertyIsLessThanOrEqualTo") == 0)
+  else if (strcasecmp(psFilterNode->pszValue, "PropertyIsLessThanOrEqualTo") == 0)
     sprintf(szTmp,  "%s", " <= ");
-  else if (strcasecmp(psFilterNode->pszValue,
-                      "PropertyIsGreaterThanOrEqualTo") == 0)
+  else if (strcasecmp(psFilterNode->pszValue, "PropertyIsGreaterThanOrEqualTo") == 0)
     sprintf(szTmp,  "%s", " >= ");
-  else if (strcasecmp(psFilterNode->pszValue,
-                      "PropertyIsLike") == 0)
+  else if (strcasecmp(psFilterNode->pszValue, "PropertyIsLike") == 0)
     sprintf(szTmp,  "%s", " ~ ");
 
   pszExpression = msStringConcatenate(pszExpression, szTmp);
@@ -331,6 +323,10 @@ char *FLTGetBinaryComparisonCommonExpression(FilterEncodingNode *psFilterNode, l
   /* value */
   if (bString) {
     sprintf(szTmp,  "%s", "\"");
+    pszExpression = msStringConcatenate(pszExpression, szTmp);
+  }
+  else if (bDateTime) {
+    sprintf(szTmp,  "%s", "`");
     pszExpression = msStringConcatenate(pszExpression, szTmp);
   }
 
@@ -344,14 +340,16 @@ char *FLTGetBinaryComparisonCommonExpression(FilterEncodingNode *psFilterNode, l
     sprintf(szTmp,  "%s", "\"");
     pszExpression = msStringConcatenate(pszExpression, szTmp);
   }
+  else if (bDateTime) {
+    sprintf(szTmp,  "%s", "`");
+    pszExpression = msStringConcatenate(pszExpression, szTmp);
+  }
 
   sprintf(szTmp,  "%s", ")");
   pszExpression = msStringConcatenate(pszExpression, szTmp);
 
   return pszExpression;
 }
-
-
 
 char *FLTGetLogicalComparisonCommonExpression(FilterEncodingNode *psFilterNode, layerObj *lp)
 {
@@ -382,7 +380,6 @@ char *FLTGetLogicalComparisonCommonExpression(FilterEncodingNode *psFilterNode, 
     pszExpression = msStringConcatenate(pszExpression, psFilterNode->pszValue);
     sprintf(szBuffer, "%s", " ");
 
-
     pszTmp = FLTGetCommonExpression(psFilterNode->psRightNode, lp);
     if (!pszTmp) {
       msFree(pszExpression);
@@ -398,8 +395,7 @@ char *FLTGetLogicalComparisonCommonExpression(FilterEncodingNode *psFilterNode, 
   /* -------------------------------------------------------------------- */
   /*      NOT                                                             */
   /* -------------------------------------------------------------------- */
-  else if (psFilterNode->psLeftNode &&
-           strcasecmp(psFilterNode->pszValue, "NOT") == 0) {
+  else if (psFilterNode->psLeftNode && strcasecmp(psFilterNode->pszValue, "NOT") == 0) {
     pszTmp = FLTGetCommonExpression(psFilterNode->psLeftNode, lp);
     if (!pszTmp)
       return NULL;
@@ -412,13 +408,10 @@ char *FLTGetLogicalComparisonCommonExpression(FilterEncodingNode *psFilterNode, 
 
     sprintf(szBuffer, "%s", ") ");
     pszExpression = msStringConcatenate(pszExpression, szBuffer);
-
   }
-
 
   return pszExpression;
 }
-
 
 char *FLTGetSpatialComparisonCommonExpression(FilterEncodingNode *psNode, layerObj *lp)
 {
@@ -442,7 +435,7 @@ char *FLTGetSpatialComparisonCommonExpression(FilterEncodingNode *psNode, layerO
     return NULL;
 
   /* get the shape */
-  if(FLTIsBBoxFilter(psNode)) {
+  if (FLTIsBBoxFilter(psNode)) {
     char szPolygon[512];
     FLTGetBBOX(psNode, &sQueryRect);
 
@@ -456,38 +449,40 @@ char *FLTGetSpatialComparisonCommonExpression(FilterEncodingNode *psNode, layerO
 
     psTmpShape = msShapeFromWKT(szPolygon);
 
-    /* This is a horrible hack to deal with world-extent requests and */
-    /* reprojection. msProjectRect() detects if reprojection from longlat to */
-    /* projected SRS, and in that case it transforms the bbox to -1e-15,-1e-15,1e15,1e15 */
-    /* to ensure that all features are returned */
-    /* Make wfs_200_cite_filter_bbox_world.xml and wfs_200_cite_postgis_bbox_world.xml pass */
-    if( fabs(sQueryRect.minx - -180.0) < 1e-5 &&
+    /* 
+    ** This is a horrible hack to deal with world-extent requests and
+    ** reprojection. msProjectRect() detects if reprojection from longlat to 
+    ** projected SRS, and in that case it transforms the bbox to -1e-15,-1e-15,1e15,1e15
+    ** to ensure that all features are returned.
+    **
+    ** Make wfs_200_cite_filter_bbox_world.xml and wfs_200_cite_postgis_bbox_world.xml pass
+    */
+    if (fabs(sQueryRect.minx - -180.0) < 1e-5 &&
         fabs(sQueryRect.miny - -90.0) < 1e-5 &&
         fabs(sQueryRect.maxx - 180.0) < 1e-5 &&
-        fabs(sQueryRect.maxy - 90.0) < 1e-5 )
+        fabs(sQueryRect.maxy - 90.0) < 1e-5)
     {
-        if(lp->projection.numargs > 0) {
+      if (lp->projection.numargs > 0) {
         if (psNode->pszSRS)
-            msInitProjection(&sProjTmp);
+          msInitProjection(&sProjTmp);
         if (psNode->pszSRS) {
-            /* Use the non EPSG variant since axis swapping is done in FLTDoAxisSwappingIfNecessary */
-            if (msLoadProjectionString(&sProjTmp, psNode->pszSRS) == 0) {
-                msProjectRect(&sProjTmp, &lp->projection, &sQueryRect);
-            }
+          /* Use the non EPSG variant since axis swapping is done in FLTDoAxisSwappingIfNecessary */
+          if (msLoadProjectionString(&sProjTmp, psNode->pszSRS) == 0) {
+            msProjectRect(&sProjTmp, &lp->projection, &sQueryRect);
+          }
         } else if (lp->map->projection.numargs > 0)
-            msProjectRect(&lp->map->projection, &lp->projection, &sQueryRect);
-            if (psNode->pszSRS)
-                msFreeProjection(&sProjTmp);
-        }
-        if( sQueryRect.minx <= -1e14 )
-        {
-            msFreeShape(psTmpShape);
-            msFree(psTmpShape);
-            psTmpShape = (shapeObj*) msSmallMalloc(sizeof(shapeObj));
-            msInitShape(psTmpShape);
-            msRectToPolygon(sQueryRect, psTmpShape);
-            bAlreadyReprojected = 1;
-        }
+          msProjectRect(&lp->map->projection, &lp->projection, &sQueryRect);
+        if (psNode->pszSRS)
+          msFreeProjection(&sProjTmp);
+      }
+      if (sQueryRect.minx <= -1e14) {
+        msFreeShape(psTmpShape);
+        msFree(psTmpShape);
+        psTmpShape = (shapeObj*) msSmallMalloc(sizeof(shapeObj));
+        msInitShape(psTmpShape);
+        msRectToPolygon(sQueryRect, psTmpShape);
+        bAlreadyReprojected = 1;
+      }
     }
 
     bBBoxQuery = 1;
@@ -517,7 +512,7 @@ char *FLTGetSpatialComparisonCommonExpression(FilterEncodingNode *psNode, layerO
     /*
     ** target is layer projection
     */
-    if(!bAlreadyReprojected && lp->projection.numargs > 0) {
+    if (!bAlreadyReprojected && lp->projection.numargs > 0) {
       if (psNode->pszSRS)
         msInitProjection(&sProjTmp);
       if (psNode->pszSRS) {
@@ -575,9 +570,9 @@ char *FLTGetSpatialComparisonCommonExpression(FilterEncodingNode *psNode, layerO
   /*
   ** Cleanup
   */
-  if(bBBoxQuery) {
-     msFreeShape(psTmpShape);
-     msFree(psTmpShape);
+  if (bBBoxQuery) {
+    msFreeShape(psTmpShape);
+    msFree(psTmpShape);
   }
 
   return pszExpression;
@@ -585,13 +580,12 @@ char *FLTGetSpatialComparisonCommonExpression(FilterEncodingNode *psNode, layerO
 
 char *FLTGetFeatureIdCommonExpression(FilterEncodingNode *psFilterNode, layerObj *lp)
 {
-
   char *pszExpression = NULL;
   int nTokens = 0, i=0, bString=0;
   char **tokens = NULL;
   const char *pszAttribute=NULL;
 
-#if defined(USE_WMS_SVR) || defined (USE_WFS_SVR) || defined (USE_WCS_SVR) || defined(USE_SOS_SVR)
+#if defined(USE_WMS_SVR) || defined(USE_WFS_SVR) || defined(USE_WCS_SVR) || defined(USE_SOS_SVR)
   if (psFilterNode->pszValue) {
     pszAttribute = msOWSLookupMetadata(&(lp->metadata), "OFG", "featureid");
     if (pszAttribute) {
@@ -609,7 +603,6 @@ char *FLTGetFeatureIdCommonExpression(FilterEncodingNode *psFilterNode, layerObj
             if(FLTIsNumeric(pszId) == MS_FALSE)
               bString = 1;
           }
-
 
           if (bString) {
             bufferSize = 11+strlen(pszId)+strlen(pszAttribute)+1;
@@ -632,7 +625,8 @@ char *FLTGetFeatureIdCommonExpression(FilterEncodingNode *psFilterNode, layerObj
         msFreeCharArray(tokens, nTokens);
       }
     }
-    /*opening and closing brackets are needed for mapserver expressions*/
+
+    /* opening and closing brackets are needed for mapserver expressions */
     if (pszExpression)
       pszExpression = msStringConcatenate(pszExpression, ")");
   }
@@ -654,13 +648,12 @@ char* FLTGetTimeExpression(FilterEncodingNode *psFilterNode, layerObj *lp)
     return NULL;
 
   pszTimeValue = FLTGetDuring(psFilterNode, &pszTimeField);
-  if( pszTimeField && pszTimeValue )
-  {
+  if (pszTimeField && pszTimeValue) {
     expressionObj old_filter;
     msInitExpression(&old_filter);
     msCopyExpression(&old_filter, &lp->filter); /* save existing filter */
     msFreeExpression(&lp->filter);
-    if( msLayerSetTimeFilter(lp, pszTimeValue, pszTimeField) == MS_TRUE ) {
+    if (msLayerSetTimeFilter(lp, pszTimeValue, pszTimeField) == MS_TRUE) {
       pszExpression = msStrdup(lp->filter.string);
     }
     msCopyExpression(&lp->filter, &old_filter); /* restore old filter */
@@ -668,7 +661,6 @@ char* FLTGetTimeExpression(FilterEncodingNode *psFilterNode, layerObj *lp)
   }
   return pszExpression;
 }
-
 
 char *FLTGetCommonExpression(FilterEncodingNode *psFilterNode, layerObj *lp)
 {

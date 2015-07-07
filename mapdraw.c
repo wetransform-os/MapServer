@@ -328,6 +328,8 @@ imageObj *msDrawMap(mapObj *map, int querymap)
   for(i=0; i<map->numlayers; i++) {
 
     if(map->layerorder[i] != -1) {
+      char *force_draw_label_cache = NULL;
+
       lp = (GET_LAYER(map,  map->layerorder[i]));
 
       if(lp->postlabelcache) /* wait to draw */
@@ -389,6 +391,27 @@ imageObj *msDrawMap(mapObj *map, int querymap)
                 (endtime.tv_sec+endtime.tv_usec/1.0e6)-
                 (starttime.tv_sec+starttime.tv_usec/1.0e6) );
       }
+
+      /* Flush layer cache in-between layers if requested by PROCESSING directive*/
+      force_draw_label_cache = msLayerGetProcessingKey(lp, "FORCE_DRAW_LABEL_CACHE");
+      if (force_draw_label_cache &&
+	  strncasecmp(force_draw_label_cache,"FLUSH",5)==0) {
+	if(map->debug >= MS_DEBUGLEVEL_V)
+	  msDebug("msDrawMap(): PROCESSING FORCE_DRAW_LABEL_CACHE=FLUSH found.\n");
+	if(msDrawLabelCache(map, image) != MS_SUCCESS) {
+	  msFreeImage(image);
+#if defined(USE_WMS_LYR) || defined(USE_WFS_LYR)
+	  if (pasOWSReqInfo) {
+	    msHTTPFreeRequestObj(pasOWSReqInfo, numOWSRequests);
+	    msFree(pasOWSReqInfo);
+	  }
+#endif /* USE_WMS_LYR || USE_WFS_LYR */
+	  return(NULL);
+	}
+	msFreeLabelCache(&(map->labelcache));
+	msInitLabelCache(&(map->labelcache));
+      } /* PROCESSING FORCE_DRAW_LABEL_CACHE */
+
     }
   }
 
@@ -431,8 +454,6 @@ imageObj *msDrawMap(mapObj *map, int querymap)
     }
   }
 
-  if(map->debug >= MS_DEBUGLEVEL_TUNING) msGettimeofday(&starttime, NULL);
-
   if(msDrawLabelCache(map, image) != MS_SUCCESS) {
     msFreeImage(image);
 #if defined(USE_WMS_LYR) || defined(USE_WFS_LYR)
@@ -444,12 +465,6 @@ imageObj *msDrawMap(mapObj *map, int querymap)
     return(NULL);
   }
 
-  if(map->debug >= MS_DEBUGLEVEL_TUNING) {
-    msGettimeofday(&endtime, NULL);
-    msDebug("msDrawMap(): Drawing Label Cache, %.3fs\n",
-            (endtime.tv_sec+endtime.tv_usec/1.0e6)-
-            (starttime.tv_sec+starttime.tv_usec/1.0e6) );
-  }
 
   for(i=0; i<map->numlayers; i++) { /* for each layer, check for postlabelcache layers */
 
@@ -1007,7 +1022,6 @@ int msDrawVectorLayer(mapObj *map, layerObj *layer, imageObj *image)
 
     if (cache) {
       styleObj *pStyle = layer->class[shape.classindex]->styles[0];
-      colorObj tmp;
       if (pStyle->outlinewidth > 0) {
         /*
          * RFC 49 implementation
@@ -1017,17 +1031,7 @@ int msDrawVectorLayer(mapObj *map, layerObj *layer, imageObj *image)
          *  - draw the shape (the outline) in the first pass of the
          *    caching mechanism
          */
-
-        /* adapt width (must take scalefactor into account) */
-        pStyle->width += (pStyle->outlinewidth / (layer->scalefactor/image->resolutionfactor)) * 2;
-        pStyle->minwidth += pStyle->outlinewidth * 2;
-        pStyle->maxwidth += pStyle->outlinewidth * 2;
-        pStyle->size += (pStyle->outlinewidth/layer->scalefactor*(map->resolution/map->defresolution));
-
-        /*swap color and outlinecolor*/
-        tmp = pStyle->color;
-        pStyle->color = pStyle->outlinecolor;
-        pStyle->outlinecolor = tmp;
+	msOutlineRenderingPrepareStyle(pStyle, map, layer, image);
       }
       status = msDrawShape(map, layer, &shape, image, 0, drawmode|MS_DRAWMODE_SINGLESTYLE); /* draw a single style */
       if (pStyle->outlinewidth > 0) {
@@ -1036,17 +1040,7 @@ int msDrawVectorLayer(mapObj *map, layerObj *layer, imageObj *image)
          * original state, so the line fill will be drawn in the
          * second pass of the caching mechanism
          */
-
-        /* reset widths to original state */
-        pStyle->width -= (pStyle->outlinewidth / (layer->scalefactor/image->resolutionfactor)) * 2;
-        pStyle->minwidth -= pStyle->outlinewidth * 2;
-        pStyle->maxwidth -= pStyle->outlinewidth * 2;
-        pStyle->size -= (pStyle->outlinewidth/layer->scalefactor*(map->resolution/map->defresolution));
-
-        /*reswap colors to original state*/
-        tmp = pStyle->color;
-        pStyle->color = pStyle->outlinecolor;
-        pStyle->outlinecolor = tmp;
+	msOutlineRenderingRestoreStyle(pStyle, map, layer, image);
       }
     }
 
@@ -1107,7 +1101,6 @@ int msDrawVectorLayer(mapObj *map, layerObj *layer, imageObj *image)
             }
           } else if(s>0) {
             if (pStyle->outlinewidth > 0 && MS_VALID_COLOR(pStyle->outlinecolor)) {
-              colorObj tmp;
               /*
                * RFC 49 implementation
                * if an outlinewidth is used:
@@ -1116,17 +1109,7 @@ int msDrawVectorLayer(mapObj *map, layerObj *layer, imageObj *image)
                *  - draw the shape (the outline) in the first pass of the
                *    caching mechanism
                */
-
-              /* adapt width (must take scalefactor into account) */
-              pStyle->width += (pStyle->outlinewidth / (layer->scalefactor/image->resolutionfactor)) * 2;
-              pStyle->minwidth += pStyle->outlinewidth * 2;
-              pStyle->maxwidth += pStyle->outlinewidth * 2;
-              pStyle->size += (pStyle->outlinewidth/layer->scalefactor*(map->resolution/map->defresolution));
-
-              /*swap color and outlinecolor*/
-              tmp = pStyle->color;
-              pStyle->color = pStyle->outlinecolor;
-              pStyle->outlinecolor = tmp;
+	      msOutlineRenderingPrepareStyle(pStyle, map, layer, image);
               if(UNLIKELY(MS_FAILURE == msDrawLineSymbol(map, image, &current->shape, pStyle, layer->scalefactor))) {
                 return MS_FAILURE;
               }
@@ -1135,17 +1118,7 @@ int msDrawVectorLayer(mapObj *map, layerObj *layer, imageObj *image)
                * original state, so the line fill will be drawn in the
                * second pass of the caching mechanism
                */
-
-              /* reset widths to original state */
-              pStyle->width -= (pStyle->outlinewidth / (layer->scalefactor/image->resolutionfactor)) * 2;
-              pStyle->minwidth -= pStyle->outlinewidth * 2;
-              pStyle->maxwidth -= pStyle->outlinewidth * 2;
-              pStyle->size -= (pStyle->outlinewidth/layer->scalefactor*(map->resolution/map->defresolution));
-
-              /*reswap colors to original state*/
-              tmp = pStyle->color;
-              pStyle->color = pStyle->outlinecolor;
-              pStyle->outlinecolor = tmp;
+	      msOutlineRenderingRestoreStyle(pStyle, map, layer, image);
             }
             /* draw a valid line, i.e. one with a color defined or of type pixmap*/
             if(MS_VALID_COLOR(pStyle->color) || 
@@ -2680,6 +2653,9 @@ void copyLabelBounds(label_bounds *dst, label_bounds *src) {
 int msDrawLabelCache(mapObj *map, imageObj *image)
 {
   int nReturnVal = MS_SUCCESS;
+  struct mstimeval starttime, endtime;
+
+  if(map->debug >= MS_DEBUGLEVEL_TUNING) msGettimeofday(&starttime, NULL);
 
   if(image) {
     if(MS_RENDERER_PLUGIN(image->format)) {
@@ -3139,8 +3115,15 @@ int msDrawLabelCache(mapObj *map, imageObj *image)
       }
 #endif
 
-      return MS_SUCCESS; /* necessary? */
+      nReturnVal = MS_SUCCESS; /* necessary? */
     }
+  }
+
+  if(map->debug >= MS_DEBUGLEVEL_TUNING) {
+    msGettimeofday(&endtime, NULL);
+    msDebug("msDrawMap(): Drawing Label Cache, %.3fs\n",
+            (endtime.tv_sec+endtime.tv_usec/1.0e6)-
+            (starttime.tv_sec+starttime.tv_usec/1.0e6) );
   }
 
   return nReturnVal;
