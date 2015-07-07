@@ -1,0 +1,26 @@
+Description: Fix 'consistant' typo, replace with 'consistent'.
+Author: Bas Couwenberg <sebastic@debian.org>
+Forwarded: https://github.com/mapserver/mapserver/pull/5116
+
+--- a/mapogcfilter.c
++++ b/mapogcfilter.c
+@@ -3537,7 +3537,7 @@ int FLTCheckFeatureIdFilters(FilterEncod
+                 if( pszDot - pszId != strlen(lp->name) ||
+                     strncasecmp(pszId, lp->name, strlen(lp->name)) != 0 )
+                 {
+-                    msSetError(MS_MISCERR, "Feature id %s not consistant with feature type name %s.",
++                    msSetError(MS_MISCERR, "Feature id %s not consistent with feature type name %s.",
+                                "FLTPreParseFilterForAlias()", pszId, lp->name);
+                     status = MS_FAILURE;
+                     break;
+--- a/mapwfs.c
++++ b/mapwfs.c
+@@ -2059,7 +2059,7 @@ static int msWFSRunFilter(mapObj* map,
+     /*preparse the filter for gml aliases*/
+     FLTPreParseFilterForAliasAndGroup(psNode, map, lp->index, "G");
+ 
+-    /* Check that FeatureId filters are consistant with the active layer */
++    /* Check that FeatureId filters are consistent with the active layer */
+     if( FLTCheckFeatureIdFilters(psNode, map, lp->index) == MS_FAILURE)
+     {
+         FLTFreeFilterEncodingNode( psNode );

@@ -1,0 +1,15 @@
+Description: Fix 'Unkown' typo, replace with 'Unknown'.
+Author: Bas Couwenberg <sebastic@debian.org>
+Forwarded: https://github.com/mapserver/mapserver/pull/5116
+
+--- a/mapgdal.c
++++ b/mapgdal.c
+@@ -243,7 +243,7 @@ int msSaveImageGDAL( mapObj *map, imageO
+     eDataType = GDT_Byte;
+   } else {
+     msReleaseLock( TLOCK_GDAL );
+-    msSetError( MS_MEMERR, "Unkown format. This is a bug.", "msSaveImageGDAL()");
++    msSetError( MS_MEMERR, "Unknown format. This is a bug.", "msSaveImageGDAL()");
+     return MS_FAILURE;
+   }
+ 
