@@ -176,7 +176,7 @@ Last-Update: 2013-10-21
    if(SVGCAIRO_FOUND)
      include_directories(${SVG_INCLUDE_DIR} ${SVGCAIRO_INCLUDE_DIR})
      ms_link_libraries( ${SVG_LIBRARY} ${SVGCAIRO_LIBRARY})
-+    list(APPEND ALL_INCLUDE_DIRS ${SVGCAIRO_INCLUDE_DIR})
++    list(APPEND ALL_INCLUDE_DIRS ${SVG_INCLUDE_DIR} ${SVGCAIRO_INCLUDE_DIR})
      set (USE_SVG_CAIRO 1)
    else(SVGCAIRO_FOUND)
      report_optional_not_found(SVGCAIRO)
