@@ -300,11 +300,7 @@ libmapserver.so.1 #PACKAGE# #MINVER#
  _ZN15polygon_adaptorD1Ev@Base 6.2.1
  _ZN15polygon_adaptorD2Ev@Base 6.2.1
  (optional=templinst|arch=amd64 arm64 ia64 kfreebsd-amd64 ppc64el s390 s390x sparc)_ZN9mapserver10conv_curveINS_20path_storage_integerIiLj6EEENS_6curve3ENS_6curve4EE6vertexEPdS6_@Base 6.4.0
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 powerpc s390 s390x sparc)_ZN9mapserver10conv_curveINS_20path_storage_integerIiLj6EEENS_6curve3ENS_6curve4EED1Ev@Base 6.4.0
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 powerpc s390 s390x sparc)_ZN9mapserver10conv_curveINS_20path_storage_integerIiLj6EEENS_6curve3ENS_6curve4EED2Ev@Base 6.4.0
  (optional=templinst|arch=amd64 arm64 ia64 kfreebsd-amd64 ppc64el s390 s390x sparc)_ZN9mapserver10conv_curveINS_20path_storage_integerIsLj6EEENS_6curve3ENS_6curve4EE6vertexEPdS6_@Base 6.4.0
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 powerpc s390 s390x sparc)_ZN9mapserver10conv_curveINS_20path_storage_integerIsLj6EEENS_6curve3ENS_6curve4EED1Ev@Base 6.4.0
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 powerpc s390 s390x sparc)_ZN9mapserver10conv_curveINS_20path_storage_integerIsLj6EEENS_6curve3ENS_6curve4EED2Ev@Base 6.4.0
  (optional=templinst|arch=amd64 arm64 ia64 kfreebsd-amd64 ppc64el s390 s390x sparc)_ZN9mapserver10conv_curveINS_31serialized_integer_path_adaptorIsLj6EEENS_6curve3ENS_6curve4EE6vertexEPdS6_@Base 6.4.0
  (optional=templinst|arch=sparc)_ZN9mapserver10conv_curveINS_31serialized_integer_path_adaptorIsLj6EEENS_6curve3ENS_6curve4EED1Ev@Base 6.4.1
  (optional=templinst|arch=sparc)_ZN9mapserver10conv_curveINS_31serialized_integer_path_adaptorIsLj6EEENS_6curve3ENS_6curve4EED2Ev@Base 6.4.1
@@ -322,7 +318,6 @@ libmapserver.so.1 #PACKAGE# #MINVER#
  _ZN9mapserver10curve4_inc4initEdddddddd@Base 6.2.1
  _ZN9mapserver10curve4_inc6rewindEj@Base 6.2.1
  _ZN9mapserver10curve4_inc6vertexEPdS1_@Base 6.2.1
-#MISSING: 6.4.2# (arch=!ia64 !s390 !sparc)_ZN9mapserver10font_cache9signatureEPKc@Base 6.4.1
  _ZN9mapserver10mcs11_propE@Base 6.2.1
  _ZN9mapserver10mcs12_propE@Base 6.2.1
  _ZN9mapserver10mcs13_propE@Base 6.2.1
@@ -343,27 +338,18 @@ libmapserver.so.1 #PACKAGE# #MINVER#
  (optional=templinst)_ZN9mapserver11pod_bvectorIN10ClipperLib8IntPointELj8EE14allocate_blockEj@Base 6.4.0
  (optional=templinst)_ZN9mapserver11pod_bvectorIN10ClipperLib8IntPointELj8EED1Ev@Base 6.2.1
  (optional=templinst)_ZN9mapserver11pod_bvectorIN10ClipperLib8IntPointELj8EED2Ev@Base 6.2.1
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver11pod_bvectorINS_10point_baseIdEELj6EE14allocate_blockEj@Base 6.4.0
  (optional=templinst)_ZN9mapserver11pod_bvectorINS_10point_baseIdEELj6EED1Ev@Base 6.2.1
  (optional=templinst)_ZN9mapserver11pod_bvectorINS_10point_baseIdEELj6EED2Ev@Base 6.2.1
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver11pod_bvectorINS_11vertex_distELj6EE14allocate_blockEj@Base 6.4.0
  (optional=templinst)_ZN9mapserver11pod_bvectorINS_11vertex_distELj6EED1Ev@Base 6.2.1
  (optional=templinst)_ZN9mapserver11pod_bvectorINS_11vertex_distELj6EED2Ev@Base 6.2.1
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver11pod_bvectorINS_14line_aa_vertexELj6EE14allocate_blockEj@Base 6.4.0
  (optional=templinst)_ZN9mapserver11pod_bvectorINS_14line_aa_vertexELj6EED1Ev@Base 6.2.1
  (optional=templinst)_ZN9mapserver11pod_bvectorINS_14line_aa_vertexELj6EED2Ev@Base 6.2.1
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver11pod_bvectorINS_14vertex_integerIiLj6EEELj6EE14allocate_blockEj@Base 6.4.0
  (optional=templinst)_ZN9mapserver11pod_bvectorINS_14vertex_integerIiLj6EEELj6EED1Ev@Base 6.2.1
  (optional=templinst)_ZN9mapserver11pod_bvectorINS_14vertex_integerIiLj6EEELj6EED2Ev@Base 6.2.1
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver11pod_bvectorINS_14vertex_integerIsLj6EEELj6EE14allocate_blockEj@Base 6.4.0
  (optional=templinst)_ZN9mapserver11pod_bvectorINS_14vertex_integerIsLj6EEELj6EED1Ev@Base 6.2.1
  (optional=templinst)_ZN9mapserver11pod_bvectorINS_14vertex_integerIsLj6EEELj6EED2Ev@Base 6.2.1
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver11pod_bvectorINS_19scanline_storage_aaIhE13scanline_dataELj8EE14allocate_blockEj@Base 6.4.0
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver11pod_bvectorINS_19scanline_storage_aaIhE9span_dataELj10EE14allocate_blockEj@Base 6.4.0
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver11pod_bvectorINS_20scanline_storage_bin13scanline_dataELj8EE14allocate_blockEj@Base 6.4.0
  (optional=templinst)_ZN9mapserver11pod_bvectorINS_20scanline_storage_bin13scanline_dataELj8EED1Ev@Base 6.2.1
  (optional=templinst)_ZN9mapserver11pod_bvectorINS_20scanline_storage_bin13scanline_dataELj8EED2Ev@Base 6.2.1
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver11pod_bvectorINS_20scanline_storage_bin9span_dataELj10EE14allocate_blockEj@Base 6.4.0
  (optional=templinst)_ZN9mapserver11pod_bvectorINS_20scanline_storage_bin9span_dataELj10EED1Ev@Base 6.2.1
  (optional=templinst)_ZN9mapserver11pod_bvectorINS_20scanline_storage_bin9span_dataELj10EED2Ev@Base 6.2.1
  (optional=templinst|arch=mipsel)_ZN9mapserver11pod_bvectorINS_21scanline_cell_storageIhE10extra_spanELj6EE14allocate_blockEj@Base 6.4.2
@@ -374,23 +360,18 @@ libmapserver.so.1 #PACKAGE# #MINVER#
  _ZN9mapserver11scanline_u8D2Ev@Base 6.2.1
  (optional=templinst)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9conv_dashINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEES8_EEE11end_contourERSt6vectorISC_IN10ClipperLib8IntPointESaISE_EESaISG_EE@Base 6.2.1
  (optional=templinst)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9conv_dashINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEES8_EEE11next_vertexEPdSC_@Base 6.4.0
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9conv_dashINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEES8_EEE3addIPS1_EEvRT_RSt6vectorISG_IN10ClipperLib8IntPointESaISI_EESaISK_EE@Base 6.4.0
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9conv_dashINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEES8_EEE3addIPSA_EEvRT_RSt6vectorISG_IN10ClipperLib8IntPointESaISI_EESaISK_EE@Base 6.4.0
  (optional=templinst)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9conv_dashINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEES8_EEE6rewindEj@Base 6.2.1
  (optional=templinst)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9conv_dashINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEES8_EEE6vertexEPdSC_@Base 6.4.1
  (optional=templinst)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9conv_dashINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEES8_EEED1Ev@Base 6.2.1
  (optional=templinst)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9conv_dashINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEES8_EEED2Ev@Base 6.2.1
  (optional=templinst)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEEE11end_contourERSt6vectorISA_IN10ClipperLib8IntPointESaISC_EESaISE_EE@Base 6.2.1
  (optional=templinst)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEEE11next_vertexEPdSA_@Base 6.4.0
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEEE3addIPS1_EEvRT_RSt6vectorISE_IN10ClipperLib8IntPointESaISG_EESaISI_EE@Base 6.4.0
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEEE3addIPS8_EEvRT_RSt6vectorISE_IN10ClipperLib8IntPointESaISG_EESaISI_EE@Base 6.4.0
  (optional=templinst)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEEE6rewindEj@Base 6.2.1
  (optional=templinst)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEEE6vertexEPdSA_@Base 6.4.1
  (optional=templinst)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEEED1Ev@Base 6.2.1
  (optional=templinst)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEEED2Ev@Base 6.2.1
  (optional=templinst|arch=sparc)_ZN9mapserver12conv_contourINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEEED1Ev@Base 6.4.1
  (optional=templinst|arch=sparc)_ZN9mapserver12conv_contourINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEEED2Ev@Base 6.4.1
-#MISSING: 6.4.0# _ZN9mapserver12g_sqrt_tableE@Base 6.2.1
  _ZN9mapserver12gse7x11_boldE@Base 6.2.1
  _ZN9mapserver12gse7x15_boldE@Base 6.2.1
  _ZN9mapserver12gse8x16_boldE@Base 6.2.1
@@ -398,7 +379,6 @@ libmapserver.so.1 #PACKAGE# #MINVER#
  _ZN9mapserver12mcs5x11_monoE@Base 6.2.1
  _ZN9mapserver12mcs6x10_monoE@Base 6.2.1
  _ZN9mapserver12mcs6x11_monoE@Base 6.2.1
-#MISSING: 6.4.1# (optional=templinst|arch=!amd64)_ZN9mapserver12shorten_pathINS_15vertex_sequenceINS_11vertex_distELj6EEEEEvRT_dj@Base 6.4.0
  _ZN9mapserver12trans_affine12parl_to_parlEPKdS2_@Base 6.2.1
  _ZN9mapserver12trans_affine12parl_to_rectEPKddddd@Base 6.2.1
  _ZN9mapserver12trans_affine12rect_to_parlEddddPKd@Base 6.2.1
@@ -413,10 +393,6 @@ libmapserver.so.1 #PACKAGE# #MINVER#
  _ZN9mapserver12vcgen_stroke6vertexEPdS1_@Base 6.2.1
  _ZN9mapserver12vcgen_strokeC1Ev@Base 6.2.1
  _ZN9mapserver12vcgen_strokeC2Ev@Base 6.2.1
-#MISSING: 6.4.1# (arch=ia64 s390 sparc)_ZN9mapserver12vcgen_strokeD1Ev@Base 6.4.0
-#MISSING: 6.4.1# (arch=ia64 s390 sparc)_ZN9mapserver12vcgen_strokeD2Ev@Base 6.4.0
-#MISSING: 6.4.1# (optional=templinst|arch=!amd64)_ZN9mapserver13obj_allocatorINS_10font_cacheEE10deallocateEPS1_@Base 6.2.1
-#MISSING: 6.4.1# (optional=templinst|arch=mips mipsel)_ZN9mapserver13obj_allocatorINS_10font_cacheEE8allocateEv@Base 6.4.0
  (optional=templinst)_ZN9mapserver13renderer_baseINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEEE10blend_fromIS8_EEvRKT_PKNS_9rect_baseIiEEiih@Base 6.2.1
  _ZN9mapserver13vcgen_contour10add_vertexEddj@Base 6.2.1
  _ZN9mapserver13vcgen_contour10remove_allEv@Base 6.2.1
@@ -431,56 +407,29 @@ libmapserver.so.1 #PACKAGE# #MINVER#
  _ZN9mapserver14verdana17_boldE@Base 6.2.1
  _ZN9mapserver14verdana18_boldE@Base 6.2.1
  _ZN9mapserver15block_allocator8allocateEjj@Base 6.2.1
-#MISSING: 6.4.0# (optional=templinst)_ZN9mapserver15clip_move_pointIdEEbT_S1_S1_S1_RKNS_9rect_baseIS1_EEPS1_S6_j@Base 6.2.1
  (optional=templinst)_ZN9mapserver15clip_move_pointIiEEbT_S1_S1_S1_RKNS_9rect_baseIS1_EEPS1_S6_j@Base 6.2.1
-#MISSING: 6.4.1# (arch=ia64 sparc)_ZN9mapserver15font_cache_poolD1Ev@Base 6.4.0
-#MISSING: 6.4.1# (arch=ia64 sparc)_ZN9mapserver15font_cache_poolD2Ev@Base 6.4.0
  _ZN9mapserver15line_parameters19s_diagonal_quadrantE@Base 6.2.1
  _ZN9mapserver15line_parameters21s_orthogonal_quadrantE@Base 6.2.1
-#MISSING: 6.4.1# (arch=armel armhf)_ZN9mapserver15line_parametersC1Eiiiii@Base 6.4.0
-#MISSING: 6.4.1# (arch=armel armhf)_ZN9mapserver15line_parametersC2Eiiiii@Base 6.4.0
-#MISSING: 6.4.0# _ZN9mapserver15line_profile_aa3setEdd@Base 6.2.1
-#MISSING: 6.4.0# _ZN9mapserver15line_profile_aa5widthEd@Base 6.2.1
-#MISSING: 6.4.0# _ZN9mapserver15line_profile_aa7profileEd@Base 6.2.1
  (optional=templinst)_ZN9mapserver15vertex_sequenceINS_11vertex_distELj6EE3addERKS1_@Base 6.2.1
  (optional=templinst)_ZN9mapserver15vertex_sequenceINS_11vertex_distELj6EE5closeEb@Base 6.2.1
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver15vertex_sequenceINS_11vertex_distELj6EED1Ev@Base 6.4.0
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver15vertex_sequenceINS_11vertex_distELj6EED2Ev@Base 6.4.0
  (optional=templinst)_ZN9mapserver15vertex_sequenceINS_14line_aa_vertexELj6EE3addERKS1_@Base 6.2.1
  (optional=templinst)_ZN9mapserver15vertex_sequenceINS_14line_aa_vertexELj6EE5closeEb@Base 6.2.1
-#MISSING: 6.4.0# _ZN9mapserver16image_filter_lut11realloc_lutEd@Base 6.2.1
-#MISSING: 6.4.0# _ZN9mapserver16image_filter_lut9normalizeEv@Base 6.2.1
  _ZN9mapserver16mcs7x12_mono_lowE@Base 6.2.1
  (optional=templinst)_ZN9mapserver16render_scanlinesINS_22rasterizer_scanline_aaINS_18rasterizer_sl_clipINS_12ras_conv_intEEEEENS_11scanline_p8ENS_26renderer_scanline_aa_solidINS_13renderer_baseINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEEEEEEEEvRT_RT0_RT1_@Base 6.2.1
  (optional=templinst)_ZN9mapserver16render_scanlinesINS_22rasterizer_scanline_aaINS_18rasterizer_sl_clipINS_12ras_conv_intEEEEENS_11scanline_u8ENS_19scanline_storage_aaIhEEEEvRT_RT0_RT1_@Base 6.2.1
  (optional=templinst)_ZN9mapserver16render_scanlinesINS_22rasterizer_scanline_aaINS_18rasterizer_sl_clipINS_12ras_conv_intEEEEENS_11scanline_u8ENS_26renderer_scanline_aa_solidINS_13renderer_baseINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEEEEEEEEvRT_RT0_RT1_@Base 6.2.1
  (optional=templinst)_ZN9mapserver16render_scanlinesINS_22rasterizer_scanline_aaINS_18rasterizer_sl_clipINS_12ras_conv_intEEEEENS_12scanline_binENS_20scanline_storage_binEEEvRT_RT0_RT1_@Base 6.2.1
-#MISSING: 6.4.1# (optional=templinst|arch=powerpc s390)_ZN9mapserver17calc_polygon_areaINS_15vertex_sequenceINS_11vertex_distELj6EEEEEdRKT_@Base 6.4.0
-#MISSING: 6.4.0# (optional=templinst)_ZN9mapserver17clip_line_segmentIdEEjPT_S2_S2_S2_RKNS_9rect_baseIS1_EE@Base 6.2.1
  (optional=templinst)_ZN9mapserver17clip_line_segmentIiEEjPT_S2_S2_S2_RKNS_9rect_baseIS1_EE@Base 6.4.0
-#MISSING: 6.4.0# _ZN9mapserver17g_elder_bit_tableE@Base 6.2.1
  _ZN9mapserver17mcs7x12_mono_highE@Base 6.2.1
  (optional=templinst)_ZN9mapserver18conv_adaptor_vcgenI12line_adaptorNS_10vcgen_dashENS_12null_markersEE6vertexEPdS5_@Base 6.2.1
  (optional=templinst)_ZN9mapserver18conv_adaptor_vcgenI12line_adaptorNS_12vcgen_strokeENS_12null_markersEE6vertexEPdS5_@Base 6.4.0
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver18conv_adaptor_vcgenINS_9conv_dashI12line_adaptorNS_12null_markersEEENS_12vcgen_strokeES3_E6vertexEPdS7_@Base 6.4.0
  (optional=templinst)_ZN9mapserver18conv_adaptor_vcgenINS_9conv_dashINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEENS_12vcgen_strokeES6_E6vertexEPdSA_@Base 6.2.1
  (optional=templinst)_ZN9mapserver18conv_adaptor_vcgenINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_10vcgen_dashENS_12null_markersEE6vertexEPdS8_@Base 6.2.1
  (optional=templinst)_ZN9mapserver18conv_adaptor_vcgenINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12vcgen_strokeENS_12null_markersEE6vertexEPdS8_@Base 6.2.1
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver18conv_adaptor_vcgenINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_13vcgen_contourENS_12null_markersEE6vertexEPdS8_@Base 6.4.0
-#MISSING: 6.4.2# (optional=templinst|arch=amd64 arm64 kfreebsd-amd64 ppc64el s390x)_ZN9mapserver18font_cache_managerINS_26font_engine_freetype_int16EE22init_embedded_adaptorsEPKNS_11glyph_cacheEddd@Base 6.4.1
  (optional=templinst)_ZN9mapserver18font_cache_managerINS_26font_engine_freetype_int16EE5glyphEj@Base 6.2.1
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver18line_image_patternINS_28pattern_filter_bilinear_rgbaINS_5rgba8EEEE6createINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preIS2_NS_10order_bgraEEENS_12row_accessorIhEEjEEEEvRKT_@Base 6.4.0
-#MISSING: 6.4.1# (optional=templinst|arch=!amd64 !armel !armhf !hurd-i386 !i386 !ia64 !kfreebsd-amd64 !kfreebsd-i386 !powerpc !s390)_ZN9mapserver18line_image_patternINS_28pattern_filter_bilinear_rgbaINS_5rgba8EEEED1Ev@Base 6.2.1
-#MISSING: 6.4.1# (optional=templinst|arch=!amd64 !armel !armhf !hurd-i386 !i386 !ia64 !kfreebsd-amd64 !kfreebsd-i386 !powerpc !s390)_ZN9mapserver18line_image_patternINS_28pattern_filter_bilinear_rgbaINS_5rgba8EEEED2Ev@Base 6.2.1
  (optional=templinst)_ZN9mapserver18rasterizer_sl_clipINS_12ras_conv_intEE7line_toINS_19rasterizer_cells_aaINS_7cell_aaEEEEEvRT_ii@Base 6.2.1
  (optional=templinst)_ZN9mapserver18render_scanline_aaINS_11scanline_p8ENS_13renderer_baseINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEEEENS_14span_allocatorIS5_EENS_17span_pattern_rgbaINS_19image_accessor_wrapISA_NS_16wrap_mode_repeatESG_EEEEEEvRKT_RT0_RT1_RT2_@Base 6.2.1
  (optional=templinst|arch=mipsel)_ZN9mapserver18render_scanline_aaINS_11scanline_p8ENS_13renderer_baseINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEEEENS_14span_allocatorIS5_EENS_36span_image_filter_rgba_bilinear_clipISA_NS_24span_interpolator_linearINS_12trans_affineELj8EEEEEEEvRKT_RT0_RT1_RT2_@Base 6.4.2
-#MISSING: 6.4.0# _ZN9mapserver18vpgen_clip_polygon14clipping_flagsEdd@Base 6.2.1
-#MISSING: 6.4.0# _ZN9mapserver18vpgen_clip_polygon5resetEv@Base 6.2.1
-#MISSING: 6.4.0# _ZN9mapserver18vpgen_clip_polygon6vertexEPdS1_@Base 6.2.1
-#MISSING: 6.4.0# _ZN9mapserver18vpgen_clip_polygon7line_toEdd@Base 6.2.1
-#MISSING: 6.4.0# _ZN9mapserver18vpgen_clip_polygon7move_toEdd@Base 6.2.1
-#MISSING: 6.4.1# (optional=templinst|arch=!amd64)_ZN9mapserver19rasterizer_cells_aaINS_7cell_aaEE10sort_cellsEv@Base 6.2.1
  (optional=templinst)_ZN9mapserver19rasterizer_cells_aaINS_7cell_aaEE12render_hlineEiiiii@Base 6.2.1
  (optional=templinst)_ZN9mapserver19rasterizer_cells_aaINS_7cell_aaEE14allocate_blockEv@Base 6.4.0
  (optional=templinst)_ZN9mapserver19rasterizer_cells_aaINS_7cell_aaEE4lineEiiii@Base 6.2.1
@@ -489,26 +438,14 @@ libmapserver.so.1 #PACKAGE# #MINVER#
  (optional=templinst|arch=armel armhf hurd-i386 i386 kfreebsd-i386 mips powerpc)_ZN9mapserver19scanline_storage_aaIhE6renderINS_11scanline_u8EEEvRKT_@Base 6.4.2
  (optional=templinst)_ZN9mapserver19scanline_storage_aaIhED1Ev@Base 6.2.1
  (optional=templinst)_ZN9mapserver19scanline_storage_aaIhED2Ev@Base 6.2.1
-#MISSING: 6.4.0# _ZN9mapserver19vpgen_clip_polyline5resetEv@Base 6.2.1
-#MISSING: 6.4.0# _ZN9mapserver19vpgen_clip_polyline6vertexEPdS1_@Base 6.2.1
-#MISSING: 6.4.0# _ZN9mapserver19vpgen_clip_polyline7line_toEdd@Base 6.2.1
-#MISSING: 6.4.0# _ZN9mapserver19vpgen_clip_polyline7move_toEdd@Base 6.2.1
  (optional=templinst)_ZN9mapserver20decompose_ft_outlineINS_20path_storage_integerIiLj6EEEEEbRK11FT_Outline_bRKNS_12trans_affineERT_@Base 6.2.1
  (optional=templinst)_ZN9mapserver20decompose_ft_outlineINS_20path_storage_integerIsLj6EEEEEbRK11FT_Outline_bRKNS_12trans_affineERT_@Base 6.2.1
  _ZN9mapserver20mcs11_prop_condensedE@Base 6.2.1
  (optional=templinst|arch=armel armhf hurd-i386 i386 kfreebsd-i386 mips mipsel powerpc)_ZN9mapserver20path_storage_integerIiLj6EE6curve4Eiiiiii@Base 6.2.1
  (optional=templinst|arch=!amd64 !arm64 !armel !armhf !hurd-i386 !i386 !kfreebsd-amd64 !kfreebsd-i386 !mips !powerpc !ppc64el !s390x !sparc)_ZN9mapserver20path_storage_integerIiLj6EE6vertexEPdS2_@Base 6.4.1
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver20path_storage_integerIiLj6EED1Ev@Base 6.4.0
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver20path_storage_integerIiLj6EED2Ev@Base 6.4.0
  (optional=templinst|arch=armel armhf hurd-i386 i386 kfreebsd-i386 mips mipsel powerpc)_ZN9mapserver20path_storage_integerIsLj6EE6curve4Essssss@Base 6.2.1
  (optional=templinst|arch=!amd64 !arm64 !armel !armhf !hurd-i386 !i386 !kfreebsd-amd64 !kfreebsd-i386 !mips !powerpc !ppc64el !s390x !sparc)_ZN9mapserver20path_storage_integerIsLj6EE6vertexEPdS2_@Base 6.4.1
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver20path_storage_integerIsLj6EED1Ev@Base 6.4.0
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver20path_storage_integerIsLj6EED2Ev@Base 6.4.0
-#MISSING: 6.4.1# (arch=ia64 s390 sparc)_ZN9mapserver20scanline_storage_binD1Ev@Base 6.4.0
-#MISSING: 6.4.1# (arch=ia64 s390 sparc)_ZN9mapserver20scanline_storage_binD2Ev@Base 6.4.0
  (optional=templinst)_ZN9mapserver20vertex_block_storageIdLj8ELj256EE10add_vertexEddj@Base 6.4.1
-#MISSING: 6.4.1# (optional=templinst)_ZN9mapserver20vertex_block_storageIdLj8ELj256EE12storage_ptrsEPPd@Base 6.4.0
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver20vertex_block_storageIdLj8ELj256EE14allocate_blockEj@Base 6.4.0
  (optional=templinst)_ZN9mapserver20vertex_block_storageIdLj8ELj256EE8free_allEv@Base 6.2.1
  (optional=templinst)_ZN9mapserver21rasterizer_outline_aaINS_22renderer_outline_imageINS_13renderer_baseINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEEEENS_18line_image_patternINS_28pattern_filter_bilinear_rgbaIS5_EEEEEENS_14line_coord_satEE4drawERNSI_9draw_varsEjj@Base 6.2.1
  (optional=templinst)_ZN9mapserver21rasterizer_outline_aaINS_22renderer_outline_imageINS_13renderer_baseINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEEEENS_18line_image_patternINS_28pattern_filter_bilinear_rgbaIS5_EEEEEENS_14line_coord_satEE6renderEb@Base 6.2.1
@@ -523,16 +460,8 @@ libmapserver.so.1 #PACKAGE# #MINVER#
  (optional=templinst|arch=armel armhf hurd-i386 i386 kfreebsd-i386 mips mipsel powerpc)_ZN9mapserver22rasterizer_scanline_aaINS_18rasterizer_sl_clipINS_12ras_conv_intEEEE8add_pathINS_10conv_curveINS_20path_storage_integerIsLj6EEENS_6curve3ENS_6curve4EEEEEvRT_j@Base 6.2.1
  (optional=templinst)_ZN9mapserver22rasterizer_scanline_aaINS_18rasterizer_sl_clipINS_12ras_conv_intEEEE8add_pathINS_12conv_contourINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEEEEEEvRT_j@Base 6.2.1
  (optional=templinst)_ZN9mapserver22rasterizer_scanline_aaINS_18rasterizer_sl_clipINS_12ras_conv_intEEEE8add_pathINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEEEEvRT_j@Base 6.2.1
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver22rasterizer_scanline_aaINS_18rasterizer_sl_clipINS_12ras_conv_intEEEE9move_to_dEdd@Base 6.4.0
  (optional=templinst)_ZN9mapserver22renderer_outline_imageINS_13renderer_baseINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEEEENS_18line_image_patternINS_28pattern_filter_bilinear_rgbaIS4_EEEEE13line3_no_clipERKNS_15line_parametersEiiii@Base 6.2.1
  (optional=templinst)_ZN9mapserver22renderer_outline_imageINS_13renderer_baseINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEEEENS_18line_image_patternINS_28pattern_filter_bilinear_rgbaIS4_EEEEE5line3ERKNS_15line_parametersEiiii@Base 6.2.1
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver23line_interpolator_imageINS_22renderer_outline_imageINS_13renderer_baseINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEEEENS_18line_image_patternINS_28pattern_filter_bilinear_rgbaIS5_EEEEEEE8step_horEv@Base 6.4.0
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver23line_interpolator_imageINS_22renderer_outline_imageINS_13renderer_baseINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEEEENS_18line_image_patternINS_28pattern_filter_bilinear_rgbaIS5_EEEEEEEC1ERSG_RKNS_15line_parametersEiiiiid@Base 6.4.0
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver23line_interpolator_imageINS_22renderer_outline_imageINS_13renderer_baseINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEEEENS_18line_image_patternINS_28pattern_filter_bilinear_rgbaIS5_EEEEEEEC2ERSG_RKNS_15line_parametersEiiiiid@Base 6.4.0
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjE17blend_color_hspanEiijPKS2_PKhh@Base 6.4.0
-#MISSING: 6.4.1# (optional=templinst|arch=!amd64 !armel !armhf !powerpc !s390x)_ZN9mapserver23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjE17blend_color_vspanEiijPKS2_PKhh@Base 6.2.1
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver24decompose_ft_bitmap_monoINS_12scanline_binENS_20scanline_storage_binEEEvRK10FT_Bitmap_iibRT_RT0_@Base 6.4.0
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver25decompose_ft_bitmap_gray8INS_22rasterizer_scanline_aaINS_18rasterizer_sl_clipINS_12ras_conv_intEEEEENS_11scanline_u8ENS_19scanline_storage_aaIhEEEEvRK10FT_Bitmap_iibRT_RT0_RT1_@Base 6.4.0
  _ZN9mapserver25font_engine_freetype_base10resolutionEj@Base 6.2.1
  _ZN9mapserver25font_engine_freetype_base11add_kerningEjjPdS1_@Base 6.2.1
  _ZN9mapserver25font_engine_freetype_base13prepare_glyphEj@Base 6.2.1
@@ -577,8 +506,6 @@ libmapserver.so.1 #PACKAGE# #MINVER#
  _ZN9mapserver9bisectrixERKNS_15line_parametersES2_PiS3_@Base 6.2.1
  (optional=templinst|arch=sparc)_ZN9mapserver9path_baseINS_20vertex_block_storageIdLj8ELj256EEEE11concat_pathINS_14conv_transformINS_10conv_curveINS_31serialized_integer_path_adaptorIsLj6EEENS_6curve3ENS_6curve4EEENS_12trans_affineEEEEEvRT_j@Base 6.4.1
  (optional=templinst|arch=mipsel sparc)_ZN9mapserver9path_baseINS_20vertex_block_storageIdLj8ELj256EEEE9transformINS_12trans_affineEEEvRKT_j@Base 6.4.1
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver9path_baseINS_20vertex_block_storageIdLj8ELj256EEEED1Ev@Base 6.4.0
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZN9mapserver9path_baseINS_20vertex_block_storageIdLj8ELj256EEEED2Ev@Base 6.4.0
  _ZN9mapserver9verdana12E@Base 6.2.1
  _ZN9mapserver9verdana13E@Base 6.2.1
  _ZN9mapserver9verdana14E@Base 6.2.1
@@ -601,7 +528,6 @@ libmapserver.so.1 #PACKAGE# #MINVER#
  _ZNK9mapserver12trans_affine8rotationEv@Base 6.2.1
  (arch=armel hurd-i386 i386 kfreebsd-i386 mips mipsel powerpc)_ZNK9mapserver12trans_affine9transformEPdS1_@Base 6.4.1
  (optional=templinst)_ZNK9mapserver18rasterizer_sl_clipINS_12ras_conv_intEE11line_clip_yINS_19rasterizer_cells_aaINS_7cell_aaEEEEEvRT_iiiijj@Base 6.2.1
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZNK9mapserver22renderer_outline_imageINS_13renderer_baseINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEEEENS_18line_image_patternINS_28pattern_filter_bilinear_rgbaIS4_EEEEE5pixelEPS4_ii@Base 6.4.0
  _ZNK9mapserver25font_engine_freetype_base14write_glyph_toEPh@Base 6.2.1
  _ZNK9mapserver25font_engine_freetype_base8ascenderEv@Base 6.2.1
  _ZNK9mapserver25font_engine_freetype_base9descenderEv@Base 6.2.1
@@ -617,8 +543,6 @@ libmapserver.so.1 #PACKAGE# #MINVER#
  (optional=templinst|arch=armel armhf hurd-i386 i386 kfreebsd-i386 mips mipsel powerpc sparc)_ZNSt6vectorIN10ClipperLib8IntPointESaIS1_EE14_M_fill_insertEN9__gnu_cxx17__normal_iteratorIPS1_S3_EEjRKS1_@Base 6.2.1
  (optional=templinst|arch=amd64 arm64 ia64 kfreebsd-amd64 ppc64el s390 s390x)_ZNSt6vectorIN10ClipperLib8IntPointESaIS1_EE14_M_fill_insertEN9__gnu_cxx17__normal_iteratorIPS1_S3_EEmRKS1_@Base 6.2.1
  (optional=templinst|arch=armel armhf hurd-i386 i386 ia64 kfreebsd-i386 mips mipsel powerpc s390|subst)_ZNSt6vectorIN10ClipperLib8IntPointESaIS1_EE7reserveE{size_t}@Base 6.4.0
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZNSt6vectorIN10ClipperLib8IntPointESaIS1_EEC1ERKS3_@Base 6.4.0
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZNSt6vectorIN10ClipperLib8IntPointESaIS1_EEC2ERKS3_@Base 6.4.0
  (optional=templinst)_ZNSt6vectorIN10ClipperLib8IntPointESaIS1_EEaSERKS3_@Base 6.2.1
  (optional=templinst)_ZNSt6vectorIN10ClipperLib9ExPolygonESaIS1_EE13_M_insert_auxEN9__gnu_cxx17__normal_iteratorIPS1_S3_EERKS1_@Base 6.2.1
  (optional=templinst|arch=armel armhf hurd-i386 i386 kfreebsd-i386 mips mipsel powerpc sparc)_ZNSt6vectorIN10ClipperLib9ExPolygonESaIS1_EE14_M_fill_insertEN9__gnu_cxx17__normal_iteratorIPS1_S3_EEjRKS1_@Base 6.2.1
@@ -640,21 +564,12 @@ libmapserver.so.1 #PACKAGE# #MINVER#
  (optional=templinst)_ZNSt6vectorIS_IN10ClipperLib8IntPointESaIS1_EESaIS3_EED2Ev@Base 6.2.1
  (optional=templinst)_ZNSt6vectorIS_IN10ClipperLib8IntPointESaIS1_EESaIS3_EEaSERKS5_@Base 6.2.1
  (optional=templinst|arch=!amd64 !arm64 !kfreebsd-amd64 !ppc64el !s390x)_ZSt13__adjust_heapIN9__gnu_cxx17__normal_iteratorIPPN10ClipperLib6OutRecESt6vectorIS4_SaIS4_EEEEiS4_NS0_5__ops15_Iter_comp_iterIPFbS4_S4_EEEEvT_T0_SG_T1_T2_@Base 6.4.1
-#MISSING: 6.4.1# (optional=templinst|arch=armel armhf hurd-i386 i386 kfreebsd-i386 mips mipsel powerpc s390 sparc)_ZSt13__adjust_heapIN9__gnu_cxx17__normal_iteratorIPPN10ClipperLib6OutRecESt6vectorIS4_SaIS4_EEEEiS4_PFbS4_S4_EEvT_T0_SD_T1_T2_@Base 6.2.1
  (optional=templinst|arch=amd64 arm64 kfreebsd-amd64 ppc64el s390x)_ZSt13__adjust_heapIN9__gnu_cxx17__normal_iteratorIPPN10ClipperLib6OutRecESt6vectorIS4_SaIS4_EEEElS4_NS0_5__ops15_Iter_comp_iterIPFbS4_S4_EEEEvT_T0_SG_T1_T2_@Base 6.4.1
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 kfreebsd-amd64 s390x)_ZSt13__adjust_heapIN9__gnu_cxx17__normal_iteratorIPPN10ClipperLib6OutRecESt6vectorIS4_SaIS4_EEEElS4_PFbS4_S4_EEvT_T0_SD_T1_T2_@Base 6.2.1
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZSt13__heap_selectIN9__gnu_cxx17__normal_iteratorIPPN10ClipperLib6OutRecESt6vectorIS4_SaIS4_EEEEPFbS4_S4_EEvT_SC_SC_T0_@Base 6.4.0
  (optional=templinst)_ZSt16__insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN10ClipperLib6OutRecESt6vectorIS4_SaIS4_EEEENS0_5__ops15_Iter_comp_iterIPFbS4_S4_EEEEvT_SF_T0_@Base 6.4.1
-#MISSING: 6.4.2# (optional=templinst)_ZSt16__insertion_sortIN9__gnu_cxx17__normal_iteratorIPPN10ClipperLib6OutRecESt6vectorIS4_SaIS4_EEEEPFbS4_S4_EEvT_SC_T0_@Base 6.4.1
  (optional=templinst|arch=!amd64 !arm64 !kfreebsd-amd64 !ppc64el !s390x)_ZSt16__introsort_loopIN9__gnu_cxx17__normal_iteratorIPPN10ClipperLib6OutRecESt6vectorIS4_SaIS4_EEEEiNS0_5__ops15_Iter_comp_iterIPFbS4_S4_EEEEvT_SF_T0_T1_@Base 6.4.1
-#MISSING: 6.4.1# (optional=templinst|arch=armel armhf hurd-i386 i386 kfreebsd-i386 mips mipsel powerpc sparc)_ZSt16__introsort_loopIN9__gnu_cxx17__normal_iteratorIPPN10ClipperLib6OutRecESt6vectorIS4_SaIS4_EEEEiPFbS4_S4_EEvT_SC_T0_T1_@Base 6.2.1
  (optional=templinst|arch=amd64 arm64 kfreebsd-amd64 ppc64el s390x)_ZSt16__introsort_loopIN9__gnu_cxx17__normal_iteratorIPPN10ClipperLib6OutRecESt6vectorIS4_SaIS4_EEEElNS0_5__ops15_Iter_comp_iterIPFbS4_S4_EEEEvT_SF_T0_T1_@Base 6.4.1
-#MISSING: 6.4.1# (optional=templinst|arch=kfreebsd-amd64 s390x)_ZSt16__introsort_loopIN9__gnu_cxx17__normal_iteratorIPPN10ClipperLib6OutRecESt6vectorIS4_SaIS4_EEEElPFbS4_S4_EEvT_SC_T0_T1_@Base 6.2.1
-#MISSING: 6.4.2# (optional=templinst|arch=!amd64 !armel !armhf !hurd-i386 !i386 !kfreebsd-amd64 !kfreebsd-i386 !mips !mipsel !powerpc !s390 !s390x)_ZSt19__move_median_firstIN9__gnu_cxx17__normal_iteratorIPPN10ClipperLib6OutRecESt6vectorIS4_SaIS4_EEEEPFbS4_S4_EEvT_SC_SC_T0_@Base 6.4.1
  (optional=templinst)_ZSt25__unguarded_linear_insertIN9__gnu_cxx17__normal_iteratorIPPN10ClipperLib6OutRecESt6vectorIS4_SaIS4_EEEENS0_5__ops14_Val_comp_iterIPFbS4_S4_EEEEvT_T0_@Base 6.4.1
-#MISSING: 6.4.2# (optional=templinst|arch=!sparc)_ZSt25__unguarded_linear_insertIN9__gnu_cxx17__normal_iteratorIPPN10ClipperLib6OutRecESt6vectorIS4_SaIS4_EEEEPFbS4_S4_EEvT_T0_@Base 6.4.1
  (optional=templinst|arch=sparc)_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN10ClipperLib6OutRecESt6vectorIS4_SaIS4_EEEEPFbS4_S4_EEvT_SC_T0_@Base 6.4.1
-#MISSING: 6.4.1# (optional=templinst|arch=ia64 s390 sparc)_ZSt8_DestroyIPSt6vectorIN10ClipperLib8IntPointESaIS2_EEEvT_S6_@Base 6.4.0
  _ZTI11KmlRenderer@Base 6.4.0
  _ZTI12line_adaptor@Base 6.2.1
  _ZTI15polygon_adaptor@Base 6.2.1
@@ -674,7 +589,6 @@ libmapserver.so.1 #PACKAGE# #MINVER#
  _ZTVN10ClipperLib11ClipperBaseE@Base 6.2.1
  _ZTVN10ClipperLib16clipperExceptionE@Base 6.2.1
  _ZTVN10ClipperLib7ClipperE@Base 6.2.1
-#MISSING: 6.4.2# _getline@Base 6.2.1
  _msSLDParseSizeParameter@Base 6.2.1
  _msValidateTime@Base 6.2.1
  _stream_write_fn@Base 6.2.1
@@ -908,7 +822,6 @@ libmapserver.so.1 #PACKAGE# #MINVER#
  msCalculateScale@Base 6.2.1
  msCaseReplaceSubstring@Base 6.2.1
  msCheckParentPointer@Base 6.2.1
-#MISSING: 6.4.0# msCircleDrawLineSymbol@Base 6.2.1
  msCircleDrawShadeSymbol@Base 6.2.1
  msClassifyRasterBuffer@Base 6.2.1
  msCleanup@Base 6.2.1
@@ -990,7 +903,6 @@ libmapserver.so.1 #PACKAGE# #MINVER#
  msCreateHashTable@Base 6.2.1
  msCreateImageKml@Base 6.4.0
  msCreateLegendIcon@Base 6.2.1
-#MISSING: 6.4.0# msCreateTileEllipseCairo@Base 6.2.1
  msCreateTree@Base 6.2.1
  msDBFAddField@Base 6.2.1
  msDBFClose@Base 6.2.1
@@ -1573,7 +1485,6 @@ libmapserver.so.1 #PACKAGE# #MINVER#
  msPopulateRendererVTableCairoSVG@Base 6.2.1
  msPopulateRendererVTableGD@Base 6.2.1
  msPopulateRendererVTableKML@Base 6.2.1
-#MISSING: 6.4.0# msPopulateRendererVTableOGL@Base 6.2.1
  msPopulateRendererVTableOGR@Base 6.2.1
  msPositionsText@Base 6.2.1
  msPostGISBase64Decode@Base 6.2.1
