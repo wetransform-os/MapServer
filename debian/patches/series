@@ -6,4 +6,4 @@ cmake-mapserver-export.patch
 java-hardening.patch
 consistent-typo.patch
 unknown-typo.patch
-missing-mapows.h-includes.patch
+avoid-including-header-files-inside-an-extern-c-block.patch
