@@ -1,6 +1,8 @@
 Description: Add support for hardening build flags.
 Author: Bas Couwenberg <sebastic@debian.org>
 Last-Update: 2013-09-02
+Forwarded: not-needed
+
 --- a/mapscript/ruby/CMakeLists.txt
 +++ b/mapscript/ruby/CMakeLists.txt
 @@ -7,6 +7,23 @@ include_directories(${PROJECT_SOURCE_DIR
