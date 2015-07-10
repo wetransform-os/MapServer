@@ -7,3 +7,4 @@ java-hardening.patch
 consistent-typo.patch
 unknown-typo.patch
 avoid-including-header-files-inside-an-extern-c-block.patch
+soversion.patch

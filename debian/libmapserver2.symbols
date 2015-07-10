@@ -1,5 +1,5 @@
 # SymbolsHelper-Confirmed: 7.0.0~beta2 amd64
-libmapserver.so.1 #PACKAGE# #MINVER#
+libmapserver.so.2 #PACKAGE# #MINVER#
  BuildExpressionTree@Base 6.2.1
  CleanVSIDir@Base 6.2.1
  CompareEllipseRegion@Base 6.2.1

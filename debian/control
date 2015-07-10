@@ -50,7 +50,7 @@ Vcs-Git: git://anonscm.debian.org/pkg-grass/mapserver.git -b experimental
 Homepage: http://www.mapserver.org
 XS-Ruby-Versions: all
 
-Package: libmapserver1
+Package: libmapserver2
 Architecture: any
 Section: libs
 Depends: ${shlibs:Depends},
@@ -75,11 +75,11 @@ Package: libmapserver-dbg
 Architecture: any
 Section: debug
 Priority: extra
-Depends: libmapserver1 (= ${binary:Version}),
+Depends: libmapserver2 (= ${binary:Version}),
          ${misc:Depends}
 Breaks: libmapserver1-dbg (<< 7.0.0~)
 Replaces: libmapserver1-dbg (<< 7.0.0~)
-Description: Debugging symbols for libmapserver1
+Description: Debugging symbols for libmapserver
  MapServer is a CGI-based framework for Internet map services which
  supports Open Geospatial Consortium (OGC) standards. Scripting
  functionality in MapScript is provided by the suggested mapscript
@@ -90,7 +90,7 @@ Description: Debugging symbols for libmapserver1
 Package: libmapserver-dev
 Architecture: any
 Section: libdevel
-Depends: libmapserver1 (= ${binary:Version}),
+Depends: libmapserver2 (= ${binary:Version}),
          ${misc:Depends}
 Suggests: cgi-mapserver,
           mapserver-bin,
