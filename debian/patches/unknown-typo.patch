@@ -1,6 +1,7 @@
 Description: Fix 'Unkown' typo, replace with 'Unknown'.
 Author: Bas Couwenberg <sebastic@debian.org>
 Forwarded: https://github.com/mapserver/mapserver/pull/5116
+Applied-Upstream: https://github.com/mapserver/mapserver/commit/bf8c0f7baa47f42be8eaa1bf45717371dbce7b2d
 
 --- a/mapgdal.c
 +++ b/mapgdal.c
