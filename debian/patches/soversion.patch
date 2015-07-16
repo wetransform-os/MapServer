@@ -1,6 +1,7 @@
 Description: Bump SOVERSION to 2, because of removed symbols.
 Author: Bas Couwenberg <sebastic@debian.org>
 Forwarded: https://github.com/mapserver/mapserver/pull/5118
+Applied-Upstream: https://github.com/mapserver/mapserver/commit/5154eb8dbf63de9b952504c2b9cc47ec65e43532
 
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
