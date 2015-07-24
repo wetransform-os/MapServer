@@ -28,6 +28,7 @@
  ****************************************************************************/
 
 #include "mapserver.h"
+#include "mapows.h"
 
 
 
@@ -995,6 +996,26 @@ static void msWFSWriteGeometryElement(FILE *stream, gmlGeometryListObj *geometry
   return;
 }
 
+static OWSGMLVersion msWFSGetGMLVersionFromSchemaVersion(WFSSchemaVersion outputformat)
+{
+    switch( outputformat )
+    {
+        case OWS_DEFAULT_SCHEMA:
+            return OWS_GML2;
+        case OWS_SFE_SCHEMA:
+            return OWS_GML3;
+        case OWS_GML32_SFE_SCHEMA:
+            return OWS_GML32;
+    }
+    return OWS_GML2;
+}
+
+static void msWFSSchemaWriteGeometryElement(FILE *stream, gmlGeometryListObj *geometryList, WFSSchemaVersion outputformat, const char *tab)
+{
+  OWSGMLVersion gmlversion = msWFSGetGMLVersionFromSchemaVersion(outputformat);
+  return msWFSWriteGeometryElement(stream,geometryList,gmlversion,tab);
+}
+
 static const char* msWFSMapServTypeToXMLType(const char* type)
 {
     const char *element_type = "string";
@@ -1153,7 +1174,7 @@ static const char* msWFSGetGMLNamespaceURI(WFSSchemaVersion outputformat)
     return "http://unknown";
 }
 
-static const char* msWFSGetGMLNamespaceURIFromGMLVersion(WFSSchemaVersion outputformat)
+static const char* msWFSGetGMLNamespaceURIFromGMLVersion(OWSGMLVersion outputformat)
 {
     switch( outputformat )
     {
@@ -1165,20 +1186,6 @@ static const char* msWFSGetGMLNamespaceURIFromGMLVersion(WFSSchemaVersion output
             return MS_OWSCOMMON_GML_32_NAMESPACE_URI;
     }
     return "http://unknown";
-}
-
-static OWSGMLVersion msWFSGetGMLVersionFromSchemaVersion(WFSSchemaVersion outputformat)
-{
-    switch( outputformat )
-    {
-        case OWS_DEFAULT_SCHEMA:
-            return OWS_GML2;
-        case OWS_SFE_SCHEMA:
-            return OWS_GML3;
-        case OWS_GML32_SFE_SCHEMA:
-            return OWS_GML32;
-    }
-    return OWS_GML2;
 }
 
 static void msWFS_NS_printf(const char* prefix, const char* uri)
@@ -1488,7 +1495,7 @@ this request. Check wfs/ows_enable_request settings.", "msWFSDescribeFeatureType
           msIO_printf("        <sequence>\n");
 
           /* write the geometry schema element(s) */
-          msWFSWriteGeometryElement(stdout, geometryList, outputformat, "          ");
+          msWFSSchemaWriteGeometryElement(stdout, geometryList, outputformat, "          ");
 
           /* write the constant-based schema elements */
           for(k=0; k<constantList->numconstants; k++) {
@@ -2059,7 +2066,7 @@ static int msWFSRunFilter(mapObj* map,
     /*preparse the filter for gml aliases*/
     FLTPreParseFilterForAliasAndGroup(psNode, map, lp->index, "G");
 
-    /* Check that FeatureId filters are consistant with the active layer */
+    /* Check that FeatureId filters are consistent with the active layer */
     if( FLTCheckFeatureIdFilters(psNode, map, lp->index) == MS_FAILURE)
     {
         FLTFreeFilterEncodingNode( psNode );

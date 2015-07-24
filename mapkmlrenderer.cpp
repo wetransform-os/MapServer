@@ -34,6 +34,7 @@
 #include "maperror.h"
 #include "mapkmlrenderer.h"
 #include "mapio.h"
+#include "mapows.h"
 
 #if defined(USE_OGR)
 #  include "cpl_conv.h"
@@ -769,7 +770,8 @@ int KmlRenderer::createIconImage(char *fileName, symbolObj *symbol, symbolStyleO
   p.z = 0.0;
 #endif
 
-  msDrawMarkerSymbol(map,tmpImg, &p, symstyle->style, 1);
+  if(msDrawMarkerSymbol(map,tmpImg, &p, symstyle->style, 1) != MS_SUCCESS)
+    return MS_FAILURE;
 
   return msSaveImage(map, tmpImg, fileName);
 }

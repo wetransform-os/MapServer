@@ -31,6 +31,7 @@
 #include "maphash.h"
 #include "mapserver.h"
 #include "maptile.h"
+#include "mapows.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -3922,18 +3923,8 @@ static char *processLine(mapservObj *mapserv, char *instr, FILE *stream, int mod
     outstr = msReplaceSubstring(outstr, "[lrn]", repstr);
     outstr = msReplaceSubstring(outstr, "[cl]", mapserv->resultlayer->name); /* current layer name */
     /* if(resultlayer->description) outstr = msReplaceSubstring(outstr, "[cd]", resultlayer->description); */ /* current layer description */
-  }
 
-  if(mode != QUERY) {
-    if(processResultSetTag(mapserv, &outstr, stream) != MS_SUCCESS) {
-      msFree(outstr);
-      return(NULL);
-    }
-  }
-
-  if(mode == QUERY) { /* return shape and/or values  */
-
-    /* allow layer metadata access in a query template, within the context of a query no layer name is necessary */
+    /* allow layer metadata access when there is a current result layer (implicitly a query template) */
     if(&(mapserv->resultlayer->metadata) && strstr(outstr, "[metadata_")) {
       for(i=0; i<MS_HASHSIZE; i++) {
         if(mapserv->resultlayer->metadata.items[i] != NULL) {
@@ -3949,6 +3940,14 @@ static char *processLine(mapservObj *mapserv, char *instr, FILE *stream, int mod
         }
       }
     }
+  }
+
+  if(mode != QUERY) {
+    if(processResultSetTag(mapserv, &outstr, stream) != MS_SUCCESS) {
+      msFree(outstr);
+      return(NULL);
+    }
+  } else { /* return shape and/or values */
 
     snprintf(repstr, sizeof(repstr), "%f %f", (mapserv->resultshape.bounds.maxx + mapserv->resultshape.bounds.minx)/2, (mapserv->resultshape.bounds.maxy + mapserv->resultshape.bounds.miny)/2);
     outstr = msReplaceSubstring(outstr, "[shpmid]", repstr);

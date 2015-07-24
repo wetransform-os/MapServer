@@ -64,6 +64,7 @@
 #include "mapserver.h"
 #include "maptime.h"
 #include "mappostgis.h"
+#include "mapows.h"
 
 #define FP_EPSILON 1e-12
 #define FP_EQ(a, b) (fabs((a)-(b)) < FP_EPSILON)
@@ -3579,9 +3580,6 @@ int msPostGISLayerTranslateFilter(layerObj *layer, expressionObj *filter, char *
 {
 #ifdef USE_POSTGIS
   tokenListNodeObjPtr node = NULL;
-
-  int resolution; /* date/time resolution */
-  int noDate;
 
   char *snippet = NULL;
   char *native_string = NULL;
