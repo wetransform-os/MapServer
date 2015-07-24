@@ -1,4 +1,4 @@
-# SymbolsHelper-Confirmed: 7.0.0~beta2 amd64 arm64 armel armhf hurd-i386 i386 kfreebsd-amd64 kfreebsd-i386 mipsel powerpc ppc64el s390x
+# SymbolsHelper-Confirmed: 7.0.0 amd64
 libmapserver.so.2 #PACKAGE# #MINVER#
  BuildExpressionTree@Base 6.2.1
  CleanVSIDir@Base 6.2.1
@@ -9,13 +9,13 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  FLTApplyFilterToLayer@Base 6.2.1
  FLTApplyFilterToLayerCommonExpression@Base 6.2.1
  FLTApplySimpleSQLFilter@Base 6.2.1
- FLTCheckFeatureIdFilters@Base 7.0.0~beta2
- FLTCheckInvalidOperand@Base 7.0.0~beta2
- FLTCheckInvalidProperty@Base 7.0.0~beta2
+ FLTCheckFeatureIdFilters@Base 7.0.0
+ FLTCheckInvalidOperand@Base 7.0.0
+ FLTCheckInvalidProperty@Base 7.0.0
  FLTCreateBinaryCompFilterEncodingNode@Base 6.2.1
  FLTCreateFeatureIdFilterEncoding@Base 6.2.1
  FLTCreateFilterEncodingNode@Base 6.2.1
- FLTDoAxisSwappingIfNecessary@Base 7.0.0~beta2
+ FLTDoAxisSwappingIfNecessary@Base 7.0.0
  FLTFreeFilterEncodingNode@Base 6.2.1
  FLTGetBBOX@Base 6.2.1
  FLTGetBinaryComparisonCommonExpression@Base 6.2.1
@@ -23,7 +23,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  FLTGetBinaryComparisonSQLExpresssion@Base 6.2.1
  FLTGetCapabilities@Base 6.2.1
  FLTGetCommonExpression@Base 6.2.1
- FLTGetDuring@Base 7.0.0~beta2
+ FLTGetDuring@Base 7.0.0
  FLTGetExpressionForValuesRanges@Base 6.2.1
  FLTGetFeatureIdCommonExpression@Base 6.2.1
  FLTGetGeosOperator@Base 6.2.1
@@ -41,7 +41,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  FLTGetSQLExpression@Base 6.2.1
  FLTGetShape@Base 6.2.1
  FLTGetSpatialComparisonCommonExpression@Base 6.2.1
- FLTGetTimeExpression@Base 7.0.0~beta2
+ FLTGetTimeExpression@Base 7.0.0
  FLTHasSpatialFilter@Base 6.2.1
  FLTInsertElementInNode@Base 6.2.1
  FLTIsBBoxFilter@Base 6.2.1
@@ -58,15 +58,15 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  FLTIsSimpleFilterNoSpatial@Base 6.2.1
  FLTIsSpatialFilterType@Base 6.2.1
  FLTIsSupportedFilterType@Base 6.2.1
- FLTIsTemporalFilterType@Base 7.0.0~beta2
+ FLTIsTemporalFilterType@Base 7.0.0
  FLTLayerApplyCondSQLFilterToLayer@Base 6.2.1
  FLTLayerApplyPlainFilterToLayer@Base 6.2.1
  FLTNumberOfFilterType@Base 6.2.1
  FLTParseFilterEncoding@Base 6.2.1
  FLTParseGMLBox@Base 6.2.1
  FLTParseGMLEnvelope@Base 6.2.1
- FLTPreParseFilterForAliasAndGroup@Base 7.0.0~beta2
- FLTSimplify@Base 7.0.0~beta2
+ FLTPreParseFilterForAliasAndGroup@Base 7.0.0
+ FLTSimplify@Base 7.0.0
  FLTValidFilterNode@Base 6.2.1
  FLTValidForBBoxFilter@Base 6.2.1
  FLTogrConvertGeometry@Base 6.2.1
@@ -90,7 +90,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  LayerDefaultNextShape@Base 6.2.1
  LayerDefaultOpen@Base 6.2.1
  LayerDefaultSupportsCommonFilters@Base 6.2.1
- LayerDefaultTranslateFilter@Base 7.0.0~beta2
+ LayerDefaultTranslateFilter@Base 7.0.0
  LayerDefaultWhichShapes@Base 6.2.1
  ParseTextLinePlacement@Base 6.2.1
  ParseTextPointPlacement@Base 6.2.1
@@ -98,7 +98,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  Pix2LayerGeoref@Base 6.2.1
  RebuildClusters@Base 6.2.1
  _SLDApplyRuleValues@Base 6.2.1
- _Z10addToTableP15UTFGridRendererP8shapeObj@Base 7.0.0~beta2
+ _Z10addToTableP15UTFGridRendererP8shapeObj@Base 7.0.0
  _Z11agg2CleanupPv@Base 6.2.1
  _Z13agg2FreeImageP8imageObj@Base 6.2.1
  _Z13agg2InitCachePPv@Base 6.2.1
@@ -106,32 +106,32 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _Z14agg2FreeSymbolP9symbolObj@Base 6.2.1
  _Z14agg2RenderLineP8imageObjP8shapeObjP14strokeStyleObj@Base 6.2.1
  _Z14agg2RenderTileP8imageObjS0_dd@Base 6.2.1
- _Z14decodeRenderedj@Base 7.0.0~beta2
+ _Z14decodeRenderedj@Base 7.0.0
  _Z15agg2CreateImageiiP15outputFormatObjP8colorObj@Base 6.2.1
- _Z15utfgridEndLayerP8imageObjP6mapObjP8layerObj@Base 7.0.0~beta2
- _Z15utfgridEndShapeP8imageObjP8shapeObj@Base 7.0.0~beta2
- _Z16utfgridCleanDataP8imageObj@Base 7.0.0~beta2
- _Z16utfgridFreeImageP8imageObj@Base 7.0.0~beta2
- _Z16utfgridSaveImageP8imageObjP6mapObjP8_IO_FILEP15outputFormatObj@Base 7.0.0~beta2
+ _Z15utfgridEndLayerP8imageObjP6mapObjP8layerObj@Base 7.0.0
+ _Z15utfgridEndShapeP8imageObjP8shapeObj@Base 7.0.0
+ _Z16utfgridCleanDataP8imageObj@Base 7.0.0
+ _Z16utfgridFreeImageP8imageObj@Base 7.0.0
+ _Z16utfgridSaveImageP8imageObjP6mapObjP8_IO_FILEP15outputFormatObj@Base 7.0.0
  _Z17agg2CloseNewLayerP8imageObjP6mapObjP8layerObj@Base 6.2.1
  _Z17agg2RenderPolygonP8imageObjP8shapeObjP8colorObj@Base 6.2.1
  _Z17agg2StartNewLayerP8imageObjP6mapObjP8layerObj@Base 6.2.1
- _Z17imageVectorSymbolP9symbolObj@Base 7.0.0~beta2
+ _Z17imageVectorSymbolP9symbolObj@Base 7.0.0
  _Z17msOGRFileReadTileP8layerObjP18ms_ogr_file_info_ti@Base 6.2.1
- _Z17utfgridFreeSymbolP9symbolObj@Base 7.0.0~beta2
- _Z17utfgridRenderLineP8imageObjP8shapeObjP14strokeStyleObj@Base 7.0.0~beta2
- _Z17utfgridStartLayerP8imageObjP6mapObjP8layerObj@Base 7.0.0~beta2
- _Z17utfgridStartShapeP8imageObjP8shapeObj@Base 7.0.0~beta2
- _Z17utfgridUpdateCharP8imageObjjj@Base 7.0.0~beta2
- _Z18encodeForRenderingj@Base 7.0.0~beta2
- _Z18utfgridCreateImageiiP15outputFormatObjP8colorObj@Base 7.0.0~beta2
+ _Z17utfgridFreeSymbolP9symbolObj@Base 7.0.0
+ _Z17utfgridRenderLineP8imageObjP8shapeObjP14strokeStyleObj@Base 7.0.0
+ _Z17utfgridStartLayerP8imageObjP6mapObjP8layerObj@Base 7.0.0
+ _Z17utfgridStartShapeP8imageObjP8shapeObj@Base 7.0.0
+ _Z17utfgridUpdateCharP8imageObjjj@Base 7.0.0
+ _Z18encodeForRenderingj@Base 7.0.0
+ _Z18utfgridCreateImageiiP15outputFormatObjP8colorObj@Base 7.0.0
  _Z19agg2RenderLineTiledP8imageObjP8shapeObjS0_@Base 6.2.1
- _Z19utfgridRenderGlyphsP8imageObjP11textPathObjP8colorObjS4_i@Base 7.0.0~beta2
- _Z20agg2RenderGlyphsPathP8imageObjP11textPathObjP8colorObjS4_i@Base 7.0.0~beta2
- (optional=templinst)_Z20decompose_ft_outlineIN9mapserver9path_baseINS0_20vertex_block_storageIdLj8ELj256EEEEEEbRK11FT_Outline_bRKNS0_12trans_affineERT_@Base 7.0.0~beta2
- (optional=templinst)_Z20renderPolygonHatchesIN9mapserver12conv_clipperI15polygon_adaptorNS0_11conv_strokeINS0_9conv_dashINS0_9path_baseINS0_20vertex_block_storageIdLj8ELj256EEEEENS0_12null_markersEEES9_EEEEEiP8imageObjRT_P8colorObj@Base 7.0.0~beta2
- (optional=templinst)_Z20renderPolygonHatchesIN9mapserver12conv_clipperI15polygon_adaptorNS0_11conv_strokeINS0_9path_baseINS0_20vertex_block_storageIdLj8ELj256EEEEENS0_12null_markersEEEEEEiP8imageObjRT_P8colorObj@Base 7.0.0~beta2
- _Z20utfgridRenderPolygonP8imageObjP8shapeObjP8colorObj@Base 7.0.0~beta2
+ _Z19utfgridRenderGlyphsP8imageObjP11textPathObjP8colorObjS4_i@Base 7.0.0
+ _Z20agg2RenderGlyphsPathP8imageObjP11textPathObjP8colorObjS4_i@Base 7.0.0
+ (optional=templinst)_Z20decompose_ft_outlineIN9mapserver9path_baseINS0_20vertex_block_storageIdLj8ELj256EEEEEEbRK11FT_Outline_bRKNS0_12trans_affineERT_@Base 7.0.0
+ (optional=templinst)_Z20renderPolygonHatchesIN9mapserver12conv_clipperI15polygon_adaptorNS0_11conv_strokeINS0_9conv_dashINS0_9path_baseINS0_20vertex_block_storageIdLj8ELj256EEEEENS0_12null_markersEEES9_EEEEEiP8imageObjRT_P8colorObj@Base 7.0.0
+ (optional=templinst)_Z20renderPolygonHatchesIN9mapserver12conv_clipperI15polygon_adaptorNS0_11conv_strokeINS0_9path_baseINS0_20vertex_block_storageIdLj8ELj256EEEEENS0_12null_markersEEEEEEiP8imageObjRT_P8colorObj@Base 7.0.0
+ _Z20utfgridRenderPolygonP8imageObjP8shapeObjP8colorObj@Base 7.0.0
  _Z21agg2MergeRasterBufferP8imageObjP15rasterBufferObjdiiiiii@Base 6.2.1
  _Z22agg2RenderPixmapSymbolP8imageObjddP9symbolObjP14symbolStyleObj@Base 6.2.1
  _Z22agg2RenderPolygonTiledP8imageObjP8shapeObjS0_@Base 6.2.1
@@ -139,13 +139,13 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _Z22aggGetRasterBufferCopyP8imageObjP15rasterBufferObj@Base 6.2.1
  _Z23agg2RenderEllipseSymbolP8imageObjddP9symbolObjP14symbolStyleObj@Base 6.2.1
  _Z23msOGREscapePropertyNameP8layerObjPKc@Base 6.2.1
- _Z24aggCompositeRasterBufferP8imageObjP15rasterBufferObj20CompositingOperationi@Base 7.0.0~beta2
+ _Z24aggCompositeRasterBufferP8imageObjP15rasterBufferObj20CompositingOperationi@Base 7.0.0
  _Z24aggGetRasterBufferHandleP8imageObjP15rasterBufferObj@Base 6.2.1
  _Z25aggInitializeRasterBufferP15rasterBufferObjiii@Base 6.2.1
- _Z25utfgridRenderPixmapSymbolP8imageObjddP9symbolObjP14symbolStyleObj@Base 7.0.0~beta2
- _Z25utfgridRenderVectorSymbolP8imageObjddP9symbolObjP14symbolStyleObj@Base 7.0.0~beta2
- _Z26utfgridRenderEllipseSymbolP8imageObjddP9symbolObjP14symbolStyleObj@Base 7.0.0~beta2
- _Z9growTableP11lookupTable@Base 7.0.0~beta2
+ _Z25utfgridRenderPixmapSymbolP8imageObjddP9symbolObjP14symbolStyleObj@Base 7.0.0
+ _Z25utfgridRenderVectorSymbolP8imageObjddP9symbolObjP14symbolStyleObj@Base 7.0.0
+ _Z26utfgridRenderEllipseSymbolP8imageObjddP9symbolObjP14symbolStyleObj@Base 7.0.0
+ _Z9growTableP11lookupTable@Base 7.0.0
  _ZN10ClipperLib10SwapPointsERNS_8IntPointES1_@Base 6.2.1
  _ZN10ClipperLib11ClipperBase10AddPolygonERKSt6vectorINS_8IntPointESaIS2_EENS_8PolyTypeE@Base 6.2.1
  _ZN10ClipperLib11ClipperBase11AddPolygonsERKSt6vectorIS1_INS_8IntPointESaIS2_EESaIS4_EENS_8PolyTypeE@Base 6.2.1
@@ -283,7 +283,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZN11KmlRenderer12getAliasNameEP8layerObjPcPKc@Base 6.4.0
  _ZN11KmlRenderer12getLayerNameEP8layerObj@Base 6.4.0
  _ZN11KmlRenderer12processLayerEP8layerObjP15outputFormatObj@Base 6.4.0
- _ZN11KmlRenderer12renderGlyphsEP8imageObjP8pointObjPcdP8colorObjS6_i@Base 7.0.0~beta2
+ _ZN11KmlRenderer12renderGlyphsEP8imageObjP8pointObjPcdP8colorObjS6_i@Base 7.0.0
  _ZN11KmlRenderer12renderSymbolEP8imageObjddP9symbolObjP14symbolStyleObj@Base 6.4.0
  _ZN11KmlRenderer13addCoordsNodeEP8_xmlNodeP8pointObji@Base 6.4.0
  _ZN11KmlRenderer13closeNewLayerEP8imageObjP8layerObj@Base 6.4.0
@@ -321,19 +321,19 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZN15polygon_adaptorD0Ev@Base 6.2.1
  _ZN15polygon_adaptorD1Ev@Base 6.2.1
  _ZN15polygon_adaptorD2Ev@Base 6.2.1
- _ZN16line_adaptor_utf6vertexEPdS0_@Base 7.0.0~beta2
- _ZN16line_adaptor_utfD0Ev@Base 7.0.0~beta2
- _ZN16line_adaptor_utfD1Ev@Base 7.0.0~beta2
- _ZN16line_adaptor_utfD2Ev@Base 7.0.0~beta2
- _ZN19polygon_adaptor_utf6vertexEPdS0_@Base 7.0.0~beta2
- _ZN19polygon_adaptor_utfD0Ev@Base 7.0.0~beta2
- _ZN19polygon_adaptor_utfD1Ev@Base 7.0.0~beta2
- _ZN19polygon_adaptor_utfD2Ev@Base 7.0.0~beta2
+ _ZN16line_adaptor_utf6vertexEPdS0_@Base 7.0.0
+ _ZN16line_adaptor_utfD0Ev@Base 7.0.0
+ _ZN16line_adaptor_utfD1Ev@Base 7.0.0
+ _ZN16line_adaptor_utfD2Ev@Base 7.0.0
+ _ZN19polygon_adaptor_utf6vertexEPdS0_@Base 7.0.0
+ _ZN19polygon_adaptor_utfD0Ev@Base 7.0.0
+ _ZN19polygon_adaptor_utfD1Ev@Base 7.0.0
+ _ZN19polygon_adaptor_utfD2Ev@Base 7.0.0
  (optional=templinst|arch=amd64 arm64 ia64 kfreebsd-amd64 ppc64el s390 s390x sparc)_ZN9mapserver10conv_curveINS_20path_storage_integerIiLj6EEENS_6curve3ENS_6curve4EE6vertexEPdS6_@Base 6.4.0
  (optional=templinst|arch=amd64 arm64 ia64 kfreebsd-amd64 ppc64el s390 s390x sparc)_ZN9mapserver10conv_curveINS_20path_storage_integerIsLj6EEENS_6curve3ENS_6curve4EE6vertexEPdS6_@Base 6.4.0
  (optional=templinst|arch=sparc)_ZN9mapserver10conv_curveINS_31serialized_integer_path_adaptorIsLj6EEENS_6curve3ENS_6curve4EED1Ev@Base 6.4.1
  (optional=templinst|arch=sparc)_ZN9mapserver10conv_curveINS_31serialized_integer_path_adaptorIsLj6EEENS_6curve3ENS_6curve4EED2Ev@Base 6.4.1
- (optional=templinst)_ZN9mapserver10conv_curveINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_6curve3ENS_6curve4EE6vertexEPdS8_@Base 7.0.0~beta2
+ (optional=templinst)_ZN9mapserver10conv_curveINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_6curve3ENS_6curve4EE6vertexEPdS8_@Base 7.0.0
  _ZN9mapserver10curve3_div16recursive_bezierEddddddj@Base 6.2.1
  _ZN9mapserver10curve3_div4initEdddddd@Base 6.2.1
  _ZN9mapserver10curve3_div6bezierEdddddd@Base 6.2.1
@@ -382,9 +382,9 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  (optional=templinst)_ZN9mapserver11pod_bvectorINS_20scanline_storage_bin13scanline_dataELj8EED2Ev@Base 6.2.1
  (optional=templinst)_ZN9mapserver11pod_bvectorINS_20scanline_storage_bin9span_dataELj10EED1Ev@Base 6.2.1
  (optional=templinst)_ZN9mapserver11pod_bvectorINS_20scanline_storage_bin9span_dataELj10EED2Ev@Base 6.2.1
- (optional=templinst|arch=mipsel)_ZN9mapserver11pod_bvectorINS_21scanline_cell_storageIhE10extra_spanELj6EE14allocate_blockEj@Base 7.0.0~beta2
- (optional=templinst|arch=mipsel)_ZN9mapserver11pod_bvectorIhLj12EE14allocate_blockEj@Base 7.0.0~beta2
- (optional=templinst|arch=mipsel)_ZN9mapserver11pod_bvectorIhLj12EE25allocate_continuous_blockEj@Base 7.0.0~beta2
+ (optional=templinst|arch=mipsel)_ZN9mapserver11pod_bvectorINS_21scanline_cell_storageIhE10extra_spanELj6EE14allocate_blockEj@Base 7.0.0
+ (optional=templinst|arch=mipsel)_ZN9mapserver11pod_bvectorIhLj12EE14allocate_blockEj@Base 7.0.0
+ (optional=templinst|arch=mipsel)_ZN9mapserver11pod_bvectorIhLj12EE25allocate_continuous_blockEj@Base 7.0.0
  (optional=templinst)_ZN9mapserver11qsort_cellsINS_7cell_aaEEEvPPT_j@Base 6.2.1
  _ZN9mapserver11scanline_u8D1Ev@Base 6.2.1
  _ZN9mapserver11scanline_u8D2Ev@Base 6.2.1
@@ -448,27 +448,27 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  (optional=templinst)_ZN9mapserver16render_scanlinesINS_22rasterizer_scanline_aaINS_18rasterizer_sl_clipINS_12ras_conv_intEEEEENS_11scanline_u8ENS_19scanline_storage_aaIhEEEEvRT_RT0_RT1_@Base 6.2.1
  (optional=templinst)_ZN9mapserver16render_scanlinesINS_22rasterizer_scanline_aaINS_18rasterizer_sl_clipINS_12ras_conv_intEEEEENS_11scanline_u8ENS_26renderer_scanline_aa_solidINS_13renderer_baseINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEEEEEEEEvRT_RT0_RT1_@Base 6.2.1
  (optional=templinst)_ZN9mapserver16render_scanlinesINS_22rasterizer_scanline_aaINS_18rasterizer_sl_clipINS_12ras_conv_intEEEEENS_12scanline_binENS_20scanline_storage_binEEEvRT_RT0_RT1_@Base 6.2.1
- (optional=templinst)_ZN9mapserver16render_scanlinesINS_22rasterizer_scanline_aaINS_18rasterizer_sl_clipINS_12ras_conv_intEEEEENS_12scanline_binENS_27renderer_scanline_bin_solidINS_13renderer_baseI10pixfmt_utfI8utfpix32NS_13row_ptr_cacheIjEELj1ELj0EEEEEEEEvRT_RT0_RT1_@Base 7.0.0~beta2
+ (optional=templinst)_ZN9mapserver16render_scanlinesINS_22rasterizer_scanline_aaINS_18rasterizer_sl_clipINS_12ras_conv_intEEEEENS_12scanline_binENS_27renderer_scanline_bin_solidINS_13renderer_baseI10pixfmt_utfI8utfpix32NS_13row_ptr_cacheIjEELj1ELj0EEEEEEEEvRT_RT0_RT1_@Base 7.0.0
  (optional=templinst)_ZN9mapserver17clip_line_segmentIiEEjPT_S2_S2_S2_RKNS_9rect_baseIS1_EE@Base 6.4.0
  _ZN9mapserver17mcs7x12_mono_highE@Base 6.2.1
- (optional=templinst)_ZN9mapserver17stack_blur_rgba32INS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEEEEvRT_jj@Base 7.0.0~beta2
- _ZN9mapserver17stack_blur_tablesIiE17g_stack_blur8_mulE@Base 7.0.0~beta2
- _ZN9mapserver17stack_blur_tablesIiE17g_stack_blur8_shrE@Base 7.0.0~beta2
+ (optional=templinst)_ZN9mapserver17stack_blur_rgba32INS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEEEEvRT_jj@Base 7.0.0
+ _ZN9mapserver17stack_blur_tablesIiE17g_stack_blur8_mulE@Base 7.0.0
+ _ZN9mapserver17stack_blur_tablesIiE17g_stack_blur8_shrE@Base 7.0.0
  (optional=templinst)_ZN9mapserver18conv_adaptor_vcgenI12line_adaptorNS_10vcgen_dashENS_12null_markersEE6vertexEPdS5_@Base 6.2.1
  (optional=templinst)_ZN9mapserver18conv_adaptor_vcgenI12line_adaptorNS_12vcgen_strokeENS_12null_markersEE6vertexEPdS5_@Base 6.4.0
- (optional=templinst)_ZN9mapserver18conv_adaptor_vcgenI16line_adaptor_utfNS_12vcgen_strokeENS_12null_markersEE6vertexEPdS5_@Base 7.0.0~beta2
+ (optional=templinst)_ZN9mapserver18conv_adaptor_vcgenI16line_adaptor_utfNS_12vcgen_strokeENS_12null_markersEE6vertexEPdS5_@Base 7.0.0
  (optional=templinst)_ZN9mapserver18conv_adaptor_vcgenINS_9conv_dashINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEENS_12vcgen_strokeES6_E6vertexEPdSA_@Base 6.2.1
  (optional=templinst)_ZN9mapserver18conv_adaptor_vcgenINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_10vcgen_dashENS_12null_markersEE6vertexEPdS8_@Base 6.2.1
  (optional=templinst)_ZN9mapserver18conv_adaptor_vcgenINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12vcgen_strokeENS_12null_markersEE6vertexEPdS8_@Base 6.2.1
  (optional=templinst)_ZN9mapserver18rasterizer_sl_clipINS_12ras_conv_intEE7line_toINS_19rasterizer_cells_aaINS_7cell_aaEEEEEvRT_ii@Base 6.2.1
  (optional=templinst)_ZN9mapserver18render_scanline_aaINS_11scanline_p8ENS_13renderer_baseINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEEEENS_14span_allocatorIS5_EENS_17span_pattern_rgbaINS_19image_accessor_wrapISA_NS_16wrap_mode_repeatESG_EEEEEEvRKT_RT0_RT1_RT2_@Base 6.2.1
- (optional=templinst|arch=mipsel)_ZN9mapserver18render_scanline_aaINS_11scanline_p8ENS_13renderer_baseINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEEEENS_14span_allocatorIS5_EENS_36span_image_filter_rgba_bilinear_clipISA_NS_24span_interpolator_linearINS_12trans_affineELj8EEEEEEEvRKT_RT0_RT1_RT2_@Base 7.0.0~beta2
+ (optional=templinst|arch=mipsel)_ZN9mapserver18render_scanline_aaINS_11scanline_p8ENS_13renderer_baseINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEEEENS_14span_allocatorIS5_EENS_36span_image_filter_rgba_bilinear_clipISA_NS_24span_interpolator_linearINS_12trans_affineELj8EEEEEEEvRKT_RT0_RT1_RT2_@Base 7.0.0
  (optional=templinst)_ZN9mapserver19rasterizer_cells_aaINS_7cell_aaEE12render_hlineEiiiii@Base 6.2.1
  (optional=templinst)_ZN9mapserver19rasterizer_cells_aaINS_7cell_aaEE14allocate_blockEv@Base 6.4.0
  (optional=templinst)_ZN9mapserver19rasterizer_cells_aaINS_7cell_aaEE4lineEiiii@Base 6.2.1
  (optional=templinst)_ZN9mapserver19rasterizer_cells_aaINS_7cell_aaEED1Ev@Base 6.2.1
  (optional=templinst)_ZN9mapserver19rasterizer_cells_aaINS_7cell_aaEED2Ev@Base 6.2.1
- (optional=templinst|arch=armel armhf hurd-i386 i386 kfreebsd-i386 mips powerpc)_ZN9mapserver19scanline_storage_aaIhE6renderINS_11scanline_u8EEEvRKT_@Base 7.0.0~beta2
+ (optional=templinst|arch=armel armhf hurd-i386 i386 kfreebsd-i386 mips powerpc)_ZN9mapserver19scanline_storage_aaIhE6renderINS_11scanline_u8EEEvRKT_@Base 7.0.0
  (optional=templinst)_ZN9mapserver19scanline_storage_aaIhED1Ev@Base 6.2.1
  (optional=templinst)_ZN9mapserver19scanline_storage_aaIhED2Ev@Base 6.2.1
  (optional=templinst)_ZN9mapserver20decompose_ft_outlineINS_20path_storage_integerIiLj6EEEEEbRK11FT_Outline_bRKNS_12trans_affineERT_@Base 6.2.1
@@ -508,10 +508,10 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZN9mapserver25font_engine_freetype_baseC2Ebj@Base 6.2.1
  _ZN9mapserver25font_engine_freetype_baseD1Ev@Base 6.2.1
  _ZN9mapserver25font_engine_freetype_baseD2Ev@Base 6.2.1
- (optional=templinst)_ZN9mapserver25render_scanline_bin_solidINS_12scanline_binENS_13renderer_baseI10pixfmt_utfI8utfpix32NS_13row_ptr_cacheIjEELj1ELj0EEEES4_EEvRKT_RT0_RKT1_@Base 7.0.0~beta2
+ (optional=templinst)_ZN9mapserver25render_scanline_bin_solidINS_12scanline_binENS_13renderer_baseI10pixfmt_utfI8utfpix32NS_13row_ptr_cacheIjEELj1ELj0EEEES4_EEvRKT_RT0_RKT1_@Base 7.0.0
  (optional=templinst|arch=amd64 hurd-i386 i386 kfreebsd-amd64 kfreebsd-i386 mips mipsel)_ZN9mapserver26copy_or_blend_rgba_wrapperINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEEE17copy_or_blend_pixEPhjjjjj@Base 6.4.0
  (optional=templinst)_ZN9mapserver28pattern_filter_bilinear_rgbaINS_5rgba8EE14pixel_high_resEPKPKS1_PS1_ii@Base 6.2.1
- (optional=templinst|arch=mipsel)_ZN9mapserver36span_image_filter_rgba_bilinear_clipINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEENS_24span_interpolator_linearINS_12trans_affineELj8EEEE8generateEPS3_iij@Base 7.0.0~beta2
+ (optional=templinst|arch=mipsel)_ZN9mapserver36span_image_filter_rgba_bilinear_clipINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEENS_24span_interpolator_linearINS_12trans_affineELj8EEEE8generateEPS3_iij@Base 7.0.0
  _ZN9mapserver3arc19approximation_scaleEd@Base 6.2.1
  _ZN9mapserver3arc4initEddddddb@Base 6.2.1
  _ZN9mapserver3arc6rewindEj@Base 6.2.1
@@ -519,9 +519,9 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZN9mapserver3arc9normalizeEddb@Base 6.2.1
  _ZN9mapserver3arcC1Eddddddb@Base 6.2.1
  _ZN9mapserver3arcC2Eddddddb@Base 6.2.1
- (arch=!ppc64el !s390x)_ZN9mapserver5rgba811premultiplyEv@Base 7.0.0~beta2
- _ZN9mapserver6curve36vertexEPdS1_@Base 7.0.0~beta2
- _ZN9mapserver6curve46vertexEPdS1_@Base 7.0.0~beta2
+ (arch=!ppc64el !s390x)_ZN9mapserver5rgba811premultiplyEv@Base 7.0.0
+ _ZN9mapserver6curve36vertexEPdS1_@Base 7.0.0
+ _ZN9mapserver6curve46vertexEPdS1_@Base 7.0.0
  _ZN9mapserver6gse4x6E@Base 6.2.1
  _ZN9mapserver6gse4x8E@Base 6.2.1
  _ZN9mapserver6gse5x7E@Base 6.2.1
@@ -533,9 +533,9 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZN9mapserver7gse8x16E@Base 6.2.1
  _ZN9mapserver9bisectrixERKNS_15line_parametersES2_PiS3_@Base 6.2.1
  (optional=templinst|arch=sparc)_ZN9mapserver9path_baseINS_20vertex_block_storageIdLj8ELj256EEEE11concat_pathINS_14conv_transformINS_10conv_curveINS_31serialized_integer_path_adaptorIsLj6EEENS_6curve3ENS_6curve4EEENS_12trans_affineEEEEEvRT_j@Base 6.4.1
- (optional=templinst)_ZN9mapserver9path_baseINS_20vertex_block_storageIdLj8ELj256EEEE6curve3Edddd@Base 7.0.0~beta2
- (optional=templinst)_ZN9mapserver9path_baseINS_20vertex_block_storageIdLj8ELj256EEEE6curve4Edddddd@Base 7.0.0~beta2
- (optional=templinst)_ZN9mapserver9path_baseINS_20vertex_block_storageIdLj8ELj256EEEE6vertexEPdS4_@Base 7.0.0~beta2
+ (optional=templinst)_ZN9mapserver9path_baseINS_20vertex_block_storageIdLj8ELj256EEEE6curve3Edddd@Base 7.0.0
+ (optional=templinst)_ZN9mapserver9path_baseINS_20vertex_block_storageIdLj8ELj256EEEE6curve4Edddddd@Base 7.0.0
+ (optional=templinst)_ZN9mapserver9path_baseINS_20vertex_block_storageIdLj8ELj256EEEE6vertexEPdS4_@Base 7.0.0
  (optional=templinst|arch=mips mipsel sparc)_ZN9mapserver9path_baseINS_20vertex_block_storageIdLj8ELj256EEEE9transformINS_12trans_affineEEEvRKT_j@Base 6.4.1
  _ZN9mapserver9verdana12E@Base 6.2.1
  _ZN9mapserver9verdana13E@Base 6.2.1
@@ -567,7 +567,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  (optional=templinst)_ZNSt20__uninitialized_copyILb0EE13__uninit_copyIPN10ClipperLib9ExPolygonES4_EET0_T_S6_S5_@Base 6.2.1
  (optional=templinst)_ZNSt20__uninitialized_copyILb0EE13__uninit_copyIPSt6vectorIN10ClipperLib8IntPointESaIS4_EES7_EET0_T_S9_S8_@Base 6.2.1
  (optional=templinst|arch=armel armhf hurd-i386 i386 kfreebsd-i386 mips mipsel powerpc sparc)_ZNSt22__uninitialized_fill_nILb0EE15__uninit_fill_nIPSt6vectorIN10ClipperLib8IntPointESaIS4_EEjS6_EEvT_T0_RKT1_@Base 6.2.1
- (optional=templinst|arch=arm64)_ZNSt22__uninitialized_fill_nILb0EE15__uninit_fill_nIPSt6vectorIN10ClipperLib8IntPointESaIS4_EEmS6_EEvT_T0_RKT1_@Base 7.0.0~beta2
+ (optional=templinst|arch=arm64)_ZNSt22__uninitialized_fill_nILb0EE15__uninit_fill_nIPSt6vectorIN10ClipperLib8IntPointESaIS4_EEmS6_EEvT_T0_RKT1_@Base 7.0.0
  (optional=templinst|arch=armel armhf hurd-i386 i386 kfreebsd-i386 mips mipsel powerpc sparc)_ZNSt6vectorIN10ClipperLib11DoublePointESaIS1_EE14_M_fill_insertEN9__gnu_cxx17__normal_iteratorIPS1_S3_EEjRKS1_@Base 6.2.1
  (optional=templinst|arch=amd64 arm64 ia64 kfreebsd-amd64 ppc64el s390x)_ZNSt6vectorIN10ClipperLib11DoublePointESaIS1_EE14_M_fill_insertEN9__gnu_cxx17__normal_iteratorIPS1_S3_EEmRKS1_@Base 6.2.1
  (optional=templinst)_ZNSt6vectorIN10ClipperLib8IntPointESaIS1_EE13_M_insert_auxEN9__gnu_cxx17__normal_iteratorIPS1_S3_EERKS1_@Base 6.2.1
@@ -604,16 +604,16 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZTI11KmlRenderer@Base 6.4.0
  _ZTI12line_adaptor@Base 6.2.1
  _ZTI15polygon_adaptor@Base 6.2.1
- _ZTI16line_adaptor_utf@Base 7.0.0~beta2
- _ZTI19polygon_adaptor_utf@Base 7.0.0~beta2
+ _ZTI16line_adaptor_utf@Base 7.0.0
+ _ZTI19polygon_adaptor_utf@Base 7.0.0
  _ZTIN10ClipperLib11ClipperBaseE@Base 6.2.1
  _ZTIN10ClipperLib16clipperExceptionE@Base 6.2.1
  _ZTIN10ClipperLib7ClipperE@Base 6.2.1
  _ZTS11KmlRenderer@Base 6.4.0
  _ZTS12line_adaptor@Base 6.2.1
  _ZTS15polygon_adaptor@Base 6.2.1
- _ZTS16line_adaptor_utf@Base 7.0.0~beta2
- _ZTS19polygon_adaptor_utf@Base 7.0.0~beta2
+ _ZTS16line_adaptor_utf@Base 7.0.0
+ _ZTS19polygon_adaptor_utf@Base 7.0.0
  _ZTSN10ClipperLib11ClipperBaseE@Base 6.2.1
  _ZTSN10ClipperLib16clipperExceptionE@Base 6.2.1
  _ZTSN10ClipperLib7ClipperE@Base 6.2.1
@@ -621,55 +621,55 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZTV11KmlRenderer@Base 6.4.0
  _ZTV12line_adaptor@Base 6.2.1
  _ZTV15polygon_adaptor@Base 6.2.1
- _ZTV16line_adaptor_utf@Base 7.0.0~beta2
- _ZTV19polygon_adaptor_utf@Base 7.0.0~beta2
+ _ZTV16line_adaptor_utf@Base 7.0.0
+ _ZTV19polygon_adaptor_utf@Base 7.0.0
  _ZTVN10ClipperLib11ClipperBaseE@Base 6.2.1
  _ZTVN10ClipperLib16clipperExceptionE@Base 6.2.1
  _ZTVN10ClipperLib7ClipperE@Base 6.2.1
- _get_param_value@Base 7.0.0~beta2
+ _get_param_value@Base 7.0.0
  _msSLDParseSizeParameter@Base 6.2.1
  _msValidateTime@Base 6.2.1
- _ms_script_prefix_am@Base 7.0.0~beta2
- _ms_script_prefix_ar@Base 7.0.0~beta2
- _ms_script_prefix_bku@Base 7.0.0~beta2
- _ms_script_prefix_bn@Base 7.0.0~beta2
- _ms_script_prefix_bo@Base 7.0.0~beta2
- _ms_script_prefix_bug@Base 7.0.0~beta2
- _ms_script_prefix_chr@Base 7.0.0~beta2
- _ms_script_prefix_cn@Base 7.0.0~beta2
- _ms_script_prefix_cop@Base 7.0.0~beta2
- _ms_script_prefix_dv@Base 7.0.0~beta2
- _ms_script_prefix_el@Base 7.0.0~beta2
- _ms_script_prefix_en@Base 7.0.0~beta2
- _ms_script_prefix_gu@Base 7.0.0~beta2
- _ms_script_prefix_he@Base 7.0.0~beta2
- _ms_script_prefix_hi@Base 7.0.0~beta2
- _ms_script_prefix_hnn@Base 7.0.0~beta2
- _ms_script_prefix_hy@Base 7.0.0~beta2
- _ms_script_prefix_iu@Base 7.0.0~beta2
- _ms_script_prefix_ja@Base 7.0.0~beta2
- _ms_script_prefix_ka@Base 7.0.0~beta2
- _ms_script_prefix_km@Base 7.0.0~beta2
- _ms_script_prefix_kn@Base 7.0.0~beta2
- _ms_script_prefix_ko@Base 7.0.0~beta2
- _ms_script_prefix_lo@Base 7.0.0~beta2
- _ms_script_prefix_ml@Base 7.0.0~beta2
- _ms_script_prefix_mn@Base 7.0.0~beta2
- _ms_script_prefix_my@Base 7.0.0~beta2
- _ms_script_prefix_nko@Base 7.0.0~beta2
- _ms_script_prefix_or@Base 7.0.0~beta2
- _ms_script_prefix_pa@Base 7.0.0~beta2
- _ms_script_prefix_peo@Base 7.0.0~beta2
- _ms_script_prefix_ru@Base 7.0.0~beta2
- _ms_script_prefix_si@Base 7.0.0~beta2
- _ms_script_prefix_syl@Base 7.0.0~beta2
- _ms_script_prefix_syr@Base 7.0.0~beta2
- _ms_script_prefix_ta@Base 7.0.0~beta2
- _ms_script_prefix_tbw@Base 7.0.0~beta2
- _ms_script_prefix_te@Base 7.0.0~beta2
- _ms_script_prefix_th@Base 7.0.0~beta2
- _ms_script_prefix_tl@Base 7.0.0~beta2
- _ms_script_prefix_uga@Base 7.0.0~beta2
+ _ms_script_prefix_am@Base 7.0.0
+ _ms_script_prefix_ar@Base 7.0.0
+ _ms_script_prefix_bku@Base 7.0.0
+ _ms_script_prefix_bn@Base 7.0.0
+ _ms_script_prefix_bo@Base 7.0.0
+ _ms_script_prefix_bug@Base 7.0.0
+ _ms_script_prefix_chr@Base 7.0.0
+ _ms_script_prefix_cn@Base 7.0.0
+ _ms_script_prefix_cop@Base 7.0.0
+ _ms_script_prefix_dv@Base 7.0.0
+ _ms_script_prefix_el@Base 7.0.0
+ _ms_script_prefix_en@Base 7.0.0
+ _ms_script_prefix_gu@Base 7.0.0
+ _ms_script_prefix_he@Base 7.0.0
+ _ms_script_prefix_hi@Base 7.0.0
+ _ms_script_prefix_hnn@Base 7.0.0
+ _ms_script_prefix_hy@Base 7.0.0
+ _ms_script_prefix_iu@Base 7.0.0
+ _ms_script_prefix_ja@Base 7.0.0
+ _ms_script_prefix_ka@Base 7.0.0
+ _ms_script_prefix_km@Base 7.0.0
+ _ms_script_prefix_kn@Base 7.0.0
+ _ms_script_prefix_ko@Base 7.0.0
+ _ms_script_prefix_lo@Base 7.0.0
+ _ms_script_prefix_ml@Base 7.0.0
+ _ms_script_prefix_mn@Base 7.0.0
+ _ms_script_prefix_my@Base 7.0.0
+ _ms_script_prefix_nko@Base 7.0.0
+ _ms_script_prefix_or@Base 7.0.0
+ _ms_script_prefix_pa@Base 7.0.0
+ _ms_script_prefix_peo@Base 7.0.0
+ _ms_script_prefix_ru@Base 7.0.0
+ _ms_script_prefix_si@Base 7.0.0
+ _ms_script_prefix_syl@Base 7.0.0
+ _ms_script_prefix_syr@Base 7.0.0
+ _ms_script_prefix_ta@Base 7.0.0
+ _ms_script_prefix_tbw@Base 7.0.0
+ _ms_script_prefix_te@Base 7.0.0
+ _ms_script_prefix_th@Base 7.0.0
+ _ms_script_prefix_tl@Base 7.0.0
+ _ms_script_prefix_uga@Base 7.0.0
  _stream_write_fn@Base 6.2.1
  _validateNamespace@Base 6.2.1
  addTileCache@Base 6.2.1
@@ -677,60 +677,60 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  arcStrokeCircle@Base 6.2.1
  arcStrokeCircularString@Base 6.2.1
  bufferPolyline@Base 6.2.1
- cairoCompositeRasterBuffer@Base 7.0.0~beta2
+ cairoCompositeRasterBuffer@Base 7.0.0
  calcMidAngle@Base 6.2.1
  calcOrientation@Base 6.2.1
  checkWebExtent@Base 6.2.1
  checkWebScale@Base 6.2.1
- check_single_font@Base 7.0.0~beta2
+ check_single_font@Base 7.0.0
  circleLayerDrawShape@Base 6.2.1
  cleanupCairo@Base 6.2.1
  cleanupDummy@Base 6.2.1
  closeLayerRasterCairo@Base 6.2.1
  closeLayerVectorCairo@Base 6.2.1
  clusterDestroyData@Base 6.2.1
- computeMarkerBounds@Base 7.0.0~beta2
+ computeMarkerBounds@Base 7.0.0
  computeSymbolStyle@Base 6.2.1
- copyLabelBounds@Base 7.0.0~beta2
+ copyLabelBounds@Base 7.0.0
  createEllipseSymbolTileDummy@Base 6.2.1
  createImageCairo@Base 6.2.1
  createImageDummy@Base 6.2.1
  createPixmapSymbolTileDummy@Base 6.2.1
- createPostgresTimeCompareEquals@Base 7.0.0~beta2
- createPostgresTimeCompareGreaterThan@Base 7.0.0~beta2
- createPostgresTimeCompareLessThan@Base 7.0.0~beta2
+ createPostgresTimeCompareEquals@Base 7.0.0
+ createPostgresTimeCompareGreaterThan@Base 7.0.0
+ createPostgresTimeCompareLessThan@Base 7.0.0
  createRasterBufferDummy@Base 6.2.1
  createSurfaceFromBuffer@Base 6.2.1
  createTruetypeSymbolTileDummy@Base 6.2.1
  createVectorSymbolTileDummy@Base 6.2.1
  ctable@Base 6.2.1
  defaultoutputformats@Base 6.2.1
- dejavu_sans_condensed_ttf@Base 7.0.0~beta2
- dejavu_sans_condensed_ttf_len@Base 7.0.0~beta2
- drawGlyphMarker@Base 7.0.0~beta2
+ dejavu_sans_condensed_ttf@Base 7.0.0
+ dejavu_sans_condensed_ttf_len@Base 7.0.0
+ drawGlyphMarker@Base 7.0.0
  drawRectangle@Base 6.2.1
  endLayerDummy@Base 6.2.1
  endShapeDummy@Base 6.2.1
  escape_shell_cmd@Base 6.2.1
  fastComputeBounds@Base 6.2.1
  findChartPoint@Base 6.2.1
- findNextTokenByType@Base 7.0.0~beta2
+ findNextTokenByType@Base 7.0.0
  findTag@Base 6.2.1
  findTagEnd@Base 6.2.1
  fmakeword@Base 6.2.1
- freeCairoFaceCache@Base 7.0.0~beta2
+ freeCairoFaceCache@Base 7.0.0
  freeClass@Base 6.2.1
  freeClassHitTests@Base 6.4.0
  freeCluster@Base 6.2.1
  freeFeatureList@Base 6.2.1
- freeGrid@Base 7.0.0~beta2
+ freeGrid@Base 7.0.0
  freeImageCache@Base 6.2.1
  freeImageCairo@Base 6.2.1
  freeImageDummy@Base 6.2.1
  freeJoin@Base 6.2.1
  freeLabel@Base 6.2.1
  freeLabelHitTests@Base 6.4.0
- freeLabelLeader@Base 7.0.0~beta2
+ freeLabelLeader@Base 7.0.0
  freeLayer@Base 6.2.1
  freeLayerHitTests@Base 6.4.0
  freeLegend@Base 6.2.1
@@ -743,12 +743,12 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  freeStyle@Base 6.2.1
  freeSymbolCairo@Base 6.2.1
  freeSymbolDummy@Base 6.2.1
- freeTextPath@Base 7.0.0~beta2
- freeTextSymbol@Base 7.0.0~beta2
+ freeTextPath@Base 7.0.0
+ freeTextSymbol@Base 7.0.0
  freeTileDummy@Base 6.2.1
  freeWeb@Base 6.2.1
- ft_caches@Base 7.0.0~beta2
- gaussian_blur@Base 7.0.0~beta2
+ ft_caches@Base 7.0.0
+ gaussian_blur@Base 7.0.0
  generateClassTemplate@Base 6.2.1
  generateGroupTemplate@Base 6.2.1
  generateLayerTemplate@Base 6.2.1
@@ -771,12 +771,12 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  getTagArgs@Base 6.2.1
  getTile@Base 6.2.1
  getTruetypeTextBBoxDummy@Base 6.2.1
- get_face_for_run@Base 7.0.0~beta2
- get_hb_font@Base 7.0.0~beta2
+ get_face_for_run@Base 7.0.0
+ get_hb_font@Base 7.0.0
  get_metrics@Base 6.2.1
- get_scripts@Base 7.0.0~beta2
+ get_scripts@Base 7.0.0
  getword@Base 6.2.1
- hbfeatures@Base 7.0.0~beta2
+ hbfeatures@Base 7.0.0
  inchesPerUnit@Base 6.2.1
  include_lineno@Base 6.2.1
  include_stack@Base 6.2.1
@@ -785,14 +785,14 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  initClass@Base 6.2.1
  initClassHitTests@Base 6.4.0
  initCluster@Base 6.2.1
- initCompositingFilter@Base 7.0.0~beta2
+ initCompositingFilter@Base 7.0.0
  initGrid@Base 6.2.1
  initHashTable@Base 6.2.1
  initJoin@Base 6.2.1
  initLabel@Base 6.2.1
  initLabelHitTests@Base 6.4.0
  initLayer@Base 6.2.1
- initLayerCompositer@Base 7.0.0~beta2
+ initLayerCompositer@Base 7.0.0
  initLayerHitTests@Base 6.4.0
  initLeader@Base 6.2.1
  initLegend@Base 6.2.1
@@ -806,16 +806,16 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  initStyle@Base 6.2.1
  initStyleHitTests@Base 6.4.0
  initSymbol@Base 6.2.1
- initTextPath@Base 7.0.0~beta2
- initTextSymbol@Base 7.0.0~beta2
+ initTextPath@Base 7.0.0
+ initTextSymbol@Base 7.0.0
  initWeb@Base 6.2.1
  initializeCache@Base 6.2.1
  initializeRasterBufferCairo@Base 6.2.1
  initializeRasterBufferDummy@Base 6.2.1
  insertFeatureList@Base 6.2.1
- insertRenderedLabelMember@Base 7.0.0~beta2
+ insertRenderedLabelMember@Base 7.0.0
  intersectLabelPolygons@Base 6.2.1
- intersectTextSymbol@Base 7.0.0~beta2
+ intersectTextSymbol@Base 7.0.0
  isOn@Base 6.2.1
  isScaleInRange@Base 6.2.1
  jpeg_buffer_empty_output_buffer@Base 6.2.1
@@ -832,7 +832,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  loadImageFromFileDummy@Base 6.2.1
  loadJoin@Base 6.2.1
  loadLayer@Base 6.2.1
- loadLayerCompositer@Base 7.0.0~beta2
+ loadLayerCompositer@Base 7.0.0
  loadLegend@Base 6.2.1
  loadParams@Base 6.2.1
  loadQueryMap@Base 6.2.1
@@ -869,7 +869,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msAppendSymbol@Base 6.2.1
  msApplyDefaultOutputFormats@Base 6.2.1
  msApplyDefaultSubstitutions@Base 6.2.1
- msApplyFilterToRasterBuffer@Base 7.0.0~beta2
+ msApplyFilterToRasterBuffer@Base 7.0.0
  msApplyMapConfigOptions@Base 6.2.1
  msApplyOutputFormat@Base 6.2.1
  msApplySubstitutions@Base 6.2.1
@@ -905,13 +905,13 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msCairoCleanup@Base 6.2.1
  msCalculateScale@Base 6.2.1
  msCaseReplaceSubstring@Base 6.2.1
- msCheckLabelMinDistance@Base 7.0.0~beta2
+ msCheckLabelMinDistance@Base 7.0.0
  msCheckParentPointer@Base 6.2.1
- msCircleDrawLineSymbol@Base 7.0.0~beta2
+ msCircleDrawLineSymbol@Base 7.0.0
  msCircleDrawShadeSymbol@Base 6.2.1
  msClassifyRasterBuffer@Base 6.2.1
  msCleanup@Base 6.2.1
- msCleanupKernelDensityDataset@Base 7.0.0~beta2
+ msCleanupKernelDensityDataset@Base 7.0.0
  msClipPolygonRect@Base 6.2.1
  msClipPolylineRect@Base 6.2.1
  msCloneOutputFormat@Base 6.2.1
@@ -935,8 +935,8 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msClusterLayerWhichShapes@Base 6.2.1
  msCommifyString@Base 6.2.1
  msComputeBounds@Base 6.2.1
- msComputeKernelDensityDataset@Base 7.0.0~beta2
- msComputeTextPath@Base 7.0.0~beta2
+ msComputeKernelDensityDataset@Base 7.0.0
+ msComputeTextPath@Base 7.0.0
  msConnPoolCloseUnreferenced@Base 6.2.1
  msConnPoolFinalCleanup@Base 6.2.1
  msConnPoolRegister@Base 6.2.1
@@ -957,23 +957,23 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msConvertWideStringToUTF8@Base 6.2.1
  msCopyClass@Base 6.2.1
  msCopyCluster@Base 6.2.1
- msCopyCompositer@Base 7.0.0~beta2
+ msCopyCompositer@Base 7.0.0
  msCopyExpression@Base 6.2.1
  msCopyFontSet@Base 6.2.1
- msCopyGrid@Base 7.0.0~beta2
+ msCopyGrid@Base 7.0.0
  msCopyHashTable@Base 6.2.1
  msCopyItem@Base 6.2.1
  msCopyJoin@Base 6.2.1
  msCopyLabel@Base 6.2.1
- msCopyLabelLeader@Base 7.0.0~beta2
+ msCopyLabelLeader@Base 7.0.0
  msCopyLayer@Base 6.2.1
  msCopyLegend@Base 6.2.1
  msCopyLine@Base 6.2.1
  msCopyMap@Base 6.2.1
  msCopyProjection@Base 6.2.1
- msCopyProjectionExtended@Base 7.0.0~beta2
+ msCopyProjectionExtended@Base 7.0.0
  msCopyQueryMap@Base 6.2.1
- msCopyRasterBuffer@Base 7.0.0~beta2
+ msCopyRasterBuffer@Base 7.0.0
  msCopyReferenceMap@Base 6.2.1
  msCopyResult@Base 6.2.1
  msCopyResultCache@Base 6.2.1
@@ -984,8 +984,8 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msCopyStyle@Base 6.2.1
  msCopySymbol@Base 6.2.1
  msCopySymbolSet@Base 6.2.1
- msCopyTextPath@Base 7.0.0~beta2
- msCopyTextSymbol@Base 7.0.0~beta2
+ msCopyTextPath@Base 7.0.0
+ msCopyTextSymbol@Base 7.0.0
  msCopyWeb@Base 6.2.1
  msCountChars@Base 6.2.1
  msCreateDefaultOutputFormat@Base 6.2.1
@@ -1016,7 +1016,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msDBFWriteIntegerAttribute@Base 6.2.1
  msDBFWriteStringAttribute@Base 6.2.1
  msDateCompare@Base 6.2.1
- msDebug2@Base 7.0.0~beta2
+ msDebug2@Base 7.0.0
  msDebug@Base 6.2.1
  msDebugCleanup@Base 6.2.1
  msDebugInitFromEnv@Base 6.2.1
@@ -1037,7 +1037,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msDrawChartLayer@Base 6.2.1
  msDrawEndShape@Base 6.2.1
  msDrawLabel@Base 6.2.1
- msDrawLabelBounds@Base 7.0.0~beta2
+ msDrawLabelBounds@Base 7.0.0
  msDrawLabelCache@Base 6.2.1
  msDrawLayer@Base 6.2.1
  msDrawLegend@Base 6.2.1
@@ -1069,7 +1069,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msDrawShape@Base 6.2.1
  msDrawStartShape@Base 6.2.1
  msDrawTextIM@Base 6.2.1
- msDrawTextSymbol@Base 7.0.0~beta2
+ msDrawTextSymbol@Base 7.0.0
  msDrawTransformedShape@Base 6.2.1
  msDrawVBarChart@Base 6.2.1
  msDrawVBarChartLayer@Base 6.2.1
@@ -1086,26 +1086,26 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msEncodeUrlExcept@Base 6.2.1
  msEncryptStringWithKey@Base 6.2.1
  msEndShapeKml@Base 6.4.0
- msEscapeJSonString@Base 7.0.0~beta2
+ msEscapeJSonString@Base 7.0.0
  msEvalContext@Base 6.2.1
  msEvalExpression@Base 6.2.1
  msEvalRegex@Base 6.2.1
- msEvalTextExpression@Base 7.0.0~beta2
- msEvalTextExpressionJSonEscape@Base 7.0.0~beta2
+ msEvalTextExpression@Base 7.0.0
+ msEvalTextExpressionJSonEscape@Base 7.0.0
  msExecuteQuery@Base 6.2.1
- msExpressionTokenToString@Base 7.0.0~beta2
+ msExpressionTokenToString@Base 7.0.0
  msExtentsOverlap@Base 6.2.1
  msFilterTreeSearch@Base 6.2.1
  msFirstKeyFromHashTable@Base 6.2.1
  msFlipBit@Base 6.2.1
- msFontCacheCleanup@Base 7.0.0~beta2
- msFontCacheSetup@Base 7.0.0~beta2
+ msFontCacheCleanup@Base 7.0.0
+ msFontCacheSetup@Base 7.0.0
  msForceTmpFileBase@Base 6.2.1
  msFreeCgiObj@Base 6.2.1
  msFreeCharArray@Base 6.2.1
- msFreeExpression@Base 7.0.0~beta2
- msFreeExpressionTokens@Base 7.0.0~beta2
- msFreeFontCache@Base 7.0.0~beta2
+ msFreeExpression@Base 7.0.0
+ msFreeExpressionTokens@Base 7.0.0
+ msFreeFontCache@Base 7.0.0
  msFreeFontSet@Base 6.2.1
  msFreeHashItems@Base 6.2.1
  msFreeHashTable@Base 6.2.1
@@ -1174,7 +1174,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msGMLGetItems@Base 6.2.1
  msGMLGetNamespaces@Base 6.2.1
  msGMLWriteQuery@Base 6.2.1
- msGMLWriteWFSBounds@Base 7.0.0~beta2
+ msGMLWriteWFSBounds@Base 7.0.0
  msGMLWriteWFSQuery@Base 6.2.1
  msGeneralize@Base 6.4.0
  msGenerateEncryptionKey@Base 6.2.1
@@ -1185,7 +1185,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msGetBit@Base 6.2.1
  msGetBitArraySize@Base 6.2.1
  msGetCURLAuthType@Base 6.2.1
- msGetCharacterSize@Base 7.0.0~beta2
+ msGetCharacterSize@Base 7.0.0
  msGetClass@Base 6.2.1
  msGetClass_FloatRGB@Base 6.2.1
  msGetConfigOption@Base 6.2.1
@@ -1196,18 +1196,18 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msGetErrorObj@Base 6.2.1
  msGetErrorString@Base 6.2.1
  msGetExpressionString@Base 6.2.1
- msGetFontCache@Base 7.0.0~beta2
- msGetFontFace@Base 7.0.0~beta2
+ msGetFontCache@Base 7.0.0
+ msGetFontFace@Base 7.0.0
  msGetFriBidiEncodedString@Base 6.2.1
  msGetGDALBandList@Base 6.2.1
  msGetGDALGeoTransform@Base 6.2.1
  msGetGDALNoDataValue@Base 6.2.1
  msGetGlobalDebugLevel@Base 6.2.1
- msGetGlyphByIndex@Base 7.0.0~beta2
- msGetGlyphIndex@Base 7.0.0~beta2
- msGetGlyphOutline@Base 7.0.0~beta2
+ msGetGlyphByIndex@Base 7.0.0
+ msGetGlyphIndex@Base 7.0.0
+ msGetGlyphOutline@Base 7.0.0
  msGetInnerList@Base 6.2.1
- msGetLabelStatus@Base 7.0.0~beta2
+ msGetLabelStatus@Base 7.0.0
  msGetLayerIndex@Base 6.2.1
  msGetLayersIndexByGroup@Base 6.2.1
  msGetMapContextFileText@Base 6.2.1
@@ -1234,10 +1234,10 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msGetProjectionString@Base 6.2.1
  msGetQueryResultBounds@Base 6.2.1
  msGetRasterBufferKml@Base 6.4.0
- msGetStringSize@Base 7.0.0~beta2
+ msGetStringSize@Base 7.0.0
  msGetSymbol@Base 6.2.1
  msGetSymbolIndex@Base 6.2.1
- msGetTextSymbolSize@Base 7.0.0~beta2
+ msGetTextSymbolSize@Base 7.0.0
  msGetThreadId@Base 6.2.1
  msGetTruetypeTextBBoxKml@Base 6.4.0
  msGetUnicodeEntity@Base 6.2.1
@@ -1266,7 +1266,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msGrowMapLayers@Base 6.2.1
  msGrowMapservLayers@Base 6.2.1
  msGrowSymbolSet@Base 6.2.1
- msHSLtoRGB@Base 7.0.0~beta2
+ msHSLtoRGB@Base 7.0.0
  msHTTPAuthProxySetup@Base 6.4.0
  msHTTPCleanup@Base 6.2.1
  msHTTPExecuteRequests@Base 6.2.1
@@ -1304,16 +1304,16 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msIO_installHandlers@Base 6.2.1
  msIO_installStdinFromBuffer@Base 6.2.1
  msIO_installStdoutToBuffer@Base 6.2.1
- msIO_isStdContext@Base 7.0.0~beta2
+ msIO_isStdContext@Base 7.0.0
  msIO_needBinaryStdin@Base 6.2.1
  msIO_needBinaryStdout@Base 6.2.1
  msIO_printf@Base 6.2.1
- msIO_pushStdoutToBufferAndGetOldContext@Base 7.0.0~beta2
+ msIO_pushStdoutToBufferAndGetOldContext@Base 7.0.0
  msIO_resetHandlers@Base 6.2.1
- msIO_restoreOldStdoutContext@Base 7.0.0~beta2
+ msIO_restoreOldStdoutContext@Base 7.0.0
  msIO_sendHeaders@Base 6.2.1
  msIO_setHeader@Base 6.2.1
- msIO_setHeaderEnabled@Base 7.0.0~beta2
+ msIO_setHeaderEnabled@Base 7.0.0
  msIO_stripStdoutBufferContentHeaders@Base 6.2.1
  msIO_stripStdoutBufferContentType@Base 6.2.1
  msIO_vfprintf@Base 6.2.1
@@ -1326,8 +1326,8 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msInchesPerUnit@Base 6.2.1
  msInitDefaultGDALOutputFormat@Base 6.2.1
  msInitDefaultOGROutputFormat@Base 6.2.1
- msInitExpression@Base 7.0.0~beta2
- msInitFontCache@Base 7.0.0~beta2
+ msInitExpression@Base 7.0.0
+ msInitFontCache@Base 7.0.0
  msInitFontSet@Base 6.2.1
  msInitLabelCache@Base 6.2.1
  msInitLabelCacheSlot@Base 6.2.1
@@ -1355,7 +1355,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msIntersectSegments@Base 6.2.1
  msIntersectionPointLine@Base 6.2.1
  msIsAxisInverted@Base 6.2.1
- msIsAxisInvertedProj@Base 7.0.0~beta2
+ msIsAxisInvertedProj@Base 7.0.0
  msIsDegenerateShape@Base 6.2.1
  msIsLayerQueryable@Base 6.2.1
  msIsOuterRing@Base 6.2.1
@@ -1370,13 +1370,13 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msLayerApplyCondSQLFilterToLayer@Base 6.2.1
  msLayerApplyPlainFilterToLayer@Base 6.2.1
  msLayerApplyScaletokens@Base 6.4.0
- msLayerBuildSQLOrderBy@Base 7.0.0~beta2
+ msLayerBuildSQLOrderBy@Base 7.0.0
  msLayerClearProcessing@Base 6.2.1
  msLayerClose@Base 6.2.1
  msLayerDefaultEnablePaging@Base 6.2.1
  msLayerDefaultGetPaging@Base 6.2.1
  msLayerEnablePaging@Base 6.2.1
- msLayerEncodeShapeAttributes@Base 7.0.0~beta2
+ msLayerEncodeShapeAttributes@Base 7.0.0
  msLayerEscapePropertyName@Base 6.2.1
  msLayerEscapeSQLParam@Base 6.2.1
  msLayerFreeItemInfo@Base 6.2.1
@@ -1402,24 +1402,24 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msLayerSetExtent@Base 6.2.1
  msLayerSetItems@Base 6.2.1
  msLayerSetProcessingKey@Base 6.2.1
- msLayerSetSort@Base 7.0.0~beta2
+ msLayerSetSort@Base 7.0.0
  msLayerSetTimeFilter@Base 6.2.1
- msLayerSubstituteProcessing@Base 7.0.0~beta2
+ msLayerSubstituteProcessing@Base 7.0.0
  msLayerSupportsCommonFilters@Base 6.2.1
  msLayerSupportsPaging@Base 6.2.1
- msLayerSupportsSorting@Base 7.0.0~beta2
- msLayerTranslateFilter@Base 7.0.0~beta2
+ msLayerSupportsSorting@Base 7.0.0
+ msLayerTranslateFilter@Base 7.0.0
  msLayerWhichItems@Base 6.2.1
  msLayerWhichShapes@Base 6.2.1
- msLayoutTextSymbol@Base 7.0.0~beta2
+ msLayoutTextSymbol@Base 7.0.0
  msLegendCalcSize@Base 6.2.1
  msLibXml2GenerateList@Base 6.2.1
- msLibXml2GetFirstChild@Base 7.0.0~beta2
- msLibXml2GetFirstChildNs@Base 7.0.0~beta2
+ msLibXml2GetFirstChild@Base 7.0.0
+ msLibXml2GetFirstChildNs@Base 7.0.0
  msLibXml2GetXPath@Base 6.2.1
  msLibXml2GetXPathTree@Base 6.2.1
- msLineLabelPath@Base 7.0.0~beta2
- msLineLabelPoint@Base 7.0.0~beta2
+ msLineLabelPath@Base 7.0.0
+ msLineLabelPoint@Base 7.0.0
  msLoadExpressionString@Base 6.2.1
  msLoadFontSet@Base 6.2.1
  msLoadImageSymbol@Base 6.2.1
@@ -1453,7 +1453,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msMapSetCenter@Base 6.2.1
  msMapSetExtent@Base 6.2.1
  msMapSetFakedExtent@Base 6.2.1
- msMapSetLanguageSpecificConnection@Base 7.0.0~beta2
+ msMapSetLanguageSpecificConnection@Base 7.0.0
  msMapSetLayerProjections@Base 6.2.1
  msMapSetRotation@Base 6.2.1
  msMapSetSize@Base 6.2.1
@@ -1507,7 +1507,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msOWSGetDimensionInfo@Base 6.2.1
  msOWSGetEPSGProj@Base 6.2.1
  msOWSGetEncodeMetadata@Base 6.2.1
- msOWSGetInspireSchemasLocation@Base 7.0.0~beta2
+ msOWSGetInspireSchemasLocation@Base 7.0.0
  msOWSGetLanguage@Base 6.2.1
  msOWSGetLanguageFromList@Base 6.2.1
  msOWSGetLanguageList@Base 6.2.1
@@ -1560,7 +1560,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msOffsetPolyline@Base 6.2.1
  msOffsetShapeRelativeTo@Base 6.2.1
  msOracleSpatialEnablePaging@Base 6.2.1
- msOracleSpatialEscapePropertyName@Base 7.0.0~beta2
+ msOracleSpatialEscapePropertyName@Base 7.0.0
  msOracleSpatialGetPaging@Base 6.2.1
  msOracleSpatialLayerClose@Base 6.2.1
  msOracleSpatialLayerFreeItemInfo@Base 6.2.1
@@ -1573,10 +1573,10 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msOracleSpatialLayerIsOpen@Base 6.2.1
  msOracleSpatialLayerNextShape@Base 6.2.1
  msOracleSpatialLayerOpen@Base 6.2.1
- msOracleSpatialLayerTranslateFilter@Base 7.0.0~beta2
+ msOracleSpatialLayerTranslateFilter@Base 7.0.0
  msOracleSpatialLayerWhichShapes@Base 6.2.1
- msOutlineRenderingPrepareStyle@Base 7.0.0~beta2
- msOutlineRenderingRestoreStyle@Base 7.0.0~beta2
+ msOutlineRenderingPrepareStyle@Base 7.0.0
+ msOutlineRenderingRestoreStyle@Base 7.0.0
  msOutputFormatValidate@Base 6.2.1
  msOwsIsOutputFormatValid@Base 6.2.1
  msPOSTGRESQLJoinClose@Base 6.2.1
@@ -1600,8 +1600,8 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msPopulateRendererVTableCairoSVG@Base 6.2.1
  msPopulateRendererVTableKML@Base 6.2.1
  msPopulateRendererVTableOGR@Base 6.2.1
- msPopulateRendererVTableUTFGrid@Base 7.0.0~beta2
- msPopulateTextSymbolForLabelAndString@Base 7.0.0~beta2
+ msPopulateRendererVTableUTFGrid@Base 7.0.0
+ msPopulateTextSymbolForLabelAndString@Base 7.0.0
  msPositionsText@Base 6.2.1
  msPostGISBase64Decode@Base 6.2.1
  msPostGISBuildSQL@Base 6.2.1
@@ -1614,13 +1614,13 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msPostGISCreateLayerInfo@Base 6.2.1
  msPostGISEnablePaging@Base 6.2.1
  msPostGISEscapeSQLParam@Base 6.2.1
- msPostGISFindTableName@Base 7.0.0~beta2
+ msPostGISFindTableName@Base 7.0.0
  msPostGISFreeLayerInfo@Base 6.2.1
  msPostGISGetPaging@Base 6.2.1
  msPostGISHexDecode@Base 6.2.1
  msPostGISLayerClose@Base 6.2.1
  msPostGISLayerFreeItemInfo@Base 6.2.1
- msPostGISLayerGetExtent@Base 7.0.0~beta2
+ msPostGISLayerGetExtent@Base 7.0.0
  msPostGISLayerGetItems@Base 6.2.1
  msPostGISLayerGetShape@Base 6.2.1
  msPostGISLayerInitItemInfo@Base 6.2.1
@@ -1628,7 +1628,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msPostGISLayerIsOpen@Base 6.2.1
  msPostGISLayerNextShape@Base 6.2.1
  msPostGISLayerOpen@Base 6.2.1
- msPostGISLayerTranslateFilter@Base 7.0.0~beta2
+ msPostGISLayerTranslateFilter@Base 7.0.0
  msPostGISLayerWhichShapes@Base 6.2.1
  msPostGISParseData@Base 6.2.1
  msPostGISReadShape@Base 6.2.1
@@ -1643,7 +1643,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msProcessProjection@Base 6.2.1
  msProcessQueryTemplate@Base 6.2.1
  msProcessTemplate@Base 6.2.1
- msProjLibInitFromEnv@Base 7.0.0~beta2
+ msProjLibInitFromEnv@Base 7.0.0
  msProjTransformer@Base 6.2.1
  msProjectLine@Base 6.2.1
  msProjectPoint@Base 6.2.1
@@ -1672,7 +1672,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msRASTERLayerOpen@Base 6.2.1
  msRASTERLayerSetTimeFilter@Base 6.2.1
  msRASTERLayerWhichShapes@Base 6.2.1
- msRGBtoHSL@Base 7.0.0~beta2
+ msRGBtoHSL@Base 7.0.0
  msRasterQueryByPoint@Base 6.2.1
  msRasterQueryByRect@Base 6.2.1
  msRasterQueryByShape@Base 6.2.1
@@ -1820,9 +1820,9 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msSetError@Base 6.2.1
  msSetErrorFile@Base 6.2.1
  msSetGlobalDebugLevel@Base 6.2.1
- msSetLayerOpacity@Base 7.0.0~beta2
+ msSetLayerOpacity@Base 7.0.0
  msSetLayersdrawingOrder@Base 6.2.1
- msSetLimitedPatternsToUse@Base 7.0.0~beta2
+ msSetLimitedPatternsToUse@Base 7.0.0
  msSetOutputFormatOption@Base 6.2.1
  msSetPROJ_LIB@Base 6.2.1
  msSetup@Base 6.2.1
@@ -1830,7 +1830,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msShapeDeleteLine@Base 6.2.1
  msShapeFromWKT@Base 6.2.1
  msShapeGetClass@Base 6.2.1
- msShapeGetLabelAnnotation@Base 7.0.0~beta2
+ msShapeGetLabelAnnotation@Base 7.0.0
  msShapeToRange@Base 6.2.1
  msShapeToWKT@Base 6.2.1
  msShapefileClose@Base 6.2.1
@@ -1850,9 +1850,9 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msStringChop@Base 6.2.1
  msStringConcatenate@Base 6.2.1
  msStringEscape@Base 6.2.1
- msStringFirstCap@Base 7.0.0~beta2
+ msStringFirstCap@Base 7.0.0
  msStringInArray@Base 6.2.1
- msStringInitCap@Base 7.0.0~beta2
+ msStringInitCap@Base 7.0.0
  msStringIsInteger@Base 6.2.1
  msStringSplit@Base 6.2.1
  msStringSplitComplex@Base 6.2.1
@@ -1870,7 +1870,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msSymbolGetDefaultSize@Base 6.2.1
  msTestConfigOption@Base 6.2.1
  msTestLabelCacheCollisions@Base 6.2.1
- msTestLabelCacheLeaderCollision@Base 7.0.0~beta2
+ msTestLabelCacheLeaderCollision@Base 7.0.0
  msThreadInit@Base 6.2.1
  msTileDraw@Base 6.2.1
  msTileIndexAbsoluteDir@Base 6.2.1
@@ -1973,21 +1973,21 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msWCSReturnCoverage11@Base 6.2.1
  msWCSSetDefaultBandsRangeSetInfo@Base 6.2.1
  msWFSCreateParamsObj@Base 6.2.1
- msWFSDescribeStoredQueries20@Base 7.0.0~beta2
+ msWFSDescribeStoredQueries20@Base 7.0.0
  msWFSDispatch@Base 6.2.1
- msWFSDumpLayer11@Base 7.0.0~beta2
+ msWFSDumpLayer11@Base 7.0.0
  msWFSDumpLayer@Base 6.2.1
  msWFSException11@Base 6.2.1
- msWFSException20@Base 7.0.0~beta2
+ msWFSException20@Base 7.0.0
  msWFSException@Base 6.2.1
  msWFSExecuteGetFeature@Base 6.2.1
  msWFSFreeParamsObj@Base 6.2.1
  msWFSGetCapabilities11@Base 6.2.1
- msWFSGetCapabilities20@Base 7.0.0~beta2
+ msWFSGetCapabilities20@Base 7.0.0
  msWFSGetCapabilities@Base 6.2.1
  msWFSGetOutputFormatList@Base 6.2.1
- msWFSGetResolvedStoredQuery20@Base 7.0.0~beta2
- msWFSHandleUpdateSequence@Base 7.0.0~beta2
+ msWFSGetResolvedStoredQuery20@Base 7.0.0
+ msWFSHandleUpdateSequence@Base 7.0.0
  msWFSIsLayerSupported@Base 6.2.1
  msWFSLayerClose@Base 6.2.1
  msWFSLayerGetExtent@Base 6.2.1
@@ -2000,7 +2000,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msWFSLayerOpen@Base 6.2.1
  msWFSLayerOpenVT@Base 6.2.1
  msWFSLayerWhichShapes@Base 6.2.1
- msWFSListStoredQueries20@Base 7.0.0~beta2
+ msWFSListStoredQueries20@Base 7.0.0
  msWFSLocateSRSInList@Base 6.2.1
  msWFSParseRequest@Base 6.2.1
  msWFSUpdateRequestInfo@Base 6.2.1
@@ -2050,7 +2050,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msWriteWebToString@Base 6.4.0
  msXmpPresent@Base 6.2.1
  msXmpWrite@Base 6.2.1
- ms_Tcl_UtfToUniChar@Base 7.0.0~beta2
+ ms_Tcl_UtfToUniChar@Base 7.0.0
  ms_limited_pattern@Base 6.2.1
  ms_num_limited_pattern@Base 6.2.1
  ms_regcomp@Base 6.2.1
@@ -2122,7 +2122,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  populateRendererVTableCairoVector@Base 6.2.1
  postgresTimeStampForTimeString@Base 6.2.1
  postresqlNoticeHandler@Base 6.2.1
- prefix_from_script@Base 7.0.0~beta2
+ prefix_from_script@Base 7.0.0
  preloadSymbol@Base 6.4.0
  processIcon@Base 6.2.1
  processIfTag@Base 6.2.1
@@ -2143,7 +2143,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  remapPaletteForPNG@Base 6.2.1
  renderEllipseSymbolCairo@Base 6.2.1
  renderEllipseSymbolDummy@Base 6.2.1
- renderGlyphs2Cairo@Base 7.0.0~beta2
+ renderGlyphs2Cairo@Base 7.0.0
  renderGlyphsLineDummy@Base 6.2.1
  renderLineCairo@Base 6.2.1
  renderLineDummy@Base 6.2.1
@@ -2187,7 +2187,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  strlcpy@Base 6.2.1
  strrstr@Base 6.2.1
  unescape_url@Base 6.2.1
- unicode_is_latin1@Base 7.0.0~beta2
+ unicode_is_latin1@Base 7.0.0
  (c++)"virtual thunk to ClipperLib::Clipper::Clear()@Base" 6.2.1
  (c++)"virtual thunk to ClipperLib::Clipper::Reset()@Base" 6.2.1
  (c++)"virtual thunk to ClipperLib::Clipper::~Clipper()@Base" 6.2.1
