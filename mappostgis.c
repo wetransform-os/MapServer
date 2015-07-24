@@ -64,6 +64,7 @@
 #include "mapserver.h"
 #include "maptime.h"
 #include "mappostgis.h"
+#include "mapows.h"
 
 #define FP_EPSILON 1e-12
 #define FP_EQ(a, b) (fabs((a)-(b)) < FP_EPSILON)
@@ -73,6 +74,12 @@
 
 #define SEGMENT_ANGLE 10.0
 #define SEGMENT_MINPOINTS 10
+
+#define WKBZOFFSET_NONISO 0x80000000
+#define WKBMOFFSET_NONISO 0x40000000
+
+#define HAS_Z   0x1
+#define HAS_M   0x2
 
 #ifdef USE_POSTGIS
 
@@ -106,7 +113,11 @@ msPostGISLayerInfo *msPostGISCreateLayerInfo(void)
   layerinfo->rownum = 0;
   layerinfo->version = 0;
   layerinfo->paging = MS_TRUE;
+#ifdef USE_POINT_Z_M
+  layerinfo->force2d = MS_FALSE;
+#else
   layerinfo->force2d = MS_TRUE;
+#endif
   return layerinfo;
 }
 
@@ -195,10 +206,45 @@ pointArrayAddPoint(pointArrayObj *d, const pointObj *p)
 ** Pass an input type number through the PostGIS version
 ** type map array to handle the pre-2.0 incorrect WKB types
 */
+
 static int
-wkbTypeMap(wkbObj *w, int type)
+wkbTypeMap(wkbObj *w, int type, int* pnZMFlag)
 {
-  if ( type < WKB_TYPE_COUNT )
+  *pnZMFlag = 0;
+  /* PostGIS >= 2 : ISO SQL/MM style Z types ? */
+  if( type >= 1000 && type < 2000 )
+  {
+    type -= 1000;
+    *pnZMFlag = HAS_Z;
+  }
+  /* PostGIS >= 2 : ISO SQL/MM style M types ? */
+  else if( type >= 2000 && type < 3000 )
+  {
+    type -= 2000;
+    *pnZMFlag = HAS_M;
+  }
+  /* PostGIS >= 2 : ISO SQL/MM style ZM types ? */
+  else if( type >= 3000 && type < 4000 )
+  {
+    type -= 3000;
+    *pnZMFlag = HAS_Z | HAS_M;
+  }
+  /* PostGIS 1.X EWKB : Extended WKB Z or ZM ? */
+  else if( (type & WKBZOFFSET_NONISO) != 0 )
+  {
+    if( (type & WKBMOFFSET_NONISO) != 0 )
+        *pnZMFlag = HAS_Z | HAS_M;
+    else
+        *pnZMFlag = HAS_Z;
+    type &= 0x00FFFFFF;
+  }
+  /* PostGIS 1.X EWKB: Extended WKB M ? */
+  else if( (type & WKBMOFFSET_NONISO) != 0 )
+  {
+    *pnZMFlag = HAS_M;
+    type &= 0x00FFFFFF;
+  }
+  if ( type >= 0 && type < WKB_TYPE_COUNT )
     return w->typemap[type];
   else
     return 0;
@@ -209,11 +255,11 @@ wkbTypeMap(wkbObj *w, int type)
 ** advancing the read pointer.
 */
 static int
-wkbType(wkbObj *w)
+wkbType(wkbObj *w, int* pnZMFlag)
 {
   int t;
   memcpy(&t, (w->ptr + 1), sizeof(int));
-  return wkbTypeMap(w,t);
+  return wkbTypeMap(w,t, pnZMFlag);
 }
 
 /*
@@ -221,11 +267,11 @@ wkbType(wkbObj *w)
 ** collection without advancing the read pointer.
 */
 static int
-wkbCollectionSubType(wkbObj *w)
+wkbCollectionSubType(wkbObj *w, int* pnZMFlag)
 {
   int t;
   memcpy(&t, (w->ptr + 1 + 4 + 4 + 1), sizeof(int));
-  return wkbTypeMap(w,t);
+  return wkbTypeMap(w,t, pnZMFlag);
 }
 
 /*
@@ -271,12 +317,31 @@ wkbReadDouble(wkbObj *w)
 ** We assume the endianess of the WKB is the same as this machine.
 */
 static inline void
-wkbReadPointP(wkbObj *w, pointObj *p)
+wkbReadPointP(wkbObj *w, pointObj *p, int nZMFlag)
 {
   memcpy(&(p->x), w->ptr, sizeof(double));
   w->ptr += sizeof(double);
   memcpy(&(p->y), w->ptr, sizeof(double));
   w->ptr += sizeof(double);
+  if( nZMFlag & HAS_Z )
+  {
+#ifdef USE_POINT_Z_M
+      memcpy(&(p->z), w->ptr, sizeof(double));
+      if( !(nZMFlag & HAS_M) )
+          p->m = 0.0;
+#endif
+      w->ptr += sizeof(double);
+  }
+  if( nZMFlag & HAS_M )
+  {
+#ifdef USE_POINT_Z_M
+      if( !(nZMFlag & HAS_Z) )
+          p->z = 0.0;
+      memcpy(&(p->m), w->ptr, sizeof(double));
+#endif
+      w->ptr += sizeof(double);
+  }
+
 }
 
 /*
@@ -284,10 +349,10 @@ wkbReadPointP(wkbObj *w, pointObj *p)
 ** We assume the endianess of the WKB is the same as this machine.
 */
 static inline pointObj
-wkbReadPoint(wkbObj *w)
+wkbReadPoint(wkbObj *w, int nZMFlag)
 {
   pointObj p;
-  wkbReadPointP(w, &p);
+  wkbReadPointP(w, &p, nZMFlag);
   return p;
 }
 
@@ -299,7 +364,7 @@ wkbReadPoint(wkbObj *w)
 ** form.
 */
 static void
-wkbReadLine(wkbObj *w, lineObj *line)
+wkbReadLine(wkbObj *w, lineObj *line, int nZMFlag)
 {
   int i;
   pointObj p;
@@ -308,7 +373,7 @@ wkbReadLine(wkbObj *w, lineObj *line)
   line->numpoints = npoints;
   line->point = msSmallMalloc(npoints * sizeof(pointObj));
   for ( i = 0; i < npoints; i++ ) {
-    wkbReadPointP(w, &p);
+    wkbReadPointP(w, &p, nZMFlag);
     line->point[i] = p;
   }
 }
@@ -321,22 +386,25 @@ static void
 wkbSkipGeometry(wkbObj *w)
 {
   int type, npoints, nrings, ngeoms, i;
+  int nZMFlag;
+  int nCoordDim;
   /*endian = */wkbReadChar(w);
-  type = wkbTypeMap(w,wkbReadInt(w));
+  type = wkbTypeMap(w,wkbReadInt(w), &nZMFlag);
+  nCoordDim = 2 + (((nZMFlag & HAS_Z) != 0) ? 1 : 0) + (((nZMFlag & HAS_M) != 0) ? 1 : 0);
   switch(type) {
     case WKB_POINT:
-      w->ptr += 2 * sizeof(double);
+      w->ptr += nCoordDim * sizeof(double);
       break;
     case WKB_CIRCULARSTRING:
     case WKB_LINESTRING:
       npoints = wkbReadInt(w);
-      w->ptr += npoints * 2 * sizeof(double);
+      w->ptr += npoints * nCoordDim * sizeof(double);
       break;
     case WKB_POLYGON:
       nrings = wkbReadInt(w);
       for ( i = 0; i < nrings; i++ ) {
         npoints = wkbReadInt(w);
-        w->ptr += npoints * 2 * sizeof(double);
+        w->ptr += npoints * nCoordDim * sizeof(double);
       }
       break;
     case WKB_MULTIPOINT:
@@ -362,16 +430,17 @@ wkbConvPointToShape(wkbObj *w, shapeObj *shape)
 {
   int type;
   lineObj line;
+  int nZMFlag;
 
   /*endian = */wkbReadChar(w);
-  type = wkbTypeMap(w,wkbReadInt(w));
+  type = wkbTypeMap(w,wkbReadInt(w),&nZMFlag);
 
   if( type != WKB_POINT ) return MS_FAILURE;
 
   if( ! (shape->type == MS_SHAPE_POINT) ) return MS_FAILURE;
   line.numpoints = 1;
   line.point = msSmallMalloc(sizeof(pointObj));
-  line.point[0] = wkbReadPoint(w);
+  line.point[0] = wkbReadPoint(w, nZMFlag);
   msAddLineDirectly(shape, &line);
   return MS_SUCCESS;
 }
@@ -384,13 +453,14 @@ wkbConvLineStringToShape(wkbObj *w, shapeObj *shape)
 {
   int type;
   lineObj line;
+  int nZMFlag;
 
   /*endian = */wkbReadChar(w);
-  type = wkbTypeMap(w,wkbReadInt(w));
+  type = wkbTypeMap(w,wkbReadInt(w), &nZMFlag);
 
   if( type != WKB_LINESTRING ) return MS_FAILURE;
 
-  wkbReadLine(w,&line);
+  wkbReadLine(w,&line, nZMFlag);
   msAddLineDirectly(shape, &line);
 
   return MS_SUCCESS;
@@ -405,9 +475,10 @@ wkbConvPolygonToShape(wkbObj *w, shapeObj *shape)
   int type;
   int i, nrings;
   lineObj line;
+  int nZMFlag;
 
   /*endian = */wkbReadChar(w);
-  type = wkbTypeMap(w,wkbReadInt(w));
+  type = wkbTypeMap(w,wkbReadInt(w), &nZMFlag);
 
   if( type != WKB_POLYGON ) return MS_FAILURE;
 
@@ -416,7 +487,7 @@ wkbConvPolygonToShape(wkbObj *w, shapeObj *shape)
 
   /* Add each ring to the shape */
   for( i = 0; i < nrings; i++ ) {
-    wkbReadLine(w,&line);
+    wkbReadLine(w,&line, nZMFlag);
     msAddLineDirectly(shape, &line);
   }
 
@@ -434,9 +505,10 @@ wkbConvCurvePolygonToShape(wkbObj *w, shapeObj *shape)
   int type, i, ncomponents;
   int failures = 0;
   int was_poly = ( shape->type == MS_SHAPE_POLYGON );
+  int nZMFlag;
 
   /*endian = */wkbReadChar(w);
-  type = wkbTypeMap(w,wkbReadInt(w));
+  type = wkbTypeMap(w,wkbReadInt(w), &nZMFlag);
   ncomponents = wkbReadInt(w);
 
   if( type != WKB_CURVEPOLYGON ) return MS_FAILURE;
@@ -469,15 +541,16 @@ static int
 wkbConvCircularStringToShape(wkbObj *w, shapeObj *shape)
 {
   int type;
+  int nZMFlag;
   lineObj line = {0, NULL};
 
   /*endian = */wkbReadChar(w);
-  type = wkbTypeMap(w,wkbReadInt(w));
+  type = wkbTypeMap(w,wkbReadInt(w), &nZMFlag);
 
   if( type != WKB_CIRCULARSTRING ) return MS_FAILURE;
 
   /* Stroke the string into a point array */
-  if ( arcStrokeCircularString(w, SEGMENT_ANGLE, &line) == MS_FAILURE ) {
+  if ( arcStrokeCircularString(w, SEGMENT_ANGLE, &line, nZMFlag) == MS_FAILURE ) {
     if(line.point) free(line.point);
     return MS_FAILURE;
   }
@@ -505,9 +578,10 @@ wkbConvCompoundCurveToShape(wkbObj *w, shapeObj *shape)
   int type, ncomponents, i, j;
   lineObj line;
   shapeObj shapebuf;
+  int nZMFlag;
 
   /*endian = */wkbReadChar(w);
-  type = wkbTypeMap(w,wkbReadInt(w));
+  type = wkbTypeMap(w,wkbReadInt(w), &nZMFlag);
 
   /* Init our shape buffer */
   msInitShape(&shapebuf);
@@ -571,9 +645,10 @@ wkbConvCollectionToShape(wkbObj *w, shapeObj *shape)
 {
   int i, ncomponents;
   int failures = 0;
+  int nZMFlag;
 
   /*endian = */wkbReadChar(w);
-  /*type = */wkbTypeMap(w,wkbReadInt(w));
+  /*type = */wkbTypeMap(w,wkbReadInt(w), &nZMFlag);
   ncomponents = wkbReadInt(w);
 
   /*
@@ -586,7 +661,7 @@ wkbConvCollectionToShape(wkbObj *w, shapeObj *shape)
       failures++;
     }
   }
-  if ( failures == ncomponents )
+  if ( failures == ncomponents || ncomponents == 0)
     return MS_FAILURE;
   else
     return MS_SUCCESS;
@@ -602,7 +677,8 @@ wkbConvCollectionToShape(wkbObj *w, shapeObj *shape)
 int
 wkbConvGeometryToShape(wkbObj *w, shapeObj *shape)
 {
-  int wkbtype = wkbType(w); /* Peak at the type number */
+  int nZMFlag;
+  int wkbtype = wkbType(w, &nZMFlag); /* Peak at the type number */
 
   switch(wkbtype) {
       /* Recurse into anonymous collections */
@@ -884,7 +960,7 @@ arcStrokeCircle(const pointObj *p1, const pointObj *p2, const pointObj *p3,
 ** argument.
 */
 int
-arcStrokeCircularString(wkbObj *w, double segment_angle, lineObj *line)
+arcStrokeCircularString(wkbObj *w, double segment_angle, lineObj *line, int nZMFlag)
 {
   pointObj p1, p2, p3;
   int npoints, nedges;
@@ -903,13 +979,13 @@ arcStrokeCircularString(wkbObj *w, double segment_angle, lineObj *line)
   /* Make a large guess at how much space we'll need */
   pa = pointArrayNew(nedges * 180 / segment_angle);
 
-  wkbReadPointP(w,&p3);
+  wkbReadPointP(w,&p3,nZMFlag);
 
   /* Fill out the point array with stroked arcs */
   while( edge < nedges ) {
     p1 = p3;
-    wkbReadPointP(w,&p2);
-    wkbReadPointP(w,&p3);
+    wkbReadPointP(w,&p2,nZMFlag);
+    wkbReadPointP(w,&p3,nZMFlag);
     if ( arcStrokeCircle(&p1, &p2, &p3, segment_angle, edge ? 0 : 1, pa) == MS_FAILURE ) {
       pointArrayFree(pa);
       return MS_FAILURE;
@@ -940,13 +1016,14 @@ static int
 msPostGISFindBestType(wkbObj *w, shapeObj *shape)
 {
   int wkbtype;
+  int nZMFlag;
 
   /* What kind of geometry is this? */
-  wkbtype = wkbType(w);
+  wkbtype = wkbType(w, &nZMFlag);
 
   /* Generic collection, we need to look a little deeper. */
   if ( wkbtype == WKB_GEOMETRYCOLLECTION )
-    wkbtype = wkbCollectionSubType(w);
+    wkbtype = wkbCollectionSubType(w, &nZMFlag);
 
   switch ( wkbtype ) {
     case WKB_POLYGON:
@@ -1053,7 +1130,8 @@ msPostGISRetrieveVersion(PGconn *pgconn)
   pgresult = PQexecParams(pgconn, sql,0, NULL, NULL, NULL, NULL, 0);
 
   if ( !pgresult || PQresultStatus(pgresult) != PGRES_TUPLES_OK) {
-    msSetError(MS_QUERYERR, "Error executing SQL: %s", "msPostGISRetrieveVersion()", sql);
+    msDebug("Error executing SQL: (%s) in msPostGISRetrieveVersion()", sql);
+    msSetError(MS_QUERYERR, "Error executing SQL. check server logs.", "msPostGISRetrieveVersion()");
     return MS_FAILURE;
   }
 
@@ -1652,15 +1730,24 @@ char *msPostGISBuildSQLItems(layerObj *layer)
     */
     char *force2d = "";
 #if TRANSFER_ENCODING == 64
-    static char *strGeomTemplate = "encode(ST_AsBinary(%s(\"%s\"),'%s'),'base64') as geom,\"%s\"";
+    const char *strGeomTemplate = "encode(ST_AsBinary(%s(\"%s\"),'%s'),'base64') as geom,\"%s\"";
 #else
-    static char *strGeomTemplate = "encode(ST_AsBinary(%s(\"%s\"),'%s'),'hex') as geom,\"%s\"";
+    const char *strGeomTemplate = "encode(ST_AsBinary(%s(\"%s\"),'%s'),'hex') as geom,\"%s\"";
 #endif
     if( layerinfo->force2d ) {
       if( layerinfo->version >= 20100 )
         force2d = "ST_Force2D";
       else
         force2d = "ST_Force_2D";
+    }
+    else if( layerinfo->version < 20000 )
+    {
+        /* Use AsEWKB() to get 3D */
+#if TRANSFER_ENCODING == 64
+        strGeomTemplate = "encode(AsEWKB(%s(\"%s\"),'%s'),'base64') as geom,\"%s\"";
+#else
+        strGeomTemplate = "encode(AsEWKB(%s(\"%s\"),'%s'),'hex') as geom,\"%s\"";
+#endif
     }
     strGeom = (char*)msSmallMalloc(strlen(strGeomTemplate) + strlen(force2d) + strlen(strEndian) + strlen(layerinfo->geomcolumn) + strlen(layerinfo->uid) + 1);
     sprintf(strGeom, strGeomTemplate, force2d, layerinfo->geomcolumn, strEndian, layerinfo->uid);
@@ -1699,6 +1786,44 @@ char *msPostGISBuildSQLItems(layerObj *layer)
   return strItems;
 }
 
+
+/*
+** msPostGISFindTableName()
+**
+** Returns malloc'ed char* that must be freed by caller.
+*/
+char *msPostGISFindTableName(char* fromsource)
+{
+  char *f_table_name = NULL;
+  char *pos = strstr(fromsource, " ");
+ 
+  if ( ! pos ) {
+    /* target table is one word */
+    f_table_name = msStrdup(fromsource);
+  } else {
+    /* target table is hiding in sub-select clause */
+    pos = strcasestr(fromsource, " from ");
+    if ( pos ) {
+      char *pos_paren;
+      char *pos_space;
+      pos += 6; /* should be start of table name */
+      pos_paren = strstr(pos, ")"); /* first ) after table name */
+      pos_space = strstr(pos, " "); /* first space after table name */
+      if ( pos_space < pos_paren ) {
+        /* found space first */
+        f_table_name = (char*)msSmallMalloc(pos_space - pos + 1);
+        strlcpy(f_table_name, pos, pos_space - pos+1);
+      } else {
+        /* found ) first */
+        f_table_name = (char*)msSmallMalloc(pos_paren - pos + 1);
+        strlcpy(f_table_name, pos, pos_paren - pos+1);
+      }
+    }
+  }
+  return f_table_name;
+}
+
+
 /*
 ** msPostGISBuildSQLSRID()
 **
@@ -1731,42 +1856,15 @@ char *msPostGISBuildSQLSRID(layerObj *layer)
   ** or "(select ... from thetable where ...)".
   */
   else {
-    char *f_table_name;
+    char *f_table_name = msPostGISFindTableName(layerinfo->fromsource);
     char *strSRIDTemplate = "find_srid('','%s','%s')";
-    char *pos = strstr(layerinfo->fromsource, " ");
     if( layer->debug > 1 ) {
       msDebug("msPostGISBuildSQLSRID: Building find_srid line.\n");
     }
 
-    if ( ! pos ) {
-      /* target table is one word */
-      f_table_name = msStrdup(layerinfo->fromsource);
-      if( layer->debug > 1 ) {
-        msDebug("msPostGISBuildSQLSRID: Found table (%s)\n", f_table_name);
-      }
-    } else {
-      /* target table is hiding in sub-select clause */
-      pos = strcasestr(layerinfo->fromsource, " from ");
-      if ( pos ) {
-        char *pos_paren;
-        char *pos_space;
-        pos += 6; /* should be start of table name */
-        pos_paren = strstr(pos, ")"); /* first ) after table name */
-        pos_space = strstr(pos, " "); /* first space after table name */
-        if ( pos_space < pos_paren ) {
-          /* found space first */
-          f_table_name = (char*)msSmallMalloc(pos_space - pos + 1);
-          strlcpy(f_table_name, pos, pos_space - pos+1);
-        } else {
-          /* found ) first */
-          f_table_name = (char*)msSmallMalloc(pos_paren - pos + 1);
-          strlcpy(f_table_name, pos, pos_paren - pos+1);
-        }
-      } else {
-        /* should not happen */
-        return NULL;
-      }
-    }
+    if (!f_table_name)
+      return NULL;  /* should not happen */
+
     strSRID = msSmallMalloc(strlen(strSRIDTemplate) + strlen(f_table_name) + strlen(layerinfo->geomcolumn) + 1);
     sprintf(strSRID, strSRIDTemplate, f_table_name, layerinfo->geomcolumn);
     free(f_table_name);
@@ -1873,14 +1971,16 @@ char *msPostGISBuildSQLFrom(layerObj *layer, rectObj *rect)
 char *msPostGISBuildSQLWhere(layerObj *layer, rectObj *rect, long *uid)
 {
   char *strRect = 0;
-  char *strFilter = 0;
+  char *strFilter1=0, *strFilter2=0;
   char *strUid = 0;
   char *strWhere = 0;
+  char *strOrderBy = 0;
   char *strLimit = 0;
   char *strOffset = 0;
   size_t strRectLength = 0;
-  size_t strFilterLength = 0;
+  size_t strFilterLength1=0, strFilterLength2=0;
   size_t strUidLength = 0;
+  size_t strOrderByLength = 0;
   size_t strLimitLength = 0;
   size_t strOffsetLength = 0;
   size_t bufferSize = 0;
@@ -1948,12 +2048,21 @@ char *msPostGISBuildSQLWhere(layerObj *layer, rectObj *rect, long *uid)
     free(strSRID);
   }
 
-  /* Populate strFilter, if necessary. */
-  if ( layer->filter.string ) {
+  /* Handle a translated filter (RFC91). */
+  if ( layer->filter.native_string ) { 
     static char *strFilterTemplate = "(%s)";
-    strFilter = (char*)msSmallMalloc(strlen(strFilterTemplate) + strlen(layer->filter.string)+1);
-    sprintf(strFilter, strFilterTemplate, layer->filter.string);
-    strFilterLength = strlen(strFilter);
+    strFilter1 = (char *) msSmallMalloc(strlen(strFilterTemplate) + strlen(layer->filter.native_string)+1);
+    sprintf(strFilter1, strFilterTemplate, layer->filter.native_string);
+    strFilterLength1 = strlen(strFilter1);
+  }
+
+  /* Handle a native filter set as a PROCESSING option (#5001). */
+  if( msLayerGetProcessingKey(layer, "NATIVE_FILTER") != NULL ) {
+    static char *strFilterTemplate = "(%s)";
+    char *native_filter = msLayerGetProcessingKey(layer, "NATIVE_FILTER");
+    strFilter2 = (char *) msSmallMalloc(strlen(strFilterTemplate) + strlen(native_filter)+1);
+    sprintf(strFilter2, strFilterTemplate, native_filter);
+    strFilterLength2 = strlen(strFilter2);
   }
 
   /* Populate strUid, if necessary. */
@@ -1964,8 +2073,17 @@ char *msPostGISBuildSQLWhere(layerObj *layer, rectObj *rect, long *uid)
     strUidLength = strlen(strUid);
   }
 
-  bufferSize = strRectLength + 5 + strFilterLength + 5 + strUidLength
-               + strLimitLength + strOffsetLength + 1;
+  /* Populate strOrderBy, if necessary */
+  if( layer->sortBy.nProperties > 0 ) {
+    char* pszTmp = msLayerBuildSQLOrderBy(layer);
+    strOrderBy = msStringConcatenate(strOrderBy, " ORDER BY ");
+    strOrderBy = msStringConcatenate(strOrderBy, pszTmp);
+    msFree(pszTmp);
+    strOrderByLength = strlen(strOrderBy);
+  }
+
+  bufferSize = strRectLength + 5 + (strFilterLength1 + 5) + (strFilterLength2 + 5) + strUidLength
+               + strLimitLength + strOffsetLength + strOrderByLength + 1;
   strWhere = (char*)msSmallMalloc(bufferSize);
   *strWhere = '\0';
   if ( strRect ) {
@@ -1973,12 +2091,20 @@ char *msPostGISBuildSQLWhere(layerObj *layer, rectObj *rect, long *uid)
     insert_and++;
     free(strRect);
   }
-  if ( strFilter ) {
+  if ( strFilter1 ) {
     if ( insert_and ) {
       strlcat(strWhere, " and ", bufferSize);
     }
-    strlcat(strWhere, strFilter, bufferSize);
-    free(strFilter);
+    strlcat(strWhere, strFilter1, bufferSize);
+    free(strFilter1);
+    insert_and++;
+  }
+  if ( strFilter2 ) {
+    if ( insert_and ) {
+      strlcat(strWhere, " and ", bufferSize);
+    }
+    strlcat(strWhere, strFilter2, bufferSize);
+    free(strFilter2);
     insert_and++;
   }
   if ( strUid ) {
@@ -1989,6 +2115,12 @@ char *msPostGISBuildSQLWhere(layerObj *layer, rectObj *rect, long *uid)
     free(strUid);
     insert_and++;
   }
+
+  if ( strOrderBy ) {
+    strlcat(strWhere, strOrderBy, bufferSize);
+    free(strOrderBy);
+  }
+
   if ( strLimit ) {
     strlcat(strWhere, strLimit, bufferSize);
     free(strLimit);
@@ -2056,12 +2188,12 @@ char *msPostGISBuildSQL(layerObj *layer, rectObj *rect, long *uid)
 
   strSQL = msSmallMalloc(strlen(strSQLTemplate) + strlen(strFrom) + strlen(strItems) + strlen(strWhere) + 1);
   sprintf(strSQL, strSQLTemplate, strItems, strFrom, strWhere);
+
   free(strItems);
   free(strFrom);
   free(strWhere);
 
   return strSQL;
-
 }
 
 #define wkbstaticsize 4096
@@ -2117,7 +2249,23 @@ int msPostGISReadShape(layerObj *layer, shapeObj *shape)
   if( layerinfo->version >= 20000 ) /* PostGIS 2.0+ */
     w.typemap = wkb_postgis20;
   else
+  {
     w.typemap = wkb_postgis15;
+    if( layerinfo->force2d == MS_FALSE )
+    {
+        /* Is there SRID ? Skip it */
+        if( w.size >= 9 && (w.ptr[4] & 0x20) != 0 )
+        {
+            w.ptr[5] = w.ptr[1];
+            w.ptr[6] = w.ptr[2];
+            w.ptr[7] = w.ptr[3];
+            w.ptr[8] = w.ptr[4] & ~(0x20);
+            w.ptr[4] = 1;
+            w.ptr += 4;
+            w.size -= 4;
+        }
+    }
+  }
 
   switch (layer->type) {
 
@@ -2136,7 +2284,6 @@ int msPostGISReadShape(layerObj *layer, shapeObj *shape)
       result = wkbConvGeometryToShape(&w, shape);
       break;
 
-    case MS_LAYER_ANNOTATION:
     case MS_LAYER_QUERY:
     case MS_LAYER_CHART:
       result = msPostGISFindBestType(&w, shape);
@@ -2206,6 +2353,8 @@ int msPostGISReadShape(layerObj *layer, shapeObj *shape)
     shape->numvalues = layer->numitems;
 
     msComputeBounds(shape);
+  } else {
+     shape->type = MS_SHAPE_NULL;
   }
 
   if( layer->debug > 2 ) {
@@ -2309,7 +2458,8 @@ int msPostGISLayerOpen(layerObj *layer)
         }
       }
 
-      msSetError(MS_QUERYERR, "Database connection failed (%s) with connect string '%s'\nIs the database running? Is it allowing connections? Does the specified user exist? Is the password valid? Is the database on the standard port?", "msPostGISLayerOpen()", PQerrorMessage(layerinfo->pgconn), maskeddata);
+      msDebug( "Database connection failed (%s) with connect string '%s'\nIs the database running? Is it allowing connections? Does the specified user exist? Is the password valid? Is the database on the standard port? in msPostGISLayerOpen()", PQerrorMessage(layerinfo->pgconn), maskeddata);
+      msSetError(MS_QUERYERR, "Database connection failed. Check server logs for more details.Is the database running? Is it allowing connections? Does the specified user exist? Is the password valid? Is the database on the standard port?", "msPostGISLayerOpen()");
 
       if(layerinfo->pgconn) PQfinish(layerinfo->pgconn);
       free(maskeddata);
@@ -2329,7 +2479,8 @@ int msPostGISLayerOpen(layerObj *layer)
       PQreset(layerinfo->pgconn);
       if( PQstatus(layerinfo->pgconn) != CONNECTION_OK ) {
         /* Nope, time to bail out. */
-        msSetError(MS_QUERYERR, "PostgreSQL database connection gone bad (%s)", "msPostGISLayerOpen()", PQerrorMessage(layerinfo->pgconn));
+        msSetError(MS_QUERYERR, "PostgreSQL database connection. Check server logs for more details", "msPostGISLayerOpen()");
+        msDebug( "PostgreSQL database connection gone bad (%s) in msPostGISLayerOpen()", PQerrorMessage(layerinfo->pgconn));
         free(layerinfo);
         /* FIXME: we should also release the connection from the pool in this case, but it is stale...
          * for the time being we do not release it so it can never be used again. If this happens multiple
@@ -2353,6 +2504,9 @@ int msPostGISLayerOpen(layerObj *layer)
   force2d_processing = msLayerGetProcessingKey( layer, "FORCE2D" );
   if(force2d_processing && !strcasecmp(force2d_processing,"no")) {
     layerinfo->force2d = MS_FALSE;
+  }
+  else if(force2d_processing && !strcasecmp(force2d_processing,"yes")) {
+    layerinfo->force2d = MS_TRUE;
   }
   if (layer->debug)
     msDebug("msPostGISLayerOpen: Forcing 2D geometries: %s.\n", (layerinfo->force2d)?"yes":"no");
@@ -2544,6 +2698,8 @@ int msPostGISLayerWhichShapes(layerObj *layer, rectObj rect, int isQuery)
     msDebug("msPostGISLayerWhichShapes query: %s\n", strSQL);
   }
 
+  // fprintf(stderr, "SQL: %s\n", strSQL);
+
   if(num_bind_values > 0) {
     pgresult = PQexecParams(layerinfo->pgconn, strSQL, num_bind_values, NULL, (const char**)layer_bind_values, NULL, NULL, 1);
   } else {
@@ -2560,10 +2716,8 @@ int msPostGISLayerWhichShapes(layerObj *layer, rectObj rect, int isQuery)
 
   /* Something went wrong. */
   if (!pgresult || PQresultStatus(pgresult) != PGRES_TUPLES_OK) {
-    if ( layer->debug ) {
-      msDebug("msPostGISLayerWhichShapes(): Error (%s) executing query: %s\n", PQerrorMessage(layerinfo->pgconn), strSQL);
-    }
-    msSetError(MS_QUERYERR, "Error executing query: %s ", "msPostGISLayerWhichShapes()", PQerrorMessage(layerinfo->pgconn));
+    msDebug("msPostGISLayerWhichShapes(): Error (%s) executing query: %s\n", PQerrorMessage(layerinfo->pgconn), strSQL);
+    msSetError(MS_QUERYERR, "Error executing query. Check server logs","msPostGISLayerWhichShapes()");
     free(strSQL);
     if (pgresult) {
       PQclear(pgresult);
@@ -2741,10 +2895,8 @@ int msPostGISLayerGetShape(layerObj *layer, shapeObj *shape, resultObj *record)
 
     /* Something went wrong. */
     if ( (!pgresult) || (PQresultStatus(pgresult) != PGRES_TUPLES_OK) ) {
-      if ( layer->debug ) {
-        msDebug("msPostGISLayerGetShape(): Error (%s) executing SQL: %s\n", PQerrorMessage(layerinfo->pgconn), strSQL );
-      }
-      msSetError(MS_QUERYERR, "Error executing SQL: %s", "msPostGISLayerGetShape()", PQerrorMessage(layerinfo->pgconn));
+      msDebug("msPostGISLayerGetShape(): Error (%s) executing SQL: %s\n", PQerrorMessage(layerinfo->pgconn), strSQL );
+      msSetError(MS_QUERYERR, "Error executing SQL. Check server logs.","msPostGISLayerGetShape()");
 
       if (pgresult) {
         PQclear(pgresult);
@@ -2967,10 +3119,8 @@ int msPostGISLayerGetItems(layerObj *layer)
   pgresult = PQexecParams(layerinfo->pgconn, sql,0, NULL, NULL, NULL, NULL, 0);
 
   if ( (!pgresult) || (PQresultStatus(pgresult) != PGRES_TUPLES_OK) ) {
-    if ( layer->debug ) {
-      msDebug("msPostGISLayerGetItems(): Error (%s) executing SQL: %s\n", PQerrorMessage(layerinfo->pgconn), sql);
-    }
-    msSetError(MS_QUERYERR, "Error executing SQL: %s", "msPostGISLayerGetItems()", PQerrorMessage(layerinfo->pgconn));
+    msDebug("msPostGISLayerGetItems(): Error (%s) executing SQL: %s\n", PQerrorMessage(layerinfo->pgconn), sql);
+    msSetError(MS_QUERYERR, "Error executing SQL. Check server logs","msPostGISLayerGetItems()");
     if (pgresult) {
       PQclear(pgresult);
     }
@@ -3024,6 +3174,100 @@ int msPostGISLayerGetItems(layerObj *layer)
 }
 
 /*
+** msPostGISLayerGetExtent()
+**
+** Registered vtable->LayerGetExtent function. Query the database for
+** the extent of the requested layer.
+*/
+int msPostGISLayerGetExtent(layerObj *layer, rectObj *extent)
+{
+#ifdef USE_POSTGIS
+  msPostGISLayerInfo *layerinfo = NULL;
+  char *strSQL = NULL;
+  char *f_table_name;
+  static char *sqlExtentTemplate = "SELECT ST_Extent(%s) FROM %s";
+  size_t buffer_len;
+  PGresult *pgresult = NULL;
+  
+  if (layer->debug) {
+    msDebug("msPostGISLayerGetExtent called.\n");
+  }
+
+  assert( layer->layerinfo != NULL);
+
+  layerinfo = (msPostGISLayerInfo *)layer->layerinfo;
+
+  if ( msPostGISParseData(layer) != MS_SUCCESS) {
+    return MS_FAILURE;
+  }
+
+  /* if we have !BOX! substitution then we use just the table name */
+  if ( strstr(layerinfo->fromsource, BOXTOKEN) )
+    f_table_name = msPostGISFindTableName(layerinfo->fromsource);
+  else
+    f_table_name = msStrdup(layerinfo->fromsource);
+  
+  if ( !f_table_name ) {
+    msSetError(MS_MISCERR, "Failed to get table name.", "msPostGISLayerGetExtent()");
+    return MS_FAILURE;
+  }
+
+  buffer_len = strlen(layerinfo->geomcolumn) + strlen(f_table_name) + strlen(sqlExtentTemplate);
+  strSQL = (char*)msSmallMalloc(buffer_len+1); /* add space for terminating NULL */
+  snprintf(strSQL, buffer_len, sqlExtentTemplate, layerinfo->geomcolumn, f_table_name);  
+  msFree(f_table_name);
+
+  if (layer->debug) {
+    msDebug("msPostGISLayerGetExtent executing SQL: %s\n", strSQL);
+  }
+
+  /* executing the query */
+  pgresult = PQexecParams(layerinfo->pgconn, strSQL,0, NULL, NULL, NULL, NULL, 0);
+
+  msFree(strSQL);
+
+  if ( (!pgresult) || (PQresultStatus(pgresult) != PGRES_TUPLES_OK) ) {
+    msDebug("Error executing SQL: (%s) in msPostGISLayerGetExtent()", PQerrorMessage(layerinfo->pgconn));
+    msSetError(MS_MISCERR, "Error executing SQL. Check server logs.","msPostGISLayerGetExtent()");
+    if (pgresult)
+      PQclear(pgresult);
+
+    return MS_FAILURE;
+  }
+
+  /* process results */
+  if (PQntuples(pgresult) < 1) {
+    msSetError(MS_MISCERR, "msPostGISLayerGetExtent: No results found.", 
+        "msPostGISLayerGetExtent()");
+    PQclear(pgresult);
+    return MS_FAILURE;
+  }
+  
+  if (PQgetisnull(pgresult, 0, 0)) {
+    msSetError(MS_MISCERR, "msPostGISLayerGetExtent: Null result returned.", 
+        "msPostGISLayerGetExtent()");
+    PQclear(pgresult);
+    return MS_FAILURE;
+  }
+
+  if (sscanf(PQgetvalue(pgresult, 0, 0), "BOX(%lf %lf,%lf %lf)", 
+         &extent->minx, &extent->miny, &extent->maxx, &extent->maxy) != 4) {
+    msSetError(MS_MISCERR, "Failed to process result data.", "msPostGISLayerGetExtent()");
+    PQclear(pgresult);
+    return MS_FAILURE;
+  }
+
+  /* cleanup */
+  PQclear(pgresult);
+
+  return MS_SUCCESS;
+#else
+  msSetError( MS_MISCERR, "PostGIS support is not available.", "msPostGISLayerGetExtent()");
+  return MS_FAILURE;
+#endif
+}
+
+/*
  * make sure that the timestring is complete and acceptable
  * to the date_trunc function :
  * - if the resolution is year (2004) or month (2004-01),
@@ -3038,7 +3282,7 @@ int postgresTimeStampForTimeString(const char *timestring, char *dest, size_t de
   int bNoDate = (*timestring == 'T');
   if (timeresolution < 0)
     return MS_FALSE;
-
+ 
   switch(timeresolution) {
     case TIME_RESOLUTION_YEAR:
       if (timestring[nlength-1] != '-') {
@@ -3096,7 +3340,6 @@ int postgresTimeStampForTimeString(const char *timestring, char *dest, size_t de
 
 }
 
-
 /*
  * create a postgresql where clause for the given timestring, taking into account
  * the resolution (e.g. second, day, month...) of the given timestring
@@ -3112,13 +3355,13 @@ int postgresTimeStampForTimeString(const char *timestring, char *dest, size_t de
  *    timecol < date_trunc(timestring,resolution) + interval '1 resolution'
  * )
  */
-int createPostgresTimeCompareSimple(const char *timecol, const char *timestring, char *dest, size_t destsize)
+int createPostgresTimeCompareEquals(const char *timestring, char *dest, size_t destsize)
 {
   int timeresolution = msTimeGetResolution(timestring);
   char timeStamp[100];
   char *interval;
-  if (timeresolution < 0)
-    return MS_FALSE;
+  if (timeresolution < 0) return MS_FALSE;
+
   postgresTimeStampForTimeString(timestring,timeStamp,100);
 
   switch(timeresolution) {
@@ -3143,8 +3386,43 @@ int createPostgresTimeCompareSimple(const char *timecol, const char *timestring,
     default:
       return MS_FAILURE;
   }
-  snprintf(dest, destsize,"(%s >= date_trunc('%s',%s) and %s < date_trunc('%s',%s) + interval '1 %s')",
-           timecol, interval, timeStamp, timecol, interval, timeStamp, interval);
+  snprintf(dest, destsize, " between date_trunc('%s',%s) and date_trunc('%s',%s) + interval '1 %s' - interval '1 second'", interval, timeStamp, interval, timeStamp, interval);
+  return MS_SUCCESS;
+}
+
+int createPostgresTimeCompareGreaterThan(const char *timestring, char *dest, size_t destsize)
+{
+  int timeresolution = msTimeGetResolution(timestring);
+  char timestamp[100];
+  char *interval;
+  if (timeresolution < 0) return MS_FALSE;
+ 
+  postgresTimeStampForTimeString(timestring,timestamp,100);
+
+  switch(timeresolution) {
+  case TIME_RESOLUTION_YEAR:
+    interval = "year";
+    break;
+  case TIME_RESOLUTION_MONTH:
+    interval = "month";
+    break;
+  case TIME_RESOLUTION_DAY:
+    interval = "day";
+    break;
+  case TIME_RESOLUTION_HOUR:
+    interval = "hour";
+    break;
+  case TIME_RESOLUTION_MINUTE:
+    interval = "minute";
+    break;
+  case TIME_RESOLUTION_SECOND:
+    interval = "second";
+    break;
+  default:
+    return MS_FAILURE;
+  }
+
+  snprintf(dest, destsize,"date_trunc('%s',%s)", interval, timestamp);
   return MS_SUCCESS;
 }
 
@@ -3165,145 +3443,39 @@ int createPostgresTimeCompareSimple(const char *timecol, const char *timestring,
  *    timecol < date_trunc(maxtimestring,maxresolution) + interval '1 maxresolution'
  * )
  */
-int createPostgresTimeCompareRange(const char *timecol, const char *mintime, const char *maxtime,
-                                   char *dest, size_t destsize)
+int createPostgresTimeCompareLessThan(const char *timestring, char *dest, size_t destsize)
 {
-  int mintimeresolution = msTimeGetResolution(mintime);
-  int maxtimeresolution = msTimeGetResolution(maxtime);
-  char minTimeStamp[100];
-  char maxTimeStamp[100];
-  char *minTimeInterval,*maxTimeInterval;
-  if (mintimeresolution < 0 || maxtimeresolution < 0)
-    return MS_FALSE;
-  postgresTimeStampForTimeString(mintime,minTimeStamp,100);
-  postgresTimeStampForTimeString(maxtime,maxTimeStamp,100);
+  int timeresolution = msTimeGetResolution(timestring);
+  char timestamp[100];
+  char *interval;
+  if (timeresolution < 0)return MS_FALSE;
 
-  switch(maxtimeresolution) {
+  postgresTimeStampForTimeString(timestring,timestamp,100);
+
+  switch(timeresolution) {
     case TIME_RESOLUTION_YEAR:
-      maxTimeInterval = "year";
+      interval = "year";
       break;
     case TIME_RESOLUTION_MONTH:
-      maxTimeInterval = "month";
+      interval = "month";
       break;
     case TIME_RESOLUTION_DAY:
-      maxTimeInterval = "day";
+      interval = "day";
       break;
     case TIME_RESOLUTION_HOUR:
-      maxTimeInterval = "hour";
+      interval = "hour";
       break;
     case TIME_RESOLUTION_MINUTE:
-      maxTimeInterval = "minute";
+      interval = "minute";
       break;
     case TIME_RESOLUTION_SECOND:
-      maxTimeInterval = "second";
+      interval = "second";
       break;
     default:
       return MS_FAILURE;
   }
-  switch(mintimeresolution) {
-    case TIME_RESOLUTION_YEAR:
-      minTimeInterval = "year";
-      break;
-    case TIME_RESOLUTION_MONTH:
-      minTimeInterval = "month";
-      break;
-    case TIME_RESOLUTION_DAY:
-      minTimeInterval = "day";
-      break;
-    case TIME_RESOLUTION_HOUR:
-      minTimeInterval = "hour";
-      break;
-    case TIME_RESOLUTION_MINUTE:
-      minTimeInterval = "minute";
-      break;
-    case TIME_RESOLUTION_SECOND:
-      minTimeInterval = "second";
-      break;
-    default:
-      return MS_FAILURE;
-  }
-  snprintf(dest, destsize,"(%s >= date_trunc('%s',%s) and %s < date_trunc('%s',%s) + interval '1 %s')",
-           timecol, minTimeInterval, minTimeStamp,
-           timecol, maxTimeInterval, maxTimeStamp, maxTimeInterval);
+  snprintf(dest, destsize,"(date_trunc('%s',%s) + interval '1 %s' - interval '1 second')", interval, timestamp, interval);
   return MS_SUCCESS;
-}
-
-int msPostGISLayerSetTimeFilter(layerObj *lp, const char *timestring, const char *timefield)
-{
-  char **atimes, **aranges = NULL;
-  int numtimes=0,i=0,numranges=0;
-  size_t buffer_size = 512;
-  char buffer[512], bufferTmp[512];
-
-  buffer[0] = '\0';
-  bufferTmp[0] = '\0';
-
-  if (!lp || !timestring || !timefield)
-    return MS_FALSE;
-
-  if( strchr(timestring,'\'') || strchr(timestring, '\\') ) {
-     msSetError(MS_MISCERR, "Invalid time filter.", "msPostGISLayerSetTimeFilter()");
-     return MS_FALSE;
-  }
-
-  /* discrete time */
-  if (strstr(timestring, ",") == NULL &&
-      strstr(timestring, "/") == NULL) { /* discrete time */
-    createPostgresTimeCompareSimple(timefield, timestring, buffer, buffer_size);
-  } else {
-
-    /* multiple times, or ranges */
-    atimes = msStringSplit (timestring, ',', &numtimes);
-    if (atimes == NULL || numtimes < 1) {
-      msFreeCharArray(atimes, numtimes);
-      return MS_FALSE;
-    }
-
-    strlcat(buffer, "(", buffer_size);
-    for(i=0; i<numtimes; i++) {
-      if(i!=0) {
-        strlcat(buffer, " OR ", buffer_size);
-      }
-      strlcat(buffer, "(", buffer_size);
-      aranges = msStringSplit(atimes[i],  '/', &numranges);
-      if(numranges == 1) {
-        /* we don't have range, just a simple time */
-        createPostgresTimeCompareSimple(timefield, atimes[i], bufferTmp, buffer_size);
-        strlcat(buffer, bufferTmp, buffer_size);
-      } else if(numranges == 2) {
-        /* we have a range */
-        createPostgresTimeCompareRange(timefield, aranges[0], aranges[1], bufferTmp, buffer_size);
-        strlcat(buffer, bufferTmp, buffer_size);
-      } else {
-        msFreeCharArray(aranges, numranges);
-        msFreeCharArray(atimes, numtimes);
-        return MS_FALSE;
-      }
-      msFreeCharArray(aranges, numranges);
-      strlcat(buffer, ")", buffer_size);
-    }
-    strlcat(buffer, ")", buffer_size);
-    msFreeCharArray(atimes, numtimes);
-  }
-  if(!*buffer) {
-    return MS_FALSE;
-  }
-  if(lp->filteritem) free(lp->filteritem);
-  lp->filteritem = msStrdup(timefield);
-  if (&lp->filter) {
-    /* if the filter is set and it's a string type, concatenate it with
-       the time. If not just free it */
-    if (lp->filter.type == MS_EXPRESSION) {
-      snprintf(bufferTmp, buffer_size, "(%s) and %s", lp->filter.string, buffer);
-      loadExpressionString(&lp->filter, bufferTmp);
-    } else {
-      freeExpression(&lp->filter);
-      loadExpressionString(&lp->filter, buffer);
-    }
-  }
-
-
-  return MS_TRUE;
 }
 
 char *msPostGISEscapeSQLParam(layerObj *layer, const char *pszString)
@@ -3387,10 +3559,262 @@ int msPostGISGetPaging(layerObj *layer)
 #endif
 }
 
+/*
+** Look ahead to find the next node of a specific type.
+*/
+tokenListNodeObjPtr findNextTokenByType(tokenListNodeObjPtr node, int type) {
+  while (node != NULL) {
+    if(node->token == type) return node;
+    node = node->next; /* keep looking */
+  }
+
+  return NULL; /* not found */
+}
+
+/*
+** msPostGISLayerTranslateFilter()
+**
+** Registered vtable->LayerTranslateFilter function.
+*/
+int msPostGISLayerTranslateFilter(layerObj *layer, expressionObj *filter, char *filteritem)
+{
+#ifdef USE_POSTGIS
+  tokenListNodeObjPtr node = NULL;
+
+  char *snippet = NULL;
+  char *native_string = NULL;
+  char *strtmpl = NULL;
+  char *stresc = NULL;
+
+  int comparisonToken = -1;
+  int bindingToken = -1;
+
+  msPostGISLayerInfo *layerinfo = layer->layerinfo;
+
+  if(!filter->string) return MS_SUCCESS; /* not an error, just nothing to do */
+
+  // fprintf(stderr, "input: %s, %s, %d\n", filter->string, filteritem, filter->type);
+
+  /*
+  ** FILTERs use MapServer syntax *only* (#5001).
+  */
+  if(filter->type == MS_STRING && filter->string && filteritem) { /* item/value pair - add escaping */
+
+    stresc = msLayerEscapePropertyName(layer, filteritem);
+    if(filter->flags & MS_EXP_INSENSITIVE) {
+      native_string = msStringConcatenate(native_string, "upper(");
+      native_string = msStringConcatenate(native_string, stresc);
+      native_string = msStringConcatenate(native_string, "::text) = upper(");
+    } else {
+      native_string = msStringConcatenate(native_string, stresc);
+      native_string = msStringConcatenate(native_string, "::text = ");
+    }
+    msFree(stresc);
+
+    strtmpl = "'%s'";  /* don't have a type for the righthand literal so assume it's a string and we quote */
+    stresc = msPostGISEscapeSQLParam(layer, filter->string);    
+    snippet = (char *) msSmallMalloc(strlen(strtmpl) + strlen(stresc));
+    sprintf(snippet, strtmpl, stresc);
+    native_string = msStringConcatenate(native_string, snippet);
+    msFree(snippet);
+    msFree(stresc);
+
+    if(filter->flags & MS_EXP_INSENSITIVE) native_string = msStringConcatenate(native_string, ")");
+  } else if(filter->type == MS_REGEX && filter->string && filteritem) { /* item/regex pair  - add escaping */
+
+    stresc = msLayerEscapePropertyName(layer, filteritem);
+    native_string = msStringConcatenate(native_string, stresc);
+    if(filter->flags & MS_EXP_INSENSITIVE) {
+      native_string = msStringConcatenate(native_string, "::text ~* ");
+    } else {
+      native_string = msStringConcatenate(native_string, "::text ~ ");
+    }
+    msFree(stresc);
+
+    strtmpl = "'%s'";
+    stresc = msPostGISEscapeSQLParam(layer, filter->string);
+    snippet = (char *) msSmallMalloc(strlen(strtmpl) + strlen(stresc));
+    sprintf(snippet, strtmpl, stresc);
+    native_string = msStringConcatenate(native_string, snippet);
+    msFree(snippet);
+    msFree(stresc);
+  } else if(filter->type == MS_EXPRESSION) {
+    if(msPostGISParseData(layer) != MS_SUCCESS) return MS_FAILURE;
+
+    if(layer->debug >= 2) msDebug("msPostGISLayerTranslateFilter. String: %s.\n", filter->string);
+    if(!filter->tokens) return MS_SUCCESS;
+    if(layer->debug >= 2) msDebug("msPostGISLayerTranslateFilter. There are tokens to process... \n");
+
+    node = filter->tokens;
+    while (node != NULL) {      
+
+      /*
+      ** Do any token caching/tracking here, easier to have it in one place.
+      */
+      if(node->token == MS_TOKEN_BINDING_TIME) {
+        bindingToken = node->token;
+      } else if(node->token == MS_TOKEN_COMPARISON_EQ || node->token == MS_TOKEN_COMPARISON_NE ||
+         node->token == MS_TOKEN_COMPARISON_GT || node->token == MS_TOKEN_COMPARISON_GE || 
+         node->token == MS_TOKEN_COMPARISON_LT || node->token == MS_TOKEN_COMPARISON_LE) {
+        comparisonToken = node->token;
+      }
+
+      switch(node->token) {
+
+        /* literal tokens */
+        case MS_TOKEN_LITERAL_BOOLEAN:
+          if(node->tokenval.dblval == MS_TRUE)
+            native_string = msStringConcatenate(native_string, "TRUE");
+          else
+            native_string = msStringConcatenate(native_string, "FALSE");
+          break;
+        case MS_TOKEN_LITERAL_NUMBER:
+	  strtmpl = "%lf";
+          snippet = (char *) msSmallMalloc(strlen(strtmpl) + 16);
+          sprintf(snippet, strtmpl, node->tokenval.dblval);
+          native_string = msStringConcatenate(native_string, snippet);
+          msFree(snippet);
+          break;
+        case MS_TOKEN_LITERAL_STRING:
+          strtmpl = "'%s'";
+          stresc = msPostGISEscapeSQLParam(layer, node->tokenval.strval);
+          snippet = (char *) msSmallMalloc(strlen(strtmpl) + strlen(stresc));
+          sprintf(snippet, strtmpl, stresc);
+          native_string = msStringConcatenate(native_string, snippet);
+          msFree(snippet);
+          msFree(stresc);
+          break;
+        case MS_TOKEN_LITERAL_TIME: {
+	  snippet = (char *) msSmallMalloc(512);
+
+          if(comparisonToken == MS_TOKEN_COMPARISON_EQ) { // TODO: support !=
+            createPostgresTimeCompareEquals(node->tokensrc, snippet, 512);
+          } else if(comparisonToken == MS_TOKEN_COMPARISON_GT || comparisonToken == MS_TOKEN_COMPARISON_GE) {
+            createPostgresTimeCompareGreaterThan(node->tokensrc, snippet, 512);
+          } else if(comparisonToken == MS_TOKEN_COMPARISON_LT || comparisonToken == MS_TOKEN_COMPARISON_LE) {
+            createPostgresTimeCompareLessThan(node->tokensrc, snippet, 512);
+          } else {
+            goto cleanup;
+          }
+
+          comparisonToken = -1; bindingToken = -1; /* reset */
+          native_string = msStringConcatenate(native_string, snippet);
+          msFree(snippet);
+          break;
+  	}
+        case MS_TOKEN_LITERAL_SHAPE:
+        {
+          char* wkt = msShapeToWKT(node->tokenval.shpval);
+          native_string = msStringConcatenate(native_string, "ST_GeomFromText('");
+          native_string = msStringConcatenate(native_string, wkt);
+          msFree(wkt);
+          native_string = msStringConcatenate(native_string, "'");
+          if(layerinfo->srid && strcmp(layerinfo->srid, "") != 0) {
+            native_string = msStringConcatenate(native_string, ",");
+            native_string = msStringConcatenate(native_string, layerinfo->srid);
+          }
+          native_string = msStringConcatenate(native_string, ")");
+          break;
+        }
+
+	/* data binding tokens */
+        case MS_TOKEN_BINDING_TIME:
+        case MS_TOKEN_BINDING_DOUBLE:
+        case MS_TOKEN_BINDING_INTEGER:
+        case MS_TOKEN_BINDING_STRING:
+          if(node->token == MS_TOKEN_BINDING_STRING || node->next->token == MS_TOKEN_COMPARISON_RE || node->next->token == MS_TOKEN_COMPARISON_IRE)
+            strtmpl = "%s::text"; /* explicit cast necessary for certain operators */
+          else
+            strtmpl = "%s";
+          stresc = msLayerEscapePropertyName(layer, node->tokenval.bindval.item);
+          snippet = (char *) msSmallMalloc(strlen(strtmpl) + strlen(stresc));
+          sprintf(snippet, strtmpl, stresc);
+          native_string = msStringConcatenate(native_string, snippet);
+          msFree(snippet);
+          msFree(stresc);       
+          break;
+        case MS_TOKEN_BINDING_SHAPE:
+          native_string = msStringConcatenate(native_string, layerinfo->geomcolumn);
+          break;
+        case MS_TOKEN_BINDING_MAP_CELLSIZE:
+          strtmpl = "%lf";
+          snippet = (char *) msSmallMalloc(strlen(strtmpl) + 16);
+          sprintf(snippet, strtmpl, layer->map->cellsize);
+          native_string = msStringConcatenate(native_string, snippet);
+          msFree(snippet);
+	  break;
+
+	/* spatial comparison tokens */
+        case MS_TOKEN_COMPARISON_INTERSECTS:
+        case MS_TOKEN_COMPARISON_DISJOINT:
+        case MS_TOKEN_COMPARISON_TOUCHES:
+        case MS_TOKEN_COMPARISON_OVERLAPS:
+        case MS_TOKEN_COMPARISON_CROSSES:
+        case MS_TOKEN_COMPARISON_WITHIN:
+        case MS_TOKEN_COMPARISON_CONTAINS:
+        case MS_TOKEN_COMPARISON_EQUALS:
+        case MS_TOKEN_COMPARISON_DWITHIN:
+          if(node->next->token != '(') goto cleanup;
+          native_string = msStringConcatenate(native_string, "st_");
+          native_string = msStringConcatenate(native_string, msExpressionTokenToString(node->token));
+          break;
+
+	/* functions */
+        case MS_TOKEN_FUNCTION_LENGTH:
+        case MS_TOKEN_FUNCTION_AREA:
+        case MS_TOKEN_FUNCTION_BUFFER:
+        case MS_TOKEN_FUNCTION_DIFFERENCE:
+          native_string = msStringConcatenate(native_string, "st_");
+          native_string = msStringConcatenate(native_string, msExpressionTokenToString(node->token));
+          break;
+
+	/* unsupported tokens */ 
+	case MS_TOKEN_COMPARISON_IEQ:
+        case MS_TOKEN_COMPARISON_BEYOND:
+	case MS_TOKEN_FUNCTION_TOSTRING:
+	case MS_TOKEN_FUNCTION_ROUND:
+	case MS_TOKEN_FUNCTION_SIMPLIFY:
+        case MS_TOKEN_FUNCTION_SIMPLIFYPT:        
+        case MS_TOKEN_FUNCTION_GENERALIZE:
+          goto cleanup;
+          break;
+
+        default:
+          /* by default accept the general token to string conversion */
+
+          if(bindingToken == MS_TOKEN_BINDING_TIME && (node->token == MS_TOKEN_COMPARISON_EQ || node->token == MS_TOKEN_COMPARISON_NE)) break; /* skip, handled elsewhere */
+
+          native_string = msStringConcatenate(native_string, msExpressionTokenToString(node->token));
+          break;
+        }
+
+      node = node->next;
+    }
+  }
+
+  filter->native_string = msStrdup(native_string);    
+  msFree(native_string);
+
+  // fprintf(stderr, "output: %s\n", filter->native_string); 
+
+  return MS_SUCCESS;
+
+cleanup:
+  msSetError(MS_MISCERR, "Translation to native SQL failed.", "msPostGISLayerTranslateFilter()");
+  msFree(native_string);
+  return MS_FAILURE;
+#else
+  msSetError(MS_MISCERR, "PostGIS support is not available.", "msPostGISLayerTranslateFilter()");
+  return MS_FAILURE;
+#endif
+}
+
 int msPostGISLayerInitializeVirtualTable(layerObj *layer)
 {
   assert(layer != NULL);
   assert(layer->vtable != NULL);
+
+  layer->vtable->LayerTranslateFilter = msPostGISLayerTranslateFilter;
 
   layer->vtable->LayerInitItemInfo = msPostGISLayerInitItemInfo;
   layer->vtable->LayerFreeItemInfo = msPostGISLayerFreeItemInfo;
@@ -3401,11 +3825,12 @@ int msPostGISLayerInitializeVirtualTable(layerObj *layer)
   layer->vtable->LayerGetShape = msPostGISLayerGetShape;
   layer->vtable->LayerClose = msPostGISLayerClose;
   layer->vtable->LayerGetItems = msPostGISLayerGetItems;
-  /* layer->vtable->LayerGetExtent = msPostGISLayerGetExtent; */
+  layer->vtable->LayerGetExtent = msPostGISLayerGetExtent;
   layer->vtable->LayerApplyFilterToLayer = msLayerApplyCondSQLFilterToLayer;
   /* layer->vtable->LayerGetAutoStyle, not supported for this layer */
   /* layer->vtable->LayerCloseConnection = msPostGISLayerClose; */
-  layer->vtable->LayerSetTimeFilter = msPostGISLayerSetTimeFilter;
+  // layer->vtable->LayerSetTimeFilter = msPostGISLayerSetTimeFilter;
+  layer->vtable->LayerSetTimeFilter = msLayerMakeBackticsTimeFilter;
   /* layer->vtable->LayerCreateItems, use default */
   /* layer->vtable->LayerGetNumFeatures, use default */
 

@@ -2,6 +2,8 @@ Description: fixes hardened java
  Java doesn't compile with hardened options. Adapted from ruby mapscript
 Author: Ezequiel Lara Gómez <ezequiel.lara@qualitasremos.com>
 Bug-Debian: https://bugs.debian.org/740351
+Forwarded: not-needed
+
 --- a/mapscript/java/CMakeLists.txt
 +++ b/mapscript/java/CMakeLists.txt
 @@ -15,6 +15,23 @@ SET (CMAKE_SWIG_OUTDIR "${CMAKE_CURRENT_

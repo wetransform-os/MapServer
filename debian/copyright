@@ -1,25 +1,32 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: MapServer
 Upstream-Contact: The MapServer team <mapserver-dev@lists.osgeo.org>
-Source: http://download.osgeo.org/mapserver/
+Source: https://github.com/mapserver/mapserver
 
 Files: *
-Copyright:         1996-2013, Regents of the University of Minnesota.
+Copyright:         1996-2014, Regents of the University of Minnesota.
+                  2011, 2013, Alan Boudreault, MapGears
+                        2013, Even Rouault
                    2010-2011, EOX IT Services GmbH, Austria
-                        2011, Alan Boudreault, MapGears
                    2000-2010, Daniel Morissette, DM Solutions Group Inc.
  2001-2002, 2004, 2007, 2010, Frank Warmerdam <warmerdam@pobox.com>
                   2008, 2010, Paul Ramsey
                    2009-2010, Thomas Bonfort
              2000-2006, 2008, Y. Assefa, DM Solutions Group inc.
-                   2006-2007, Tom Kralidis
+                   2006-2007, Tom Kralidis <tomkralidis@gmail.com>
                         2007, IS Consulting (www.mapdotnet.com)
                    2000-2005, DM Solutions Group
                    2004-2005, Sean Gillies <sgillies@frii.com>
                    2002-2003, Julien-Samuel Lacroix, DM Solutions Group Inc
                         2003, John Novak, Novacell Technologies
                         2002, Refractions Research
+                              Joyent, Inc. and other Node contributors
 License: MIT
+
+Files: dejavu-sans-condensed.h
+Copyright: 2003, Bitstream, Inc.
+           2006, Tavmjong Bah.
+License: DejaVu
 
 Files: mapbits.c
 Copyright: 1996-2005, Regents of the University of Minnesota
@@ -53,15 +60,19 @@ Files: strptime.c
 Copyright: 1999, Kungliga Tekniska Högskolan
 License: BSD-3-clause-KTH
 
+Files: mapparser.c
+ mapparser.h
+Copyright: 1984, 1989-1990, 2000-2006, Free Software Foundation, Inc.
+License: GPL-2+ with Bison exception
+
+Files: uthash.h
+Copyright: 2003-2013, Troy D. Hanson
+License: BSD-1-clause
+
 Files: mapscript/python/pygdioctx/pygdioctx.c
  mapscript/python/pygdioctx/pygdioctx.h
 Copyright: 1995, Richard Jones, Bureau of Meteorology Australia
 License: BSD-3-clause-GDMODULE-LICENSE
-
-Files: mapparser.c
- mapparser.h
-Copyright: 1984, 1989-1990, 2000-2006, Free Software Foundation, Inc.
-License: GPL-3+ with Bison exception
 
 Files: opengl/glext.h
 Copyright: 1991-2004, Silicon Graphics, Inc
@@ -360,6 +371,25 @@ License: BSD-3-clause-GDMODULE-LICENSE
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+License: BSD-1-clause
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+ .
+     * Redistributions of source code must retain the above copyright
+       notice, this list of conditions and the following disclaimer.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+ IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+ PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
+ OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 License: BSD-3-clause-KTH
  All rights reserved.
  .
@@ -456,11 +486,11 @@ License: BSL-1.0
  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  DEALINGS IN THE SOFTWARE.
 
-License: GPL-3+ with Bison exception
+License: GPL-2+ with Bison exception
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+ the Free Software Foundation; either version 2, or (at your option)
+ any later version.
  .
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -468,7 +498,9 @@ License: GPL-3+ with Bison exception
  GNU General Public License for more details.
  .
  You should have received a copy of the GNU General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ Boston, MA 02110-1301, USA.  */
  .
  As a special exception, you may create a larger work that contains
  part or all of the Bison parser skeleton and distribute that work
@@ -484,8 +516,8 @@ License: GPL-3+ with Bison exception
  version 2.2 of Bison.
  .
  On Debian systems, the full text of the GNU General Public
- License version 3 can be found in the file
- `/usr/share/common-licenses/GPL-3'.
+ License version 2 can be found in the file
+ `/usr/share/common-licenses/GPL-2'.
 
 License: SGI-B-1.1
  License Applicability. Except to the extent portions of this file are
@@ -555,3 +587,102 @@ License: SGI-B-1.1-with-NVIDIA
  OpenGL(R) version 1.2.1 Sample Implementation published by SGI, but has
  not been independently verified as being compliant with the OpenGL(R)
  version 1.2.1 Specification.
+
+License: DejaVu
+ Fonts are (c) Bitstream (see below). DejaVu changes are in public domain.
+ Glyphs imported from Arev fonts are (c) Tavmjong Bah (see below)
+ .
+ Bitstream Vera Fonts Copyright
+ ------------------------------
+ .
+ Copyright (c) 2003 by Bitstream, Inc. All Rights Reserved. Bitstream Vera is
+ a trademark of Bitstream, Inc.
+ .
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of the fonts accompanying this license ("Fonts") and associated
+ documentation files (the "Font Software"), to reproduce and distribute the
+ Font Software, including without limitation the rights to use, copy, merge,
+ publish, distribute, and/or sell copies of the Font Software, and to permit
+ persons to whom the Font Software is furnished to do so, subject to the
+ following conditions:
+ .
+ The above copyright and trademark notices and this permission notice shall
+ be included in all copies of one or more of the Font Software typefaces.
+ .
+ The Font Software may be modified, altered, or added to, and in particular
+ the designs of glyphs or characters in the Fonts may be modified and
+ additional glyphs or characters may be added to the Fonts, only if the fonts
+ are renamed to names not containing either the words "Bitstream" or the word
+ "Vera".
+ .
+ This License becomes null and void to the extent applicable to Fonts or Font
+ Software that has been modified and is distributed under the "Bitstream
+ Vera" names.
+ .
+ The Font Software may be sold as part of a larger software package but no
+ copy of one or more of the Font Software typefaces may be sold by itself.
+ .
+ THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF COPYRIGHT, PATENT,
+ TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL BITSTREAM OR THE GNOME
+ FOUNDATION BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, INCLUDING
+ ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
+ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+ THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM OTHER DEALINGS IN THE
+ FONT SOFTWARE.
+ .
+ Except as contained in this notice, the names of Gnome, the Gnome
+ Foundation, and Bitstream Inc., shall not be used in advertising or
+ otherwise to promote the sale, use or other dealings in this Font Software
+ without prior written authorization from the Gnome Foundation or Bitstream
+ Inc., respectively. For further information, contact: fonts at gnome dot
+ org.
+ .
+ Arev Fonts Copyright
+ --------------------
+ .
+ Copyright (c) 2006 by Tavmjong Bah. All Rights Reserved.
+ .
+ Permission is hereby granted, free of charge, to any person obtaining
+ a copy of the fonts accompanying this license ("Fonts") and
+ associated documentation files (the "Font Software"), to reproduce
+ and distribute the modifications to the Bitstream Vera Font Software,
+ including without limitation the rights to use, copy, merge, publish,
+ distribute, and/or sell copies of the Font Software, and to permit
+ persons to whom the Font Software is furnished to do so, subject to
+ the following conditions:
+ .
+ The above copyright and trademark notices and this permission notice
+ shall be included in all copies of one or more of the Font Software
+ typefaces.
+ .
+ The Font Software may be modified, altered, or added to, and in
+ particular the designs of glyphs or characters in the Fonts may be
+ modified and additional glyphs or characters may be added to the
+ Fonts, only if the fonts are renamed to names not containing either
+ the words "Tavmjong Bah" or the word "Arev".
+ .
+ This License becomes null and void to the extent applicable to Fonts
+ or Font Software that has been modified and is distributed under the
+ "Tavmjong Bah Arev" names.
+ .
+ The Font Software may be sold as part of a larger software package but
+ no copy of one or more of the Font Software typefaces may be sold by
+ itself.
+ .
+ THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+ OF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL
+ TAVMJONG BAH BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL
+ DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
+ OTHER DEALINGS IN THE FONT SOFTWARE.
+ .
+ Except as contained in this notice, the name of Tavmjong Bah shall not
+ be used in advertising or otherwise to promote the sale, use or other
+ dealings in this Font Software without prior written authorization
+ from Tavmjong Bah. For further information, contact: tavmjong @ free
+

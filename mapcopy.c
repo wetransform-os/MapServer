@@ -45,9 +45,39 @@
 #include "mapserver.h"
 #include "mapsymbol.h"
 
-
-
 #include "mapcopy.h"
+
+/***********************************************************************
+ * msCopyProjectioExtended()                                           *
+ *                                                                     *
+ * Copy a projectionObj while adding additional arguments              *
+ **********************************************************************/
+
+int msCopyProjectionExtended(projectionObj *dst, projectionObj *src, char ** args, int num_args)
+{
+
+#ifdef USE_PROJ
+  int i;
+
+  MS_COPYSTELEM(numargs);
+  MS_COPYSTELEM(gt);
+  MS_COPYSTELEM(automatic);
+
+  for (i = 0; i < dst->numargs; i++) {
+    /* Our destination consists of unallocated pointers */
+    dst->args[i] = msStrdup(src->args[i]);
+  }
+  for(i=0 ; i< num_args; i++) {
+    dst->args[dst->numargs++] = msStrdup(args[i]);
+  }
+  if (dst->numargs != 0) {
+    if (msProcessProjection(dst) != MS_SUCCESS)
+      return MS_FAILURE;
+  }
+#endif
+  MS_COPYSTELEM(wellknownprojection);
+  return MS_SUCCESS;
+}
 
 /***********************************************************************
  * msCopyProjection()                                                  *
@@ -57,24 +87,7 @@
 
 int msCopyProjection(projectionObj *dst, projectionObj *src)
 {
-
-#ifdef USE_PROJ
-  int i;
-
-  MS_COPYSTELEM(numargs);
-
-  for (i = 0; i < dst->numargs; i++) {
-    /* Our destination consists of unallocated pointers */
-    dst->args[i] = msStrdup(src->args[i]);
-  }
-  if (dst->numargs != 0) {
-    if (msProcessProjection(dst) != MS_SUCCESS)
-      return MS_FAILURE;
-
-  }
-#endif
-  MS_COPYSTELEM(wellknownprojection);
-  return MS_SUCCESS;
+  return msCopyProjectionExtended(dst,src,NULL,0);
 }
 
 /***********************************************************************
@@ -184,15 +197,16 @@ int msCopyFontSet(fontSetObj *dst, fontSetObj *src, mapObj *map)
 }
 
 /***********************************************************************
- * msCopyExpression(                                                   *
+ * msCopyExpression()                                                  *
  *                                                                     *
- * Copy an expressionObj, but only its string and type                 *
+ * Copy an expressionObj, but only its string, type and flags          *
  **********************************************************************/
 
 int msCopyExpression(expressionObj *dst, expressionObj *src)
 {
   MS_COPYSTRING(dst->string, src->string);
   MS_COPYSTELEM(type);
+  MS_COPYSTELEM(flags);
   dst->compiled = MS_FALSE;
 
   return MS_SUCCESS;
@@ -256,9 +270,10 @@ int msCopyQueryMap(queryMapObj *dst, queryMapObj *src)
  * Copy a labelLeaderObj, using msCopyStyle()                          *
  **********************************************************************/
 
-int msCopyLeader(labelLeaderObj *dst, labelLeaderObj *src)
+int msCopyLabelLeader(labelLeaderObj *dst, labelLeaderObj *src)
 {
   int i;
+  assert(dst && src);
   MS_COPYSTELEM(gridstep);
   MS_COPYSTELEM(maxdistance);
   /*
@@ -306,7 +321,6 @@ int msCopyLabel(labelObj *dst, labelObj *src)
   MS_COPYSTELEM(numbindings);
 
   MS_COPYSTRING(dst->font, src->font);
-  MS_COPYSTELEM(type);
 
   MS_COPYCOLOR(&(dst->color), &(src->color));
   MS_COPYCOLOR(&(dst->outlinecolor), &(src->outlinecolor));
@@ -324,7 +338,6 @@ int msCopyLabel(labelObj *dst, labelObj *src)
   MS_COPYSTELEM(angle);
   MS_COPYSTELEM(anglemode);
   MS_COPYSTELEM(buffer);
-  MS_COPYSTELEM(antialias);
   MS_COPYSTELEM(wrap);
   MS_COPYSTELEM(align);
   MS_COPYSTELEM(maxlength);
@@ -339,6 +352,10 @@ int msCopyLabel(labelObj *dst, labelObj *src)
   MS_COPYSTELEM(partials);
   MS_COPYSTELEM(force);
   MS_COPYSTELEM(priority);
+
+  MS_COPYSTELEM(repeatdistance);
+  MS_COPYSTELEM(maxoverlapangle);
+
 
   MS_COPYSTRING(dst->encoding, src->encoding);
 
@@ -381,13 +398,17 @@ int msCopyLabel(labelObj *dst, labelObj *src)
     dst->numstyles++;
   }
 
-  /*
-  ** other book keeping information (RFC77 TODO)
-  */
-  MS_COPYSTELEM(status);
-  MS_COPYSTRING(dst->annotext, src->annotext);
-
-  msCopyLeader(&(dst->leader),&(src->leader));
+  if(src->leader) {
+    dst->leader = msSmallMalloc(sizeof(labelLeaderObj));
+    initLeader(dst->leader);
+    msCopyLabelLeader(dst->leader,src->leader);
+  } else {
+    if(dst->leader) {
+      freeLabelLeader(dst->leader);
+      msFree(dst->leader);
+    }
+    dst->leader = NULL;
+  }
 
   return MS_SUCCESS;
 }
@@ -478,7 +499,6 @@ int msCopyStyle(styleObj *dst, styleObj *src)
   MS_COPYSTELEM(maxwidth);
   MS_COPYSTELEM(offsetx);
   MS_COPYSTELEM(offsety);
-  MS_COPYSTELEM(antialias);
   MS_COPYSTELEM(angle);
   MS_COPYSTELEM(minvalue);
   MS_COPYSTELEM(maxvalue);
@@ -552,7 +572,16 @@ int msCopyClass(classObj *dst, classObj *src, layerObj *layer)
   }
   MS_COPYSTELEM(numlabels);
 
-  msCopyLeader(&(dst->leader),&(src->leader));
+  if(src->leader) {
+    if(dst->leader) {
+      freeLabelLeader(dst->leader);
+    }
+    if(!dst->leader) {
+      dst->leader = msSmallMalloc(sizeof(labelLeaderObj));
+      initLeader(dst->leader);
+    }
+    msCopyLabelLeader(dst->leader,src->leader);
+  }
 
   MS_COPYSTRING(dst->keyimage, src->keyimage);
   MS_COPYSTRING(dst->name, src->name);
@@ -569,7 +598,6 @@ int msCopyClass(classObj *dst, classObj *src, layerObj *layer)
 #else
   MS_COPYSTRING(dst->_template, src->_template);
 #endif
-  MS_COPYSTELEM(type);
 
   if (&(src->metadata) != NULL) {
     /* dst->metadata = msCreateHashTable(); */
@@ -605,6 +633,36 @@ int msCopyCluster(clusterObj *dst, clusterObj *src)
     return MS_FAILURE;
   }
 
+  return MS_SUCCESS;
+}
+
+/***********************************************************************
+ * msCopyGrid()                                                        *
+ **********************************************************************/
+
+int msCopyGrid(graticuleObj *dst, graticuleObj *src)
+{
+  MS_COPYSTELEM(dwhichlatitude);
+  MS_COPYSTELEM(dwhichlongitude);
+  MS_COPYSTELEM(dstartlatitude);
+  MS_COPYSTELEM(dstartlongitude);
+  MS_COPYSTELEM(dendlatitude);
+  MS_COPYSTELEM(dendlongitude);
+  MS_COPYSTELEM(dincrementlatitude);
+  MS_COPYSTELEM(dincrementlongitude);
+  MS_COPYSTELEM(minarcs);
+  MS_COPYSTELEM(maxarcs);
+  MS_COPYSTELEM(minincrement);
+  MS_COPYSTELEM(maxincrement);
+  MS_COPYSTELEM(minsubdivides);
+  MS_COPYSTELEM(maxsubdivides);
+  MS_COPYSTELEM(bvertical);
+  MS_COPYSTELEM(blabelaxes);
+  MS_COPYSTELEM(ilabelstate);
+  MS_COPYSTELEM(ilabeltype);
+  MS_COPYRECT(&(dst->extent), &(src->extent));
+  MS_COPYSTRING(dst->labelformat, src->labelformat);
+  
   return MS_SUCCESS;
 }
 
@@ -867,6 +925,29 @@ int msCopyScaleToken(scaleTokenObj *src, scaleTokenObj *dst) {
   return MS_SUCCESS;
 }
 
+int msCopyCompositer(LayerCompositer **ldst, LayerCompositer *src) {
+  LayerCompositer *dst = NULL;
+  if(!src) {
+    *ldst = NULL;
+    return MS_SUCCESS;
+  }
+
+  while(src) {
+    if(!dst) {
+      dst = *ldst = msSmallMalloc(sizeof(LayerCompositer));
+    } else {
+      dst->next = msSmallMalloc(sizeof(LayerCompositer));
+      dst = dst->next;
+    }
+    dst->comp_op = src->comp_op;
+    dst->opacity = src->opacity;
+    dst->next = NULL;
+    /* TODO dst->filter */
+    src = src->next;
+  }
+  return MS_SUCCESS;
+}
+
 /***********************************************************************
  * msCopyLayer()                                                       *
  *                                                                     *
@@ -922,10 +1003,10 @@ int msCopyLayer(layerObj *dst, layerObj *src)
   MS_COPYSTRING(dst->name, src->name);
   MS_COPYSTRING(dst->group, src->group);
   MS_COPYSTRING(dst->data, src->data);
+  MS_COPYSTRING(dst->encoding, src->encoding);
 
   MS_COPYSTELEM(status);
   MS_COPYSTELEM(type);
-  MS_COPYSTELEM(annotate);
   MS_COPYSTELEM(tolerance);
   MS_COPYSTELEM(toleranceunits);
   MS_COPYSTELEM(symbolscaledenom);
@@ -1006,7 +1087,6 @@ int msCopyLayer(layerObj *dst, layerObj *src)
   }
   msCopyHashTable(&dst->validation,&src->validation);
 
-  MS_COPYSTELEM(opacity);
   MS_COPYSTELEM(dump);
   MS_COPYSTELEM(debug);
 
@@ -1029,6 +1109,21 @@ int msCopyLayer(layerObj *dst, layerObj *src)
 
   MS_COPYSTRING(dst->classgroup, src->classgroup);
   MS_COPYSTRING(dst->mask, src->mask);
+
+  if (src->grid) {
+    if (dst->grid) {
+      freeGrid(dst->grid);
+      msFree(dst->grid);
+    }
+    dst->grid = (void *) malloc(sizeof(graticuleObj));
+    MS_CHECK_ALLOC(dst->grid, sizeof(graticuleObj), -1);
+    initGrid(dst->grid);
+    msCopyGrid(dst->grid, src->grid);
+  }
+
+  if(src->compositer) {
+    msCopyCompositer(&dst->compositer, src->compositer);
+  }
 
   return MS_SUCCESS;
 }
@@ -1170,6 +1265,24 @@ int msCopyMap(mapObj *dst, mapObj *src)
   if( msCopyHashTable( &(dst->configoptions), &(src->configoptions) ) != MS_SUCCESS )
     return MS_FAILURE;
 
+  return MS_SUCCESS;
+}
+
+int msCopyRasterBuffer(rasterBufferObj *dst, const rasterBufferObj *src) {
+  *dst = *src;
+  if(src->type == MS_BUFFER_BYTE_RGBA) {
+    dst->data.rgba = src->data.rgba;
+    dst->data.rgba.pixels = msSmallMalloc(src->height * src->data.rgba.row_step);
+    memcpy(dst->data.rgba.pixels, src->data.rgba.pixels, src->data.rgba.row_step*src->height);
+    dst->data.rgba.r = dst->data.rgba.pixels + (src->data.rgba.r - src->data.rgba.pixels);
+    dst->data.rgba.g = dst->data.rgba.pixels + (src->data.rgba.g - src->data.rgba.pixels);
+    dst->data.rgba.b = dst->data.rgba.pixels + (src->data.rgba.b - src->data.rgba.pixels);
+    if(src->data.rgba.a) {
+      dst->data.rgba.a = dst->data.rgba.pixels + (src->data.rgba.a - src->data.rgba.pixels);
+    } else {
+      dst->data.rgba.a = NULL;
+    }
+  }
   return MS_SUCCESS;
 }
 

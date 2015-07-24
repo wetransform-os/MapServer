@@ -31,6 +31,7 @@
 #include "mapserver.h"
 #include "mapserv.h"
 #include "maptime.h"
+#include "mapows.h"
 
 /*
 ** Enumerated types, keep the query modes in sequence and at the end of the enumeration (mode enumeration is in maptemplate.h).
@@ -371,6 +372,10 @@ int msCGILoadForm(mapservObj *mapserv)
 
     if(strcasecmp(mapserv->request->ParamNames[i],"queryfile") == 0) {
       mapserv->QueryFile = msStrdup(mapserv->request->ParamValues[i]);
+      if(msValidateParameter(mapserv->QueryFile, msLookupHashTable(&(mapserv->map->web.validation), "queryfile"), NULL, NULL, NULL) != MS_SUCCESS) {
+        msSetError(MS_WEBERR, "Parameter 'queryfile' value fails to validate.", "mapserv()");
+        return MS_FAILURE;
+      }
       continue;
     }
 
@@ -1228,9 +1233,12 @@ int msCGIDispatchQueryRequest(mapservObj *mapserv)
           if(MS_SUCCESS != setExtent(mapserv)) /* set user area of interest */
             return MS_FAILURE;
 
-        mapserv->map->query.type = MS_QUERY_BY_ATTRIBUTE;
-        if(mapserv->QueryItem) mapserv->map->query.item = msStrdup(mapserv->QueryItem);
-        if(mapserv->QueryString) mapserv->map->query.str = msStrdup(mapserv->QueryString);
+        mapserv->map->query.type = MS_QUERY_BY_FILTER;
+        if(mapserv->QueryItem) mapserv->map->query.filteritem = msStrdup(mapserv->QueryItem);
+        if(mapserv->QueryString) {
+          msInitExpression(&mapserv->map->query.filter);
+          msLoadExpressionString(&mapserv->map->query.filter, mapserv->QueryString);
+        }
 
         mapserv->map->query.rect = mapserv->map->extent;
 
@@ -1321,10 +1329,13 @@ int msCGIDispatchQueryRequest(mapservObj *mapserv)
           if(MS_SUCCESS != setExtent(mapserv)) /* set user area of interest */
             return MS_FAILURE;
 
-        mapserv->map->query.type = MS_QUERY_BY_ATTRIBUTE;
+        mapserv->map->query.type = MS_QUERY_BY_FILTER;
         mapserv->map->query.layer = mapserv->QueryLayerIndex;
-        if(mapserv->QueryItem) mapserv->map->query.item = msStrdup(mapserv->QueryItem);
-        if(mapserv->QueryString) mapserv->map->query.str = msStrdup(mapserv->QueryString);
+        if(mapserv->QueryItem) mapserv->map->query.filteritem = msStrdup(mapserv->QueryItem);
+        if(mapserv->QueryString) {
+          msInitExpression(&mapserv->map->query.filter);
+          msLoadExpressionString(&mapserv->map->query.filter, mapserv->QueryString);
+	}
 
         mapserv->map->query.rect = mapserv->map->extent;
 
@@ -1528,7 +1539,12 @@ int msCGIDispatchImageRequest(mapservObj *mapserv)
     const char *attachment = msGetOutputFormatOption(mapserv->map->outputformat, "ATTACHMENT", NULL );
     if(attachment)
       msIO_setHeader("Content-disposition","attachment; filename=%s", attachment);
-    msIO_setHeader("Content-Type","%s", MS_IMAGE_MIME_TYPE(mapserv->map->outputformat));
+
+    if(!strcmp(MS_IMAGE_MIME_TYPE(mapserv->map->outputformat), "application/json")) {
+      msIO_setHeader("Content-Type","application/json; charset=utf-8");
+    } else {
+      msIO_setHeader("Content-Type","%s", MS_IMAGE_MIME_TYPE(mapserv->map->outputformat));
+    }
     msIO_sendHeaders();
   }
 
@@ -1802,6 +1818,10 @@ int msCGIHandler(const char *query_string, void **out_buffer, size_t *buffer_len
   msIOBuffer  *buf;
 
   msIO_installStdoutToBuffer();
+
+  /* Use PROJ_LIB env vars if set */
+  msProjLibInitFromEnv();
+
   /* Use MS_ERRORFILE and MS_DEBUGLEVEL env vars if set */
   if( msDebugInitFromEnv() != MS_SUCCESS ) {
     msCGIWriteError(mapserv);

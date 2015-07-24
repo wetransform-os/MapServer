@@ -30,6 +30,7 @@
 #include "mapserver.h"
 #include "maperror.h"
 #include "mapogcsld.h"
+#include "mapows.h"
 
 #include <time.h>
 #include <ctype.h>
@@ -285,17 +286,13 @@ static int msBuildWMSLayerURLBase(mapObj *map, layerObj *lp,
 
     for(i=0; pszFormat==NULL && i<n; i++) {
       if (0
-#if defined USE_GD_PNG || defined USE_PNG
+#if defined USE_PNG
           || strcasecmp(papszTok[i], "PNG")
           || strcasecmp(papszTok[i], "image/png")
 #endif
-#if defined USE_GD_JPEG || defined USE_JPEG
+#if defined USE_JPEG
           || strcasecmp(papszTok[i], "JPEG")
           || strcasecmp(papszTok[i], "image/jpeg")
-#endif
-#ifdef USE_GD_GIF
-          || strcasecmp(papszTok[i], "GIF")
-          || strcasecmp(papszTok[i], "image/gif")
 #endif
          ) {
         pszFormat = papszTok[i];
@@ -707,6 +704,11 @@ msBuildWMSLayerURL(mapObj *map, layerObj *lp, int nRequestType,
 
         bbox_width = ceil((bbox.maxx - bbox.minx) / cellsize);
         bbox_height = ceil((bbox.maxy - bbox.miny) / cellsize);
+
+        /* Force going through the resampler if we're going to receive a clipped BBOX (#4931) */
+        if(msLayerGetProcessingKey(lp, "RESAMPLE") == NULL) {
+          msLayerSetProcessingKey(lp, "RESAMPLE", "nearest");
+        }
       }
     }
   }

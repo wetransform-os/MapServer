@@ -12,23 +12,24 @@ export DH_OPTIONS
 #  pie: causes build failure
 export DEB_BUILD_MAINT_OPTIONS=hardening=+all,-pie
 
-DEB_HOST_MULTIARCH?=$(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 
-CPPFLAGS:=$(shell dpkg-buildflags --get CPPFLAGS)
-CFLAGS:=$(shell dpkg-buildflags --get CFLAGS)
-LDFLAGS:=$(shell dpkg-buildflags --get LDFLAGS)
+CPPFLAGS := $(shell dpkg-buildflags --get CPPFLAGS)
+CFLAGS   := $(shell dpkg-buildflags --get CFLAGS)
+LDFLAGS  := $(shell dpkg-buildflags --get LDFLAGS)
 
-CFLAGS+=$(CPPFLAGS)
-CFLAGS+=$(LDFLAGS)
+CFLAGS += $(CPPFLAGS)
+CFLAGS += $(LDFLAGS)
 
-RUBYVERSIONS=$(shell dh_ruby --print-supported)
-PHP5API=$(shell php-config5 --phpapi)
-MANPAGES:=$(wildcard debian/man/*.*.xml)
+RUBYVERSIONS := $(shell dh_ruby --print-supported)
+PHP5API      := $(shell php-config5 --phpapi)
 
-MS_VERSION=$(shell dpkg-parsechangelog | sed -ne 's/^Version: \(.*\)-.*/\1/p' | sed -e 's/\+.*//; s/^[0-9]://')
-BUILD_DATE=$(shell dpkg-parsechangelog | sed -ne 's/^Date: //p' | LC_ALL=C date -u "+%d %B %Y" -f -)
+MANPAGES := $(wildcard debian/man/*.*.xml)
 
-CMAKE_OPTS:= \
+MS_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(.*\)-.*/\1/p' | sed -e 's/\+.*//; s/^[0-9]://')
+BUILD_DATE := $(shell dpkg-parsechangelog | sed -ne 's/^Date: //p' | LC_ALL=C date -u "+%d %B %Y" -f -)
+
+CMAKE_OPTS := \
 		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 		-DCMAKE_EXE_LINKER_FLAGS="$(LDFLAGS)" \
 		-DCMAKE_MODULE_LINKER_FLAGS="$(LDFLAGS)" \
@@ -39,8 +40,8 @@ CMAKE_OPTS:= \
 		-DWITH_KML=1 \
 		-DWITH_SOS=1 \
 		-DWITH_WMS=1 \
-		-DWITH_GD=1 \
 		-DWITH_FRIBIDI=1 \
+		-DWITH_HARFBUZZ=1 \
 		-DWITH_ICONV=1 \
 		-DWITH_CAIRO=1 \
 		-DWITH_SVGCAIRO=0 \
@@ -62,18 +63,15 @@ CMAKE_OPTS:= \
 		-DWITH_ORACLESPATIAL=0 \
 		-DWITH_ORACLE_PLUGIN=0 \
 		-DWITH_MSSQL2008=0 \
-		-DWITH_SDE_PLUGIN=0 \
-		-DWITH_SDE=0 \
 		-DWITH_EXEMPI=0 \
-		-DWITH_XMLMAPFILE=0
+		-DWITH_XMLMAPFILE=0 \
+		-DWITH_V8=0 \
+		-DWITH_PIXMAN=1
 
 %:
 	dh $@ --with python2,pkgkde_symbolshelper \
 	      --parallel \
 	      --buildsystem cmake
-
-override_dh_strip:
-	dh_strip --dbg-package=libmapserver1-dbg
 
 override_dh_auto_clean:
 	dh_clean
@@ -159,6 +157,7 @@ override_dh_installexamples:
 	chmod a-x $(CURDIR)/debian/php*-mapscript/usr/share/doc/php*-mapscript/examples/*.phtml
 
 override_dh_install:
+	$(RM) debian/*/usr/lib/*.h
 	dh_install --autodest --list-missing
 
 override_dh_compress:
@@ -175,4 +174,7 @@ override_dh_perl:
 
 override_dh_java:
 	dh_java -plibmapscript-java
+
+override_dh_strip:
+	dh_strip --dbg-package=libmapserver-dbg
 

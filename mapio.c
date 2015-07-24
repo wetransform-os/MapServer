@@ -46,13 +46,14 @@
 
 
 static int is_msIO_initialized = MS_FALSE;
+static int is_msIO_header_enabled = MS_TRUE;
 
 typedef struct msIOContextGroup_t {
   msIOContext stdin_context;
   msIOContext stdout_context;
   msIOContext stderr_context;
 
-  int    thread_id;
+  void*    thread_id;
   struct msIOContextGroup_t *next;
 } msIOContextGroup;
 
@@ -94,7 +95,7 @@ void msIO_Cleanup()
 static msIOContextGroup *msIO_GetContextGroup()
 
 {
-  int nThreadId = msGetThreadId();
+  void* nThreadId = msGetThreadId();
   msIOContextGroup *prev = NULL, *group = io_context_list;
 
   if( group != NULL && group->thread_id == nThreadId )
@@ -148,7 +149,7 @@ static msIOContextGroup *msIO_GetContextGroup()
 /* returns MS_TRUE if the msIO standard output hasn't been redirected */
 int msIO_isStdContext() {
   msIOContextGroup *group = io_context_list;
-  int nThreadId = msGetThreadId();
+  void* nThreadId = msGetThreadId();
   if(!group || group->thread_id != nThreadId) {
     group = msIO_GetContextGroup();
     if(!group) {
@@ -169,7 +170,7 @@ int msIO_isStdContext() {
 msIOContext *msIO_getHandler( FILE * fp )
 
 {
-  int nThreadId = msGetThreadId();
+  void* nThreadId = msGetThreadId();
   msIOContextGroup *group = io_context_list;
 
   msIO_Initialize();
@@ -189,6 +190,19 @@ msIOContext *msIO_getHandler( FILE * fp )
   else
     return NULL;
 }
+
+/************************************************************************/
+/*                      msIO_setHeaderEnabled()                         */
+/************************************************************************/
+
+void msIO_setHeaderEnabled(int bFlag)
+{
+    is_msIO_header_enabled = bFlag;
+}
+
+/************************************************************************/
+/*                           msIO_setHeader()                           */
+/************************************************************************/
 
 void msIO_setHeader (const char *header, const char* value, ...)
 {
@@ -212,9 +226,11 @@ void msIO_setHeader (const char *header, const char* value, ...)
     }
   } else {
 #endif // MOD_WMS_ENABLED
-    msIO_fprintf(stdout,"%s: ",header);
-    msIO_vfprintf(stdout,value,args);
-    msIO_fprintf(stdout,"\r\n");
+   if( is_msIO_header_enabled ) {
+      msIO_fprintf(stdout,"%s: ",header);
+      msIO_vfprintf(stdout,value,args);
+      msIO_fprintf(stdout,"\r\n");
+   }
 #ifdef MOD_WMS_ENABLED
   }
 #endif
@@ -227,8 +243,10 @@ void msIO_sendHeaders ()
   msIOContext *ioctx = msIO_getHandler (stdout);
   if(ioctx && !strcmp(ioctx->label,"apache")) return;
 #endif // !MOD_WMS_ENABLED
-  msIO_printf ("\r\n");
-  fflush (stdout);
+  if( is_msIO_header_enabled ) {
+    msIO_printf ("\r\n");
+    fflush (stdout);
+  }
 }
 
 
@@ -542,79 +560,6 @@ static void msIO_Initialize( void )
   is_msIO_initialized = MS_TRUE;
 }
 
-/* ==================================================================== */
-/* ==================================================================== */
-/*      Stuff related to having a gdIOCtx operate through the msIO      */
-/*      layer.                                                          */
-/* ==================================================================== */
-/* ==================================================================== */
-
-typedef struct {
-#ifdef USE_GD
-  gdIOCtx        gd_io_ctx;
-#endif
-  msIOContext    *ms_io_ctx;
-} msIO_gdIOCtx;
-
-
-#ifdef USE_GD
-/************************************************************************/
-/*                            msIO_gd_putC()                            */
-/*                                                                      */
-/*      A GD IO context callback to put a character, redirected         */
-/*      through the msIO output context.                                */
-/************************************************************************/
-
-static void msIO_gd_putC( gdIOCtx *cbData, int out_char )
-
-{
-  msIO_gdIOCtx *merged_context = (msIO_gdIOCtx *) cbData;
-  char out_char_as_char = (char) out_char;
-
-  msIO_contextWrite( merged_context->ms_io_ctx, &out_char_as_char, 1 );
-}
-
-/************************************************************************/
-/*                           msIO_gd_putBuf()                           */
-/*                                                                      */
-/*      The GD IO context callback to put a buffer of data,             */
-/*      redirected through the msIO output context.                     */
-/************************************************************************/
-
-static int msIO_gd_putBuf( gdIOCtx *cbData, const void *data, int byteCount )
-
-{
-  msIO_gdIOCtx *merged_context = (msIO_gdIOCtx *) cbData;
-
-  return msIO_contextWrite( merged_context->ms_io_ctx, data, byteCount );
-}
-#endif
-
-/************************************************************************/
-/*                          msIO_getGDIOCtx()                           */
-/*                                                                      */
-/*      The returned context should be freed with free() when no        */
-/*      longer needed.                                                  */
-/************************************************************************/
-
-#ifdef USE_GD
-gdIOCtx *msIO_getGDIOCtx( FILE *fp )
-
-{
-  msIO_gdIOCtx *merged_context;
-  msIOContext *context = msIO_getHandler( fp );
-
-  if( context == NULL )
-    return NULL;
-
-  merged_context = (msIO_gdIOCtx *) calloc(1,sizeof(msIO_gdIOCtx));
-  merged_context->gd_io_ctx.putC = msIO_gd_putC;
-  merged_context->gd_io_ctx.putBuf = msIO_gd_putBuf;
-  merged_context->ms_io_ctx = context;
-
-  return (gdIOCtx *) merged_context;
-}
-#endif
 
 /* ==================================================================== */
 /* ==================================================================== */
@@ -739,6 +684,57 @@ void msIO_installStdoutToBuffer()
   msIO_installHandlers( &group->stdin_context,
                         &context,
                         &group->stderr_context );
+}
+
+
+/************************************************************************/
+/*               msIO_pushStdoutToBufferAndGetOldContext()              */
+/*                                                                      */
+/* This function installs a temporary buffer I/O context and returns    */
+/* previously installed stdout handler. This previous stdout handler    */
+/* should later be restored with msIO_restoreOldStdoutContext().        */
+/* This function can be for example used when wanting to ingest into    */
+/* libxml objects XML generated by msIO_fprintf()                       */
+/************************************************************************/
+
+msIOContext* msIO_pushStdoutToBufferAndGetOldContext()
+
+{
+  msIOContextGroup *group = msIO_GetContextGroup();
+  msIOContext *old_context;
+
+  /* Backup current context */
+  old_context = (msIOContext*) msSmallMalloc(sizeof(msIOContext));
+  memcpy(old_context, &group->stdout_context, sizeof(msIOContext));
+
+  msIO_installStdoutToBuffer();
+
+  return old_context;
+}
+
+/************************************************************************/
+/*                    msIO_restoreOldStdoutContext()                    */
+/************************************************************************/
+
+void msIO_restoreOldStdoutContext(msIOContext *context_to_restore)
+{
+  msIOContextGroup *group = msIO_GetContextGroup();
+  msIOContext *prev_context = &group->stdout_context;
+  msIOBuffer* buffer;
+  
+  /* Free memory associated to our temporary context */
+  assert( strcmp(prev_context->label, "buffer") == 0 );
+
+  buffer = (msIOBuffer* )prev_context->cbData;
+  msFree(buffer->data);
+  msFree(buffer);
+
+  /* Restore old context */
+  msIO_installHandlers( &group->stdin_context,
+                        context_to_restore,
+                        &group->stderr_context );
+
+  msFree(context_to_restore);
 }
 
 /************************************************************************/
@@ -938,9 +934,9 @@ int msIO_bufferWrite( void *cbData, void *data, int byteCount )
   msIOBuffer *buf = (msIOBuffer *) cbData;
 
   /*
-  ** Grow buffer if needed.
+  ** Grow buffer if needed (reserve one extra byte to put nul character)
   */
-  if( buf->data_offset + byteCount > buf->data_len ) {
+  if( buf->data_offset + byteCount >= buf->data_len ) {
     buf->data_len = buf->data_len * 2 + byteCount + 100;
     if( buf->data == NULL )
       buf->data = (unsigned char *) malloc(buf->data_len);
@@ -962,6 +958,7 @@ int msIO_bufferWrite( void *cbData, void *data, int byteCount )
 
   memcpy( buf->data + buf->data_offset, data, byteCount );
   buf->data_offset += byteCount;
+  buf->data[buf->data_offset] = '\0';
 
   return byteCount;
 }

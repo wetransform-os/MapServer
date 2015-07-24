@@ -83,13 +83,14 @@ static char *ms_errorCodes[MS_NUMERRORCODES] = {"",
     "AGG library error.",
     "OWS error.",
     "OpenGL renderer error.",
-    "Renderer error."
+    "Renderer error.",
+    "V8 engine error."                                                
                                                };
 #ifndef USE_THREAD
 
 errorObj *msGetErrorObj()
 {
-  static errorObj ms_error = {MS_NOERR, "", "", MS_FALSE, NULL};
+  static errorObj ms_error = {MS_NOERR, "", "", MS_FALSE, 0, NULL};
 
   return &ms_error;
 }
@@ -99,7 +100,7 @@ errorObj *msGetErrorObj()
 
 typedef struct te_info {
   struct te_info *next;
-  int             thread_id;
+  void*             thread_id;
   errorObj        ms_error;
 } te_info_t;
 
@@ -108,7 +109,7 @@ static te_info_t *error_list = NULL;
 errorObj *msGetErrorObj()
 {
   te_info_t *link;
-  int        thread_id;
+  void*        thread_id;
   errorObj   *ret_obj;
 
   msAcquireLock( TLOCK_ERROROBJ );
@@ -195,12 +196,14 @@ static errorObj *msInsertErrorObj(void)
       new_error->isreported = ms_error->isreported;
       strlcpy(new_error->routine, ms_error->routine, sizeof(new_error->routine));
       strlcpy(new_error->message, ms_error->message, sizeof(new_error->message));
+      new_error->errorcount = ms_error->errorcount;
 
       ms_error->next = new_error;
       ms_error->code = MS_NOERR;
       ms_error->isreported = MS_FALSE;
       ms_error->routine[0] = '\0';
       ms_error->message[0] = '\0';
+      ms_error->errorcount = 0;
     }
   }
 
@@ -229,6 +232,7 @@ void msResetErrorList()
   ms_error->code = MS_NOERR;
   ms_error->routine[0] = '\0';
   ms_error->message[0] = '\0';
+  ms_error->errorcount = 0;
 
   /* -------------------------------------------------------------------- */
   /*      Cleanup our entry in the thread list.  This is mainly           */
@@ -236,7 +240,7 @@ void msResetErrorList()
   /* -------------------------------------------------------------------- */
 #ifdef USE_THREAD
   {
-    int  thread_id = msGetThreadId();
+    void*  thread_id = msGetThreadId();
     te_info_t *link;
 
     msAcquireLock( TLOCK_ERROROBJ );
@@ -285,6 +289,18 @@ char *msAddErrorDisplayString(char *source, errorObj *error)
   if((source = msStringConcatenate(source, ms_errorCodes[error->code])) == NULL) return(NULL);
   if((source = msStringConcatenate(source, " ")) == NULL) return(NULL);
   if((source = msStringConcatenate(source, error->message)) == NULL) return(NULL);
+  if (error->errorcount > 0) {
+    char* pszTmp;
+    if((source = msStringConcatenate(source, " (message repeated ")) == NULL) return(NULL);
+    pszTmp = msIntToString(error->errorcount);
+    if((source = msStringConcatenate(source, pszTmp)) == NULL) {
+      msFree(pszTmp);
+      return(NULL);
+    }
+    msFree(pszTmp);
+    if((source = msStringConcatenate(source, " times)")) == NULL) return(NULL);
+  }
+
   return source;
 }
 
@@ -310,24 +326,35 @@ char *msGetErrorString(char *delimiter)
 
 void msSetError(int code, const char *message_fmt, const char *routine, ...)
 {
-  errorObj *ms_error = msInsertErrorObj();
+  errorObj *ms_error;
   va_list args;
-
-  ms_error->code = code;
-
-  if(!routine)
-    strcpy(ms_error->routine, "");
-  else {
-    strlcpy(ms_error->routine, routine, sizeof(ms_error->routine));
-  }
+  char message[MESSAGELENGTH];
 
   if(!message_fmt)
-    strcpy(ms_error->message, "");
+    strcpy(message, "");
   else {
     va_start(args, routine);
-    vsnprintf( ms_error->message, MESSAGELENGTH, message_fmt, args );
+    vsnprintf( message, MESSAGELENGTH, message_fmt, args );
     va_end(args);
   }
+
+  ms_error = msGetErrorObj();
+
+  /* Insert the error to the list if it is not the same as the previous error*/
+  if (ms_error->code != code || !EQUAL(message, ms_error->message) || 
+                     !EQUAL(routine, ms_error->routine)) {
+      ms_error = msInsertErrorObj();
+      if(!routine)
+        strcpy(ms_error->routine, "");
+      else {
+        strlcpy(ms_error->routine, routine, sizeof(ms_error->routine));
+      }
+      strlcpy(ms_error->message, message, sizeof(ms_error->message));
+      ms_error->code = code;
+      ms_error->errorcount = 0;
+  }
+  else
+      ++ms_error->errorcount;
 
   /* Log a copy of errors to MS_ERRORFILE if set (handled automatically inside msDebug()) */
   msDebug("%s: %s %s\n", ms_error->routine, ms_errorCodes[ms_error->code], ms_error->message);
@@ -365,8 +392,6 @@ void msWriteErrorXML(FILE *stream)
 void msWriteErrorImage(mapObj *map, char *filename, int blank)
 {
   imageObj *img;
-  rendererVTableObj *renderer;
-  int font_index = 0;
   int width=400, height=300;
   int nMargin =5;
   int nTextLength = 0;
@@ -378,18 +403,16 @@ void msWriteErrorImage(mapObj *map, char *filename, int blank)
   int nEnd = 0;
   int nLength = 0;
   char **papszLines = NULL;
-  int nXPos = 0;
-  int nYPos = 0;
+  pointObj pnt;
   int nWidthTxt = 0;
   outputFormatObj *format = NULL;
   char *errormsg = msGetErrorString("; ");
   errorObj *error = msGetErrorObj();
-  fontMetrics *font = NULL;
   char *imagepath = NULL, *imageurl = NULL;
-  labelStyleObj ls;
-  colorObj labelcolor, labeloutlinecolor, imagecolor, *imagecolorptr=NULL;
-  ls.color = &labelcolor;
-  ls.outlinecolor = &labeloutlinecolor;
+  colorObj imagecolor, *imagecolorptr=NULL;
+  textSymbolObj ts;
+  labelObj label;
+  int charWidth = 5, charHeight = 8; /* hardcoded, should be looked up from ft face */
   if(!errormsg) {
     errormsg = msStrdup("No error found sorry. This is likely a bug");
   }
@@ -405,7 +428,7 @@ void msWriteErrorImage(mapObj *map, char *filename, int blank)
   }
 
   /* Default to GIF if no suitable GD output format set */
-  if (format == NULL || !MS_RENDERER_PLUGIN(format) || !format->vtable->supports_bitmap_fonts)
+  if (format == NULL || !MS_RENDERER_PLUGIN(format))
     format = msCreateDefaultOutputFormat( NULL, "AGG/PNG8", "png" );
 
   if(!format->transparent) {
@@ -418,65 +441,61 @@ void msWriteErrorImage(mapObj *map, char *filename, int blank)
   }
 
   img = msImageCreate(width,height,format,imagepath,imageurl,MS_DEFAULT_RESOLUTION,MS_DEFAULT_RESOLUTION,imagecolorptr);
-  renderer = MS_IMAGE_RENDERER(img);
 
-  for(i=0; i<5; i++) {
-    /* use the first font we find */
-    if((font = renderer->bitmapFontMetrics[font_index]) != NULL) {
-      ls.size = i;
-      MS_INIT_COLOR(*ls.color,0,0,0,255);
-      MS_INIT_COLOR(*ls.outlinecolor,255,255,255,255);
-      ls.outlinewidth = 1;
-      break;
-    }
-  }
-  /* if no font found we can't do much. this shouldn't happen */
-  if(font) {
+  nTextLength = strlen(errormsg);
+  nWidthTxt  =  nTextLength * charWidth;
+  nUsableWidth = width - (nMargin*2);
 
-    nTextLength = strlen(errormsg);
-    nWidthTxt  =  nTextLength * font->charWidth;
-    nUsableWidth = width - (nMargin*2);
-
-    /* Check to see if it all fits on one line. If not, split the text on several lines. */
-    if(!blank) {
-      if (nWidthTxt > nUsableWidth) {
-        nMaxCharsPerLine =  nUsableWidth/font->charWidth;
-        nLines = (int) ceil ((double)nTextLength / (double)nMaxCharsPerLine);
-        if (nLines > 0) {
-          papszLines = (char **)malloc(nLines*sizeof(char *));
-          for (i=0; i<nLines; i++) {
-            papszLines[i] = (char *)malloc((nMaxCharsPerLine+1)*sizeof(char));
-            papszLines[i][0] = '\0';
-          }
-        }
-        for (i=0; i<nLines; i++) {
-          nStart = i*nMaxCharsPerLine;
-          nEnd = nStart + nMaxCharsPerLine;
-          if (nStart < nTextLength) {
-            if (nEnd > nTextLength)
-              nEnd = nTextLength;
-            nLength = nEnd-nStart;
-
-            strncpy(papszLines[i], errormsg+nStart, nLength);
-            papszLines[i][nLength] = '\0';
-          }
-        }
-      } else {
-        nLines = 1;
+  /* Check to see if it all fits on one line. If not, split the text on several lines. */
+  if(!blank) {
+    if (nWidthTxt > nUsableWidth) {
+      nMaxCharsPerLine =  nUsableWidth/charWidth;
+      nLines = (int) ceil ((double)nTextLength / (double)nMaxCharsPerLine);
+      if (nLines > 0) {
         papszLines = (char **)malloc(nLines*sizeof(char *));
-        papszLines[0] = msStrdup(errormsg);
+        for (i=0; i<nLines; i++) {
+          papszLines[i] = (char *)malloc((nMaxCharsPerLine+1)*sizeof(char));
+          papszLines[i][0] = '\0';
+        }
       }
       for (i=0; i<nLines; i++) {
-        nYPos = (font->charHeight) * ((i*2) +1);
-        nXPos = font->charWidth;;
-        renderer->renderBitmapGlyphs(img, nXPos, nYPos, &ls, papszLines[i]);
-      }
-      if (papszLines) {
-        for (i=0; i<nLines; i++) {
-          free(papszLines[i]);
+        nStart = i*nMaxCharsPerLine;
+        nEnd = nStart + nMaxCharsPerLine;
+        if (nStart < nTextLength) {
+          if (nEnd > nTextLength)
+            nEnd = nTextLength;
+          nLength = nEnd-nStart;
+
+          strncpy(papszLines[i], errormsg+nStart, nLength);
+          papszLines[i][nLength] = '\0';
         }
-        free(papszLines);
       }
+    } else {
+      nLines = 1;
+      papszLines = (char **)malloc(nLines*sizeof(char *));
+      papszLines[0] = msStrdup(errormsg);
+    }
+    initLabel(&label);
+    MS_INIT_COLOR(label.color,0,0,0,255);
+    MS_INIT_COLOR(label.outlinecolor,255,255,255,255);
+    label.outlinewidth = 1;
+
+    label.size = MS_SMALL;
+    MS_REFCNT_INCR((&label));
+    for (i=0; i<nLines; i++) {
+      pnt.y = charHeight * ((i*2) +1);
+      pnt.x = charWidth;
+      initTextSymbol(&ts);
+      msPopulateTextSymbolForLabelAndString(&ts,&label,papszLines[i],1,1,0);
+      if(LIKELY(MS_SUCCESS == msComputeTextPath(map,&ts))) {
+        if(MS_SUCCESS!=msDrawTextSymbol(NULL,img,pnt,&ts)) {
+          /* an error occured, but there's nothing much we can do about it here as we are already handling an error condition */
+        }
+        freeTextSymbol(&ts);
+      }
+    }
+    if (papszLines) {
+      free(papszLines);
     }
   }
 
@@ -505,13 +524,10 @@ char *msGetVersion()
 
   sprintf(version, "MapServer version %s", MS_VERSION);
 
-#ifdef USE_GD_GIF
-  strcat(version, " OUTPUT=GIF");
-#endif
-#if (defined USE_GD_PNG || defined USE_PNG)
+#if (defined USE_PNG)
   strcat(version, " OUTPUT=PNG");
 #endif
-#if (defined USE_GD_JPEG || defined USE_JPEG)
+#if (defined USE_JPEG)
   strcat(version, " OUTPUT=JPEG");
 #endif
 #ifdef USE_KML
@@ -519,9 +535,6 @@ char *msGetVersion()
 #endif
 #ifdef USE_PROJ
   strcat(version, " SUPPORTS=PROJ");
-#endif
-#ifdef USE_GD
-  strcat(version, " SUPPORTS=GD");
 #endif
   strcat(version, " SUPPORTS=AGG");
   strcat(version, " SUPPORTS=FREETYPE");
@@ -577,6 +590,9 @@ char *msGetVersion()
 #endif
 #ifdef USE_POINT_Z_M
   strcat(version, " SUPPORTS=POINT_Z_M");
+#endif
+#ifdef USE_V8_MAPSCRIPT
+  strcat(version, " SUPPORTS=V8");
 #endif
 #ifdef USE_JPEG
   strcat(version, " INPUT=JPEG");

@@ -57,10 +57,6 @@ extern "C" {
   int MS_DLL_EXPORT msIO_fread( void *ptr, size_t size, size_t nmemb, FILE *stream );
   int MS_DLL_EXPORT msIO_vfprintf( FILE *fp, const char *format, va_list ap );
 
-#ifdef USE_GD
-  gdIOCtx MS_DLL_EXPORT *msIO_getGDIOCtx( FILE *fp );
-#endif
-
   /*
   ** Definitions for the callback function and the details of the IO
   ** channel contexts.
@@ -79,6 +75,7 @@ extern "C" {
                                           msIOContext *stdout_context,
                                           msIOContext *stderr_context );
   msIOContext MS_DLL_EXPORT *msIO_getHandler( FILE * );
+  void MS_DLL_EXPORT msIO_setHeaderEnabled(int bFlag);
   void msIO_setHeader (const char *header, const char* value, ...) MS_PRINT_FUNC_FORMAT(2,3);
   void msIO_sendHeaders(void);
 
@@ -108,7 +105,12 @@ extern "C" {
   void MS_DLL_EXPORT msIO_Cleanup(void);
   char MS_DLL_EXPORT *msIO_stripStdoutBufferContentType(void);
   void MS_DLL_EXPORT msIO_stripStdoutBufferContentHeaders(void);
+  
+  msIOContext *msIO_pushStdoutToBufferAndGetOldContext(void);
+  void msIO_restoreOldStdoutContext(msIOContext *context_to_restore);
+
   int MS_DLL_EXPORT msIO_isStdContext(void);
+
 
   /* this is just for setting normal stdout's to binary mode on windows */
 

@@ -6,10 +6,10 @@ BUILDPATH=../../build
 FLEX=flex
 YACC=yacc
 CMAKEFLAGS=-DCMAKE_C_FLAGS="--coverage" -DCMAKE_CXX_FLAGS="--coverage" \
-			  -DCMAKE_SHARED_LINKER_FLAGS="-lgcov" -DWITH_GD=1 -DWITH_CLIENT_WMS=1 \
+			  -DCMAKE_SHARED_LINKER_FLAGS="-lgcov" -DWITH_CLIENT_WMS=1 \
 			  -DWITH_CLIENT_WFS=1 -DWITH_KML=1 -DWITH_SOS=1 -DWITH_PHP=1 \
-			  -DWITH_PYTHON=1 -DWITH_JAVA=1 -DWITH_THREAD_SAFETY=1 -DWITH_FRIBIDI=0 -DWITH_FCGI=0 -DWITH_EXEMPI=1 \
-			  -DCMAKE_BUILD_TYPE=Release -DWITH_RSVG=1 -DWITH_CURL=1
+			  -DWITH_PYTHON=1 -DWITH_JAVA=1 -DWITH_THREAD_SAFETY=1 -DWITH_FRIBIDI=1 -DWITH_FCGI=0 -DWITH_EXEMPI=1 \
+			  -DCMAKE_BUILD_TYPE=Release -DWITH_RSVG=1 -DWITH_CURL=1 -DWITH_HARFBUZZ=1 -DWITH_POINT_Z_M=1
 all: cmakebuild
 
 cmakebuild: lexer parser
@@ -50,14 +50,13 @@ test: autotest-install cmakebuild
 	@$(MAKE) $(MFLAGS)	wxs-testcase renderers-testcase misc-testcase gdal-testcase query-testcase mspython-testcase
 	@./print-test-results.sh
 	@$(MAKE) $(MFLAGS)	php-testcase
-	@$(MAKE) $(MFLAGS)	java-testcase
 
 
 lexer: maplexer.c
 parser: mapparser.c
 
 maplexer.c: maplexer.l
-	$(FLEX) --nounistd -Pmsyy -i -o$(CURDIR)/maplexer.c $(CURDIR)/maplexer.l
+	$(FLEX) --nounistd -Pmsyy -i -o$(CURDIR)/maplexer.c maplexer.l
 
 mapparser.c: mapparser.y
-	$(YACC) -d -o$(CURDIR)/mapparser.c $(CURDIR)/mapparser.y
+	$(YACC) -d -o$(CURDIR)/mapparser.c mapparser.y

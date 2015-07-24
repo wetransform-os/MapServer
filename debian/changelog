@@ -1,3 +1,32 @@
+mapserver (7.0.0-1~exp1) experimental; urgency=medium
+
+  * New upstream release.
+  * Drop patches applied upstream.
+  * Update symbols for amd64.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Fri, 24 Jul 2015 11:44:28 +0200
+
+mapserver (7.0.0~beta2-1~exp1) experimental; urgency=medium
+
+  * Update watch file to use GitHub releases instead of download.osgeo.org.
+  * New upstream beta release.
+  * Update copyright file, changes:
+    - Update Source URL for GitHub
+    - Add license & copyright for new files
+  * Drop transitional packages for libmapscript-ruby.
+  * Drop patches applied upstream, refresh remaining patches.
+  * Update build dependencies:
+    - drop libgd-dev
+    - add libharfbuzz-dev & libpixman-1-dev
+  * Drop SOVERSION from -dbg & -dev package name.
+  * Add libcurl-ssl-dev as alternative for libcurl-gnutls-dev build dependency.
+  * Add patches for typos.
+  * Update symbols for amd64.
+  * Bump SOVERSION to 2 to account for removed symbols,
+    change package names to match new SONAME.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Fri, 10 Jul 2015 15:48:54 +0200
+
 mapserver (6.4.2-2) unstable; urgency=medium
 
   * Update symbols for other architectures.

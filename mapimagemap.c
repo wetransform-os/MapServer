@@ -334,7 +334,7 @@ imageObj *msImageCreateIM(int width, int height, outputFormatObj *format,
 /* ------------------------------------------------------------------------- */
 /* Draw a single marker symbol of the specified size and color               */
 /* ------------------------------------------------------------------------- */
-void msDrawMarkerSymbolIM(symbolSetObj *symbolset, imageObj* img, pointObj *p, styleObj *style, double scalefactor)
+void msDrawMarkerSymbolIM(mapObj *map, imageObj* img, pointObj *p, styleObj *style, double scalefactor)
 {
   symbolObj *symbol;
   int ox, oy;
@@ -349,7 +349,8 @@ void msDrawMarkerSymbolIM(symbolSetObj *symbolset, imageObj* img, pointObj *p, s
   if(!p) return;
 
 
-  symbol = symbolset->symbol[style->symbol];
+  if(style->symbol > map->symbolset.numsymbols || style->symbol < 0) return; /* no such symbol, 0 is OK */
+  symbol = map->symbolset.symbol[style->symbol];
   ox = style->offsetx*scalefactor;
   oy = style->offsety*scalefactor;
   if(style->size == -1) {
@@ -360,7 +361,6 @@ void msDrawMarkerSymbolIM(symbolSetObj *symbolset, imageObj* img, pointObj *p, s
   size = MS_MAX(size, style->minsize*img->resolutionfactor);
   size = MS_MIN(size, style->maxsize*img->resolutionfactor);
 
-  if(style->symbol > symbolset->numsymbols || style->symbol < 0) return; /* no such symbol, 0 is OK */
   if(size < 1) return; /* size too small */
 
   /* DEBUG_IF printf(".%d.%d.%d.", symbol->type, style->symbol, fc); */
@@ -464,7 +464,7 @@ void msDrawMarkerSymbolIM(symbolSetObj *symbolset, imageObj* img, pointObj *p, s
 /* ------------------------------------------------------------------------- */
 /* Draw a line symbol of the specified size and color                        */
 /* ------------------------------------------------------------------------- */
-void msDrawLineSymbolIM(symbolSetObj *symbolset, imageObj* img, shapeObj *p, styleObj *style, double scalefactor)
+void msDrawLineSymbolIM(mapObj *map, imageObj* img, shapeObj *p, styleObj *style, double scalefactor)
 {
   symbolObj *symbol;
   int i,j,l;
@@ -476,7 +476,8 @@ void msDrawLineSymbolIM(symbolSetObj *symbolset, imageObj* img, shapeObj *p, sty
   if(!p) return;
   if(p->numlines <= 0) return;
 
-  symbol = symbolset->symbol[style->symbol];
+  if(style->symbol > map->symbolset.numsymbols || style->symbol < 0) return; /* no such symbol, 0 is OK */
+  symbol = map->symbolset.symbol[style->symbol];
   if(style->size == -1) {
     size = msSymbolGetDefaultSize( symbol );
     size = MS_NINT(size*scalefactor);
@@ -485,7 +486,6 @@ void msDrawLineSymbolIM(symbolSetObj *symbolset, imageObj* img, shapeObj *p, sty
   size = MS_MAX(size, style->minsize*img->resolutionfactor);
   size = MS_MIN(size, style->maxsize*img->resolutionfactor);
 
-  if(style->symbol > symbolset->numsymbols || style->symbol < 0) return; /* no such symbol, 0 is OK */
   if (suppressEmpty && p->numvalues==0) return;/* suppress area with empty title */
   if(style->symbol == 0) { /* just draw a single width line */
     for(l=0,j=0; j<p->numlines; j++) {
@@ -546,7 +546,7 @@ void msDrawLineSymbolIM(symbolSetObj *symbolset, imageObj* img, shapeObj *p, sty
 /* ------------------------------------------------------------------------- */
 /* Draw a shade symbol of the specified size and color                       */
 /* ------------------------------------------------------------------------- */
-void msDrawShadeSymbolIM(symbolSetObj *symbolset, imageObj* img, shapeObj *p, styleObj *style, double scalefactor)
+void msDrawShadeSymbolIM(mapObj *map, imageObj* img, shapeObj *p, styleObj *style, double scalefactor)
 {
   symbolObj *symbol;
   int i,j,l;
@@ -557,7 +557,7 @@ void msDrawShadeSymbolIM(symbolSetObj *symbolset, imageObj* img, shapeObj *p, st
   if(!p) return;
   if(p->numlines <= 0) return;
 
-  symbol = symbolset->symbol[style->symbol];
+  symbol = map->symbolset.symbol[style->symbol];
   if(style->size == -1) {
     size = msSymbolGetDefaultSize( symbol );
     size = MS_NINT(size*scalefactor);
@@ -622,7 +622,7 @@ void msDrawShadeSymbolIM(symbolSetObj *symbolset, imageObj* img, shapeObj *p, st
 /*
  * Simply draws a label based on the label point and the supplied label object.
  */
-int msDrawTextIM(imageObj* img, pointObj labelPnt, char *string, labelObj *label, fontSetObj *fontset, double scalefactor)
+int msDrawTextIM(mapObj *map, imageObj* img, pointObj labelPnt, char *string, labelObj *label, double scalefactor)
 {
   DEBUG_IF printf("msDrawText<BR>\n");
   if(!string) return(0); /* not errors, just don't want to do anything */
