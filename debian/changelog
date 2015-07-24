@@ -1,3 +1,9 @@
+mapserver (7.0.0-1) UNRELEASED; urgency=medium
+
+  * New upstream release.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Fri, 24 Jul 2015 11:26:03 +0200
+
 mapserver (7.0.0~beta2-1~exp1) experimental; urgency=medium
 
   * Update watch file to use GitHub releases instead of download.osgeo.org.
