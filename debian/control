@@ -46,7 +46,7 @@ Build-Depends: debhelper (>= 9),
 Build-Conflicts: libcurl3-openssl-dev
 Standards-Version: 3.9.6
 Vcs-Browser: http://anonscm.debian.org/cgit/pkg-grass/mapserver.git
-Vcs-Git: git://anonscm.debian.org/pkg-grass/mapserver.git -b experimental
+Vcs-Git: git://anonscm.debian.org/pkg-grass/mapserver.git
 Homepage: http://www.mapserver.org
 XS-Ruby-Versions: all
 
