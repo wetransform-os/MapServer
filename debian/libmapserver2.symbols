@@ -557,7 +557,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZNK9mapserver12trans_affine8is_equalERKS0_d@Base 6.2.1
  _ZNK9mapserver12trans_affine8is_validEd@Base 6.2.1
  _ZNK9mapserver12trans_affine8rotationEv@Base 6.2.1
- (arch=armel hurd-i386 i386 kfreebsd-i386 mips mipsel powerpc)_ZNK9mapserver12trans_affine9transformEPdS1_@Base 6.4.1
+ (arch=armel armhf hurd-i386 i386 kfreebsd-i386 mips mipsel powerpc)_ZNK9mapserver12trans_affine9transformEPdS1_@Base 6.4.1
  (optional=templinst)_ZNK9mapserver18rasterizer_sl_clipINS_12ras_conv_intEE11line_clip_yINS_19rasterizer_cells_aaINS_7cell_aaEEEEEvRT_iiiijj@Base 6.2.1
  _ZNK9mapserver25font_engine_freetype_base14write_glyph_toEPh@Base 6.2.1
  _ZNK9mapserver25font_engine_freetype_base8ascenderEv@Base 6.2.1

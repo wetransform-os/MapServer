@@ -561,7 +561,7 @@ int msDrawLineSymbol(mapObj *map, imageObj *image, shapeObj *p,
       rendererVTableObj *renderer = image->format->vtable;
       symbolObj *symbol;
       shapeObj *offsetLine = p;
-      int i,ret=MS_SUCCESS;
+      int i;
       double width;
       double finalscalefactor;
 
