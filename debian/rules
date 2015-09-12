@@ -157,7 +157,6 @@ override_dh_installexamples:
 	chmod a-x $(CURDIR)/debian/php*-mapscript/usr/share/doc/php*-mapscript/examples/*.phtml
 
 override_dh_install:
-	$(RM) debian/*/usr/lib/*.h
 	dh_install --autodest --list-missing
 
 override_dh_compress:
