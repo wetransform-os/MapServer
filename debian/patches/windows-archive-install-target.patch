@@ -1,0 +1,14 @@
+Description: Add ARCHIVE install target for Windows builds.
+Author: Bas Couwenberg <sebastic@debian.org>
+Origin: https://github.com/sebastic/mapserver/commit/f86ccbd000a0672d9e29756db2a57b4d9290c5c3
+
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -976,6 +976,7 @@ INSTALL(TARGETS sortshp shptree shptreev
+ )
+ INSTALL(TARGETS mapserver
+         EXPORT mapserverTargets
++        ARCHIVE DESTINATION ${INSTALL_LIB_DIR} COMPONENT shlib
+         LIBRARY DESTINATION ${INSTALL_LIB_DIR} COMPONENT shlib
+         PUBLIC_HEADER DESTINATION ${INSTALL_INCLUDE_DIR}/mapserver COMPONENT dev
+ )
