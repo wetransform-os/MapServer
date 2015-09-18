@@ -2,6 +2,8 @@ Description: Don't install the headers in /usr/lib too.
  The mapserver target only needs to be installed when BUILD_DYNAMIC is true.
  Also add staticlib component for mapserver_static.
 Author: Bas Couwenberg <sebastic@debian.org>
+Forwarded: https://github.com/mapserver/mapserver/pull/5166
+Applied-Upstream: https://github.com/mapserver/mapserver/commit/3c10ad17cbd04998edf779c92f3be04a9bc3b460
 
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
