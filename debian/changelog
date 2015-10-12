@@ -3,6 +3,8 @@ mapserver (7.0.0-5) UNRELEASED; urgency=medium
   * Add patch to add ARCHIVE install target for Windows builds.
   * Add patch to install mapserver target only once.
   * Add patch to not export the mapserver target for static builds.
+  * Disable experimental pixman support.
+    (closes: #801573)
 
  -- Bas Couwenberg <sebastic@debian.org>  Sat, 12 Sep 2015 16:09:34 +0200
 
