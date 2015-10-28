@@ -1,3 +1,10 @@
+mapserver (7.0.0-6) UNRELEASED; urgency=medium
+
+  * Add upstream patch for giflib 5.1 support.
+    (closes: #803299)
+
+ -- Bas Couwenberg <sebastic@debian.org>  Wed, 28 Oct 2015 22:05:37 +0100
+
 mapserver (7.0.0-5) unstable; urgency=medium
 
   * Add patch to add ARCHIVE install target for Windows builds.

@@ -1,0 +1,36 @@
+From 3e76491eafeb3f4d573f40fe7699656347882393 Mon Sep 17 00:00:00 2001
+From: Sander Jansen <s.jansen@gmail.com>
+Date: Wed, 19 Aug 2015 16:51:13 -0500
+Subject: Fix compilation with gif_lib 5.1
+Origin: https://github.com/mapserver/mapserver/commit/3e76491eafeb3f4d573f40fe7699656347882393
+Bug: https://github.com/mapserver/mapserver/pull/5144
+Bug-Debian: https://bugs.debian.org/803299
+
+---
+ mapimageio.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+--- a/mapimageio.c
++++ b/mapimageio.c
+@@ -1058,6 +1058,13 @@ int readGIF(char *path, rasterBufferObj
+ 
+   } while (recordType != TERMINATE_RECORD_TYPE);
+ 
++
++#if defined GIFLIB_MAJOR && GIFLIB_MINOR && ((GIFLIB_MAJOR == 5 && GIFLIB_MINOR >= 1) || (GIFLIB_MAJOR > 5))
++  if (DGifCloseFile(image, &errcode) == GIF_ERROR) {
++    msSetError(MS_MISCERR,"failed to close gif after loading: %s","readGIF()", gif_error_msg(errcode));
++    return MS_FAILURE;
++  }
++#else
+   if (DGifCloseFile(image) == GIF_ERROR) {
+ #if defined GIFLIB_MAJOR && GIFLIB_MAJOR >= 5
+     msSetError(MS_MISCERR,"failed to close gif after loading: %s","readGIF()", gif_error_msg(image->Error));
+@@ -1066,6 +1073,7 @@ int readGIF(char *path, rasterBufferObj
+ #endif
+     return MS_FAILURE;
+   }
++#endif
+ 
+   return MS_SUCCESS;
+ }
