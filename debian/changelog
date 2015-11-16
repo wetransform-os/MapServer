@@ -1,8 +1,9 @@
-mapserver (7.0.0-7) UNRELEASED; urgency=medium
+mapserver (7.0.0-7) unstable; urgency=medium
 
   * Add patch to fix build with newer SWIG versions.
+  * Rebuild for ruby2.2 transition.
 
- -- Bas Couwenberg <sebastic@debian.org>  Mon, 16 Nov 2015 23:06:04 +0100
+ -- Bas Couwenberg <sebastic@debian.org>  Mon, 16 Nov 2015 23:25:23 +0100
 
 mapserver (7.0.0-6) unstable; urgency=medium
 
