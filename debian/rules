@@ -154,7 +154,7 @@ override_dh_installchangelogs:
 override_dh_installexamples:
 	dh_installexamples
 
-	chmod a-x $(CURDIR)/debian/php*-mapscript/usr/share/doc/php*-mapscript/examples/*.phtml
+	-chmod a-x $(CURDIR)/debian/php*-mapscript/usr/share/doc/php*-mapscript/examples/*.phtml
 
 override_dh_install:
 	dh_install --autodest --list-missing

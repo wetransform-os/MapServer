@@ -1,3 +1,10 @@
+mapserver (7.0.0-8) UNRELEASED; urgency=medium
+
+  * Don't fail the build when the examples are not installed.
+    (closes: #806074)
+
+ -- Bas Couwenberg <sebastic@debian.org>  Tue, 24 Nov 2015 21:23:46 +0100
+
 mapserver (7.0.0-7) unstable; urgency=medium
 
   * Add patch to fix build with newer SWIG versions.
