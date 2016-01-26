@@ -9,3 +9,4 @@ dont-export-mapserver-target-for-static-libmapserver.patch
 0001-Fix-compilation-with-gif_lib-5.1.patch
 0001-Fix-java-mapscript-to-be-compatible-with-newer-swig.patch
 fix-types.patch
+should-typo.patch

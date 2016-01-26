@@ -3,6 +3,7 @@ mapserver (7.0.0-9) UNRELEASED; urgency=medium
   * Update Vcs-Git URL to use HTTPS.
   * Add patch by Michael Tautschnig to fix type inconsistencies.
     (closes: #812685)
+  * Add patch to fix 'should' typo.
 
  -- Bas Couwenberg <sebastic@debian.org>  Tue, 26 Jan 2016 07:28:39 +0100
 
