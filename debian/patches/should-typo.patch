@@ -1,6 +1,7 @@
 Description: Fix 'shoud' typo, replace with 'should'.
 Author: Bas Couwenberg <sebastic@debian.org>
 Forwarded: https://github.com/mapserver/mapserver/pull/5228
+Applied-Upstream: https://github.com/mapserver/mapserver/commit/84c9d79a3d70c449d96689a10eb3ab6e13c2e769
 
 --- a/mapproject.c
 +++ b/mapproject.c
