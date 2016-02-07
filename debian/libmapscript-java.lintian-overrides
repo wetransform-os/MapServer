@@ -1,2 +1,2 @@
 # The module is only built for the default JRE
-libmapscript-java: incompatible-java-bytecode-format Java7 version (Class format: 51)
+libmapscript-java: incompatible-java-bytecode-format Java* version (Class format: *)
