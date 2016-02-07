@@ -1,6 +1,7 @@
 mapserver (7.0.0-10) UNRELEASED; urgency=medium
 
   * Update lintian override for OpenJDK 8 as default JDK.
+  * Bump Standards-Version to 3.9.7, no changes.
 
  -- Bas Couwenberg <sebastic@debian.org>  Sun, 07 Feb 2016 01:50:23 +0100
 
