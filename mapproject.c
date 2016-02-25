@@ -46,7 +46,7 @@ static int msTestNeedWrap( pointObj pt1, pointObj pt2, pointObj pt2_geo,
 
 /************************************************************************/
 /*                           int msIsAxisInverted                       */
-/*      Check to see if we shoud invert the axis.                       */
+/*      Check to see if we should invert the axis.                       */
 /*                                                                      */
 /************************************************************************/
 int msIsAxisInverted(int epsg_code)
@@ -1029,6 +1029,10 @@ static projectionObj* msGetProjectNormalized( const projectionObj* p )
               msFree(pnew->args[i]);
               memmove(pnew->args + i, pnew->args + i + 1,
                       sizeof(char*) * (pnew->numargs - 1 -i ));
+          }
+          else 
+          {
+              msFree(pnew->args[i]);
           }
           pnew->numargs --;
           i --;

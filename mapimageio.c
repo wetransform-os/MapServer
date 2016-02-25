@@ -210,7 +210,7 @@ int saveAsJPEG(mapObj *map, rasterBufferObj *rb, streamInfo *info,
       /* If the user doesn't provide a value for JPEGMEM, we want to be sure */
       /* that at least the image size will be used before creating the temporary file */
       cinfo.mem->max_memory_to_use =
-        MAX(cinfo.mem->max_memory_to_use, cinfo.input_components * rb->width * rb->height);
+        MS_MAX(cinfo.mem->max_memory_to_use, cinfo.input_components * rb->width * rb->height);
     }
   }
 
@@ -391,11 +391,13 @@ int readPalette(const char *palette, rgbaPixel *entries, unsigned int *nEntries,
       continue; /* skip comments and blank lines */
     if(!useAlpha) {
       if(3 != sscanf(buffer,"%d,%d,%d\n",&r,&g,&b)) {
+        fclose(stream);
         msSetError(MS_MISCERR,"failed to parse color %d r,g,b triplet in line \"%s\" from file %s","readPalette()",*nEntries+1,buffer,palette);
         return MS_FAILURE;
       }
     } else {
       if(4 != sscanf(buffer,"%d,%d,%d,%d\n",&r,&g,&b,&a)) {
+        fclose(stream);
         msSetError(MS_MISCERR,"failed to parse color %d r,g,b,a quadruplet in line \"%s\" from file %s","readPalette()",*nEntries+1,buffer,palette);
         return MS_FAILURE;
       }
@@ -1058,6 +1060,13 @@ int readGIF(char *path, rasterBufferObj *rb)
 
   } while (recordType != TERMINATE_RECORD_TYPE);
 
+
+#if defined GIFLIB_MAJOR && GIFLIB_MINOR && ((GIFLIB_MAJOR == 5 && GIFLIB_MINOR >= 1) || (GIFLIB_MAJOR > 5))
+  if (DGifCloseFile(image, &errcode) == GIF_ERROR) {
+    msSetError(MS_MISCERR,"failed to close gif after loading: %s","readGIF()", gif_error_msg(errcode));
+    return MS_FAILURE;
+  }
+#else
   if (DGifCloseFile(image) == GIF_ERROR) {
 #if defined GIFLIB_MAJOR && GIFLIB_MAJOR >= 5
     msSetError(MS_MISCERR,"failed to close gif after loading: %s","readGIF()", gif_error_msg(image->Error));
@@ -1066,6 +1075,7 @@ int readGIF(char *path, rasterBufferObj *rb)
 #endif
     return MS_FAILURE;
   }
+#endif
 
   return MS_SUCCESS;
 }
@@ -1082,6 +1092,7 @@ int msLoadMSRasterBufferFromFile(char *path, rasterBufferObj *rb)
     return MS_FAILURE;
   }
   if(1 != fread(signature,8,1,stream)) {
+    fclose(stream);
     msSetError(MS_MISCERR, "Unable to read header from image file %s", "msLoadMSRasterBufferFromFile()",path);
     return MS_FAILURE;
   }

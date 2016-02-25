@@ -669,6 +669,12 @@ int msDrawLayer(mapObj *map, layerObj *layer, imageObj *image)
      layer->project true to recheck projection needs (Bug #673) */
   layer->project = MS_TRUE;
 
+  /* make sure labelcache setting is set correctly if postlabelcache is set. This is done by the parser but
+     may have been altered by a mapscript. see #5142 */
+  if(layer->postlabelcache) {
+    layer->labelcache = MS_FALSE;
+  }
+
   if(layer->mask) {
     int maskLayerIdx;
     /* render the mask layer in its own imageObj */
@@ -916,11 +922,15 @@ int msDrawVectorLayer(mapObj *map, layerObj *layer, imageObj *image)
   if(status != MS_SUCCESS) return MS_FAILURE;
 
   /* build item list. STYLEITEM javascript needs the shape attributes */
-  if (layer->styleitem &&
-     (strncasecmp(layer->styleitem, "javascript://", 13) == 0)) {  
+  if (layer->styleitem && (strncasecmp(layer->styleitem, "javascript://", 13) == 0)) {  
     status = msLayerWhichItems(layer, MS_TRUE, NULL);
   } else {
     status = msLayerWhichItems(layer, MS_FALSE, NULL);
+  }
+
+  if(status != MS_SUCCESS) {
+    msLayerClose(layer);
+    return MS_FAILURE;
   }
 
   /* identify target shapes */
@@ -973,6 +983,7 @@ int msDrawVectorLayer(mapObj *map, layerObj *layer, imageObj *image)
     }
 
     if(maxfeatures >=0 && featuresdrawn >= maxfeatures) {
+      msFreeShape(&shape);
       status = MS_DONE;
       break;
     }
@@ -995,12 +1006,14 @@ int msDrawVectorLayer(mapObj *map, layerObj *layer, imageObj *image)
       if(strcasecmp(layer->styleitem, "AUTO") == 0) {
         if(msLayerGetAutoStyle(map, layer, layer->class[shape.classindex], &shape) != MS_SUCCESS) {
           retcode = MS_FAILURE;
+          msFreeShape(&shape);
           break;
         }
       } else {
         /* Generic feature style handling as per RFC-61 */
         if(msLayerGetFeatureStyle(map, layer, layer->class[shape.classindex], &shape) != MS_SUCCESS) {
           retcode = MS_FAILURE;
+          msFreeShape(&shape);
           break;
         }
       }
@@ -1060,6 +1073,7 @@ int msDrawVectorLayer(mapObj *map, layerObj *layer, imageObj *image)
 
     if(cache) {
       if(insertFeatureList(&shpcache, &shape) == NULL) {
+        msFreeShape(&shape);
         retcode = MS_FAILURE; /* problem adding to the cache */
         break;
       }
@@ -2039,7 +2053,7 @@ int msDrawPoint(mapObj *map, layerObj *layer, pointObj *point, imageObj *image, 
             return MS_FAILURE;
           }
       }
-      if(labeltext) {
+      if(labeltext && *labeltext) {
         textSymbolObj *ts = msSmallMalloc(sizeof(textSymbolObj));
         initTextSymbol(ts);
         msPopulateTextSymbolForLabelAndString(ts, label, msStrdup(labeltext), layer->scalefactor, image->resolutionfactor, layer->labelcache);
@@ -2048,6 +2062,11 @@ int msDrawPoint(mapObj *map, layerObj *layer, pointObj *point, imageObj *image, 
             return(MS_FAILURE);
           }
         } else {
+          if(UNLIKELY(MS_FAILURE == msComputeTextPath(map,ts))) {
+            freeTextSymbol(ts);
+            free(ts);
+            return MS_FAILURE;
+          }
           ret = msDrawTextSymbol(map,image,*point,ts);
           freeTextSymbol(ts);
           free(ts); 
@@ -2074,13 +2093,19 @@ int msDrawLabel(mapObj *map, imageObj *image, pointObj labelPnt, char *string, l
   textSymbolObj ts;
   int needLabelPoly=MS_TRUE;
   int needLabelPoint=MS_TRUE;
+  int haveLabelText=MS_TRUE;
 
-  
-  initTextSymbol(&ts);
-  msPopulateTextSymbolForLabelAndString(&ts, label, string, scalefactor, image->resolutionfactor, 0);
-  if(UNLIKELY(MS_FAILURE == msComputeTextPath(map,&ts))) {
-    freeTextSymbol(&ts);
-    return MS_FAILURE;
+
+  if(!string || !*string)
+    haveLabelText = MS_FALSE;
+
+  if(haveLabelText) {
+    initTextSymbol(&ts);
+    msPopulateTextSymbolForLabelAndString(&ts, label, string, scalefactor, image->resolutionfactor, 0);
+    if(UNLIKELY(MS_FAILURE == msComputeTextPath(map,&ts))) {
+      freeTextSymbol(&ts);
+      return MS_FAILURE;
+    }
   }
 
   labelPoly.line = &labelPolyLine; /* setup the label polygon structure */
@@ -2096,12 +2121,14 @@ int msDrawLabel(mapObj *map, imageObj *image, pointObj labelPnt, char *string, l
       int i;
 
       for(i=0; i<label->numstyles; i++) {
-        if(label->styles[i]->_geomtransform.type == MS_GEOMTRANSFORM_LABELPOINT) {
+        if(label->styles[i]->_geomtransform.type == MS_GEOMTRANSFORM_LABELPOINT
+           || label->styles[i]->_geomtransform.type == MS_GEOMTRANSFORM_NONE) {
           if(UNLIKELY(MS_FAILURE == msDrawMarkerSymbol(map, image, &labelPnt, label->styles[i], scalefactor))) {
-            freeTextSymbol(&ts);
+            if(haveLabelText)
+              freeTextSymbol(&ts);
             return MS_FAILURE;
           }
-        } else if(label->styles[i]->_geomtransform.type == MS_GEOMTRANSFORM_LABELPOLY) {
+        } else if(haveLabelText && label->styles[i]->_geomtransform.type == MS_GEOMTRANSFORM_LABELPOLY) {
           if(needLabelPoly) {
             p = get_metrics(&labelPnt, label->position, ts.textpath, label->offsetx * ts.scalefactor,
                     label->offsety * ts.scalefactor, ts.rotation, 1, &lbounds);
@@ -2125,20 +2152,23 @@ int msDrawLabel(mapObj *map, imageObj *image, pointObj labelPnt, char *string, l
           }
         } else {
           msSetError(MS_MISCERR,"Unknown label geomtransform %s", "msDrawLabel()",label->styles[i]->_geomtransform.string);
-          freeTextSymbol(&ts);
+          if(haveLabelText)
+            freeTextSymbol(&ts);
           return MS_FAILURE;
         }
       }
     }
 
-    if(needLabelPoint)
-      p = get_metrics(&labelPnt, label->position, ts.textpath, label->offsetx * ts.scalefactor,
-              label->offsety * ts.scalefactor, ts.rotation, 0, &lbounds);
+    if(haveLabelText) {
+      if(needLabelPoint)
+        p = get_metrics(&labelPnt, label->position, ts.textpath, label->offsetx * ts.scalefactor,
+                        label->offsety * ts.scalefactor, ts.rotation, 0, &lbounds);
 
-    /* draw the label text */
-    if(UNLIKELY(MS_FAILURE == msDrawTextSymbol(map,image,p,&ts))) {
-      freeTextSymbol(&ts);
-      return MS_FAILURE;
+      /* draw the label text */
+      if(UNLIKELY(MS_FAILURE == msDrawTextSymbol(map,image,p,&ts))) {
+        freeTextSymbol(&ts);
+        return MS_FAILURE;
+      }
     }
   } else {
     labelPnt.x += label->offsetx * ts.scalefactor;
@@ -2148,12 +2178,13 @@ int msDrawLabel(mapObj *map, imageObj *image, pointObj labelPnt, char *string, l
       int i;
 
       for(i=0; i<label->numstyles; i++) {
-        if(label->styles[i]->_geomtransform.type == MS_GEOMTRANSFORM_LABELPOINT) {
+        if(label->styles[i]->_geomtransform.type == MS_GEOMTRANSFORM_LABELPOINT ||
+           label->styles[i]->_geomtransform.type == MS_GEOMTRANSFORM_NONE) {
           if(UNLIKELY(MS_FAILURE == msDrawMarkerSymbol(map, image, &labelPnt, label->styles[i], scalefactor))) {
             freeTextSymbol(&ts);
             return MS_FAILURE;
           }
-        } else if(label->styles[i]->_geomtransform.type == MS_GEOMTRANSFORM_LABELPOLY) {
+        } else if(haveLabelText && label->styles[i]->_geomtransform.type == MS_GEOMTRANSFORM_LABELPOLY) {
           if(needLabelPoly) {
             get_metrics(&labelPnt, label->position, ts.textpath, label->offsetx * ts.scalefactor,
                     label->offsety * ts.scalefactor, ts.rotation, 1, &lbounds);
@@ -2176,19 +2207,23 @@ int msDrawLabel(mapObj *map, imageObj *image, pointObj labelPnt, char *string, l
           }
         } else {
           msSetError(MS_MISCERR,"Unknown label geomtransform %s", "msDrawLabel()",label->styles[i]->_geomtransform.string);
-          freeTextSymbol(&ts);
+          if(haveLabelText)
+            freeTextSymbol(&ts);
           return MS_FAILURE;
         }
       }
     }
 
-    /* draw the label text */
-    if(UNLIKELY(MS_FAILURE == msDrawTextSymbol(map,image,labelPnt,&ts))) {
-      freeTextSymbol(&ts);
-      return MS_FAILURE;
+    if(haveLabelText) {
+      /* draw the label text */
+      if(UNLIKELY(MS_FAILURE == msDrawTextSymbol(map,image,labelPnt,&ts))) {
+        freeTextSymbol(&ts);
+        return MS_FAILURE;
+      }
     }
   }
-  freeTextSymbol(&ts);
+  if(haveLabelText)
+    freeTextSymbol(&ts);
 
   return MS_SUCCESS;
 }
