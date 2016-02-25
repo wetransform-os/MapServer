@@ -8,6 +8,7 @@ mapserver (7.0.1-1) UNRELEASED; urgency=medium
   * Drop patches applied upstream.
   * Don't install documentation no longer included upstream.
   * Update symbols for amd64.
+  * Add dependency on php5-common to php5-mapscript for php5enmod.
 
  -- Bas Couwenberg <sebastic@debian.org>  Thu, 25 Feb 2016 21:05:55 +0100
 

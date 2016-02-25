@@ -171,7 +171,8 @@ Description: documentation for MapServer
 Package: php5-mapscript
 Architecture: any
 Section: php
-Depends: ${shlibs:Depends},
+Depends: php5-common,
+         ${shlibs:Depends},
          ${misc:Depends}
 Suggests: mapserver-bin,
           mapserver-doc
