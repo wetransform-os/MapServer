@@ -1,4 +1,4 @@
-# SymbolsHelper-Confirmed: 7.0.0 amd64 arm64 armel armhf hppa i386 kfreebsd-amd64 kfreebsd-i386 mips mipsel powerpc ppc64 ppc64el s390x x32
+# SymbolsHelper-Confirmed: 7.0.1 amd64
 libmapserver.so.2 #PACKAGE# #MINVER#
  BuildExpressionTree@Base 6.2.1
  CleanVSIDir@Base 6.2.1
@@ -479,7 +479,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  (optional=templinst|arch=amd64)_ZN9mapserver19comp_op_rgba_src_inINS_5rgba8ENS_10order_bgraEE9blend_pixEPhjjjjj@Base 7.0.0
  (optional=templinst)_ZN9mapserver19rasterizer_cells_aaINS_7cell_aaEE10sort_cellsEv@Base 7.0.0
  (optional=templinst)_ZN9mapserver19rasterizer_cells_aaINS_7cell_aaEE12render_hlineEiiiii@Base 6.2.1
- (optional=templinst)_ZN9mapserver19rasterizer_cells_aaINS_7cell_aaEE13add_curr_cellEv@Base 7.0.0
+#MISSING: 7.0.1# (optional=templinst)_ZN9mapserver19rasterizer_cells_aaINS_7cell_aaEE13add_curr_cellEv@Base 7.0.0
  (optional=templinst)_ZN9mapserver19rasterizer_cells_aaINS_7cell_aaEE14allocate_blockEv@Base 6.4.0
  (optional=templinst)_ZN9mapserver19rasterizer_cells_aaINS_7cell_aaEE4lineEiiii@Base 6.2.1
  (optional=templinst)_ZN9mapserver19rasterizer_cells_aaINS_7cell_aaEED1Ev@Base 6.2.1
@@ -546,9 +546,9 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZN9mapserver3arc9normalizeEddb@Base 6.2.1
  _ZN9mapserver3arcC1Eddddddb@Base 6.2.1
  _ZN9mapserver3arcC2Eddddddb@Base 6.2.1
- (arch=!ppc64el !s390x)_ZN9mapserver5rgba811premultiplyEv@Base 7.0.0
- _ZN9mapserver6curve36vertexEPdS1_@Base 7.0.0
- _ZN9mapserver6curve46vertexEPdS1_@Base 7.0.0
+#MISSING: 7.0.1# (arch=!ppc64el !s390x)_ZN9mapserver5rgba811premultiplyEv@Base 7.0.0
+#MISSING: 7.0.1# _ZN9mapserver6curve36vertexEPdS1_@Base 7.0.0
+#MISSING: 7.0.1# _ZN9mapserver6curve46vertexEPdS1_@Base 7.0.0
  _ZN9mapserver6gse4x6E@Base 6.2.1
  _ZN9mapserver6gse4x8E@Base 6.2.1
  _ZN9mapserver6gse5x7E@Base 6.2.1
@@ -631,7 +631,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZTI12line_adaptor@Base 6.2.1
  _ZTI15polygon_adaptor@Base 6.2.1
  _ZTI16line_adaptor_utf@Base 7.0.0
- _ZTI19polygon_adaptor_utf@Base 7.0.0
+#MISSING: 7.0.1# _ZTI19polygon_adaptor_utf@Base 7.0.0
  _ZTIN10ClipperLib11ClipperBaseE@Base 6.2.1
  _ZTIN10ClipperLib16clipperExceptionE@Base 6.2.1
  _ZTIN10ClipperLib7ClipperE@Base 6.2.1
@@ -639,7 +639,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZTS12line_adaptor@Base 6.2.1
  _ZTS15polygon_adaptor@Base 6.2.1
  _ZTS16line_adaptor_utf@Base 7.0.0
- _ZTS19polygon_adaptor_utf@Base 7.0.0
+#MISSING: 7.0.1# _ZTS19polygon_adaptor_utf@Base 7.0.0
  _ZTSN10ClipperLib11ClipperBaseE@Base 6.2.1
  _ZTSN10ClipperLib16clipperExceptionE@Base 6.2.1
  _ZTSN10ClipperLib7ClipperE@Base 6.2.1
@@ -648,7 +648,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZTV12line_adaptor@Base 6.2.1
  _ZTV15polygon_adaptor@Base 6.2.1
  _ZTV16line_adaptor_utf@Base 7.0.0
- _ZTV19polygon_adaptor_utf@Base 7.0.0
+#MISSING: 7.0.1# _ZTV19polygon_adaptor_utf@Base 7.0.0
  _ZTVN10ClipperLib11ClipperBaseE@Base 6.2.1
  _ZTVN10ClipperLib16clipperExceptionE@Base 6.2.1
  _ZTVN10ClipperLib7ClipperE@Base 6.2.1

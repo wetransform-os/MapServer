@@ -7,6 +7,7 @@ mapserver (7.0.1-1) UNRELEASED; urgency=medium
     GitHub releases include msautotest which contains non-free CITE tests.
   * Drop patches applied upstream.
   * Don't install documentation no longer included upstream.
+  * Update symbols for amd64.
 
  -- Bas Couwenberg <sebastic@debian.org>  Thu, 25 Feb 2016 21:05:55 +0100
 
