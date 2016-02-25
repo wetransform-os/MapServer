@@ -5,6 +5,7 @@ mapserver (7.0.1-1) UNRELEASED; urgency=medium
   * Bump Standards-Version to 3.9.7, no changes.
   * Update watch file to use download.osgeo.org.
     GitHub releases include msautotest which contains non-free CITE tests.
+  * Drop patches applied upstream.
 
  -- Bas Couwenberg <sebastic@debian.org>  Thu, 25 Feb 2016 21:05:55 +0100
 

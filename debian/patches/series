@@ -1,12 +1,4 @@
 hardening.patch
 perl-mapscript-install.patch
 ruby-mapscript-install.patch
-cmake-mapserver-export.patch
 java-hardening.patch
-windows-archive-install-target.patch
-dont-install-headers-in-usr-lib.patch
-dont-export-mapserver-target-for-static-libmapserver.patch
-0001-Fix-compilation-with-gif_lib-5.1.patch
-0001-Fix-java-mapscript-to-be-compatible-with-newer-swig.patch
-fix-types.patch
-should-typo.patch
