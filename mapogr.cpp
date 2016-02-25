@@ -901,6 +901,14 @@ static char **msOGRGetValues(layerObj *layer, OGRFeatureH hFeature)
           msDebug(MSOGR_SYMBOLPARAMNAME " = \"%s\"\n", values[i]);
       }
       else {
+        msFreeCharArray(values,i);
+
+        OGR_SM_Destroy(hStyleMgr);
+        OGR_ST_Destroy(hLabelStyle);
+        OGR_ST_Destroy(hPenStyle);
+        OGR_ST_Destroy(hBrushStyle);
+        OGR_ST_Destroy(hSymbolStyle);
+
         msSetError(MS_OGRERR,"Invalid field index!?!","msOGRGetValues()");
         return(NULL);
       }
@@ -1310,6 +1318,7 @@ static int msOGRFileClose(layerObj *layer, msOGRFileInfo *psInfo )
 
   return MS_SUCCESS;
 }
+#endif /* USE_OGR */
 
 /************************************************************************/
 /*                           msOGREscapeSQLParam                        */
@@ -1337,6 +1346,9 @@ static char *msOGREscapeSQLParam(layerObj *layer, const char *pszString)
 #endif /* USE_OGR */
 }
 
+#ifdef USE_OGR
+
+#if 0 /*left over code from filter translation development */
 /**********************************************************************
  *                     msOGRTranslateMsExpressionToOGRSQL()
  *
@@ -1484,7 +1496,7 @@ cleanup:
   msFree(msSQLExpression);
   return NULL;
 }
-
+#endif //0
 
 /**********************************************************************
  *                     msOGRFileWhichShapes()
@@ -1704,6 +1716,14 @@ msOGRPassThroughFieldDefinitions( layerObj *layer, msOGRFileInfo *psInfo )
           sprintf( gml_width, "%d", OGR_Fld_GetWidth( hField) );
         break;
 
+#if GDAL_VERSION_MAJOR >= 2
+      case OFTInteger64:
+        gml_type = "Long";
+        if( OGR_Fld_GetWidth( hField) > 0 )
+          sprintf( gml_width, "%d", OGR_Fld_GetWidth( hField) );
+        break;
+#endif
+
       case OFTReal:
         gml_type = "Real";
         if( OGR_Fld_GetWidth( hField) > 0 )
@@ -1887,8 +1907,8 @@ msOGRFileNextShape(layerObj *layer, shapeObj *shape,
         break; // Shape is ready to be returned!
 
       if (layer->debug >= MS_DEBUGLEVEL_VVV)
-        msDebug("msOGRFileNextShape: Rejecting feature (shapeid = %ld, tileid=%d) of incompatible type for this layer (feature wkbType %d, layer type %d)\n",
-                OGR_F_GetFID( hFeature ), psInfo->nTileId,
+        msDebug("msOGRFileNextShape: Rejecting feature (shapeid = " CPL_FRMT_GIB ", tileid=%d) of incompatible type for this layer (feature wkbType %d, layer type %d)\n",
+                (GIntBig)OGR_F_GetFID( hFeature ), psInfo->nTileId,
                 OGR_F_GetGeometryRef( hFeature )==NULL ? wkbFlatten(wkbUnknown):wkbFlatten( OGR_G_GetGeometryType( OGR_F_GetGeometryRef( hFeature ) ) ),
                 layer->type);
 
@@ -1904,7 +1924,7 @@ msOGRFileNextShape(layerObj *layer, shapeObj *shape,
     shape->type = MS_SHAPE_NULL;
   }
 
-  shape->index =  OGR_F_GetFID( hFeature );;
+  shape->index =  (int)OGR_F_GetFID( hFeature ); // FIXME? GetFID() is a 64bit integer in GDAL 2.0
   shape->resultindex = psInfo->last_record_index_read;
   shape->tileindex = psInfo->nTileId;
 
@@ -2019,7 +2039,7 @@ msOGRFileGetShape(layerObj *layer, shapeObj *shape, long record,
     shape->index = record;
     shape->resultindex = -1;
   } else {
-    shape->index = OGR_F_GetFID( hFeature );
+    shape->index = (int)OGR_F_GetFID( hFeature ); // FIXME? GetFID() is a 64bit integer in GDAL 2.0
     shape->resultindex = record;
   }
 
@@ -2101,7 +2121,7 @@ NextFile:
   connection = msStrdup( OGR_F_GetFieldAsString( hFeature,
                          layer->tileitemindex ));
 
-  nFeatureId = OGR_F_GetFID( hFeature );
+  nFeatureId = (int)OGR_F_GetFID( hFeature ); // FIXME? GetFID() is a 64bit integer in GDAL 2.0
 
   OGR_F_Destroy( hFeature );
 
