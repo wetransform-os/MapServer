@@ -7,8 +7,4 @@ set -e
 
 #DEBHELPER#
 
-if [ "$1" = "configure" ]; then
-	php5enmod mapscript
-fi
-
 exit 0
