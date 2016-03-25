@@ -1,0 +1,2 @@
+# PIE breaks the build
+cgi-mapserver: hardening-no-pie *
