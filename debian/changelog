@@ -1,6 +1,7 @@
 mapserver (7.0.1-3) UNRELEASED; urgency=medium
 
   * Disable PHP mapscript, extension doesn't support PHP 7 yet.
+  * Update symbols for ppc64.
 
  -- Bas Couwenberg <sebastic@debian.org>  Sun, 20 Mar 2016 19:41:17 +0100
 

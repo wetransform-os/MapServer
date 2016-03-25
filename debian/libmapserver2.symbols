@@ -1,4 +1,4 @@
-# SymbolsHelper-Confirmed: 7.0.1 alpha amd64 arm64 armel armhf hppa hurd-i386 i386 kfreebsd-amd64 kfreebsd-i386 mips64el mipsel powerpc ppc64el s390x sparc64 x32
+# SymbolsHelper-Confirmed: 7.0.1 alpha amd64 arm64 armel armhf hppa hurd-i386 i386 kfreebsd-amd64 kfreebsd-i386 mips64el mipsel powerpc ppc64 ppc64el s390x sparc64 x32
 libmapserver.so.2 #PACKAGE# #MINVER#
  BuildExpressionTree@Base 6.2.1
  CleanVSIDir@Base 6.2.1
@@ -368,7 +368,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  (optional=templinst|arch=alpha amd64 arm64 hppa kfreebsd-amd64 mips64el ppc64 ppc64el s390x sparc64 x32)_ZN9mapserver11pod_bvectorIN10ClipperLib8IntPointELj8EE14allocate_blockEj@Base 6.4.0
  (optional=templinst)_ZN9mapserver11pod_bvectorIN10ClipperLib8IntPointELj8EED1Ev@Base 6.2.1
  (optional=templinst)_ZN9mapserver11pod_bvectorIN10ClipperLib8IntPointELj8EED2Ev@Base 6.2.1
- (optional=templinst|arch=alpha amd64 arm64 hppa kfreebsd-amd64 mips64el ppc64el s390x sparc64 x32)_ZN9mapserver11pod_bvectorINS_10point_baseIdEELj6EE14allocate_blockEj@Base 7.0.0
+ (optional=templinst|arch=alpha amd64 arm64 hppa kfreebsd-amd64 mips64el ppc64 ppc64el s390x sparc64 x32)_ZN9mapserver11pod_bvectorINS_10point_baseIdEELj6EE14allocate_blockEj@Base 7.0.0
  (optional=templinst)_ZN9mapserver11pod_bvectorINS_10point_baseIdEELj6EED1Ev@Base 6.2.1
  (optional=templinst)_ZN9mapserver11pod_bvectorINS_10point_baseIdEELj6EED2Ev@Base 6.2.1
  (optional=templinst)_ZN9mapserver11pod_bvectorINS_11vertex_distELj6EED1Ev@Base 6.2.1
@@ -465,7 +465,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZN9mapserver18comp_op_table_rgbaINS_5rgba8ENS_10order_bgraEE14g_comp_op_funcE@Base 7.0.1
  (optional=templinst)_ZN9mapserver18conv_adaptor_vcgenI12line_adaptorNS_10vcgen_dashENS_12null_markersEE6vertexEPdS5_@Base 6.2.1
  (optional=templinst|arch=alpha amd64 arm64 hppa kfreebsd-amd64 mips64el ppc64 ppc64el s390x sparc64 x32)_ZN9mapserver18conv_adaptor_vcgenI12line_adaptorNS_12vcgen_strokeENS_12null_markersEE6vertexEPdS5_@Base 6.4.0
- (optional=templinst|arch=alpha amd64 arm64 hppa kfreebsd-amd64 mips64el ppc64el s390x sparc64 x32)_ZN9mapserver18conv_adaptor_vcgenI16line_adaptor_utfNS_12vcgen_strokeENS_12null_markersEE6vertexEPdS5_@Base 7.0.0
+ (optional=templinst|arch=alpha amd64 arm64 hppa kfreebsd-amd64 mips64el ppc64 ppc64el s390x sparc64 x32)_ZN9mapserver18conv_adaptor_vcgenI16line_adaptor_utfNS_12vcgen_strokeENS_12null_markersEE6vertexEPdS5_@Base 7.0.0
  (optional=templinst)_ZN9mapserver18conv_adaptor_vcgenINS_9conv_dashINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEENS_12vcgen_strokeES6_E6vertexEPdSA_@Base 6.2.1
  (optional=templinst)_ZN9mapserver18conv_adaptor_vcgenINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_10vcgen_dashENS_12null_markersEE6vertexEPdS8_@Base 6.2.1
  (optional=templinst)_ZN9mapserver18conv_adaptor_vcgenINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12vcgen_strokeENS_12null_markersEE6vertexEPdS8_@Base 6.2.1
@@ -585,16 +585,16 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZNK9mapserver25font_engine_freetype_base9num_facesEv@Base 6.2.1
  (optional=templinst)_ZNSt20__uninitialized_copyILb0EE13__uninit_copyIPN10ClipperLib9ExPolygonES4_EET0_T_S6_S5_@Base 6.2.1
  (optional=templinst)_ZNSt20__uninitialized_copyILb0EE13__uninit_copyIPSt6vectorIN10ClipperLib8IntPointESaIS4_EES7_EET0_T_S9_S8_@Base 6.2.1
- (optional=templinst|arch=!alpha !amd64 !arm64 !kfreebsd-amd64 !mips64el !ppc64el !s390x !sparc64)_ZNSt22__uninitialized_fill_nILb0EE15__uninit_fill_nIPN10ClipperLib9ExPolygonEjS3_EET_S5_T0_RKT1_@Base 7.0.0
- (optional=templinst|arch=alpha amd64 arm64 kfreebsd-amd64 mips64el ppc64el s390x sparc64)_ZNSt22__uninitialized_fill_nILb0EE15__uninit_fill_nIPN10ClipperLib9ExPolygonEmS3_EET_S5_T0_RKT1_@Base 7.0.0
+ (optional=templinst|arch=!alpha !amd64 !arm64 !kfreebsd-amd64 !mips64el !ppc64 !ppc64el !s390x !sparc64)_ZNSt22__uninitialized_fill_nILb0EE15__uninit_fill_nIPN10ClipperLib9ExPolygonEjS3_EET_S5_T0_RKT1_@Base 7.0.0
+ (optional=templinst|arch=alpha amd64 arm64 kfreebsd-amd64 mips64el ppc64 ppc64el s390x sparc64)_ZNSt22__uninitialized_fill_nILb0EE15__uninit_fill_nIPN10ClipperLib9ExPolygonEmS3_EET_S5_T0_RKT1_@Base 7.0.0
  (optional=templinst|arch=armel armhf hppa hurd-i386 i386 kfreebsd-i386 mips mipsel powerpc sparc x32)_ZNSt6vectorIN10ClipperLib11DoublePointESaIS1_EE14_M_fill_insertEN9__gnu_cxx17__normal_iteratorIPS1_S3_EEjRKS1_@Base 6.2.1
  (optional=templinst|arch=alpha amd64 arm64 ia64 kfreebsd-amd64 mips64el ppc64 ppc64el s390x sparc64)_ZNSt6vectorIN10ClipperLib11DoublePointESaIS1_EE14_M_fill_insertEN9__gnu_cxx17__normal_iteratorIPS1_S3_EEmRKS1_@Base 6.2.1
  (optional=templinst)_ZNSt6vectorIN10ClipperLib8IntPointESaIS1_EE13_M_insert_auxEN9__gnu_cxx17__normal_iteratorIPS1_S3_EERKS1_@Base 6.2.1
  (optional=templinst|arch=armel armhf hppa hurd-i386 i386 kfreebsd-i386 mips mipsel powerpc sparc x32)_ZNSt6vectorIN10ClipperLib8IntPointESaIS1_EE14_M_fill_insertEN9__gnu_cxx17__normal_iteratorIPS1_S3_EEjRKS1_@Base 6.2.1
  (optional=templinst|arch=alpha amd64 arm64 ia64 kfreebsd-amd64 mips64el ppc64 ppc64el s390 s390x sparc64)_ZNSt6vectorIN10ClipperLib8IntPointESaIS1_EE14_M_fill_insertEN9__gnu_cxx17__normal_iteratorIPS1_S3_EEmRKS1_@Base 6.2.1
  (optional=templinst|subst)_ZNSt6vectorIN10ClipperLib8IntPointESaIS1_EE7reserveE{size_t}@Base 6.4.0
- (optional=templinst|arch=alpha amd64 hppa kfreebsd-amd64 mips64el ppc64el s390x sparc64 x32)_ZNSt6vectorIN10ClipperLib8IntPointESaIS1_EEC1ERKS3_@Base 7.0.0
- (optional=templinst|arch=alpha amd64 hppa kfreebsd-amd64 mips64el ppc64el s390x sparc64 x32)_ZNSt6vectorIN10ClipperLib8IntPointESaIS1_EEC2ERKS3_@Base 7.0.0
+ (optional=templinst|arch=alpha amd64 hppa kfreebsd-amd64 mips64el ppc64 ppc64el s390x sparc64 x32)_ZNSt6vectorIN10ClipperLib8IntPointESaIS1_EEC1ERKS3_@Base 7.0.0
+ (optional=templinst|arch=alpha amd64 hppa kfreebsd-amd64 mips64el ppc64 ppc64el s390x sparc64 x32)_ZNSt6vectorIN10ClipperLib8IntPointESaIS1_EEC2ERKS3_@Base 7.0.0
  (optional=templinst)_ZNSt6vectorIN10ClipperLib8IntPointESaIS1_EEaSERKS3_@Base 6.2.1
  (optional=templinst)_ZNSt6vectorIN10ClipperLib9ExPolygonESaIS1_EE13_M_insert_auxEN9__gnu_cxx17__normal_iteratorIPS1_S3_EERKS1_@Base 6.2.1
  (optional=templinst|arch=armel armhf hppa hurd-i386 i386 kfreebsd-i386 mips mipsel powerpc sparc x32)_ZNSt6vectorIN10ClipperLib9ExPolygonESaIS1_EE14_M_fill_insertEN9__gnu_cxx17__normal_iteratorIPS1_S3_EEjRKS1_@Base 6.2.1
