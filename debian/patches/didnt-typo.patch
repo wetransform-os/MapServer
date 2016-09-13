@@ -1,6 +1,7 @@
 Description: Fix "didnt" typo, replace with "didn't".
 Author: Bas Couwenberg <sebastic@debian.org>
 Forwarded: https://github.com/mapserver/mapserver/pull/5324
+Applied-Upstream: https://github.com/mapserver/mapserver/commit/66309eebb7ba0dc70469efeb40f865a8e88fafbd
 
 --- a/mapmssql2008.c
 +++ b/mapmssql2008.c
