@@ -4,6 +4,7 @@ mapserver (7.0.2-1) UNRELEASED; urgency=medium
   * Bump Standards-Version to 3.9.8, no changes.
   * Drop unused override for incompatible-java-bytecode-format.
   * Drop didnt-typo.patch, applied upstream.
+  * Update symbols for amd64.
 
  -- Bas Couwenberg <sebastic@debian.org>  Wed, 21 Sep 2016 20:56:49 +0200
 
