@@ -3709,6 +3709,22 @@ int initLayerCompositer(LayerCompositer *compositer) {
   compositer->filter = NULL;
   return MS_SUCCESS;
 }
+
+int freeLayerCompositers(LayerCompositer * item) {
+  while(item) {
+    LayerCompositer * next = item->next;
+
+    if (item->filter) {
+      msFree(item->filter->filter);
+      msFree(item->filter);
+      }
+    msFree(item);
+
+    item=next;
+    }
+  return MS_SUCCESS;
+}
+
 /*
 ** Initialize, load and free a single layer structure
 */
@@ -3978,6 +3994,8 @@ int freeLayer(layerObj *layer)
       msFree(layer->sortBy.properties[i].item);
   msFree(layer->sortBy.properties);
 
+  freeLayerCompositers(layer->compositer);
+
   return MS_SUCCESS;
 }
 
@@ -4108,7 +4126,11 @@ int loadLayerCompositer(LayerCompositer *compositer) {
       case COMPFILTER:
         compositer->filter = msSmallMalloc(sizeof(CompositingFilter));
         initCompositingFilter(compositer->filter);
-        if(getString(&compositer->filter->filter) == MS_FAILURE) return(MS_FAILURE);
+        if(getString(&compositer->filter->filter) == MS_FAILURE) {
+          msFree(compositer->filter);
+          compositer->filter=NULL;
+          return(MS_FAILURE);
+          }
         break;
       case COMPOP: {
         char *compop=NULL;
@@ -4172,6 +4194,11 @@ int loadLayerCompositer(LayerCompositer *compositer) {
         else {
           msSetError(MS_PARSEERR,"Unknown COMPOP \"%s\"", "loadLayerCompositer()", compop);
           free(compop);
+          if (compositer->filter) {
+            msFree(compositer->filter->filter);
+            msFree(compositer->filter);
+            compositer->filter=NULL;
+            }
           return MS_FAILURE;
         }
         free(compop);
@@ -4180,14 +4207,30 @@ int loadLayerCompositer(LayerCompositer *compositer) {
       case END:
         return MS_SUCCESS;
       case OPACITY:
-        if (getInteger(&(compositer->opacity)) == -1)
+        if (getInteger(&(compositer->opacity)) == -1) {
+          if (compositer->filter) {
+            msFree(compositer->filter->filter);
+            msFree(compositer->filter);
+            compositer->filter=NULL;
+            }
           return MS_FAILURE;
+          }
         if(compositer->opacity<0 || compositer->opacity>100) {
+          if (compositer->filter) {
+            msFree(compositer->filter->filter);
+            msFree(compositer->filter);
+            compositer->filter=NULL;
+            }
           msSetError(MS_PARSEERR,"OPACITY must be between 0 and 100 (line %d)","loadLayerCompositer()",msyylineno);
           return MS_FAILURE;
         }
         break;
       default:
+        if (compositer->filter) {
+          msFree(compositer->filter->filter);
+          msFree(compositer->filter);
+          compositer->filter=NULL;
+          }
         msSetError(MS_IDENTERR, "Parsing error 2 near (%s):(line %d)", "loadLayerCompositer()",  msyystring_buffer, msyylineno );
         return(MS_FAILURE);
     }
@@ -4240,7 +4283,10 @@ int loadLayer(layerObj *layer, mapObj *map)
       case(COMPOSITE): {
         LayerCompositer *compositer = msSmallMalloc(sizeof(LayerCompositer));
         initLayerCompositer(compositer);
-        if(MS_FAILURE == loadLayerCompositer(compositer)) return -1;
+        if(MS_FAILURE == loadLayerCompositer(compositer)) {
+          msFree(compositer);
+          return -1;
+          }
         if(!layer->compositer) {
           layer->compositer = compositer;
         } else {
@@ -4695,6 +4741,110 @@ int msUpdateLayerFromString(layerObj *layer, char *string, int url_string)
   return MS_SUCCESS;
 }
 
+static void writeCompositingFilter(FILE *stream, int indent, CompositingFilter *filter) {
+  if(filter) {
+    writeString(stream, indent, "COMPFILTER", "", filter->filter);
+  }
+}
+
+static void writeLayerCompositer(FILE *stream, int indent, LayerCompositer *compositor) {
+  indent++;
+  while(compositor) {
+    writeBlockBegin(stream, indent, "COMPOSITE");
+    writeCompositingFilter(stream, indent, compositor->filter);
+    if(compositor->comp_op != MS_COMPOP_SRC_OVER) {
+      switch(compositor->comp_op) {
+        case MS_COMPOP_CLEAR:
+          writeString(stream, indent, "COMPOP", NULL, "clear");
+          break;
+        case MS_COMPOP_COLOR_BURN:
+          writeString(stream, indent, "COMPOP", NULL, "color-burn");
+          break;
+        case MS_COMPOP_COLOR_DODGE:
+          writeString(stream, indent, "COMPOP", NULL, "color-dodge");
+          break;
+        case MS_COMPOP_CONTRAST:
+          writeString(stream, indent, "COMPOP", NULL, "contrast");
+          break;
+        case MS_COMPOP_DARKEN:
+          writeString(stream, indent, "COMPOP", NULL, "darken");
+          break;
+        case MS_COMPOP_DIFFERENCE:
+          writeString(stream, indent, "COMPOP", NULL, "difference");
+          break;
+        case MS_COMPOP_DST:
+          writeString(stream, indent, "COMPOP", NULL, "dst");
+          break;
+        case MS_COMPOP_DST_ATOP:
+          writeString(stream, indent, "COMPOP", NULL, "dst-atop");
+          break;
+        case MS_COMPOP_DST_IN:
+          writeString(stream, indent, "COMPOP", NULL, "dst-in");
+          break;
+        case MS_COMPOP_DST_OUT:
+          writeString(stream, indent, "COMPOP", NULL, "dst-out");
+          break;
+        case MS_COMPOP_DST_OVER:
+          writeString(stream, indent, "COMPOP", NULL, "dst-over");
+          break;
+        case MS_COMPOP_EXCLUSION:
+          writeString(stream, indent, "COMPOP", NULL, "exclusion");
+          break;
+        case MS_COMPOP_HARD_LIGHT:
+          writeString(stream, indent, "COMPOP", NULL, "hard-light");
+          break;
+        case MS_COMPOP_INVERT:
+          writeString(stream, indent, "COMPOP", NULL, "invert");
+          break;
+        case MS_COMPOP_INVERT_RGB:
+          writeString(stream, indent, "COMPOP", NULL, "invert-rgb");
+          break;
+        case MS_COMPOP_LIGHTEN:
+          writeString(stream, indent, "COMPOP", NULL, "lighten");
+          break;
+        case MS_COMPOP_MINUS:
+          writeString(stream, indent, "COMPOP", NULL, "minus");
+          break;
+        case MS_COMPOP_MULTIPLY:
+          writeString(stream, indent, "COMPOP", NULL, "multiply");
+          break;
+        case MS_COMPOP_OVERLAY:
+          writeString(stream, indent, "COMPOP", NULL, "overlay");
+          break;
+        case MS_COMPOP_PLUS:
+          writeString(stream, indent, "COMPOP", NULL, "plus");
+          break;
+        case MS_COMPOP_SCREEN:
+          writeString(stream, indent, "COMPOP", NULL, "screen");
+          break;
+        case MS_COMPOP_SOFT_LIGHT:
+          writeString(stream, indent, "COMPOP", NULL, "soft-light");
+          break;
+        case MS_COMPOP_SRC:
+          writeString(stream, indent, "COMPOP", NULL, "src");
+          break;
+        case MS_COMPOP_SRC_ATOP:
+          writeString(stream, indent, "COMPOP", NULL, "src-atop");
+          break;
+        case MS_COMPOP_SRC_IN:
+          writeString(stream, indent, "COMPOP", NULL, "src-in");
+          break;
+        case MS_COMPOP_SRC_OUT:
+          writeString(stream, indent, "COMPOP", NULL, "src-out");
+          break;
+        case MS_COMPOP_SRC_OVER:
+          writeString(stream, indent, "COMPOP", NULL, "src-over");
+          break;
+        case MS_COMPOP_XOR:
+          writeString(stream, indent, "COMPOP", NULL, "xor");
+          break;
+      }
+    }
+    writeNumber(stream,indent,"OPACITY",100,compositor->opacity);
+    writeBlockEnd(stream,indent,"COMPOSITE");
+    compositor = compositor->next;
+  }
+}
 static void writeLayer(FILE *stream, int indent, layerObj *layer)
 {
   int i;
@@ -4710,6 +4860,7 @@ static void writeLayer(FILE *stream, int indent, layerObj *layer)
   writeString(stream, indent, "CLASSGROUP", NULL, layer->classgroup);
   writeString(stream, indent, "CLASSITEM", NULL, layer->classitem);
   writeCluster(stream, indent, &(layer->cluster));
+  writeLayerCompositer(stream, indent, layer->compositer);
   writeString(stream, indent, "CONNECTION", NULL, layer->connection);
   writeKeyword(stream, indent, "CONNECTIONTYPE", layer->connectiontype, 10, MS_OGR, "OGR", MS_POSTGIS, "POSTGIS", MS_WMS, "WMS", MS_ORACLESPATIAL, "ORACLESPATIAL", MS_WFS, "WFS", MS_PLUGIN, "PLUGIN", MS_UNION, "UNION", MS_UVRASTER, "UVRASTER", MS_CONTOUR, "CONTOUR", MS_KERNELDENSITY, "KERNELDENSITY");
   writeString(stream, indent, "DATA", NULL, layer->data);
@@ -4760,7 +4911,7 @@ static void writeLayer(FILE *stream, int indent, layerObj *layer)
   writeNumber(stream, indent, "TOLERANCE", -1, layer->tolerance);
   writeKeyword(stream, indent, "TOLERANCEUNITS", layer->toleranceunits, 7, MS_INCHES, "INCHES", MS_FEET ,"FEET", MS_MILES, "MILES", MS_METERS, "METERS", MS_KILOMETERS, "KILOMETERS", MS_NAUTICALMILES, "NAUTICALMILES", MS_DD, "DD");
   writeKeyword(stream, indent, "TRANSFORM", layer->transform, 10, MS_FALSE, "FALSE", MS_UL, "UL", MS_UC, "UC", MS_UR, "UR", MS_CL, "CL", MS_CC, "CC", MS_CR, "CR", MS_LL, "LL", MS_LC, "LC", MS_LR, "LR");
-  writeKeyword(stream, indent, "TYPE", layer->type, 8, MS_LAYER_POINT, "POINT", MS_LAYER_LINE, "LINE", MS_LAYER_POLYGON, "POLYGON", MS_LAYER_RASTER, "RASTER", MS_LAYER_QUERY, "QUERY", MS_LAYER_CIRCLE, "CIRCLE", MS_LAYER_TILEINDEX, "TILEINDEX", MS_LAYER_CHART, "CHART");
+  writeKeyword(stream, indent, "TYPE", layer->type, 9, MS_LAYER_POINT, "POINT", MS_LAYER_LINE, "LINE", MS_LAYER_POLYGON, "POLYGON", MS_LAYER_RASTER, "RASTER", MS_LAYER_ANNOTATION, "ANNOTATION", MS_LAYER_QUERY, "QUERY", MS_LAYER_CIRCLE, "CIRCLE", MS_LAYER_TILEINDEX, "TILEINDEX", MS_LAYER_CHART, "CHART");
   writeKeyword(stream, indent, "UNITS", layer->units, 9, MS_INCHES, "INCHES", MS_FEET ,"FEET", MS_MILES, "MILES", MS_METERS, "METERS", MS_KILOMETERS, "KILOMETERS", MS_NAUTICALMILES, "NAUTICALMILES", MS_DD, "DD", MS_PIXELS, "PIXELS", MS_PERCENTAGES, "PERCENTATGES");
   writeHashTable(stream, indent, "VALIDATION", &(layer->validation));
 
@@ -6868,11 +7019,14 @@ int msUpdateMapFromURL(mapObj *map, char *variable, char *string)
 
 static void hashTableSubstituteString(hashTableObj *hash, const char *from, const char *to) {
   const char *key, *val;
+  char *new_val;
   key = msFirstKeyFromHashTable(hash);
   while(key != NULL) {
     val = msLookupHashTable(hash, key);
     if(strcasestr(val, from)) {
-      msInsertHashTable(hash, key, msCaseReplaceSubstring(msStrdup(val), from, to));
+      new_val = msCaseReplaceSubstring(msStrdup(val), from, to);
+      msInsertHashTable(hash, key, new_val);
+      msFree(new_val);
     }
     key = msNextKeyFromHashTable(hash, key);
   }
