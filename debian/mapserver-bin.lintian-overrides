@@ -1,2 +1,0 @@
-# PIE breaks the build
-mapserver-bin: hardening-no-pie *
