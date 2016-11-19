@@ -1,5 +1,7 @@
 mapserver (7.0.2-2) UNRELEASED; urgency=medium
 
+  * Enable pie hardening flags.
+    (closes: #844892)
   * Drop unused overrides for hardening-no-pie.
 
  -- Bas Couwenberg <sebastic@debian.org>  Wed, 26 Oct 2016 17:23:29 +0200

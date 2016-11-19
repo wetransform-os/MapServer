@@ -8,9 +8,8 @@
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
-# Enable hardening build flags, except:
-#  pie: causes build failure
-export DEB_BUILD_MAINT_OPTIONS=hardening=+all,-pie
+# Enable hardening build flags
+export DEB_BUILD_MAINT_OPTIONS=hardening=+all
 
 DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 
