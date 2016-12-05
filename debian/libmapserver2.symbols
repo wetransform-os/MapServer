@@ -1,4 +1,4 @@
-# SymbolsHelper-Confirmed: 7.0.3 amd64
+# SymbolsHelper-Confirmed: 7.0.3 amd64 armel armhf hurd-i386 i386 m68k mips mipsel powerpc sparc64
 libmapserver.so.2 #PACKAGE# #MINVER#
  BuildExpressionTree@Base 6.2.1
  CleanVSIDir@Base 6.2.1
@@ -218,7 +218,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZN10ClipperLib7Clipper13BuildResultExERSt6vectorINS_9ExPolygonESaIS2_EE@Base 6.2.1
  _ZN10ClipperLib7Clipper13DeleteFromAELEPNS_5TEdgeE@Base 6.2.1
  _ZN10ClipperLib7Clipper13DeleteFromSELEPNS_5TEdgeE@Base 6.2.1
- (arch=armel armhf hppa hurd-i386 i386 kfreebsd-i386 mips mipsel powerpc sparc x32)_ZN10ClipperLib7Clipper13DisposeOutRecEjb@Base 7.0.0
+ (arch=armel armhf hppa hurd-i386 i386 kfreebsd-i386 m68k mips mipsel powerpc sparc x32)_ZN10ClipperLib7Clipper13DisposeOutRecEjb@Base 7.0.3
  (arch=alpha amd64 arm64 ia64 kfreebsd-amd64 mips64el ppc64 ppc64el s390 s390x sparc64)_ZN10ClipperLib7Clipper13DisposeOutRecEmb@Base 7.0.1
  _ZN10ClipperLib7Clipper14ClearHorzJoinsEv@Base 6.2.1
  _ZN10ClipperLib7Clipper14FixHoleLinkageEPNS_6OutRecE@Base 6.2.1
@@ -309,8 +309,8 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZN11KmlRendererD0Ev@Base 6.4.0
  _ZN11KmlRendererD1Ev@Base 6.4.0
  _ZN11KmlRendererD2Ev@Base 6.4.0
- (arch=!amd64 !arm64 !kfreebsd-amd64 !mips64el !ppc64el !s390x)_ZN12AGG2RendererD1Ev@Base 7.0.1
- (arch=!amd64 !arm64 !kfreebsd-amd64 !mips64el !ppc64el !s390x)_ZN12AGG2RendererD2Ev@Base 7.0.1
+ (arch=!amd64 !arm64 !kfreebsd-amd64 !mips64el !ppc64el !s390x !sparc64)_ZN12AGG2RendererD1Ev@Base 7.0.1
+ (arch=!amd64 !arm64 !kfreebsd-amd64 !mips64el !ppc64el !s390x !sparc64)_ZN12AGG2RendererD2Ev@Base 7.0.1
  _ZN12line_adaptor6vertexEPdS0_@Base 6.2.1
  _ZN12line_adaptorD0Ev@Base 6.2.1
  _ZN12line_adaptorD1Ev@Base 6.2.1
@@ -393,13 +393,13 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  (optional=templinst)_ZN9mapserver11pod_bvectorIhLj12EED1Ev@Base 7.0.2
  (optional=templinst)_ZN9mapserver11pod_bvectorIhLj12EED2Ev@Base 7.0.2
  (optional=templinst)_ZN9mapserver11qsort_cellsINS_7cell_aaEEEvPPT_j@Base 6.2.1
- (optional=templinst|arch=!amd64 !arm64 !mips64el !ppc64el !s390x)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9conv_dashINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEES8_EEE11end_contourERSt6vectorISC_IN10ClipperLib8IntPointESaISE_EESaISG_EE@Base 7.0.2
+ (optional=templinst|arch=!amd64 !arm64 !mips64el !ppc64el !s390x !sparc64)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9conv_dashINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEES8_EEE11end_contourERSt6vectorISC_IN10ClipperLib8IntPointESaISE_EESaISG_EE@Base 7.0.2
  (optional=templinst)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9conv_dashINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEES8_EEE11next_vertexEPdSC_@Base 6.4.0
  (optional=templinst)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9conv_dashINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEES8_EEE6rewindEj@Base 6.2.1
  (optional=templinst)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9conv_dashINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEES8_EEE6vertexEPdSC_@Base 6.4.1
  (optional=templinst)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9conv_dashINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEES8_EEED1Ev@Base 6.2.1
  (optional=templinst)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9conv_dashINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEES8_EEED2Ev@Base 6.2.1
- (optional=templinst|arch=!amd64 !arm64 !mips64el !ppc64el !s390x)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEEE11end_contourERSt6vectorISA_IN10ClipperLib8IntPointESaISC_EESaISE_EE@Base 7.0.2
+ (optional=templinst|arch=!amd64 !arm64 !mips64el !ppc64el !s390x !sparc64)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEEE11end_contourERSt6vectorISA_IN10ClipperLib8IntPointESaISC_EESaISE_EE@Base 7.0.2
  (optional=templinst)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEEE11next_vertexEPdSA_@Base 6.4.0
  (optional=templinst)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEEE6rewindEj@Base 6.2.1
  (optional=templinst)_ZN9mapserver12conv_clipperI15polygon_adaptorNS_11conv_strokeINS_9path_baseINS_20vertex_block_storageIdLj8ELj256EEEEENS_12null_markersEEEE6vertexEPdSA_@Base 6.4.1
@@ -510,8 +510,8 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  (optional=templinst|arch=sparc)_ZN9mapserver21rasterizer_outline_aaINS_22renderer_outline_imageINS_13renderer_baseINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEEEENS_18line_image_patternINS_28pattern_filter_bilinear_rgbaIS5_EEEEEENS_14line_coord_satEED2Ev@Base 6.4.1
  (optional=templinst)_ZN9mapserver22comp_op_rgba_exclusionINS_5rgba8ENS_10order_bgraEE9blend_pixEPhjjjjj@Base 7.0.0
  (optional=templinst)_ZN9mapserver22rasterizer_scanline_aaINS_18rasterizer_sl_clipINS_12ras_conv_intEEEE10add_vertexEddj@Base 6.2.1
- (optional=templinst|arch=armel armhf hurd-i386 i386 kfreebsd-i386 mips mipsel powerpc)_ZN9mapserver22rasterizer_scanline_aaINS_18rasterizer_sl_clipINS_12ras_conv_intEEEE8add_pathINS_10conv_curveINS_20path_storage_integerIiLj6EEENS_6curve3ENS_6curve4EEEEEvRT_j@Base 6.2.1
- (optional=templinst|arch=armel armhf hurd-i386 i386 kfreebsd-i386 mips mipsel powerpc)_ZN9mapserver22rasterizer_scanline_aaINS_18rasterizer_sl_clipINS_12ras_conv_intEEEE8add_pathINS_10conv_curveINS_20path_storage_integerIsLj6EEENS_6curve3ENS_6curve4EEEEEvRT_j@Base 6.2.1
+ (optional=templinst|arch=armel armhf hurd-i386 i386 kfreebsd-i386 m68k mips mipsel powerpc)_ZN9mapserver22rasterizer_scanline_aaINS_18rasterizer_sl_clipINS_12ras_conv_intEEEE8add_pathINS_10conv_curveINS_20path_storage_integerIiLj6EEENS_6curve3ENS_6curve4EEEEEvRT_j@Base 6.2.1
+ (optional=templinst|arch=armel armhf hurd-i386 i386 kfreebsd-i386 m68k mips mipsel powerpc)_ZN9mapserver22rasterizer_scanline_aaINS_18rasterizer_sl_clipINS_12ras_conv_intEEEE8add_pathINS_10conv_curveINS_20path_storage_integerIsLj6EEENS_6curve3ENS_6curve4EEEEEvRT_j@Base 6.2.1
  (optional=templinst)_ZN9mapserver22renderer_outline_imageINS_13renderer_baseINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEEEENS_18line_image_patternINS_28pattern_filter_bilinear_rgbaIS4_EEEEE13line3_no_clipERKNS_15line_parametersEiiii@Base 6.2.1
  (optional=templinst)_ZN9mapserver22renderer_outline_imageINS_13renderer_baseINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEEEENS_18line_image_patternINS_28pattern_filter_bilinear_rgbaIS4_EEEEE5line3ERKNS_15line_parametersEiiii@Base 6.2.1
  (optional=templinst)_ZN9mapserver23comp_op_rgba_color_burnINS_5rgba8ENS_10order_bgraEE9blend_pixEPhjjjjj@Base 7.0.0
@@ -568,7 +568,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZN9mapserver9verdana18E@Base 6.2.1
  _ZNK10ClipperLib16clipperException4whatEv@Base 6.2.1
  (arch=sparc)_ZNK10ClipperLib6Int128dvERKS0_@Base 6.4.1
- (arch=!amd64 !arm64 !mips64el !ppc64el !s390x)_ZNK10ClipperLib6Int128mlERKS0_@Base 7.0.2
+ (arch=!amd64 !arm64 !mips64el !ppc64el !s390x !sparc64)_ZNK10ClipperLib6Int128mlERKS0_@Base 7.0.2
  _ZNK10ClipperLib7Clipper14IsContributingERKNS_5TEdgeE@Base 6.2.1
  _ZNK10ClipperLib7Clipper17IsEvenOddFillTypeERKNS_5TEdgeE@Base 6.2.1
  _ZNK10ClipperLib7Clipper20IsEvenOddAltFillTypeERKNS_5TEdgeE@Base 6.2.1
@@ -580,32 +580,32 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZNK9mapserver12trans_affine8is_equalERKS0_d@Base 6.2.1
  _ZNK9mapserver12trans_affine8is_validEd@Base 6.2.1
  _ZNK9mapserver12trans_affine8rotationEv@Base 6.2.1
- (arch=armel armhf hurd-i386 i386 kfreebsd-i386 mips mipsel powerpc)_ZNK9mapserver12trans_affine9transformEPdS1_@Base 6.4.1
+ (arch=armel armhf hurd-i386 i386 kfreebsd-i386 m68k mips mipsel powerpc)_ZNK9mapserver12trans_affine9transformEPdS1_@Base 7.0.3
  (optional=templinst)_ZNK9mapserver18rasterizer_sl_clipINS_12ras_conv_intEE11line_clip_yINS_19rasterizer_cells_aaINS_7cell_aaEEEEEvRT_iiiijj@Base 6.2.1
  _ZNK9mapserver25font_engine_freetype_base14write_glyph_toEPh@Base 6.2.1
  _ZNK9mapserver25font_engine_freetype_base8ascenderEv@Base 6.2.1
  _ZNK9mapserver25font_engine_freetype_base9descenderEv@Base 6.2.1
  _ZNK9mapserver25font_engine_freetype_base9find_faceEPKc@Base 6.2.1
  _ZNK9mapserver25font_engine_freetype_base9num_facesEv@Base 6.2.1
- (optional=templinst|arch=!amd64 !arm64 !mips64el !ppc64el !s390x)_ZNSt6vectorIN10ClipperLib11DoublePointESaIS1_EE17_M_default_appendEj@Base 7.0.2
- (optional=templinst|arch=!amd64 !arm64 !mips64el !ppc64el !s390x)_ZNSt6vectorIN10ClipperLib8IntPointESaIS1_EE17_M_default_appendEj@Base 7.0.2
- (optional=templinst)_ZNSt6vectorIN10ClipperLib8IntPointESaIS1_EE17_M_default_appendEm@Base 7.0.2
+ (optional=templinst|arch=!amd64 !arm64 !mips64el !ppc64el !s390x !sparc64)_ZNSt6vectorIN10ClipperLib11DoublePointESaIS1_EE17_M_default_appendEj@Base 7.0.2
+ (optional=templinst|arch=!amd64 !arm64 !mips64el !ppc64el !s390x !sparc64)_ZNSt6vectorIN10ClipperLib8IntPointESaIS1_EE17_M_default_appendEj@Base 7.0.2
+ (optional=templinst|arch=amd64 sparc64)_ZNSt6vectorIN10ClipperLib8IntPointESaIS1_EE17_M_default_appendEm@Base 7.0.2
  (optional=templinst)_ZNSt6vectorIN10ClipperLib8IntPointESaIS1_EE19_M_emplace_back_auxIJRKS1_EEEvDpOT_@Base 7.0.2
  (optional=templinst|subst)_ZNSt6vectorIN10ClipperLib8IntPointESaIS1_EE7reserveE{size_t}@Base 6.4.0
  (optional=templinst)_ZNSt6vectorIN10ClipperLib8IntPointESaIS1_EEaSERKS3_@Base 6.2.1
- (optional=templinst|arch=!amd64 !arm64 !mips64el !ppc64el !s390x)_ZNSt6vectorIN10ClipperLib9ExPolygonESaIS1_EE17_M_default_appendEj@Base 7.0.2
- (optional=templinst)_ZNSt6vectorIN10ClipperLib9ExPolygonESaIS1_EE17_M_default_appendEm@Base 7.0.2
+ (optional=templinst|arch=!amd64 !arm64 !mips64el !ppc64el !s390x !sparc64)_ZNSt6vectorIN10ClipperLib9ExPolygonESaIS1_EE17_M_default_appendEj@Base 7.0.2
+ (optional=templinst|arch=amd64 sparc64)_ZNSt6vectorIN10ClipperLib9ExPolygonESaIS1_EE17_M_default_appendEm@Base 7.0.2
  (optional=templinst)_ZNSt6vectorIN10ClipperLib9ExPolygonESaIS1_EE19_M_emplace_back_auxIJRKS1_EEEvDpOT_@Base 7.0.2
- (optional=templinst|arch=!amd64 !arm64 !mips64el !ppc64el !s390x)_ZNSt6vectorIPN10ClipperLib11HorzJoinRecESaIS2_EE17_M_default_appendEj@Base 7.0.2
- (optional=templinst)_ZNSt6vectorIPN10ClipperLib11HorzJoinRecESaIS2_EE17_M_default_appendEm@Base 7.0.2
+ (optional=templinst|arch=!amd64 !arm64 !mips64el !ppc64el !s390x !sparc64)_ZNSt6vectorIPN10ClipperLib11HorzJoinRecESaIS2_EE17_M_default_appendEj@Base 7.0.2
+ (optional=templinst|arch=amd64 sparc64)_ZNSt6vectorIPN10ClipperLib11HorzJoinRecESaIS2_EE17_M_default_appendEm@Base 7.0.2
  (optional=templinst)_ZNSt6vectorIPN10ClipperLib11HorzJoinRecESaIS2_EE19_M_emplace_back_auxIJRKS2_EEEvDpOT_@Base 7.0.2
  (optional=templinst)_ZNSt6vectorIPN10ClipperLib5TEdgeESaIS2_EE19_M_emplace_back_auxIJRKS2_EEEvDpOT_@Base 7.0.2
  (optional=templinst)_ZNSt6vectorIPN10ClipperLib6OutRecESaIS2_EE19_M_emplace_back_auxIJRKS2_EEEvDpOT_@Base 7.0.2
- (optional=templinst|arch=!amd64 !arm64 !mips64el !ppc64el !s390x)_ZNSt6vectorIPN10ClipperLib7JoinRecESaIS2_EE17_M_default_appendEj@Base 7.0.2
- (optional=templinst)_ZNSt6vectorIPN10ClipperLib7JoinRecESaIS2_EE17_M_default_appendEm@Base 7.0.2
+ (optional=templinst|arch=!amd64 !arm64 !mips64el !ppc64el !s390x !sparc64)_ZNSt6vectorIPN10ClipperLib7JoinRecESaIS2_EE17_M_default_appendEj@Base 7.0.2
+ (optional=templinst|arch=amd64 sparc64)_ZNSt6vectorIPN10ClipperLib7JoinRecESaIS2_EE17_M_default_appendEm@Base 7.0.2
  (optional=templinst)_ZNSt6vectorIPN10ClipperLib7JoinRecESaIS2_EE19_M_emplace_back_auxIJRKS2_EEEvDpOT_@Base 7.0.2
- (optional=templinst|arch=!amd64 !arm64 !mips64el !ppc64el !s390x)_ZNSt6vectorIS_IN10ClipperLib8IntPointESaIS1_EESaIS3_EE17_M_default_appendEj@Base 7.0.2
- (optional=templinst)_ZNSt6vectorIS_IN10ClipperLib8IntPointESaIS1_EESaIS3_EE17_M_default_appendEm@Base 7.0.2
+ (optional=templinst|arch=!amd64 !arm64 !mips64el !ppc64el !s390x !sparc64)_ZNSt6vectorIS_IN10ClipperLib8IntPointESaIS1_EESaIS3_EE17_M_default_appendEj@Base 7.0.2
+ (optional=templinst|arch=amd64 sparc64)_ZNSt6vectorIS_IN10ClipperLib8IntPointESaIS1_EESaIS3_EE17_M_default_appendEm@Base 7.0.2
  (optional=templinst)_ZNSt6vectorIS_IN10ClipperLib8IntPointESaIS1_EESaIS3_EE19_M_emplace_back_auxIJRKS3_EEEvDpOT_@Base 7.0.2
  (optional=templinst)_ZNSt6vectorIS_IN10ClipperLib8IntPointESaIS1_EESaIS3_EED1Ev@Base 6.2.1
  (optional=templinst)_ZNSt6vectorIS_IN10ClipperLib8IntPointESaIS1_EESaIS3_EED2Ev@Base 6.2.1
