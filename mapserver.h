@@ -259,7 +259,7 @@ extern "C" {
 #define MS_URL_LENGTH 1024
 #define MS_MAXPATHLEN 1024
 
-#define MS_MAXIMAGESIZE_DEFAULT 2048
+#define MS_MAXIMAGESIZE_DEFAULT 4096
 
 #define MS_MAXPROJARGS 20
 #define MS_MAXJOINS 20
@@ -474,7 +474,9 @@ extern "C" {
 #define MS_IS_VALID_ARRAY_INDEX(index, size) ((index<0 || index>=size)?MS_FALSE:MS_TRUE)
 
 #define MS_CONVERT_UNIT(src_unit, dst_unit, value) (value * msInchesPerUnit(src_unit,0) / msInchesPerUnit(dst_unit,0))
-  
+
+#define MS_INIT_INVALID_RECT { -1e300, -1e300, 1e300, 1e300 }
+
 #endif
 
   /* General enumerated types - needed by scripts */
@@ -2410,6 +2412,7 @@ void msPopulateTextSymbolForLabelAndString(textSymbolObj *ts, labelObj *l, char 
   MS_DLL_EXPORT int msClusterLayerOpen(layerObj *layer); /* in mapcluster.c */
   MS_DLL_EXPORT int msLayerIsOpen(layerObj *layer);
   MS_DLL_EXPORT void msLayerClose(layerObj *layer);
+  MS_DLL_EXPORT void msLayerFreeExpressions(layerObj *layer);
   MS_DLL_EXPORT int msLayerWhichShapes(layerObj *layer, rectObj rect, int isQuery);
   MS_DLL_EXPORT int msLayerGetItemIndex(layerObj *layer, char *item);
   MS_DLL_EXPORT int msLayerWhichItems(layerObj *layer, int get_all, const char *metadata);
@@ -3129,6 +3132,8 @@ shapeObj *msOffsetCurve(shapeObj *p, double offset);
 #if defined USE_GEOS && (GEOS_VERSION_MAJOR > 3 || (GEOS_VERSION_MAJOR == 3 && GEOS_VERSION_MINOR >= 3))
 shapeObj *msGEOSOffsetCurve(shapeObj *p, double offset);
 #endif
+
+int msOGRIsSpatialite(layerObj* layer);
 
 #endif /* SWIG */
 

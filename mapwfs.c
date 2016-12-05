@@ -37,6 +37,7 @@
 /* There is a dependency to GDAL/OGR for the GML driver and MiniXML parser */
 #include "cpl_minixml.h"
 #include "cpl_conv.h"
+#include "cpl_string.h"
 
 #include "mapogcfilter.h"
 #include "mapowscommon.h"
@@ -2065,6 +2066,8 @@ static int msWFSRunFilter(mapObj* map,
         return msWFSException(map, "mapserv", MS_OWS_ERROR_NO_APPLICABLE_CODE, paramsObj->pszVersion);
     }
 
+    FLTProcessPropertyIsNull(psNode, map, lp->index);
+
     /*preparse the filter for gml aliases*/
     FLTPreParseFilterForAliasAndGroup(psNode, map, lp->index, "G");
 
@@ -2136,6 +2139,7 @@ static int msWFSRunBasicGetFeature(mapObj* map,
     const char *pszMapSRS=NULL, *pszLayerSRS=NULL;
     rectObj ext;
     int status;
+    const char* pszUseDefaultExtent;
     
     map->query.type = MS_QUERY_BY_RECT; /* setup the query */
     map->query.mode = MS_QUERY_MULTIPLE;
@@ -2147,7 +2151,15 @@ static int msWFSRunBasicGetFeature(mapObj* map,
     if(!paramsObj->pszSrs)
         pszMapSRS = msOWSGetEPSGProj(&(map->projection), &(map->web.metadata), "FO", MS_TRUE);
 
-    if (msOWSGetLayerExtent(map, lp, "FO", &ext) == MS_SUCCESS) {
+    pszUseDefaultExtent = msOWSLookupMetadata(&(lp->metadata), "F",
+                                              "use_default_extent_for_getfeature");
+    if( pszUseDefaultExtent && CSLTestBoolean(pszUseDefaultExtent) &&
+        lp->connectiontype == MS_OGR )
+    {
+        const rectObj rectInvalid = MS_INIT_INVALID_RECT;
+        map->query.rect = rectInvalid;
+    }
+    else if (msOWSGetLayerExtent(map, lp, "FO", &ext) == MS_SUCCESS) {
 
         /* For a single point layer, to avoid numerical precision issues */
         /* when reprojection is involved */
