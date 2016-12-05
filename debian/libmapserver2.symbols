@@ -1,4 +1,4 @@
-# SymbolsHelper-Confirmed: 7.0.2 amd64 arm64 armel armhf i386 kfreebsd-i386 mips mips64el mipsel powerpc ppc64el s390x
+# SymbolsHelper-Confirmed: 7.0.3 amd64
 libmapserver.so.2 #PACKAGE# #MINVER#
  BuildExpressionTree@Base 6.2.1
  CleanVSIDir@Base 6.2.1
@@ -67,6 +67,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  FLTParseGMLBox@Base 6.2.1
  FLTParseGMLEnvelope@Base 6.2.1
  FLTPreParseFilterForAliasAndGroup@Base 7.0.0
+ FLTProcessPropertyIsNull@Base 7.0.3
  FLTSimplify@Base 7.0.0
  FLTValidFilterNode@Base 6.2.1
  FLTValidForBBoxFilter@Base 6.2.1
@@ -1397,6 +1398,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msLayerEncodeShapeAttributes@Base 7.0.0
  msLayerEscapePropertyName@Base 6.2.1
  msLayerEscapeSQLParam@Base 6.2.1
+ msLayerFreeExpressions@Base 7.0.3
  msLayerFreeItemInfo@Base 6.2.1
  msLayerGetAutoStyle@Base 6.2.1
  msLayerGetExtent@Base 6.2.1
@@ -1496,6 +1498,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msOGRCleanup@Base 6.2.1
  msOGRGeometryToShape@Base 6.2.1
  msOGRInitialize@Base 6.2.1
+ msOGRIsSpatialite@Base 7.0.3
  msOGRLayerClose@Base 6.2.1
  msOGRLayerFreeItemInfo@Base 6.2.1
  msOGRLayerGetExtent@Base 6.2.1

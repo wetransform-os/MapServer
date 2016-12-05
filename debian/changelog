@@ -2,6 +2,7 @@ mapserver (7.0.3-1) UNRELEASED; urgency=medium
 
   * New upstream release.
     - Fixes CVE-2016-9839
+  * Update symbols for amd64.
 
  -- Bas Couwenberg <sebastic@debian.org>  Mon, 05 Dec 2016 21:26:24 +0100
 
