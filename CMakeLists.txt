@@ -17,7 +17,7 @@ include(CheckCSourceCompiles)
 
 set (MapServer_VERSION_MAJOR 7)
 set (MapServer_VERSION_MINOR 0)
-set (MapServer_VERSION_REVISION 2)
+set (MapServer_VERSION_REVISION 3)
 set (MapServer_VERSION_SUFFIX "")
 
 set(TARGET_VERSION_MAJOR ${MapServer_VERSION_MAJOR})
@@ -857,7 +857,7 @@ ms_link_libraries( ${CMAKE_DL_LIBS} m )
 endif(UNIX)
 
 if (WIN32)
-ms_link_libraries( ${MS_EXTERNAL_LIBS})
+ms_link_libraries( ${MS_EXTERNAL_LIBS} ws2_32.lib)
 endif (WIN32)
 
 configure_file (

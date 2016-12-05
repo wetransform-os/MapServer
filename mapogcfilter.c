@@ -667,8 +667,18 @@ int FLTLayerApplyPlainFilterToLayer(FilterEncodingNode *psNode, mapObj *map,
 
   pszExpression = FLTGetCommonExpression(psNode,  lp);
   if (pszExpression) {
+    const char* pszUseDefaultExtent;
     FilterEncodingNode* psTopBBOX;
     rectObj rect = map->extent;
+
+    pszUseDefaultExtent = msOWSLookupMetadata(&(lp->metadata), "F",
+                                              "use_default_extent_for_getfeature");
+    if( pszUseDefaultExtent && CSLTestBoolean(pszUseDefaultExtent) &&
+        lp->connectiontype == MS_OGR )
+    {
+        const rectObj rectInvalid = MS_INIT_INVALID_RECT;
+        rect = rectInvalid;
+    }
 
     psTopBBOX = FLTGetTopBBOX(psNode);
     if( psTopBBOX )
@@ -706,9 +716,9 @@ int FLTLayerApplyPlainFilterToLayer(FilterEncodingNode *psNode, mapObj *map,
     if(map->debug == MS_DEBUGLEVEL_VVV)
     {
       if( pszExpression )
-        msDebug("FLTLayerApplyPlainFilterToLayer(): %s, rect=%f,%f,%f,%f\n", pszExpression, rect.minx, rect.miny, rect.maxx, rect.maxy);
+        msDebug("FLTLayerApplyPlainFilterToLayer(): %s, rect=%.15g,%.15g,%.15g,%.15g\n", pszExpression, rect.minx, rect.miny, rect.maxx, rect.maxy);
       else
-        msDebug("FLTLayerApplyPlainFilterToLayer(): rect=%f,%f,%f,%f\n", rect.minx, rect.miny, rect.maxx, rect.maxy);
+        msDebug("FLTLayerApplyPlainFilterToLayer(): rect=%.15g,%.15g,%.15g,%.15g\n", rect.minx, rect.miny, rect.maxx, rect.maxy);
     }
 
     status = FLTApplyFilterToLayerCommonExpressionWithRect(map, iLayerIndex,
@@ -3662,6 +3672,57 @@ int FLTCheckInvalidOperand(FilterEncodingNode *psFilterNode)
       {
         if (psFilterNode->psRightNode)
             status = FLTCheckInvalidOperand(psFilterNode->psRightNode);
+      }
+    }
+    return status;
+}
+
+/************************************************************************/
+/*                       FLTProcessPropertyIsNull                       */
+/*                                                                      */
+/*      HACK for PropertyIsNull processing. PostGIS & Spatialite only   */
+/*      for now.                                                        */
+/************************************************************************/
+int FLTProcessPropertyIsNull(FilterEncodingNode *psFilterNode,
+                            mapObj *map, int i)
+{
+    int status = MS_SUCCESS;
+
+    if (psFilterNode->eType == FILTER_NODE_TYPE_COMPARISON &&
+        psFilterNode->psLeftNode != NULL &&
+        psFilterNode->psLeftNode->eType == FILTER_NODE_TYPE_PROPERTYNAME &&
+        strcmp(psFilterNode->pszValue, "PropertyIsNull") == 0 &&
+        !FLTIsGMLDefaultProperty(psFilterNode->psLeftNode->pszValue) )
+    {
+        layerObj* lp;
+        int layerWasOpened;
+
+        lp = GET_LAYER(map, i);
+        layerWasOpened = msLayerIsOpen(lp);
+
+        /* Horrible HACK to compensate for the lack of null testing in MapServer */
+        if( (lp->connectiontype == MS_POSTGIS ||
+             (lp->connectiontype == MS_OGR && msOGRIsSpatialite(lp))) &&
+            strcmp(psFilterNode->pszValue, "PropertyIsNull") == 0 )
+        {
+            msFree(psFilterNode->pszValue);
+            psFilterNode->pszValue = msStrdup("PropertyIsEqualTo");
+            psFilterNode->psRightNode = FLTCreateBinaryCompFilterEncodingNode();
+            psFilterNode->psRightNode->eType = FILTER_NODE_TYPE_LITERAL;
+            psFilterNode->psRightNode->pszValue = msStrdup("_MAPSERVER_NULL_");
+        }
+
+        if (!layerWasOpened) /* do not close the layer if it has been opened somewhere else (paging?) */
+          msLayerClose(lp);
+    }
+
+    if (psFilterNode->psLeftNode)
+    {
+      status = FLTProcessPropertyIsNull(psFilterNode->psLeftNode, map, i);
+      if( status == MS_SUCCESS )
+      {
+        if (psFilterNode->psRightNode)
+            status = FLTProcessPropertyIsNull(psFilterNode->psRightNode, map, i);
       }
     }
     return status;
