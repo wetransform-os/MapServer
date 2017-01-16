@@ -1,0 +1,18 @@
+Description: Use include paths from php-config when include path not found.
+Author: Bas Couwenberg <sebastic@debian.org>
+Forwarded: https://github.com/mapserver/mapserver/pull/5370
+Applied-Upstream: https://github.com/mapserver/mapserver/commit/37a70fff4ab54f12619833414cb1995643f7a10d
+
+--- a/cmake/FindPHP5.cmake
++++ b/cmake/FindPHP5.cmake
+@@ -86,6 +86,10 @@ IF(PHP5_CONFIG_EXECUTABLE)
+ 
+   MESSAGE(STATUS ${PHP5_MAIN_INCLUDE_DIR})
+ 
++  IF(NOT PHP5_INCLUDE_PATH)
++    set(PHP5_INCLUDE_PATH ${PHP5_INCLUDES})
++  ENDIF(NOT PHP5_INCLUDE_PATH)
++
+   IF(PHP5_VERSION LESS 5)
+     MESSAGE(FATAL_ERROR "PHP version is not 5 or later")
+   ENDIF(PHP5_VERSION LESS 5)
