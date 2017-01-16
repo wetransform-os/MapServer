@@ -4,7 +4,8 @@ Upstream-Contact: The MapServer team <mapserver-dev@lists.osgeo.org>
 Source: https://github.com/mapserver/mapserver
 
 Files: *
-Copyright:         1996-2014, Regents of the University of Minnesota.
+Copyright:         2008-2017, Open Source Geospatial Foundation.
+                   1996-2014, Regents of the University of Minnesota.
                   2011, 2013, Alan Boudreault, MapGears
                         2013, Even Rouault
                    2010-2011, EOX IT Services GmbH, Austria

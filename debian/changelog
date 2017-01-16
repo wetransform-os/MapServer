@@ -3,6 +3,7 @@ mapserver (7.0.4-1) UNRELEASED; urgency=high
   * New upstream release.
     - Security release.
   * Update symbols for other architectures.
+  * Add Open Source Geospatial Foundation to copyright holders.
 
  -- Bas Couwenberg <sebastic@debian.org>  Mon, 16 Jan 2017 18:52:15 +0100
 
