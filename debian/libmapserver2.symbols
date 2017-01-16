@@ -1,4 +1,4 @@
-# SymbolsHelper-Confirmed: 7.0.3 amd64 armel armhf hppa hurd-i386 i386 m68k mips mipsel powerpc sparc64
+# SymbolsHelper-Confirmed: 7.0.4 amd64
 libmapserver.so.2 #PACKAGE# #MINVER#
  BuildExpressionTree@Base 6.2.1
  CleanVSIDir@Base 6.2.1
@@ -1207,6 +1207,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msGetCharacterSize@Base 7.0.0
  msGetClass@Base 6.2.1
  msGetClass_FloatRGB@Base 6.2.1
+ msGetClass_FloatRGB_WithFirstClassToTry@Base 7.0.4
  msGetConfigOption@Base 6.2.1
  msGetDebugInfoObj@Base 6.2.1
  msGetEncodedString@Base 6.2.1
