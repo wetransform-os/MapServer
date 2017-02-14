@@ -1,0 +1,25 @@
+Description: Declare nLayerOrder where it's used.
+ If LAYERS is specified multiple times in the query string, nLayerOrder isnt
+ reset to 0, and this leads to memory corruption/double-free's upon exit.
+Author: Landry Breuil <breuil@craig.fr>
+Origin: https://github.com/mapserver/mapserver/commit/132695864b27bb6fced9a866f35365f445889a00
+Bug: https://github.com/mapserver/mapserver/issues/5387
+
+--- a/mapwms.c
++++ b/mapwms.c
+@@ -791,7 +791,6 @@ int msWMSLoadGetMapParams(mapObj *map, i
+                           const char *wms_request, owsRequestObj *ows_request)
+ {
+   int i, adjust_extent = MS_FALSE, nonsquare_enabled = MS_FALSE;
+-  int nLayerOrder = 0;
+   int transparent = MS_NOOVERRIDE;
+   int bbox_pixel_is_point = MS_FALSE;
+   outputFormatObj *format = NULL;
+@@ -870,6 +869,7 @@ int msWMSLoadGetMapParams(mapObj *map, i
+ 
+     if (strcasecmp(names[i], "LAYERS") == 0) {
+       int  j, k, iLayer, *layerOrder;
++      int nLayerOrder = 0;
+       char ***nestedGroups = NULL;
+       int *numNestedGroups = NULL;
+       int *isUsedInNestedGroup = NULL;
