@@ -38,6 +38,7 @@
 
 #include "mapserver.h"
 #include "maptime.h" 
+#include "mapows.h"
 #include <assert.h>
 
 
@@ -399,8 +400,10 @@ static int msSplitData( char *data, char **geometry_column_name, char **table_na
       break; /* stop on spaces */
     /* double the size of the table_name array if necessary */
     if (i == table_name_size) {
+      size_t tgt_offset = tgt - *table_name;
       table_name_size *= 2;
       *table_name = (char *) realloc(*table_name,sizeof(char *) * table_name_size);
+      tgt = *table_name + tgt_offset;
     }
     *tgt = *src;
   }
