@@ -1,10 +1,10 @@
-mapserver (7.0.5-1) UNRELEASED; urgency=medium
+mapserver (7.0.5-1~exp1) experimental; urgency=medium
 
   * New upstream release.
   * Drop patches applied upstream.
   * Update symbols for amd64.
 
- -- Bas Couwenberg <sebastic@debian.org>  Tue, 09 May 2017 22:14:04 +0200
+ -- Bas Couwenberg <sebastic@debian.org>  Tue, 09 May 2017 22:29:51 +0200
 
 mapserver (7.0.4-2) unstable; urgency=medium
 
