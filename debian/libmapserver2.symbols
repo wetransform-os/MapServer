@@ -1,4 +1,4 @@
-# SymbolsHelper-Confirmed: 7.0.4 amd64
+# SymbolsHelper-Confirmed: 7.0.5 amd64
 libmapserver.so.2 #PACKAGE# #MINVER#
  BuildExpressionTree@Base 6.2.1
  CleanVSIDir@Base 6.2.1
@@ -273,6 +273,8 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZN10ClipperLiblsERSoRNS_8IntPointE@Base 6.2.1
  _ZN10ClipperLiblsERSoRSt6vectorINS_8IntPointESaIS2_EE@Base 6.2.1
  _ZN10ClipperLiblsERSoRSt6vectorIS1_INS_8IntPointESaIS2_EESaIS4_EE@Base 6.2.1
+ _ZN10msExprNodeD1Ev@Base 7.0.5
+ _ZN10msExprNodeD2Ev@Base 7.0.5
  _ZN11KmlRenderer10renderLineEP8imageObjP8shapeObjP14strokeStyleObj@Base 6.4.0
  _ZN11KmlRenderer10startShapeEP8imageObjP8shapeObj@Base 6.4.0
  _ZN11KmlRenderer11createImageEiiP15outputFormatObjP8colorObj@Base 6.4.0
@@ -596,6 +598,9 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  (optional=templinst|arch=!amd64 !arm64 !mips64el !ppc64el !s390x !sparc64)_ZNSt6vectorIN10ClipperLib9ExPolygonESaIS1_EE17_M_default_appendEj@Base 7.0.2
  (optional=templinst|arch=amd64 sparc64)_ZNSt6vectorIN10ClipperLib9ExPolygonESaIS1_EE17_M_default_appendEm@Base 7.0.2
  (optional=templinst)_ZNSt6vectorIN10ClipperLib9ExPolygonESaIS1_EE19_M_emplace_back_auxIJRKS1_EEEvDpOT_@Base 7.0.2
+ (optional=templinst)_ZNSt6vectorIP10msExprNodeSaIS1_EE19_M_emplace_back_auxIJRKS1_EEEvDpOT_@Base 7.0.5
+ (optional=templinst)_ZNSt6vectorIP10msExprNodeSaIS1_EE9push_backERKS1_@Base 7.0.5
+ (optional=templinst)_ZNSt6vectorIP10msExprNodeSaIS1_EEaSERKS3_@Base 7.0.5
  (optional=templinst|arch=!amd64 !arm64 !mips64el !ppc64el !s390x !sparc64)_ZNSt6vectorIPN10ClipperLib11HorzJoinRecESaIS2_EE17_M_default_appendEj@Base 7.0.2
  (optional=templinst|arch=amd64 sparc64)_ZNSt6vectorIPN10ClipperLib11HorzJoinRecESaIS2_EE17_M_default_appendEm@Base 7.0.2
  (optional=templinst)_ZNSt6vectorIPN10ClipperLib11HorzJoinRecESaIS2_EE19_M_emplace_back_auxIJRKS2_EEEvDpOT_@Base 7.0.2
@@ -616,6 +621,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  (optional=templinst|arch=!alpha !amd64 !arm64 !kfreebsd-amd64 !mips64el !ppc64 !ppc64el !s390x !sparc64)_ZSt16__introsort_loopIN9__gnu_cxx17__normal_iteratorIPPN10ClipperLib6OutRecESt6vectorIS4_SaIS4_EEEEiNS0_5__ops15_Iter_comp_iterIPFbS4_S4_EEEEvT_SF_T0_T1_@Base 6.4.1
  (optional=templinst|arch=alpha amd64 arm64 kfreebsd-amd64 mips64el ppc64 ppc64el s390x sparc64)_ZSt16__introsort_loopIN9__gnu_cxx17__normal_iteratorIPPN10ClipperLib6OutRecESt6vectorIS4_SaIS4_EEEElNS0_5__ops15_Iter_comp_iterIPFbS4_S4_EEEEvT_SF_T0_T1_@Base 6.4.1
  (optional=templinst|arch=sparc)_ZSt4sortIN9__gnu_cxx17__normal_iteratorIPPN10ClipperLib6OutRecESt6vectorIS4_SaIS4_EEEEPFbS4_S4_EEvT_SC_T0_@Base 6.4.1
+ (optional=templinst)_ZStplIcSt11char_traitsIcESaIcEENSt7__cxx1112basic_stringIT_T0_T1_EEPKS5_RKS8_@Base 7.0.5
  _ZTI11KmlRenderer@Base 6.4.0
  _ZTI12line_adaptor@Base 6.2.1
  _ZTI15polygon_adaptor@Base 6.2.1
@@ -1320,6 +1326,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msIO_fprintf@Base 6.2.1
  msIO_fread@Base 6.2.1
  msIO_fwrite@Base 6.2.1
+ msIO_getAndStripStdoutBufferMimeHeaders@Base 7.0.5
  msIO_getHandler@Base 6.2.1
  msIO_installHandlers@Base 6.2.1
  msIO_installStdinFromBuffer@Base 6.2.1
