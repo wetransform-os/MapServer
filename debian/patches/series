@@ -2,5 +2,3 @@ hardening.patch
 perl-mapscript-install.patch
 ruby-mapscript-install.patch
 java-hardening.patch
-php-mapscript.patch
-0001-Declare-nLayerOrder-where-it-s-used.-5387.patch
