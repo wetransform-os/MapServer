@@ -11,6 +11,8 @@ export DH_OPTIONS
 # Enable hardening build flags
 export DEB_BUILD_MAINT_OPTIONS=hardening=+all
 
+include /usr/share/dpkg/pkg-info.mk
+
 DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 
 CPPFLAGS := $(shell dpkg-buildflags --get CPPFLAGS)
@@ -25,8 +27,8 @@ RUBYVERSIONS := $(shell dh_ruby --print-supported)
 
 MANPAGES := $(wildcard debian/man/*.*.xml)
 
-MS_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(.*\)-.*/\1/p' | sed -e 's/\+.*//; s/^[0-9]://')
-BUILD_DATE := $(shell dpkg-parsechangelog | sed -ne 's/^Date: //p' | LC_ALL=C date -u "+%d %B %Y" -f -)
+MS_VERSION := $(shell echo $(DEB_VERSION_UPSTREAM) | sed -e 's/\+.*//')
+BUILD_DATE := $(shell echo $(SOURCE_DATE_EPOCH) | LC_ALL=C date -u "+%d %B %Y" -f -)
 
 CMAKE_OPTS := \
 		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
