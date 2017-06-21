@@ -1,11 +1,11 @@
-mapserver (7.0.6-1) UNRELEASED; urgency=medium
+mapserver (7.0.6-1) unstable; urgency=medium
 
   * New upstream release.
   * Use pkg-info.mk variables instead of dpkg-parsechangelog output.
   * Bump Standards-Version to 4.0.0, no changes.
   * Add autopkgtest to test installability.
 
- -- Bas Couwenberg <sebastic@debian.org>  Wed, 21 Jun 2017 20:53:59 +0200
+ -- Bas Couwenberg <sebastic@debian.org>  Wed, 21 Jun 2017 21:14:05 +0200
 
 mapserver (7.0.5-1) unstable; urgency=medium
 
