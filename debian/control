@@ -75,7 +75,6 @@ Description: Shared library for MapServer
 Package: libmapserver-dbg
 Architecture: any
 Section: debug
-Priority: extra
 Depends: libmapserver2 (= ${binary:Version}),
          ${misc:Depends}
 Breaks: libmapserver1-dbg (<< 7.0.0~)
