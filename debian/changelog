@@ -4,6 +4,7 @@ mapserver (7.0.7-1) UNRELEASED; urgency=medium
   * Change priority from extra to optional.
   * Bump Standards-Version to 4.1.1, changes: priority.
   * Strip trailing whitespace from changelog & rules.
+  * Add lintian override for debian-watch-uses-insecure-uri.
 
  -- Bas Couwenberg <sebastic@debian.org>  Wed, 15 Nov 2017 20:59:16 +0100
 
