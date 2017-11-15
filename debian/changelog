@@ -3,6 +3,7 @@ mapserver (7.0.7-1) UNRELEASED; urgency=medium
   * New upstream release.
   * Change priority from extra to optional.
   * Bump Standards-Version to 4.1.1, changes: priority.
+  * Strip trailing whitespace from changelog & rules.
 
  -- Bas Couwenberg <sebastic@debian.org>  Wed, 15 Nov 2017 20:59:16 +0100
 
@@ -302,7 +303,7 @@ mapserver (6.4.1-1) unstable; urgency=low
   * New upstream release, fixes a vulnerability leading to potential leakage of
     information when using TIME filtering on postgis layers.
   * Refresh patches.
-  * Drop freetype2-include-dir.patch, applied upstream in modified form. 
+  * Drop freetype2-include-dir.patch, applied upstream in modified form.
   * Bump Standards-Version to 3.9.5, no changes required.
   * Add lintian override for debian-watch-may-check-gpg-signature,
     upstream doesn't provide signatures for verification.
@@ -328,7 +329,7 @@ mapserver (6.4.0-3) unstable; urgency=low
   * Remove debconf translations, debconf template no longer used.
 
   [ Francesco Paolo Lovergine ]
-  * Now build-dep on (versioned) libgdal-dev instead of (obsolete) libgdal1-dev. 
+  * Now build-dep on (versioned) libgdal-dev instead of (obsolete) libgdal1-dev.
   * Added a new patch freetype2-include-dir.patch to fix problem in
     determining the correct FreeType2 include directory (why is it not using
     freetype-config?).
@@ -381,7 +382,7 @@ mapserver (6.2.1-3) unstable; urgency=low
 
   [ Bas Couwenberg ]
   * Upload for Debian closes: #706157
-  * Merge changes from 6.0.1-4: 
+  * Merge changes from 6.0.1-4:
     - Migrated to debhelper level 9.
     - Depend on PHP API version instead of libapache2-mod-php5.
     - Bump libgeos-dev build dependency to 3.3.1-1~.
@@ -472,7 +473,7 @@ mapserver (6.0.1-4) unstable; urgency=low
   * Fixed typo that prevented AGG use in debian/rules.
     (closes: #663875)
   * Now using libpng-dev as b-d.
-  * Migrated to debhelper level 9 and policy bumped to 3.9.3. 
+  * Migrated to debhelper level 9 and policy bumped to 3.9.3.
 
  -- Francesco Paolo Lovergine <frankie@debian.org>  Wed, 14 Mar 2012 21:43:53 +0100
 
@@ -500,7 +501,7 @@ mapserver (6.0.1-1) unstable; urgency=low
   [ Francesco Paolo Lovergine ]
   * Debhelper level set to 8.
   * This version still uses libpng 1.2, but is ready also for 1.5.
-  * Removed explicit settings of png dir, it collids with multi-arch support. 
+  * Removed explicit settings of png dir, it collids with multi-arch support.
   * Now mapscript/php3 moved finally to mapscript/php. Install file changed as
     due.
   * Removed obsolete python-docutils build-dep. Thanks Jakub Wilk.
@@ -598,7 +599,7 @@ mapserver (5.6.3-1) unstable; urgency=low
   * Policy bumped to 3.8.4 without changes.
   * Removed Andreas Putzo among Uploaders: last contribution dated more than
     two years ago.
-  * Added shapelib to Suggests in mapserver-bin. 
+  * Added shapelib to Suggests in mapserver-bin.
 
  -- Francesco Paolo Lovergine <frankie@debian.org>  Wed, 24 Mar 2010 22:13:25 +0100
 
@@ -617,9 +618,9 @@ mapserver (5.6.1-1) unstable; urgency=low
 mapserver (5.6.0+final-1) unstable; urgency=low
 
   * New upstream release, reissued after some last minute changes. This is
-    the current 5.6.0 upstream version. 
-  * Added a lintian override-file for mismatched 
-    possible-gpl-code-linked-with-openssl error. 
+    the current 5.6.0 upstream version.
+  * Added a lintian override-file for mismatched
+    possible-gpl-code-linked-with-openssl error.
   * Policy bumped to 3.8.3 (no changes).
   * Added missing ${misc:Depends} item in each control stanza.
   * Added a README.source for documenting dpatch use.
@@ -634,7 +635,7 @@ mapserver (5.6.0-1) unstable; urgency=low
   * Deprecated dh_movefiles changed in dh_install.
   * Removed debian/AGG and debian/agg-2.4.uu: use AGG included with Mapserver source.
   * Clean up of debian/rules: removed all agg related stuff.
-  * Added libxslt1-dev, libpam0g-dev and libreadline-dev build-dependencies. 
+  * Added libxslt1-dev, libpam0g-dev and libreadline-dev build-dependencies.
   * Added msencrypt binary.
   * Added SWF support. (flash)
   * Added fribidi support.
@@ -645,7 +646,7 @@ mapserver (5.6.0-1) unstable; urgency=low
 
 mapserver (5.4.2-1) unstable; urgency=high
 
-  * New upstream release, with a few fixes. 
+  * New upstream release, with a few fixes.
     Proper fix for CVE-2009-0840.
     (closes: #535340, #532446)
 
@@ -653,7 +654,7 @@ mapserver (5.4.2-1) unstable; urgency=high
 
 mapserver (5.4.1-1) experimental; urgency=low
 
-  * New upstream release, with a few fixes. 
+  * New upstream release, with a few fixes.
 
  -- Alan Boudreault <aboudreault@mapgears.com>  Thu, 04 Jun 2009 14:51:13 -0400
 
@@ -662,8 +663,8 @@ mapserver (5.4.0-1) experimental; urgency=low
   [ Alan Boudreault ]
   * New upstream release.
   * Added Alan as Uploader in debian/control.
-  * Removed obsolete html doc generation in debian/rules and 
-    from mapserver-doc package.  
+  * Removed obsolete html doc generation in debian/rules and
+    from mapserver-doc package.
 
   [ Francesco Paolo Lovergine ]
   * Updated sections due to ftmpasters changes.
@@ -729,15 +730,15 @@ mapserver (5.0.3-2) unstable; urgency=high
 mapserver (5.0.3-1) unstable; urgency=low
 
   * New upstream release, with a good deal of fixes.
-  * Changed a bit clean-first-build to make lintian happy about 
+  * Changed a bit clean-first-build to make lintian happy about
     debian-rules-ignores-make-clean-error warning.
 
  -- Francesco Paolo Lovergine <frankie@debian.org>  Sun, 08 Jun 2008 11:50:22 +0200
 
 mapserver (5.0.2-3) unstable; urgency=high
 
-  * The setup.py script is not able to manage properly static libraries flavor 
-    for AGG now used embedded in mapserver. The trick is explicitly linking by 
+  * The setup.py script is not able to manage properly static libraries flavor
+    for AGG now used embedded in mapserver. The trick is explicitly linking by
     manipulating the mapscriptvars file before running setup.py. That rendered
     python-mapscript unusable.
     (closes: #483400)
@@ -747,8 +748,8 @@ mapserver (5.0.2-3) unstable; urgency=high
 mapserver (5.0.2-2) unstable; urgency=low
 
   * Added embedded AGG 2.4 for use with mapserver. This is a BSD-licensed
-    version roughly functionally identical to current 2.5 version. 
-    See debian/AGG for additional maintainer information about the AGG integration. 
+    version roughly functionally identical to current 2.5 version.
+    See debian/AGG for additional maintainer information about the AGG integration.
     (closes: #448198)
   * Added build-deps for AGG: libsdl1.2-dev, libfreetype6-dev, libx11-dev.
   * Added build-dep on sharutils for AGG uuencoded distfile.
@@ -833,7 +834,7 @@ mapserver (4.10.3-1) unstable; urgency=high
     - French. Closes: #435933
     - Czech. Closes: #436280
     - Dutch. Closes: #436853
-    
+
  -- Andreas Putzo <andreas@putzo.net>  Tue, 28 Aug 2007 08:21:59 +0000
 
 mapserver (4.10.2-1) unstable; urgency=low
@@ -1153,12 +1154,12 @@ mapserver (4.4.1-0.dgis.unstable.2) unstable; urgency=low
 
 mapserver (4.4.1-0.dgis.unstable.1) unstable; urgency=low
 
-  * update release number 
+  * update release number
   * New upstram release
-  * Major change to rule the files for make a double build one for php 
+  * Major change to rule the files for make a double build one for php
     and another one for the rest
   * Change dep to php4-dev
-  
+
  -- Thomas Sondag <thomas@microdop.org>  Fri, 07 Jan 2005 16:16:37 +0100
 
 mapserver (4.2.5-2) unstable; urgency=low
@@ -1173,19 +1174,19 @@ mapserver (4.2.5-2) unstable; urgency=low
   * Add configure section to debian rules
   * configure with thread safe support
 
- -- Thomas Sondag <thomas@microdop.org>  Fri, 29 Oct 2004 13:06:50 +0200 
+ -- Thomas Sondag <thomas@microdop.org>  Fri, 29 Oct 2004 13:06:50 +0200
 
 mapserver (4.2.5-1) unstable; urgency=low
 
-  * New upstream version 
+  * New upstream version
 
- -- Thomas Sondag <thomas@microdop.org>  Mon, 25 Oct 2004 19:13:21 +0200 
+ -- Thomas Sondag <thomas@microdop.org>  Mon, 25 Oct 2004 19:13:21 +0200
 
 mapserver (4.2.0-2) unstable; urgency=low
 
   * Build For Sarge
   * Removing libming support (Where is it ? not found in Sarge)
-  
+
  -- Thomas Sondag <thomas@microdop.org>  Sun, 25 Jul 2004 15:45:20 +0200
 
 mapserver (4.2.0-1) stable; urgency=low
@@ -1200,12 +1201,12 @@ mapserver (4.0.2-1) stable; urgency=low
   * adding --without-tiff for fixing problem with perl-mapscript
 
  -- Thomas Sondag <thomas@microdop.org>  Wed, 04 Feb 2004 19:24:56 +0100
- 
+
 mapserver (4.0-1) stable; urgency=low
 
   * New release
 
- -- Thomas Sondag <thomas@microdop.org>  Sun, 12 Oct 2003 18:44:57 +0200 
+ -- Thomas Sondag <thomas@microdop.org>  Sun, 12 Oct 2003 18:44:57 +0200
 
 mapserver (3.6.4-5) stable; urgency=low
 
@@ -1215,13 +1216,13 @@ mapserver (3.6.4-5) stable; urgency=low
 
 mapserver (3.6.4-4) stable; urgency=low
 
-  * hum nothing 
+  * hum nothing
 
  -- Thomas Sondag <thomas.sondag@educagri.fr>  Mon, 13 May  2003 14:17:27 +0100
 
 mapserver (3.6.4-3) unstable; urgency=low
 
-  * Added proj 
+  * Added proj
 
  -- Thomas Sondag <thomas.sondag@educagri.fr>  Mon, 07 Feb 2003 14:17:27 +0100
 
