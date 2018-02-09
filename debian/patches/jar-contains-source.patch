@@ -1,0 +1,15 @@
+Description: Exclude .java files from jar.
+Author: Bas Couwenberg <sebastic@debian.org>
+Forwarded: https://github.com/mapserver/mapserver/pull/5545
+
+--- a/mapscript/java/CMakeLists.txt
++++ b/mapscript/java/CMakeLists.txt
+@@ -38,7 +38,7 @@ ADD_CUSTOM_COMMAND(TARGET javamapscript
+                       WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+                       POST_BUILD
+                       COMMAND ${Java_JAVAC_EXECUTABLE} edu/umn/gis/mapscript/*.java
+-                      COMMAND ${Java_JAR_EXECUTABLE} cf mapscript.jar edu
++                      COMMAND ${Java_JAR_EXECUTABLE} cf mapscript.jar edu/umn/gis/mapscript/*.class
+                       COMMENT "Compiling java source files, creating mapscript.jar"
+                       )
+ 
