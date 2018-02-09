@@ -504,7 +504,7 @@ mapserver (6.0.1-2) unstable; urgency=low
  -- Francesco Paolo Lovergine <frankie@debian.org>  Fri, 23 Dec 2011 14:02:06 +0100
 
 mapserver (6.0.1-1) unstable; urgency=low
-	
+
   [ Alan Boudreault ]
   * New upstream release.
 
@@ -553,7 +553,7 @@ mapserver (5.6.5-2) unstable; urgency=high
 
   * Fix Validation of symbol index values (CVE-2010-1678)
     [http://trac.osgeo.org/mapserver/ticket/3641]
-	
+
  -- Alan Boudreault <aboudreault@mapgears.com>  Thu, 06 Jan 2011 11:18:29 -0500
 
 mapserver (5.6.5-1.1) unstable; urgency=low
@@ -619,7 +619,7 @@ mapserver (5.6.1-1) unstable; urgency=low
   * New upstream release, with a few important bug fixes.
   * Modified ruby mapscript package to use ruby 1.9.1 instead of 1.9.0.
     (closes: #565831)
-	
+
   [ Francesco Paolo Lovergine ]
   * Removed Fabio Tranchitella from Uploaders.
 
