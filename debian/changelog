@@ -6,6 +6,7 @@ mapserver (7.0.7-2) UNRELEASED; urgency=medium
   * Fix deprecated source override location.
   * Update watch file to use HTTPS.
   * Update Vcs-* URLs for Salsa.
+  * Strip trailing whitespace from control & rules files.
 
  -- Bas Couwenberg <sebastic@debian.org>  Sat, 20 Jan 2018 22:17:20 +0100
 
