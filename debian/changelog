@@ -1,4 +1,4 @@
-mapserver (7.2.0~beta1-1) UNRELEASED; urgency=medium
+mapserver (7.2.0~beta1-1~exp1) experimental; urgency=medium
 
   * New upstream beta release.
   * Update copyright-format URL to use HTTPS.
@@ -16,7 +16,7 @@ mapserver (7.2.0~beta1-1) UNRELEASED; urgency=medium
   * Replace /usr/lib/cgi-bin/mapserv with symlink to /usr/bin/mapserv.
   * Update symbols for amd64.
 
- -- Bas Couwenberg <sebastic@debian.org>  Wed, 09 May 2018 19:54:22 +0200
+ -- Bas Couwenberg <sebastic@debian.org>  Wed, 09 May 2018 22:21:12 +0200
 
 mapserver (7.0.7-1) unstable; urgency=medium
 
