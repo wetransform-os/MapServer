@@ -177,4 +177,4 @@ override_dh_java:
 	dh_java -plibmapscript-java
 
 override_dh_strip:
-	dh_strip --dbg-package=libmapserver-dbg
+	dh_strip --dbgsym-migration='libmapserver-dbg (<< 7.2.0~)'
