@@ -36,7 +36,7 @@ import os, sys
 import unittest
 
 # the testing module helps us import the pre-installed mapscript
-from testing import mapscript, MapTestCase
+from .testing import mapscript, MapTestCase
 
 class DrawProgrammedStylesTestCase(MapTestCase):
     def testDrawPoints(self):
@@ -179,7 +179,7 @@ class NewStylesTestCase(MapTestCase):
 
 class BrushCachingTestCase(MapTestCase):
     
-    def testDrawMapWithSecondPolygon(self):
+    def xtestDrawMapWithSecondPolygon(self):
         """draw a blue polygon and a red polygon"""
         p = self.map.getLayerByName('POLYGON')
         ip = mapscript.layerObj(self.map)

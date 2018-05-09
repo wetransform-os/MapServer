@@ -54,8 +54,9 @@
 #include "../../mapprimitive.h"
 #include "../../mapshape.h"
 
-#ifdef SWIGPYTHON
-#include "pygdioctx/pygdioctx.h"
+#if defined(WIN32) && defined(SWIGCSHARP)
+/* <windows.h> is needed for GetExceptionCode() for unhandled exception */
+#include <windows.h>
 #endif
 
 %}

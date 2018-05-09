@@ -36,7 +36,7 @@ import os, sys
 import unittest
 
 # the testing module helps us import the pre-installed mapscript
-from testing import mapscript, TESTMAPFILE, TESTS_PATH
+from .testing import mapscript, TESTMAPFILE, TESTS_PATH
 
 
 class FontTestCase(unittest.TestCase):
@@ -57,10 +57,12 @@ class FontTestCase(unittest.TestCase):
         lo.status = mapscript.MS_DEFAULT
 
         co = mapscript.classObj()
-        co.label.type = mapscript.MS_TRUETYPE
-        co.label.font = 'Vera'
-        co.label.size = 10
-        co.label.color.setHex('#000000')
+        lbl =mapscript.labelObj() 
+        lbl.type = mapscript.MS_TRUETYPE
+        lbl.font = 'Vera'
+        lbl.size = 10
+        lbl.color.setHex('#000000')
+        co.addLabel(lbl)
 
         so = mapscript.styleObj()
         so.symbol = 0
