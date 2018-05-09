@@ -14,6 +14,7 @@ mapserver (7.2.0~beta1-1) UNRELEASED; urgency=medium
   * Add protobuf build dependencies for MVT support.
   * Drop obsolete dbg package.
   * Replace /usr/lib/cgi-bin/mapserv with symlink to /usr/bin/mapserv.
+  * Update symbols for amd64.
 
  -- Bas Couwenberg <sebastic@debian.org>  Wed, 09 May 2018 19:54:22 +0200
 

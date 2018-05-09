@@ -1,4 +1,4 @@
-# SymbolsHelper-Confirmed: 7.0.7 amd64
+# SymbolsHelper-Confirmed: 7.2.0~beta1 amd64
 libmapserver.so.2 #PACKAGE# #MINVER#
  BuildExpressionTree@Base 6.2.1
  CleanVSIDir@Base 6.2.1
@@ -69,6 +69,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  FLTPreParseFilterForAliasAndGroup@Base 7.0.0
  FLTProcessPropertyIsNull@Base 7.0.3
  FLTSimplify@Base 7.0.0
+ FLTSplitFilters@Base 7.2.0~beta1
  FLTValidFilterNode@Base 6.2.1
  FLTValidForBBoxFilter@Base 6.2.1
  FLTogrConvertGeometry@Base 6.2.1
@@ -87,6 +88,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  LayerDefaultGetItems@Base 6.2.1
  LayerDefaultGetNumFeatures@Base 6.2.1
  LayerDefaultGetShape@Base 6.2.1
+ LayerDefaultGetShapeCount@Base 7.2.0~beta1
  LayerDefaultInitItemInfo@Base 6.2.1
  LayerDefaultIsOpen@Base 6.2.1
  LayerDefaultNextShape@Base 6.2.1
@@ -143,6 +145,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _Z23msOGREscapePropertyNameP8layerObjPKc@Base 6.2.1
  _Z24aggCompositeRasterBufferP8imageObjP15rasterBufferObj20CompositingOperationi@Base 7.0.0
  _Z24aggGetRasterBufferHandleP8imageObjP15rasterBufferObj@Base 6.2.1
+ _Z24msOGRLayerGetNumFeaturesP8layerObj@Base 7.2.0~beta1
  _Z25aggInitializeRasterBufferP15rasterBufferObjiii@Base 6.2.1
  _Z25utfgridRenderPixmapSymbolP8imageObjddP9symbolObjP14symbolStyleObj@Base 7.0.0
  _Z25utfgridRenderVectorSymbolP8imageObjddP9symbolObjP14symbolStyleObj@Base 7.0.0
@@ -646,6 +649,20 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZTVN10ClipperLib16clipperExceptionE@Base 6.2.1
  _ZTVN10ClipperLib7ClipperE@Base 6.2.1
  _get_param_value@Base 7.0.0
+ _msMetadataGetCharacterString@Base 7.2.0~beta1
+ _msMetadataGetCodeList@Base 7.2.0~beta1
+ _msMetadataGetContact@Base 7.2.0~beta1
+ _msMetadataGetDate@Base 7.2.0~beta1
+ _msMetadataGetDecimal@Base 7.2.0~beta1
+ _msMetadataGetDistributionInfo@Base 7.2.0~beta1
+ _msMetadataGetExtent@Base 7.2.0~beta1
+ _msMetadataGetGMLTimePeriod@Base 7.2.0~beta1
+ _msMetadataGetIdentificationInfo@Base 7.2.0~beta1
+ _msMetadataGetInteger@Base 7.2.0~beta1
+ _msMetadataGetOnline@Base 7.2.0~beta1
+ _msMetadataGetReferenceSystemInfo@Base 7.2.0~beta1
+ _msMetadataGetSpatialRepresentationInfo@Base 7.2.0~beta1
+ _msMetadataGetURL@Base 7.2.0~beta1
  _msSLDParseSizeParameter@Base 6.2.1
  _msValidateTime@Base 6.2.1
  _ms_script_prefix_am@Base 7.0.0
@@ -705,6 +722,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  circleLayerDrawShape@Base 6.2.1
  cleanupCairo@Base 6.2.1
  cleanupDummy@Base 6.2.1
+ cleanupResultCache@Base 7.2.0~beta1
  closeLayerRasterCairo@Base 6.2.1
  closeLayerVectorCairo@Base 6.2.1
  clusterDestroyData@Base 6.2.1
@@ -741,6 +759,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  freeClass@Base 6.2.1
  freeClassHitTests@Base 6.4.0
  freeCluster@Base 6.2.1
+ freeCompositingFilter@Base 7.2.0~beta1
  freeFeatureList@Base 6.2.1
  freeGrid@Base 7.0.0
  freeImageCache@Base 6.2.1
@@ -751,7 +770,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  freeLabelHitTests@Base 6.4.0
  freeLabelLeader@Base 7.0.0
  freeLayer@Base 6.2.1
- freeLayerCompositers@Base 7.0.2
+ freeLayerCompositer@Base 7.2.0~beta1
  freeLayerHitTests@Base 6.4.0
  freeLegend@Base 6.2.1
  freeMapHitTests@Base 6.4.0
@@ -887,12 +906,17 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msAlphaBlendPM@Base 6.2.1
  msAppendOutputFormat@Base 6.2.1
  msAppendSymbol@Base 6.2.1
+ msApplyBlackeningCompositingFilter@Base 7.2.0~beta1
+ msApplyBlurringCompositingFilter@Base 7.2.0~beta1
+ msApplyCompositingFilter@Base 7.2.0~beta1
  msApplyDefaultOutputFormats@Base 6.2.1
  msApplyDefaultSubstitutions@Base 6.2.1
- msApplyFilterToRasterBuffer@Base 7.0.0
+ msApplyGrayscaleCompositingFilter@Base 7.2.0~beta1
  msApplyMapConfigOptions@Base 6.2.1
  msApplyOutputFormat@Base 6.2.1
  msApplySubstitutions@Base 6.2.1
+ msApplyTranslationCompositingFilter@Base 7.2.0~beta1
+ msApplyWhiteningCompositingFilter@Base 7.2.0~beta1
  msAxisDenormalizePoints@Base 6.2.1
  msAxisNormalizePoints@Base 6.2.1
  msAxisSwapShape@Base 6.2.1
@@ -1086,6 +1110,10 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msDrawRasterLayer@Base 6.2.1
  msDrawRasterLayerGDAL@Base 6.2.1
  msDrawRasterLayerLow@Base 6.2.1
+ msDrawRasterLayerLowCheckIfMustDraw@Base 7.2.0~beta1
+ msDrawRasterLayerLowCloseDataset@Base 7.2.0~beta1
+ msDrawRasterLayerLowOpenDataset@Base 7.2.0~beta1
+ msDrawRasterLayerLowWithDataset@Base 7.2.0~beta1
  msDrawRasterLoadProjection@Base 6.4.0
  msDrawRasterSetupTileLayer@Base 6.4.0
  msDrawReferenceMap@Base 6.2.1
@@ -1102,7 +1130,6 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msDrawVectorLayer@Base 6.2.1
  msDrawWMSLayer@Base 6.2.1
  msDrawWMSLayerLow@Base 6.2.1
- msDumpLayer@Base 6.2.1
  msDumpResult@Base 6.2.1
  msEmbedLegend@Base 6.2.1
  msEmbedScalebar@Base 6.2.1
@@ -1261,6 +1288,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msGetProjectionString@Base 6.2.1
  msGetQueryResultBounds@Base 6.2.1
  msGetRasterBufferKml@Base 6.4.0
+ msGetShapeRAMSize@Base 7.2.0~beta1
  msGetStringSize@Base 7.0.0
  msGetSymbol@Base 6.2.1
  msGetSymbolIndex@Base 6.2.1
@@ -1385,6 +1413,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msIsAxisInverted@Base 6.2.1
  msIsAxisInvertedProj@Base 7.0.0
  msIsDegenerateShape@Base 6.2.1
+ msIsGlyphASpace@Base 7.2.0~beta1
  msIsLayerQueryable@Base 6.2.1
  msIsOuterRing@Base 6.2.1
  msIsXMLTagValid@Base 6.2.1
@@ -1420,6 +1449,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msLayerGetProcessing@Base 6.2.1
  msLayerGetProcessingKey@Base 6.2.1
  msLayerGetShape@Base 6.2.1
+ msLayerGetShapeCount@Base 7.2.0~beta1
  msLayerInitItemInfo@Base 6.2.1
  msLayerIsOpen@Base 6.2.1
  msLayerIsVisible@Base 6.2.1
@@ -1444,6 +1474,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msLegendCalcSize@Base 6.2.1
  msLibXml2GenerateList@Base 6.2.1
  msLibXml2GetFirstChild@Base 7.0.0
+ msLibXml2GetFirstChildElement@Base 7.2.0~beta1
  msLibXml2GetFirstChildNs@Base 7.0.0
  msLibXml2GetXPath@Base 6.2.1
  msLibXml2GetXPathTree@Base 6.2.1
@@ -1471,6 +1502,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msLoadSymbolSet@Base 6.2.1
  msLongToString@Base 6.2.1
  msLookupHashTable@Base 6.2.1
+ msMVTWriteTile@Base 7.2.0~beta1
  msMapComputeGeotransform@Base 6.2.1
  msMapGeorefToPixel@Base 6.2.1
  msMapIgnoreMissingData@Base 6.2.1
@@ -1489,6 +1521,13 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msMaybeAllocateClassStyle@Base 6.2.1
  msMergeRasterBufferKml@Base 6.4.0
  msMergeRect@Base 6.2.1
+ msMetadataCreateParamsObj@Base 7.2.0~beta1
+ msMetadataDispatch@Base 7.2.0~beta1
+ msMetadataFreeParamsObj@Base 7.2.0~beta1
+ msMetadataGetExceptionReport@Base 7.2.0~beta1
+ msMetadataGetLayerMetadata@Base 7.2.0~beta1
+ msMetadataParseRequest@Base 7.2.0~beta1
+ msMetadataSetGetMetadataURL@Base 7.2.0~beta1
  msMoveClassDown@Base 6.2.1
  msMoveClassUp@Base 6.2.1
  msMoveLabelStyleDown@Base 6.2.1
@@ -1552,6 +1591,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msOWSIpInList@Base 6.4.0
  msOWSIpInMetadata@Base 6.4.0
  msOWSIpParse@Base 6.4.0
+ msOWSLanguageNegotiation@Base 7.2.0~beta1
  msOWSLookupMetadata2@Base 6.2.1
  msOWSLookupMetadata@Base 6.2.1
  msOWSLookupMetadataWithLanguage@Base 6.2.1
@@ -1607,6 +1647,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msOracleSpatialLayerWhichShapes@Base 6.2.1
  msOutlineRenderingPrepareStyle@Base 7.0.0
  msOutlineRenderingRestoreStyle@Base 7.0.0
+ msOutputFormatResolveFromImage@Base 7.2.0~beta1
  msOutputFormatValidate@Base 6.2.1
  msOwsIsOutputFormatValid@Base 6.2.1
  msPOSTGRESQLJoinClose@Base 6.2.1
@@ -1629,6 +1670,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msPopulateRendererVTableCairoRaster@Base 6.2.1
  msPopulateRendererVTableCairoSVG@Base 6.2.1
  msPopulateRendererVTableKML@Base 6.2.1
+ msPopulateRendererVTableMVT@Base 7.2.0~beta1
  msPopulateRendererVTableOGR@Base 6.2.1
  msPopulateRendererVTableUTFGrid@Base 7.0.0
  msPopulateTextSymbolForLabelAndString@Base 7.0.0
@@ -1652,7 +1694,9 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msPostGISLayerFreeItemInfo@Base 6.2.1
  msPostGISLayerGetExtent@Base 7.0.0
  msPostGISLayerGetItems@Base 6.2.1
+ msPostGISLayerGetNumFeatures@Base 7.2.0~beta1
  msPostGISLayerGetShape@Base 6.2.1
+ msPostGISLayerGetShapeCount@Base 7.2.0~beta1
  msPostGISLayerInitItemInfo@Base 6.2.1
  msPostGISLayerInitializeVirtualTable@Base 6.2.1
  msPostGISLayerIsOpen@Base 6.2.1
@@ -1740,7 +1784,6 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msReplaceSubstring@Base 6.2.1
  msResampleGDALToMap@Base 6.2.1
  msResetErrorList@Base 6.2.1
- msRestoreOldFilter@Base 6.2.1
  msReturnNestedTemplateQuery@Base 6.2.1
  msReturnOpenLayersPage@Base 6.2.1
  msReturnPage@Base 6.2.1
@@ -1907,9 +1950,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msTileIndexAbsoluteDir@Base 6.2.1
  msTileSetExtent@Base 6.2.1
  msTileSetup@Base 6.2.1
- msTiledSHPClose@Base 6.2.1
  msTiledSHPCloseVT@Base 6.2.1
- msTiledSHPGetShape@Base 6.2.1
  msTiledSHPLayerFreeItemInfo@Base 6.2.1
  msTiledSHPLayerGetExtent@Base 6.2.1
  msTiledSHPLayerGetItems@Base 6.2.1
@@ -1917,10 +1958,6 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msTiledSHPLayerInitializeVirtualTable@Base 6.2.1
  msTiledSHPLayerIsOpen@Base 6.2.1
  msTiledSHPLayerSupportsCommonFilters@Base 6.2.1
- msTiledSHPNextShape@Base 6.2.1
- msTiledSHPOpenFile@Base 6.2.1
- msTiledSHPTryOpen@Base 6.2.1
- msTiledSHPWhichShapes@Base 6.2.1
  msTimeCleanup@Base 6.2.1
  msTimeCompare@Base 6.2.1
  msTimeGetResolution@Base 6.2.1
@@ -1954,6 +1991,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msUVRASTERLayerNextShape@Base 6.2.1
  msUVRASTERLayerOpen@Base 6.2.1
  msUVRASTERLayerSetTimeFilter@Base 6.2.1
+ msUVRASTERLayerUseMapExtentAndProjectionForNextWhichShapes@Base 7.2.0~beta1
  msUVRASTERLayerWhichShapes@Base 6.2.1
  msUnionLayerClose@Base 6.2.1
  msUnionLayerCopyVirtualTable@Base 6.2.1
@@ -1984,6 +2022,8 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msValidateParameter@Base 6.2.1
  msValidateTimeValue@Base 6.2.1
  msValueToRange@Base 6.2.1
+ msWCSApplyDatasetMetadataAsCreationOptions@Base 7.2.0~beta1
+ msWCSApplyLayerCreationOptions@Base 7.2.0~beta1
  msWCSCreateParamsObj20@Base 6.2.1
  msWCSDescribeCoverage11@Base 6.2.1
  msWCSDescribeCoverage20@Base 6.2.1
@@ -1991,6 +2031,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msWCSException11@Base 6.2.1
  msWCSException20@Base 6.2.1
  msWCSException@Base 6.2.1
+ msWCSFreeCoverageMetadata@Base 7.2.0~beta1
  msWCSFreeParams@Base 6.2.1
  msWCSFreeParamsObj20@Base 6.2.1
  msWCSGetCapabilities11@Base 6.2.1
@@ -2037,6 +2078,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msWFSUpdateRequestInfo@Base 6.2.1
  msWMSApplyDimension@Base 6.2.1
  msWMSApplyDimensionLayer@Base 6.2.1
+ msWMSApplyFilter@Base 7.2.0~beta1
  msWMSApplyTime@Base 6.2.1
  msWMSDescribeLayer@Base 6.2.1
  msWMSDispatch@Base 6.2.1
@@ -2138,6 +2180,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msyystring_size_tmp@Base 6.2.1
  msyytext@Base 6.2.1
  msyywrap@Base 6.2.1
+ mvtWriteShape@Base 7.2.0~beta1
  offsetAndTest@Base 6.2.1
  ogrEnabled@Base 6.2.1
  path@Base 6.2.1
@@ -2208,7 +2251,6 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  setCoordinate@Base 6.2.1
  setExtent@Base 6.2.1
  setExtentFromShapes@Base 6.2.1
- sortLayerByMetadata@Base 6.2.1
  sortLayerByOrder@Base 6.2.1
  startLayerDummy@Base 6.2.1
  startLayerRasterCairo@Base 6.2.1
@@ -2219,6 +2261,21 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  strrstr@Base 6.2.1
  unescape_url@Base 6.2.1
  unicode_is_latin1@Base 7.0.0
+ use_global_ft_cache@Base 7.2.0~beta1
+ vector_tile__tile__descriptor@Base 7.2.0~beta1
+ vector_tile__tile__feature__descriptor@Base 7.2.0~beta1
+ vector_tile__tile__feature__init@Base 7.2.0~beta1
+ vector_tile__tile__free_unpacked@Base 7.2.0~beta1
+ vector_tile__tile__geom_type__descriptor@Base 7.2.0~beta1
+ vector_tile__tile__get_packed_size@Base 7.2.0~beta1
+ vector_tile__tile__init@Base 7.2.0~beta1
+ vector_tile__tile__layer__descriptor@Base 7.2.0~beta1
+ vector_tile__tile__layer__init@Base 7.2.0~beta1
+ vector_tile__tile__pack@Base 7.2.0~beta1
+ vector_tile__tile__pack_to_buffer@Base 7.2.0~beta1
+ vector_tile__tile__unpack@Base 7.2.0~beta1
+ vector_tile__tile__value__descriptor@Base 7.2.0~beta1
+ vector_tile__tile__value__init@Base 7.2.0~beta1
  (c++)"virtual thunk to ClipperLib::Clipper::Clear()@Base" 6.2.1
  (c++)"virtual thunk to ClipperLib::Clipper::Reset()@Base" 6.2.1
  (c++)"virtual thunk to ClipperLib::Clipper::~Clipper()@Base" 6.2.1
