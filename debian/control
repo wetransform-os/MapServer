@@ -6,7 +6,7 @@ Uploaders: Francesco Paolo Lovergine <frankie@debian.org>,
 Section: devel
 Priority: optional
 Build-Depends: debhelper (>= 9),
-               dh-php,
+#               dh-php,
                dh-python,
                dpkg-dev (>= 1.16.1.1),
                cmake (>= 2.8.12.1-1.2),
@@ -32,7 +32,7 @@ Build-Depends: debhelper (>= 9),
                libxml2-dev,
                libxslt1-dev,
                zlib1g-dev (>= 1.1.4),
-               php-dev,
+#               php-dev,
                pkg-config,
                pkg-kde-tools,
                protobuf-c-compiler,
@@ -62,7 +62,7 @@ Suggests: cgi-mapserver,
           mapserver-bin,
           mapserver-doc,
           libmapscript-perl,
-          php-mapscript,
+#          php-mapscript,
           python-mapscript,
           ruby-mapscript
 Pre-Depends: ${misc:Pre-Depends}
@@ -98,7 +98,7 @@ Suggests: cgi-mapserver,
           mapserver-bin,
           mapserver-doc,
           libmapscript-perl,
-          php-mapscript,
+#          php-mapscript,
           python-mapscript,
           ruby-mapscript
 Breaks: libmapserver-6.2.1-dev (<< 6.4.0-1~),
@@ -121,7 +121,7 @@ Depends: ${shlibs:Depends},
 Suggests: mapserver-bin,
           mapserver-doc,
           libmapscript-perl,
-          php-mapscript,
+#          php-mapscript,
           python-mapscript,
           ruby-mapscript
 Description: CGI executable for MapServer
@@ -143,7 +143,7 @@ Suggests: cgi-mapserver,
           mapserver-doc,
           shapelib,
           libmapscript-perl,
-          php-mapscript,
+#          php-mapscript,
           python-mapscript,
           ruby-mapscript
 Description: MapServer utilities
@@ -160,7 +160,7 @@ Section: doc
 Depends: ${misc:Depends}
 Suggests: cgi-mapserver,
           libmapscript-perl,
-          php-mapscript,
+#          php-mapscript,
           python-mapscript,
           ruby-mapscript
 Description: documentation for MapServer
@@ -171,19 +171,19 @@ Description: documentation for MapServer
  functionality in MapScript is provided by the suggested mapscript
  library packages.
 
-Package: php-mapscript
-Architecture: any
-Section: php
-Depends: ${php:Depends},
-         ${shlibs:Depends},
-         ${misc:Depends}
-Suggests: mapserver-bin,
-          mapserver-doc
-Description: php-cgi module for MapServer
- PHP MapScript provides MapServer functions for PHP scripts.
- .
- MapServer is a CGI-based framework for Internet map services which
- supports Open Geospatial Consortium (OGC) standards.
+#Package: php-mapscript
+#Architecture: any
+#Section: php
+#Depends: ${php:Depends},
+#         ${shlibs:Depends},
+#         ${misc:Depends}
+#Suggests: mapserver-bin,
+#          mapserver-doc
+#Description: php-cgi module for MapServer
+# PHP MapScript provides MapServer functions for PHP scripts.
+# .
+# MapServer is a CGI-based framework for Internet map services which
+# supports Open Geospatial Consortium (OGC) standards.
 
 Package: libmapscript-perl
 Architecture: any
