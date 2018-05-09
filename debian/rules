@@ -139,10 +139,6 @@ override_dh_auto_install:
 	# removing embedded rpath in libraries
 	-find $(CURDIR)/debian/tmp/usr/lib -name "*.so*" -type f -exec chrpath --delete {} \;
 
-	# CGI mapserver
-	-mkdir -p debian/tmp/usr/lib/cgi-bin
-	install -m755 debian/tmp/usr/bin/mapserv debian/tmp/usr/lib/cgi-bin/mapserv
-
 	# TODO: Use dh_php for substvars & mapscript.ini installation
 	# PHP mapscript
 	#echo 'misc:Depends=phpapi-'$(PHPAPI) >> debian/php-mapscript.substvars

@@ -101,10 +101,10 @@ Description: Shared library development files for MapServer
 Package: cgi-mapserver
 Architecture: any
 Section: web
-Depends: ${shlibs:Depends},
+Depends: mapserver-bin,
+         ${shlibs:Depends},
          ${misc:Depends}
-Suggests: mapserver-bin,
-          mapserver-doc,
+Suggests: mapserver-doc,
           libmapscript-perl,
 #          php-mapscript,
           python-mapscript,
