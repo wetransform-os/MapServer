@@ -69,7 +69,7 @@ CMAKE_OPTS := \
 		-DWITH_PIXMAN=0
 
 %:
-	dh $@ --with php,python2,pkgkde_symbolshelper \
+	dh $@ --with php,python3,pkgkde_symbolshelper \
 	      --parallel \
 	      --buildsystem cmake
 
@@ -155,8 +155,8 @@ override_dh_compress:
 override_dh_makeshlibs:
 	dh_makeshlibs -Xphp_mapscript -- -c0 -v$(MS_VERSION)
 
-override_dh_python2:
-	dh_python2 -ppython-mapscript
+override_dh_python3:
+	dh_python3 -ppython3-mapscript
 
 override_dh_perl:
 	dh_perl -plibmapscript-perl
