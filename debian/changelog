@@ -7,6 +7,10 @@ mapserver (7.2.0~beta1-1) UNRELEASED; urgency=medium
   * Update watch file to use HTTPS.
   * Update Vcs-* URLs for Salsa.
   * Strip trailing whitespace from control & rules files.
+  * Update copyright file, changes:
+    - Update copyright years for existing copyright holders
+    - Update license for Bison files
+    - Drop license & copyright for pygdioctx, removed upstream
 
  -- Bas Couwenberg <sebastic@debian.org>  Wed, 09 May 2018 19:54:22 +0200
 
