@@ -3,7 +3,6 @@ mapserver (7.2.0~beta1-1) UNRELEASED; urgency=medium
   * New upstream beta release.
   * Update copyright-format URL to use HTTPS.
   * Bump Standards-Version to 4.1.4, no changes.
-  * Add patch to exclude .java files from mapscript.jar.
   * Fix deprecated source override location.
   * Update watch file to use HTTPS.
   * Update Vcs-* URLs for Salsa.
