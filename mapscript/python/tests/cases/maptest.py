@@ -36,7 +36,7 @@ import os, sys
 import unittest
 
 # the testing module helps us import the pre-installed mapscript
-from testing import mapscript, MapTestCase, TESTMAPFILE
+from .testing import mapscript, MapTestCase, TESTMAPFILE
 
 # ===========================================================================
 # Test begins now
@@ -96,9 +96,9 @@ class MapLayersTestCase(MapTestCase):
         n = self.map.numlayers
         layer = mapscript.layerObj()
         layer.name = 'new'
-	assert layer.map == None, layer.map
+        assert layer.map == None, layer.map
         index = self.map.insertLayer(layer)
-	assert layer.map != None, layer.map
+        assert layer.map != None, layer.map
         assert index == n, index
         assert self.map.numlayers == n + 1
         names = [self.map.getLayer(i).name for i in range(self.map.numlayers)]
@@ -112,9 +112,9 @@ class MapLayersTestCase(MapTestCase):
         n = self.map.numlayers
         layer = mapscript.layerObj()
         layer.name = 'new'
-	assert layer.map == None, layer.map
+        assert layer.map == None, layer.map
         index = self.map.insertLayer(layer, 0)
-	assert layer.map != None, layer.map
+        assert layer.map != None, layer.map
         assert index == 0, index
         assert self.map.numlayers == n + 1
         names = [self.map.getLayer(i).name for i in range(self.map.numlayers)]
@@ -212,7 +212,7 @@ class MapMetaDataTestCase(MapTestCase):
     def testLastKeyAccess(self):
         """MapMetaDataTestCase.testLastKeyAccess: last metadata key is correct value"""
         key = self.map.getFirstMetaDataKey()
-        for i in range(3):
+        for i in range(4):
             key = self.map.getNextMetaDataKey(key)
             assert key is not None
         key = self.map.getNextMetaDataKey(key)
@@ -227,7 +227,7 @@ class MapMetaDataTestCase(MapTestCase):
             if not key:
                 break
             keys.append(key)
-        assert keys == ['key1', 'key2', 'key3', 'key4'], keys
+        assert keys == ['key1', 'key2', 'key3', 'key4', 'ows_enable_request'], keys
     def testLayerMetaData(self):
         """MapMetaDataTestCase.testLayerMetaData: layer metadata keys are correct values"""
         keys = []
@@ -301,7 +301,7 @@ class MapSetWKTTestCase(MapTestCase):
         self.map.setWKTProjection('WGS84')
         proj4 = self.map.getProjection()
         assert proj4.find( '+proj=longlat' ) != -1, proj4
-        assert proj4.find( '+ellps=WGS84' ) != -1, proj4
+        assert proj4.find( '+datum=WGS84' ) != -1, proj4
         assert (mapscript.projectionObj(proj4)).getUnits() != mapscript.MS_METERS
 
 # ===========================================================================

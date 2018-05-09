@@ -904,6 +904,63 @@ int msMSSQL2008LayerGetExtent(layerObj *layer, rectObj *extent)
   return MS_SUCCESS;
 }
 
+/* Get the layer feature count */
+int msMSSQL2008LayerGetNumFeatures(layerObj *layer)
+{
+    msMSSQL2008LayerInfo *layerinfo;
+    char query_string_temp[10000];       /* Should be big enough */
+    SQLLEN retLen;
+    SQLRETURN rc;
+
+    if (layer->debug) {
+        msDebug("msMSSQL2008LayerGetNumFeatures called\n");
+    }
+
+    layerinfo = getMSSQL2008LayerInfo(layer);
+
+    if (!layerinfo) {
+        msSetError(MS_QUERYERR, "GetNumFeatures called with layerinfo = NULL", "msMSSQL2008LayerGetNumFeatures()");
+        return -1;
+    }
+
+    /* set up statement */
+    if (layer->filter.native_string) {
+        snprintf(query_string_temp, sizeof(query_string_temp), "SELECT count(*) from %s WHERE (%s)", layerinfo->geom_table, layer->filter.native_string);
+    }
+    else if (msLayerGetProcessingKey(layer, "NATIVE_FILTER") == NULL) {
+        snprintf(query_string_temp, sizeof(query_string_temp), "SELECT count(*) from %s", layerinfo->geom_table);
+    }
+    else {
+        snprintf(query_string_temp, sizeof(query_string_temp), "SELECT count(*) from %s WHERE (%s)", layerinfo->geom_table, msLayerGetProcessingKey(layer, "NATIVE_FILTER"));
+    }
+
+    if (!executeSQL(layerinfo->conn, query_string_temp)) {
+
+        return -1;
+    }
+
+    rc = SQLFetch(layerinfo->conn->hstmt);
+
+    if (rc != SQL_SUCCESS && rc != SQL_SUCCESS_WITH_INFO) {
+        if (layer->debug) {
+            msDebug("msMSSQL2008LayerGetNumFeatures: No results found.\n");
+        }
+
+        return -1;
+    }
+
+    rc = SQLGetData(layerinfo->conn->hstmt, 1, SQL_C_CHAR, query_string_temp, sizeof(query_string_temp), &retLen);
+
+    if (rc == SQL_ERROR) {
+        msSetError(MS_QUERYERR, "Failed to get feature count", "msMSSQL2008LayerGetNumFeatures()");
+        return -1;
+    }
+
+    query_string_temp[retLen] = 0;
+
+    return atoi(query_string_temp);
+}
+
 /* Prepare and execute the SQL statement for this layer */
 static int prepare_database(layerObj *layer, rectObj rect, char **query_string)
 {
@@ -2387,6 +2444,11 @@ int process_node(layerObj* layer, expressionObj *filter)
        break;
     /* literal tokens */
     case MS_TOKEN_LITERAL_BOOLEAN:
+      if(layerinfo->current_node->tokenval.dblval == MS_TRUE)
+        filter->native_string = msStringConcatenate(filter->native_string, "1");
+      else
+        filter->native_string = msStringConcatenate(filter->native_string, "0");
+      break;
     case MS_TOKEN_LITERAL_NUMBER:
       strtmpl = "%lf";
       snippet = (char *) msSmallMalloc(strlen(strtmpl) + 16);
@@ -2959,6 +3021,12 @@ int msMSSQL2008LayerGetExtent(layerObj *layer, rectObj *extent)
   return MS_FAILURE;
 }
 
+int msMSSQL2008LayerGetNumFeatures(layerObj *layer)
+{
+    msSetError(MS_QUERYERR, "msMSSQL2008LayerGetNumFeatures called but unimplemented!(mapserver not compiled with MSSQL2008 support)", "msMSSQL2008LayerGetNumFeatures()");
+    return -1;
+}
+
 int msMSSQL2008LayerGetShapeRandom(layerObj *layer, shapeObj *shape, long *record)
 {
   msSetError(MS_QUERYERR, "msMSSQL2008LayerGetShapeRandom called but unimplemented!(mapserver not compiled with MSSQL2008 support)", "msMSSQL2008LayerGetShapeRandom()");
@@ -3023,7 +3091,7 @@ MS_DLL_EXPORT int PluginInitializeVirtualTable(layerVTableObj* vtable, layerObj 
 
   vtable->LayerSetTimeFilter = msLayerMakeBackticsTimeFilter;
   /* vtable->LayerCreateItems, use default */
-  /* vtable->LayerGetNumFeatures, use default */
+  vtable->LayerGetNumFeatures = msMSSQL2008LayerGetNumFeatures;
   /* layer->vtable->LayerGetAutoProjection, use defaut*/
 
   return MS_SUCCESS;
@@ -3048,6 +3116,7 @@ msMSSQL2008LayerInitializeVirtualTable(layerObj *layer)
   layer->vtable->LayerWhichShapes = msMSSQL2008LayerWhichShapes;
   layer->vtable->LayerNextShape = msMSSQL2008LayerNextShape;
   layer->vtable->LayerGetShape = msMSSQL2008LayerGetShape;
+  /* layer->vtable->LayerGetShapeCount, use default */
 
   layer->vtable->LayerClose = msMSSQL2008LayerClose;
 
@@ -3061,7 +3130,7 @@ msMSSQL2008LayerInitializeVirtualTable(layerObj *layer)
 
   layer->vtable->LayerSetTimeFilter = msLayerMakeBackticsTimeFilter;
   /* layer->vtable->LayerCreateItems, use default */
-  /* layer->vtable->LayerGetNumFeatures, use default */
+  layer->vtable->LayerGetNumFeatures = msMSSQL2008LayerGetNumFeatures;
 
 
   return MS_SUCCESS;

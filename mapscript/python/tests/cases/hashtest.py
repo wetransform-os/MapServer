@@ -36,7 +36,7 @@ import os, sys
 import unittest
 
 # the testing module helps us import the pre-installed mapscript
-from testing import mapscript, MapTestCase
+from .testing import mapscript, MapTestCase
 
 # ===========================================================================
 # Base class for hashtable tests.  Derived classes use these tests, but
@@ -130,7 +130,9 @@ class WebMetadataTestCase(MapTestCase, HashTableBaseTestCase):
     def setUp(self):
         MapTestCase.setUp(self)
         self.table = self.map.web.metadata
-        
+        self.keys = ['key1', 'key2', 'key3', 'key4', 'ows_enable_request']
+        self.values = ['value1', 'value2', 'value3', 'value4', '*']
+
     def tearDown(self):
         MapTestCase.tearDown(self)
         self.table = None
