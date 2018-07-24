@@ -1,6 +1,7 @@
 Description: Remove -beta2 version suffix.
 Author: Bas Couwenberg <sebastic@debian.org>
 Forwarded: https://github.com/mapserver/mapserver/pull/5633
+Applied-Upstream: https://github.com/mapserver/mapserver/commit/8644369f39575c7640d6ad19c8052d1e16b516ee
 
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
