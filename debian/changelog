@@ -1,6 +1,7 @@
 mapserver (7.2.0-3) UNRELEASED; urgency=medium
 
   * Add upstream patch to update HISTORY.TXT for 7.2.0 release.
+  * Update symbols for mipsel.
 
  -- Bas Couwenberg <sebastic@debian.org>  Tue, 24 Jul 2018 16:47:17 +0200
 
