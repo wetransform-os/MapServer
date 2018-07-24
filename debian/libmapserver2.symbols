@@ -1,4 +1,4 @@
-# SymbolsHelper-Confirmed: 7.2.0 amd64
+# SymbolsHelper-Confirmed: 7.2.0 amd64 arm64 armel armhf i386 m68k mips mips64el powerpc ppc64 ppc64el riscv64 s390x sh4 sparc64
 libmapserver.so.2 #PACKAGE# #MINVER#
  BuildExpressionTree@Base 6.2.1
  CleanVSIDir@Base 6.2.1
@@ -318,8 +318,8 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZN11KmlRendererD0Ev@Base 6.4.0
  _ZN11KmlRendererD1Ev@Base 6.4.0
  _ZN11KmlRendererD2Ev@Base 6.4.0
- (arch=!amd64 !arm64 !kfreebsd-amd64 !mips64el !ppc64 !ppc64el !riscv64 !s390x !sparc64)_ZN12AGG2RendererD1Ev@Base 7.0.1
- (arch=!amd64 !arm64 !kfreebsd-amd64 !mips64el !ppc64 !ppc64el !riscv64 !s390x !sparc64)_ZN12AGG2RendererD2Ev@Base 7.0.1
+ (arch=!amd64 !arm64 !i386 !kfreebsd-amd64 !mips64el !ppc64 !ppc64el !riscv64 !s390x !sparc64)_ZN12AGG2RendererD1Ev@Base 7.0.1
+ (arch=!amd64 !arm64 !i386 !kfreebsd-amd64 !mips64el !ppc64 !ppc64el !riscv64 !s390x !sparc64)_ZN12AGG2RendererD2Ev@Base 7.0.1
  _ZN12line_adaptor6vertexEPdS0_@Base 6.2.1
  _ZN12line_adaptorD0Ev@Base 6.2.1
  _ZN12line_adaptorD1Ev@Base 6.2.1
@@ -440,7 +440,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZN9mapserver12vcgen_stroke6vertexEPdS1_@Base 6.2.1
  _ZN9mapserver12vcgen_strokeC1Ev@Base 6.2.1
  _ZN9mapserver12vcgen_strokeC2Ev@Base 6.2.1
- (optional=templinst)_ZN9mapserver13renderer_baseINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEEE10blend_fromIS8_EEvRKT_PKNS_9rect_baseIiEEiih@Base 6.2.1
+ (optional=templinst|arch=!arm64 !mips64el !ppc64 !ppc64el !riscv64 !s390x !sparc64)_ZN9mapserver13renderer_baseINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEEE10blend_fromIS8_EEvRKT_PKNS_9rect_baseIiEEiih@Base 6.2.1
  _ZN9mapserver13vcgen_contour10add_vertexEddj@Base 6.2.1
  _ZN9mapserver13vcgen_contour10remove_allEv@Base 6.2.1
  _ZN9mapserver13vcgen_contour6rewindEj@Base 6.2.1
@@ -465,6 +465,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  (optional=templinst)_ZN9mapserver16comp_op_rgba_xorINS_5rgba8ENS_10order_bgraEE9blend_pixEPhjjjjj@Base 7.0.0
  _ZN9mapserver16mcs7x12_mono_lowE@Base 6.2.1
  (optional=templinst)_ZN9mapserver16render_scanlinesINS_22rasterizer_scanline_aaINS_18rasterizer_sl_clipINS_12ras_conv_intEEEEENS_11scanline_p8ENS_26renderer_scanline_aa_solidINS_13renderer_baseINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEEEEEEEEvRT_RT0_RT1_@Base 6.2.1
+ (optional=templinst|arch=mips)_ZN9mapserver16render_scanlinesINS_22rasterizer_scanline_aaINS_18rasterizer_sl_clipINS_12ras_conv_intEEEEENS_11scanline_u8ENS_19scanline_storage_aaIhEEEEvRT_RT0_RT1_@Base 7.2.0
  (optional=templinst)_ZN9mapserver16render_scanlinesINS_22rasterizer_scanline_aaINS_18rasterizer_sl_clipINS_12ras_conv_intEEEEENS_11scanline_u8ENS_26renderer_scanline_aa_solidINS_13renderer_baseINS_23pixfmt_alpha_blend_rgbaINS_16blender_rgba_preINS_5rgba8ENS_10order_bgraEEENS_12row_accessorIhEEjEEEEEEEEvRT_RT0_RT1_@Base 6.2.1
  (optional=templinst)_ZN9mapserver16render_scanlinesINS_22rasterizer_scanline_aaINS_18rasterizer_sl_clipINS_12ras_conv_intEEEEENS_12scanline_binENS_20scanline_storage_binEEEvRT_RT0_RT1_@Base 6.2.1
  (optional=templinst)_ZN9mapserver16render_scanlinesINS_22rasterizer_scanline_aaINS_18rasterizer_sl_clipINS_12ras_conv_intEEEEENS_12scanline_binENS_27renderer_scanline_bin_solidINS_13renderer_baseI10pixfmt_utfI8utfpix32NS_13row_ptr_cacheIjEELj1ELj0EEEEEEEEvRT_RT0_RT1_@Base 7.0.0
@@ -549,7 +550,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZN9mapserver25font_engine_freetype_baseD1Ev@Base 6.2.1
  _ZN9mapserver25font_engine_freetype_baseD2Ev@Base 6.2.1
  (optional=templinst)_ZN9mapserver25render_scanline_bin_solidINS_12scanline_binENS_13renderer_baseI10pixfmt_utfI8utfpix32NS_13row_ptr_cacheIjEELj1ELj0EEEES4_EEvRKT_RT0_RKT1_@Base 7.0.0
- (optional=templinst|arch=!sparc64)_ZN9mapserver28pattern_filter_bilinear_rgbaINS_5rgba8EE14pixel_high_resEPKPKS1_PS1_ii@Base 7.0.2
+ (optional=templinst)_ZN9mapserver28pattern_filter_bilinear_rgbaINS_5rgba8EE14pixel_high_resEPKPKS1_PS1_ii@Base 7.0.2
  _ZN9mapserver3arc19approximation_scaleEd@Base 6.2.1
  _ZN9mapserver3arc4initEddddddb@Base 6.2.1
  _ZN9mapserver3arc6rewindEj@Base 6.2.1
@@ -596,7 +597,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZNK9mapserver25font_engine_freetype_base9descenderEv@Base 6.2.1
  _ZNK9mapserver25font_engine_freetype_base9find_faceEPKc@Base 6.2.1
  _ZNK9mapserver25font_engine_freetype_base9num_facesEv@Base 6.2.1
- (optional=templinst|arch=!amd64 !arm64 !hppa !mips64el !ppc64 !ppc64el !riscv64 !s390x !sh4 !sparc64)_ZNSt6vectorIN10ClipperLib11DoublePointESaIS1_EE17_M_default_appendEj@Base 7.0.2
+ (optional=templinst|arch=!amd64 !arm64 !hppa !mips64el !ppc64 !ppc64el !riscv64 !s390x !sparc64)_ZNSt6vectorIN10ClipperLib11DoublePointESaIS1_EE17_M_default_appendEj@Base 7.0.2
  (optional=templinst)_ZNSt6vectorIN10ClipperLib11DoublePointESaIS1_EE17_M_default_appendEm@Base 7.2.0
  (optional=templinst|arch=!amd64 !arm64 !mips64el !ppc64 !ppc64el !riscv64 !s390x !sparc64)_ZNSt6vectorIN10ClipperLib8IntPointESaIS1_EE17_M_default_appendEj@Base 7.0.2
  (optional=templinst|arch=amd64 arm64 mips64el ppc64 ppc64el riscv64 s390x sparc64)_ZNSt6vectorIN10ClipperLib8IntPointESaIS1_EE17_M_default_appendEm@Base 7.0.2
@@ -609,10 +610,13 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  (optional=templinst)_ZNSt6vectorIP10msExprNodeSaIS1_EE17_M_realloc_insertIJRKS1_EEEvN9__gnu_cxx17__normal_iteratorIPS1_S3_EEDpOT_@Base 7.0.7
  (optional=templinst)_ZNSt6vectorIP10msExprNodeSaIS1_EE9push_backERKS1_@Base 7.0.5
  (optional=templinst)_ZNSt6vectorIP10msExprNodeSaIS1_EEaSERKS3_@Base 7.0.5
+ (optional=templinst|arch=armel armhf i386 m68k mips powerpc sh4)_ZNSt6vectorIPN10ClipperLib11HorzJoinRecESaIS2_EE17_M_default_appendEj@Base 7.2.0
  (optional=templinst)_ZNSt6vectorIPN10ClipperLib11HorzJoinRecESaIS2_EE17_M_default_appendEm@Base 7.2.0
  (optional=templinst)_ZNSt6vectorIPN10ClipperLib5TEdgeESaIS2_EE17_M_realloc_insertIJRKS2_EEEvN9__gnu_cxx17__normal_iteratorIPS2_S4_EEDpOT_@Base 7.0.7
  (optional=templinst)_ZNSt6vectorIPN10ClipperLib6OutRecESaIS2_EE17_M_realloc_insertIJRKS2_EEEvN9__gnu_cxx17__normal_iteratorIPS2_S4_EEDpOT_@Base 7.0.7
+ (optional=templinst|arch=armel armhf i386 m68k mips powerpc sh4)_ZNSt6vectorIPN10ClipperLib7JoinRecESaIS2_EE17_M_default_appendEj@Base 7.2.0
  (optional=templinst)_ZNSt6vectorIPN10ClipperLib7JoinRecESaIS2_EE17_M_default_appendEm@Base 7.2.0
+ (optional=templinst|arch=armel armhf i386 m68k mips powerpc)_ZNSt6vectorIPN10ClipperLib7JoinRecESaIS2_EE17_M_realloc_insertIJRKS2_EEEvN9__gnu_cxx17__normal_iteratorIPS2_S4_EEDpOT_@Base 7.2.0
  (optional=templinst|arch=!amd64 !arm64 !mips64el !ppc64 !ppc64el !riscv64 !s390x !sparc64)_ZNSt6vectorIS_IN10ClipperLib8IntPointESaIS1_EESaIS3_EE17_M_default_appendEj@Base 7.0.2
  (optional=templinst|arch=amd64 arm64 mips64el ppc64 ppc64el riscv64 s390x sparc64)_ZNSt6vectorIS_IN10ClipperLib8IntPointESaIS1_EESaIS3_EE17_M_default_appendEm@Base 7.0.2
  (optional=templinst)_ZNSt6vectorIS_IN10ClipperLib8IntPointESaIS1_EESaIS3_EE17_M_realloc_insertIJRKS3_EEEvN9__gnu_cxx17__normal_iteratorIPS3_S5_EEDpOT_@Base 7.0.7
