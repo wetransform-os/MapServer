@@ -1,6 +1,7 @@
 mapserver (7.2.0-4) UNRELEASED; urgency=medium
 
   * Drop autopkgtest to test installability.
+  * Add lintian override for testsuite-autopkgtest-missing.
 
  -- Bas Couwenberg <sebastic@debian.org>  Tue, 31 Jul 2018 21:45:09 +0200
 
