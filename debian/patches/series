@@ -4,3 +4,4 @@ ruby-mapscript-install.patch
 java-hardening.patch
 version-suffix.patch
 history.patch
+cmake-3.12.patch

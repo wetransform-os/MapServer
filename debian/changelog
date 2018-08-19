@@ -1,6 +1,8 @@
 mapserver (7.2.0-5) UNRELEASED; urgency=medium
 
   * Bump Standards-Version to 4.2.0, no changes.
+  * Add patch to fix FTBFS with CMake 3.12.x.
+    (closes: #906605)
 
  -- Bas Couwenberg <sebastic@debian.org>  Sun, 05 Aug 2018 20:29:15 +0200
 
