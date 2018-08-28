@@ -1,3 +1,9 @@
+mapserver (7.2.0-6) UNRELEASED; urgency=medium
+
+  * Bump Standards-Version to 4.2.1, no changes.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Tue, 28 Aug 2018 13:14:38 +0200
+
 mapserver (7.2.0-5) unstable; urgency=medium
 
   * Bump Standards-Version to 4.2.0, no changes.
