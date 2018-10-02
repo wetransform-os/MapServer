@@ -1,11 +1,11 @@
-mapserver (7.2.1-1) UNRELEASED; urgency=medium
+mapserver (7.2.1-1) unstable; urgency=medium
 
   * New upstream release.
   * Bump Standards-Version to 4.2.1, no changes.
   * Drop patches applied upstream. Refresh remaining patches.
   * Fix docs install for README rename.
 
- -- Bas Couwenberg <sebastic@debian.org>  Tue, 02 Oct 2018 07:04:56 +0200
+ -- Bas Couwenberg <sebastic@debian.org>  Tue, 02 Oct 2018 07:11:40 +0200
 
 mapserver (7.2.0-5) unstable; urgency=medium
 
