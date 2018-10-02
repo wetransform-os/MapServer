@@ -1,4 +1,4 @@
-# SymbolsHelper-Confirmed: 7.2.0 amd64 arm64 armel armhf i386 m68k mips mips64el mipsel powerpc ppc64 ppc64el riscv64 s390x sh4 sparc64
+# SymbolsHelper-Confirmed: 7.2.0 amd64 arm64 armel armhf i386 m68k mips mips64el mipsel powerpc powerpcspe ppc64 ppc64el riscv64 s390x sh4 sparc64
 libmapserver.so.2 #PACKAGE# #MINVER#
  BuildExpressionTree@Base 6.2.1
  CleanVSIDir@Base 6.2.1
@@ -195,7 +195,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZN10ClipperLib17E2InsertsBeforeE1ERNS_5TEdgeES1_@Base 6.2.1
  _ZN10ClipperLib17FindAppendLinkEndEPNS_6OutRecE@Base 6.2.1
  _ZN10ClipperLib17GetOverlapSegmentENS_8IntPointES0_S0_S0_RS0_S1_@Base 6.2.1
- (arch=armel armhf i386 m68k mips mipsel powerpc)_ZN10ClipperLib17PolyOffsetBuilder8DoSquareEd@Base 7.2.0
+ (arch=armel armhf i386 m68k mips mipsel powerpc powerpcspe)_ZN10ClipperLib17PolyOffsetBuilder8DoSquareEd@Base 7.2.0
  _ZN10ClipperLib17PolyOffsetBuilderC1ERKSt6vectorIS1_INS_8IntPointESaIS2_EESaIS4_EERS6_dNS_8JoinTypeEd@Base 6.2.1
  _ZN10ClipperLib17PolyOffsetBuilderC2ERKSt6vectorIS1_INS_8IntPointESaIS2_EESaIS4_EERS6_dNS_8JoinTypeEd@Base 6.2.1
  _ZN10ClipperLib18GetNextNonDupOutPtEPNS_5OutPtERS1_@Base 6.2.1
@@ -209,7 +209,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZN10ClipperLib4TopXERNS_5TEdgeEx@Base 6.2.1
  _ZN10ClipperLib5GetDxENS_8IntPointES0_@Base 6.2.1
  _ZN10ClipperLib5SetDxERNS_5TEdgeE@Base 6.2.1
- (arch=armel armhf i386 m68k mips mipsel powerpc)_ZN10ClipperLib6Int1286NegateERS0_@Base 7.2.0
+ (arch=armel armhf i386 m68k mips mipsel powerpc powerpcspe)_ZN10ClipperLib6Int1286NegateERS0_@Base 7.2.0
  _ZN10ClipperLib7Clipper10ClearJoinsEv@Base 6.2.1
  _ZN10ClipperLib7Clipper11AddHorzJoinEPNS_5TEdgeEi@Base 6.2.1
  _ZN10ClipperLib7Clipper11BuildResultERSt6vectorIS1_INS_8IntPointESaIS2_EESaIS4_EE@Base 6.2.1
@@ -610,13 +610,13 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  (optional=templinst)_ZNSt6vectorIP10msExprNodeSaIS1_EE17_M_realloc_insertIJRKS1_EEEvN9__gnu_cxx17__normal_iteratorIPS1_S3_EEDpOT_@Base 7.0.7
  (optional=templinst)_ZNSt6vectorIP10msExprNodeSaIS1_EE9push_backERKS1_@Base 7.0.5
  (optional=templinst)_ZNSt6vectorIP10msExprNodeSaIS1_EEaSERKS3_@Base 7.0.5
- (optional=templinst|arch=armel armhf i386 m68k mips mipsel powerpc sh4)_ZNSt6vectorIPN10ClipperLib11HorzJoinRecESaIS2_EE17_M_default_appendEj@Base 7.2.0
+ (optional=templinst|arch=armel armhf i386 m68k mips mipsel powerpc powerpcspe sh4)_ZNSt6vectorIPN10ClipperLib11HorzJoinRecESaIS2_EE17_M_default_appendEj@Base 7.2.0
  (optional=templinst)_ZNSt6vectorIPN10ClipperLib11HorzJoinRecESaIS2_EE17_M_default_appendEm@Base 7.2.0
  (optional=templinst)_ZNSt6vectorIPN10ClipperLib5TEdgeESaIS2_EE17_M_realloc_insertIJRKS2_EEEvN9__gnu_cxx17__normal_iteratorIPS2_S4_EEDpOT_@Base 7.0.7
  (optional=templinst)_ZNSt6vectorIPN10ClipperLib6OutRecESaIS2_EE17_M_realloc_insertIJRKS2_EEEvN9__gnu_cxx17__normal_iteratorIPS2_S4_EEDpOT_@Base 7.0.7
- (optional=templinst|arch=armel armhf i386 m68k mips mipsel powerpc sh4)_ZNSt6vectorIPN10ClipperLib7JoinRecESaIS2_EE17_M_default_appendEj@Base 7.2.0
+ (optional=templinst|arch=armel armhf i386 m68k mips mipsel powerpc powerpcspe sh4)_ZNSt6vectorIPN10ClipperLib7JoinRecESaIS2_EE17_M_default_appendEj@Base 7.2.0
  (optional=templinst)_ZNSt6vectorIPN10ClipperLib7JoinRecESaIS2_EE17_M_default_appendEm@Base 7.2.0
- (optional=templinst|arch=armel armhf i386 m68k mips mipsel powerpc)_ZNSt6vectorIPN10ClipperLib7JoinRecESaIS2_EE17_M_realloc_insertIJRKS2_EEEvN9__gnu_cxx17__normal_iteratorIPS2_S4_EEDpOT_@Base 7.2.0
+ (optional=templinst|arch=armel armhf i386 m68k mips mipsel powerpc powerpcspe)_ZNSt6vectorIPN10ClipperLib7JoinRecESaIS2_EE17_M_realloc_insertIJRKS2_EEEvN9__gnu_cxx17__normal_iteratorIPS2_S4_EEDpOT_@Base 7.2.0
  (optional=templinst|arch=!amd64 !arm64 !mips64el !ppc64 !ppc64el !riscv64 !s390x !sparc64)_ZNSt6vectorIS_IN10ClipperLib8IntPointESaIS1_EESaIS3_EE17_M_default_appendEj@Base 7.0.2
  (optional=templinst|arch=amd64 arm64 mips64el ppc64 ppc64el riscv64 s390x sparc64)_ZNSt6vectorIS_IN10ClipperLib8IntPointESaIS1_EESaIS3_EE17_M_default_appendEm@Base 7.0.2
  (optional=templinst)_ZNSt6vectorIS_IN10ClipperLib8IntPointESaIS1_EESaIS3_EE17_M_realloc_insertIJRKS3_EEEvN9__gnu_cxx17__normal_iteratorIPS3_S5_EEDpOT_@Base 7.0.7
