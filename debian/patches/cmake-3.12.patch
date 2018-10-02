@@ -39,9 +39,9 @@ Bug-Debian: https://bugs.debian.org/906605
  install(FILES ${LOC_MAPSCRIPT_LIB} DESTINATION ${CUSTOM_PERL_VENDOR_ARCH_DIR}/auto/mapscript)
 --- a/mapscript/python/CMakeLists.txt
 +++ b/mapscript/python/CMakeLists.txt
-@@ -39,6 +39,14 @@ set_target_properties(${SWIG_MODULE_pyth
- 
- execute_process ( COMMAND ${PYTHON_EXECUTABLE} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(True))" OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
+@@ -46,6 +46,14 @@ execute_process ( COMMAND ${PYTHON_EXECU
+ #  expression $<TARGET_FILE>, as appropriate.
+ cmake_policy(SET CMP0026 OLD)
  
 +# Workaround for CMake 3.12 error:
 +#
