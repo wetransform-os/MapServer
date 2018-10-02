@@ -1,7 +1,11 @@
+MapServer
+=========
+
+| |Build Status| |Appveyor Build Status|
+
 -------
 Summary
 -------
-
    
 MapServer is a system for developing web-based GIS applications. 
 The basic system consists of a CGI program that can be configured to 
@@ -15,7 +19,7 @@ visit:
 
   http://www.mapserver.org/
 
-Bug reports and enhancment submissions can be reported in the MapServer 
+Bug reports and enhancement submissions can be reported in the MapServer 
 issue tracker at the following url.   If you do make changes and/or enhancements, 
 please let us know so that they might be incorporated into future releases.
 
@@ -28,9 +32,8 @@ Join the MapServer user mailing list online at:
 
  
 
------------
 Credits
------------
+-------
 
 MapServer was originally written by Stephen Lime. Major funding for development of 
 MapServer has been provided by NASA through cooperative argreements with 
@@ -61,9 +64,8 @@ Portions derived from Shapelib, Copyright 1995-1999 Frank Warmerdam.
 
 Supporting packages are covered by their own copyrights.
 
------------
 License
------------
+-------
 
 ::
 
@@ -89,3 +91,8 @@ License
   SOFTWARE.
 
 
+.. |Build Status| image:: https://travis-ci.org/mapserver/mapserver.svg?branch=master
+   :target: https://travis-ci.org/mapserver/mapserver
+
+.. |Appveyor Build Status| image:: https://ci.appveyor.com/api/projects/status/vw1n07095a8bg23u?svg=true
+   :target: https://ci.appveyor.com/project/mapserver/mapserver

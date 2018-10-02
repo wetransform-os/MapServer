@@ -1,7 +1,7 @@
 # How to contribute to MapServer
 
 Contributions to the MapServer project are most welcome, and can take many forms such as detailed bug reports, documentation, 
-tests, features, and patches. 
+tests, features, and patches.  Note that all contributions are managed by the MapServer [Project Steering Committee](https://mapserver.org/psc.html).
 
 ## Bugs and Help
 
@@ -18,15 +18,15 @@ For professional support please see the [MapServer Service Providers page](http:
 
 ## Development
 
-A seperate [mapserver-dev mailing list](http://lists.osgeo.org/mailman/listinfo/mapserver-dev) is available for developers
+A separate [mapserver-dev mailing list](http://lists.osgeo.org/mailman/listinfo/mapserver-dev) is available for developers
 working on the MapServer code. 
 
-Details on using GitHub can be found on the [MapServer GutHub page](http://mapserver.org/development/git.html)  
+Details on using GitHub can be found on the [MapServer GitHub page](http://mapserver.org/development/git.html)  
 
 Additional developer notes can be found in the [MapServer wiki](https://github.com/mapserver/mapserver/wiki#developer-notes), including
 coding style and guidelines, memory management, and working with Git. 
 
 ## Documentation
 
-The MapServer documentation is stored in a [seperate repository](https://github.com/mapserver/docs). Please submit any documentation
+The MapServer documentation is stored in a [separate repository](https://github.com/mapserver/docs). Please submit any documentation
 issues or changes there. See the [Documentation Development Guide](http://mapserver.org/development/documentation.html) for further details. 
