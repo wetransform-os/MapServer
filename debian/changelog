@@ -1,6 +1,7 @@
 mapserver (7.2.1-2) UNRELEASED; urgency=medium
 
   * Add patch with changes from PR#5674 for CMake 3.12.
+  * Add Build-Depends-Package field to symbols file.
 
  -- Bas Couwenberg <sebastic@debian.org>  Fri, 05 Oct 2018 09:46:56 +0200
 
