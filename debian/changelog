@@ -3,6 +3,7 @@ mapserver (7.4.0~beta1-1) UNRELEASED; urgency=medium
   * New upstream beta release.
   * Remove package name from lintian overrides.
   * Re-enable PHP MapScript, support for PHP 7 available now.
+  * Add python-setuptools to build dependencies.
 
  -- Bas Couwenberg <sebastic@debian.org>  Sat, 30 Mar 2019 07:02:34 +0100
 
