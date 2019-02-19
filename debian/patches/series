@@ -2,4 +2,3 @@ hardening.patch
 perl-mapscript-install.patch
 ruby-mapscript-install.patch
 java-hardening.patch
-pr5674_Use-generator-expressions-in-MapScript-CMakeLists.patch

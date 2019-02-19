@@ -6,9 +6,9 @@ Forwarded: not-needed
 
 --- a/mapscript/java/CMakeLists.txt
 +++ b/mapscript/java/CMakeLists.txt
-@@ -15,6 +15,23 @@ SET (CMAKE_SWIG_OUTDIR "${CMAKE_CURRENT_
- SET(CMAKE_SWIG_FLAGS -package edu.umn.gis.mapscript)
- SWIG_ADD_MODULE(javamapscript java ../mapscript.i)
+@@ -20,6 +20,23 @@ else ()
+     swig_add_module(javamapscript java ../mapscript.i)
+ endif ()
  
 +# Java mapscript fails to build with -Werror=format-security
 +
@@ -27,14 +27,13 @@ Forwarded: not-needed
 +  set(CMAKE_CPP_FLAGS "${TMP}")
 +endif(${CMAKE_CPP_FLAGS} MATCHES "-Werror=format-security")
 +
- SWIG_LINK_LIBRARIES(javamapscript ${MAPSERVER_LIBMAPSERVER})
+ swig_link_libraries(javamapscript ${MAPSERVER_LIBMAPSERVER})
  
- ADD_CUSTOM_COMMAND(TARGET javamapscript
-@@ -26,5 +43,5 @@ ADD_CUSTOM_COMMAND(TARGET javamapscript
+ add_custom_command(TARGET javamapscript
+@@ -31,4 +48,5 @@ add_custom_command(TARGET javamapscript
                        )
  
- get_target_property(LOC_MAPSCRIPT_LIB ${SWIG_MODULE_javamapscript_REAL_NAME} LOCATION)
--install(FILES ${LOC_MAPSCRIPT_LIB} DESTINATION ${CMAKE_INSTALL_LIBDIR})
--
-+install(FILES ${LOC_MAPSCRIPT_LIB} DESTINATION lib/jni)
+ set(mapscript_files $<TARGET_FILE:${SWIG_MODULE_javamapscript_REAL_NAME}>)
+-install(FILES ${mapscript_files} DESTINATION ${CMAKE_INSTALL_LIBDIR})
++install(FILES ${mapscript_files} DESTINATION lib/jni)
 +install(FILES ${CMAKE_CURRENT_BINARY_DIR}/mapscript.jar DESTINATION share/java)

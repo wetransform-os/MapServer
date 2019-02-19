@@ -5,9 +5,9 @@ Forwarded: not-needed
 
 --- a/mapscript/ruby/CMakeLists.txt
 +++ b/mapscript/ruby/CMakeLists.txt
-@@ -7,6 +7,23 @@ include_directories(${PROJECT_SOURCE_DIR
- include_directories(${PROJECT_SOURCE_DIR}/mapscript/ruby)
- SWIG_ADD_MODULE(rubymapscript ruby ../mapscript.i)
+@@ -12,6 +12,23 @@ else ()
+     swig_add_module(rubymapscript ruby ../mapscript.i)
+ endif ()
  
 +# Ruby mapscript fails to build with -Werror=format-security
 +
@@ -26,6 +26,6 @@ Forwarded: not-needed
 +  set(CMAKE_CPP_FLAGS "${TMP}")
 +endif(${CMAKE_CPP_FLAGS} MATCHES "-Werror=format-security")
 +
- SWIG_LINK_LIBRARIES(rubymapscript ${RUBY_LIBRARY} ${MAPSERVER_LIBMAPSERVER})
+ swig_link_libraries(rubymapscript ${RUBY_LIBRARY} ${MAPSERVER_LIBMAPSERVER})
  
  set_target_properties(${SWIG_MODULE_rubymapscript_REAL_NAME} PROPERTIES PREFIX "")

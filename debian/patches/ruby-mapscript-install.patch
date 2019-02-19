@@ -5,11 +5,11 @@ Forwarded: not-needed
 
 --- a/mapscript/ruby/CMakeLists.txt
 +++ b/mapscript/ruby/CMakeLists.txt
-@@ -33,5 +33,5 @@ if(APPLE)
+@@ -39,5 +39,5 @@ if(APPLE)
  endif(APPLE)
  
- get_target_property(LOC_MAPSCRIPT_LIB ${SWIG_MODULE_rubymapscript_REAL_NAME} LOCATION)
+ set(mapscript_files $<TARGET_FILE:${SWIG_MODULE_rubymapscript_REAL_NAME}>)
 -execute_process(COMMAND ${RUBY_EXECUTABLE} -r rbconfig -e "puts RbConfig::CONFIG['sitearchdir']" OUTPUT_VARIABLE RUBY_SITEARCHDIR OUTPUT_STRIP_TRAILING_WHITESPACE)
--install(FILES ${LOC_MAPSCRIPT_LIB} DESTINATION ${RUBY_SITEARCHDIR})
+-install(FILES ${mapscript_files} DESTINATION ${RUBY_SITEARCHDIR})
 +execute_process(COMMAND ${RUBY_EXECUTABLE} -r rbconfig -e "puts RbConfig::CONFIG['vendorarchdir']" OUTPUT_VARIABLE RUBY_VENDORARCHDIR OUTPUT_STRIP_TRAILING_WHITESPACE)
-+install(FILES ${LOC_MAPSCRIPT_LIB} DESTINATION ${RUBY_VENDORARCHDIR})
++install(FILES ${mapscript_files} DESTINATION ${RUBY_VENDORARCHDIR})

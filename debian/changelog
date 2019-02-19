@@ -1,9 +1,9 @@
 mapserver (7.2.2-1) UNRELEASED; urgency=medium
 
   * New upstream release.
-  * Add patch with changes from PR#5674 for CMake 3.12.
   * Add Build-Depends-Package field to symbols file.
   * Bump Standards-Version to 4.3.0, no changes.
+  * Refresh patches.
 
  -- Bas Couwenberg <sebastic@debian.org>  Tue, 19 Feb 2019 17:56:39 +0100
 
