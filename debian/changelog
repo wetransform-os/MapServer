@@ -5,6 +5,7 @@ mapserver (7.2.2-1) UNRELEASED; urgency=medium
   * Bump Standards-Version to 4.3.0, no changes.
   * Refresh patches.
   * Update copyright years for Open Source Geospatial Foundation.
+  * Update symbols for amd64.
 
  -- Bas Couwenberg <sebastic@debian.org>  Tue, 19 Feb 2019 17:56:39 +0100
 
