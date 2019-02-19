@@ -6,6 +6,7 @@ mapserver (7.2.2-1) UNRELEASED; urgency=medium
   * Refresh patches.
   * Update copyright years for Open Source Geospatial Foundation.
   * Update symbols for amd64.
+  * Add lintian overrides for file-references-package-build-path.
 
  -- Bas Couwenberg <sebastic@debian.org>  Tue, 19 Feb 2019 17:56:39 +0100
 
