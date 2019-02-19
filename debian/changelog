@@ -1,4 +1,4 @@
-mapserver (7.2.2-1) UNRELEASED; urgency=medium
+mapserver (7.2.2-1~exp1) experimental; urgency=medium
 
   * New upstream release.
   * Add Build-Depends-Package field to symbols file.
@@ -8,7 +8,7 @@ mapserver (7.2.2-1) UNRELEASED; urgency=medium
   * Update symbols for amd64.
   * Add lintian overrides for file-references-package-build-path.
 
- -- Bas Couwenberg <sebastic@debian.org>  Tue, 19 Feb 2019 17:56:39 +0100
+ -- Bas Couwenberg <sebastic@debian.org>  Tue, 19 Feb 2019 18:07:57 +0100
 
 mapserver (7.2.1-1) unstable; urgency=medium
 
