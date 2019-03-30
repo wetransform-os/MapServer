@@ -22,8 +22,6 @@ LDFLAGS  := $(shell dpkg-buildflags --get LDFLAGS)
 CFLAGS += $(CPPFLAGS)
 CFLAGS += $(LDFLAGS)
 
-RUBYVERSIONS := $(shell dh_ruby --print-supported)
-
 MANPAGES := $(wildcard debian/man/*.*.xml)
 
 MS_VERSION := $(shell echo $(DEB_VERSION_UPSTREAM) | sed -e 's/\+.*//')
@@ -85,21 +83,9 @@ override_dh_auto_configure:
 			     -DWITH_PYTHON=1 \
 			     -DWITH_PHP=1 \
 			     -DWITH_PERL=1 \
-			     -DWITH_RUBY=0 \
+			     -DWITH_RUBY=1 \
 			     -DWITH_JAVA=1 \
 			     -DWITH_CSHARP=0
-
-	for RUBY in $(RUBYVERSIONS); do \
-		dh_auto_configure --builddirectory=build-$$RUBY -- $(CMAKE_OPTS) \
-								   -DWITH_PYTHON=0 \
-								   -DWITH_PHP=0 \
-								   -DWITH_PERL=0 \
-								   -DWITH_RUBY=1 \
-								   -DWITH_JAVA=0 \
-								   -DWITH_CSHARP=0 \
-								   -DRUBY_EXECUTABLE=/usr/bin/$$RUBY \
-		; \
-	done
 	
 
 override_dh_auto_build:
@@ -111,22 +97,11 @@ override_dh_auto_build:
 
 	dh_auto_build
 
-	for RUBY in $(RUBYVERSIONS); do \
-		dh_auto_build --builddirectory=build-$$RUBY ; \
-	done
-
 override_dh_auto_test:
 	# msautotest submodule is not used
 
 override_dh_auto_install:
 	dh_auto_install
-
-	for RUBY in $(RUBYVERSIONS); do \
-		dh_auto_install --builddirectory=build-$$RUBY --destdir=debian/tmp-$$RUBY ; \
-		mkdir -p debian/tmp/`$$RUBY -r rbconfig -e "print RbConfig::CONFIG['vendorarchdir']"` ; \
-		mv -v debian/tmp-$$RUBY`$$RUBY -r rbconfig -e "print RbConfig::CONFIG['vendorarchdir']"`/mapscript.so \
-		      debian/tmp`$$RUBY -r rbconfig -e "print RbConfig::CONFIG['vendorarchdir']"`/ ; \
-	done
 
 	-mkdir -p $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/
 	-mv -v $(CURDIR)/debian/tmp/usr/lib/libmapserver*.so* $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/
