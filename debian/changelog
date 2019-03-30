@@ -6,6 +6,7 @@ mapserver (7.4.0~beta1-1) UNRELEASED; urgency=medium
   * Add python-setuptools to build dependencies.
   * Switch Python MapScript to Python 3.
   * Drop Ruby MapScript, causes FTBFS.
+  * Update symbols for amd64.
 
  -- Bas Couwenberg <sebastic@debian.org>  Sat, 30 Mar 2019 07:02:34 +0100
 

@@ -1,4 +1,4 @@
-# SymbolsHelper-Confirmed: 7.2.2 amd64 arm64 armel armhf i386 kfreebsd-amd64 kfreebsd-i386 mips powerpc ppc64el s390x
+# SymbolsHelper-Confirmed: 7.4.0~beta1 amd64
 libmapserver.so.2 #PACKAGE# #MINVER#
 * Build-Depends-Package: libmapserver-dev
  BuildExpressionTree@Base 6.2.1
@@ -21,7 +21,6 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  FLTFreeFilterEncodingNode@Base 6.2.1
  FLTGetBBOX@Base 6.2.1
  FLTGetBinaryComparisonCommonExpression@Base 6.2.1
- FLTGetBinaryComparisonExpresssion@Base 6.2.1
  FLTGetBinaryComparisonSQLExpresssion@Base 6.2.1
  FLTGetCapabilities@Base 6.2.1
  FLTGetCommonExpression@Base 6.2.1
@@ -30,16 +29,11 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  FLTGetFeatureIdCommonExpression@Base 6.2.1
  FLTGetGeosOperator@Base 6.2.1
  FLTGetIsBetweenComparisonCommonExpresssion@Base 6.2.1
- FLTGetIsBetweenComparisonExpresssion@Base 6.2.1
  FLTGetIsBetweenComparisonSQLExpresssion@Base 6.2.1
  FLTGetIsLikeComparisonCommonExpression@Base 6.2.1
- FLTGetIsLikeComparisonExpression@Base 6.2.1
  FLTGetIsLikeComparisonSQLExpression@Base 6.2.1
  FLTGetLogicalComparisonCommonExpression@Base 6.2.1
- FLTGetLogicalComparisonExpresssion@Base 6.2.1
  FLTGetLogicalComparisonSQLExpresssion@Base 6.2.1
- FLTGetMapserverExpression@Base 6.2.1
- FLTGetNodeExpression@Base 6.2.1
  FLTGetSQLExpression@Base 6.2.1
  FLTGetShape@Base 6.2.1
  FLTGetSpatialComparisonCommonExpression@Base 6.2.1
@@ -2109,7 +2103,6 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msWMSPrintScaleHint@Base 6.2.1
  msWMSSetTimePattern@Base 6.2.1
  msWMSValidateDimensionValue@Base 6.2.1
- msWrapText@Base 6.2.1
  msWriteClassToString@Base 6.4.0
  msWriteClusterToString@Base 6.4.0
  msWriteError@Base 6.2.1
