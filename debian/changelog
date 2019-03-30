@@ -8,6 +8,7 @@ mapserver (7.4.0~beta1-1) UNRELEASED; urgency=medium
   * Drop Ruby MapScript, causes FTBFS.
   * Update symbols for amd64.
   * Add patch to fix spelling errors.
+  * Use ttf-bitstream-vera instead of embedded copy.
 
  -- Bas Couwenberg <sebastic@debian.org>  Sat, 30 Mar 2019 07:02:34 +0100
 

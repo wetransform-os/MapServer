@@ -183,7 +183,8 @@ Description: Perl MapServer module
 Package: python3-mapscript
 Architecture: any
 Section: python
-Depends: ${python3:Depends},
+Depends: ttf-bitstream-vera,
+         ${python3:Depends},
          ${shlibs:Depends},
          ${misc:Depends}
 Suggests: mapserver-bin,

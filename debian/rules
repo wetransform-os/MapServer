@@ -124,6 +124,8 @@ override_dh_installexamples:
 override_dh_install:
 	dh_install --autodest --list-missing
 
+	$(RM) $(CURDIR)/debian/*/usr/lib/python*/*-packages/mapscript/tests/data/vera/*
+
 override_dh_compress:
 	dh_compress -X.xml -X.xsd -X.xsl
 
