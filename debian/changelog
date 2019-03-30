@@ -10,6 +10,7 @@ mapserver (7.4.0~beta1-1) UNRELEASED; urgency=medium
   * Add patch to fix spelling errors.
   * Use ttf-bitstream-vera instead of embedded copy.
   * Add patch for shebang in Python MapScript example scripts.
+  * Set INSTALL_LIB_DIR to Multi-Arch path.
 
  -- Bas Couwenberg <sebastic@debian.org>  Sat, 30 Mar 2019 07:02:34 +0100
 

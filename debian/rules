@@ -34,6 +34,7 @@ CMAKE_OPTS := \
 		-DCMAKE_SHARED_LINKER_FLAGS="$(LDFLAGS)" \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_VERBOSE_MAKEFILE=1 \
+	        -DINSTALL_LIB_DIR="/usr/lib/$(DEB_HOST_MULTIARCH)" \
 		-DWITH_PROJ=1 \
 		-DWITH_KML=1 \
 		-DWITH_SOS=1 \
@@ -86,7 +87,6 @@ override_dh_auto_configure:
 			     -DWITH_RUBY=0 \
 			     -DWITH_JAVA=1 \
 			     -DWITH_CSHARP=0
-	
 
 override_dh_auto_build:
 	# Create man pages from DocBook XML
@@ -102,10 +102,6 @@ override_dh_auto_test:
 
 override_dh_auto_install:
 	dh_auto_install
-
-	-mkdir -p $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/
-	-mv -v $(CURDIR)/debian/tmp/usr/lib/libmapserver*.so* $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/
-	-sed -i "s/lib\/libmapserver/lib\/$(DEB_HOST_MULTIARCH)\/libmapserver/g" $(CURDIR)/debian/tmp/usr/share/*/cmake/*.cmake
 
 	# removing embedded rpath in binaries
 	-find $(CURDIR)/debian/tmp/usr/bin -type f -exec chrpath --delete {} \;
