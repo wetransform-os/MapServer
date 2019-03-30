@@ -23,7 +23,6 @@ CFLAGS += $(CPPFLAGS)
 CFLAGS += $(LDFLAGS)
 
 RUBYVERSIONS := $(shell dh_ruby --print-supported)
-#PHPAPI      := $(shell php-config --phpapi)
 
 MANPAGES := $(wildcard debian/man/*.*.xml)
 
@@ -70,7 +69,7 @@ CMAKE_OPTS := \
 		-DWITH_PIXMAN=0
 
 %:
-	dh $@ --with python2,pkgkde_symbolshelper \
+	dh $@ --with php,python2,pkgkde_symbolshelper \
 	      --parallel \
 	      --buildsystem cmake
 
@@ -84,7 +83,7 @@ override_dh_auto_clean:
 override_dh_auto_configure:
 	dh_auto_configure -- $(CMAKE_OPTS) \
 			     -DWITH_PYTHON=1 \
-			     -DWITH_PHP=0 \
+			     -DWITH_PHP=1 \
 			     -DWITH_PERL=1 \
 			     -DWITH_RUBY=0 \
 			     -DWITH_JAVA=1 \
@@ -139,20 +138,13 @@ override_dh_auto_install:
 	# removing embedded rpath in libraries
 	-find $(CURDIR)/debian/tmp/usr/lib -name "*.so*" -type f -exec chrpath --delete {} \;
 
-	# TODO: Use dh_php for substvars & mapscript.ini installation
-	# PHP mapscript
-	#echo 'misc:Depends=phpapi-'$(PHPAPI) >> debian/php-mapscript.substvars
-
-	#-mkdir -p debian/tmp/etc/php/7.0/mods-available/
-	#install -m644 debian/mapscript.ini debian/tmp/etc/php/7.0/mods-available/
-
 override_dh_installchangelogs:
 	dh_installchangelogs HISTORY.TXT
 
 override_dh_installexamples:
 	dh_installexamples
 
-	#-chmod a-x $(CURDIR)/debian/php-mapscript/usr/share/doc/php-mapscript/examples/*.phtml
+	-chmod a-x $(CURDIR)/debian/php-mapscript/usr/share/doc/php-mapscript/examples/*.phtml
 
 override_dh_install:
 	dh_install --autodest --list-missing
