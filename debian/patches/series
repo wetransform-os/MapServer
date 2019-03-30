@@ -2,3 +2,4 @@ perl-mapscript-install.patch
 java-hardening.patch
 php-mapscript.patch
 spelling-errors.patch
+python-mapscript.patch
