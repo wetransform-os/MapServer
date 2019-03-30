@@ -27,46 +27,6 @@ MANPAGES := $(wildcard debian/man/*.*.xml)
 MS_VERSION := $(shell echo $(DEB_VERSION_UPSTREAM) | sed -e 's/\+.*//')
 BUILD_DATE := $(shell LC_ALL=C date -u "+%d %B %Y" -d "@$(SOURCE_DATE_EPOCH)")
 
-CMAKE_OPTS := \
-		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
-		-DCMAKE_EXE_LINKER_FLAGS="$(LDFLAGS)" \
-		-DCMAKE_MODULE_LINKER_FLAGS="$(LDFLAGS)" \
-		-DCMAKE_SHARED_LINKER_FLAGS="$(LDFLAGS)" \
-		-DCMAKE_INSTALL_PREFIX=/usr \
-		-DCMAKE_VERBOSE_MAKEFILE=1 \
-	        -DINSTALL_LIB_DIR="/usr/lib/$(DEB_HOST_MULTIARCH)" \
-		-DWITH_PROJ=1 \
-		-DWITH_KML=1 \
-		-DWITH_SOS=1 \
-		-DWITH_WMS=1 \
-		-DWITH_FRIBIDI=1 \
-		-DWITH_HARFBUZZ=1 \
-		-DWITH_ICONV=1 \
-		-DWITH_CAIRO=1 \
-		-DWITH_SVGCAIRO=0 \
-		-DWITH_RSVG=1 \
-		-DWITH_MYSQL=0 \
-		-DWITH_FCGI=1 \
-		-DWITH_GEOS=1 \
-		-DWITH_POSTGIS=1 \
-		-DWITH_GDAL=1 \
-		-DWITH_OGR=1 \
-		-DWITH_CURL=1 \
-		-DWITH_CLIENT_WMS=1 \
-		-DWITH_CLIENT_WFS=1 \
-		-DWITH_WFS=1 \
-		-DWITH_WCS=1 \
-		-DWITH_LIBXML2=1 \
-		-DWITH_THREAD_SAFETY=1 \
-		-DWITH_GIF=1 \
-		-DWITH_ORACLESPATIAL=0 \
-		-DWITH_ORACLE_PLUGIN=0 \
-		-DWITH_MSSQL2008=0 \
-		-DWITH_EXEMPI=0 \
-		-DWITH_XMLMAPFILE=0 \
-		-DWITH_V8=0 \
-		-DWITH_PIXMAN=0
-
 %:
 	dh $@ --with php,python3,pkgkde_symbolshelper \
 	      --parallel \
@@ -80,13 +40,50 @@ override_dh_auto_clean:
 	-$(RM) -rf build-ruby*/ debian/tmp-ruby*/
 
 override_dh_auto_configure:
-	dh_auto_configure -- $(CMAKE_OPTS) \
-			     -DWITH_PYTHON=1 \
-			     -DWITH_PHP=1 \
-			     -DWITH_PERL=1 \
-			     -DWITH_RUBY=0 \
-			     -DWITH_JAVA=1 \
-			     -DWITH_CSHARP=0
+	dh_auto_configure -- -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+	                     -DCMAKE_EXE_LINKER_FLAGS="$(LDFLAGS)" \
+	                     -DCMAKE_MODULE_LINKER_FLAGS="$(LDFLAGS)" \
+	                     -DCMAKE_SHARED_LINKER_FLAGS="$(LDFLAGS)" \
+	                     -DCMAKE_INSTALL_PREFIX=/usr \
+	                     -DCMAKE_VERBOSE_MAKEFILE=1 \
+	                     -DINSTALL_LIB_DIR="/usr/lib/$(DEB_HOST_MULTIARCH)" \
+	                     -DWITH_PROJ=1 \
+	                     -DWITH_KML=1 \
+	                     -DWITH_SOS=1 \
+	                     -DWITH_WMS=1 \
+	                     -DWITH_FRIBIDI=1 \
+	                     -DWITH_HARFBUZZ=1 \
+	                     -DWITH_ICONV=1 \
+	                     -DWITH_CAIRO=1 \
+	                     -DWITH_SVGCAIRO=0 \
+	                     -DWITH_RSVG=1 \
+	                     -DWITH_MYSQL=0 \
+	                     -DWITH_FCGI=1 \
+	                     -DWITH_GEOS=1 \
+	                     -DWITH_POSTGIS=1 \
+	                     -DWITH_GDAL=1 \
+	                     -DWITH_OGR=1 \
+	                     -DWITH_CURL=1 \
+	                     -DWITH_CLIENT_WMS=1 \
+	                     -DWITH_CLIENT_WFS=1 \
+	                     -DWITH_WFS=1 \
+	                     -DWITH_WCS=1 \
+	                     -DWITH_LIBXML2=1 \
+	                     -DWITH_THREAD_SAFETY=1 \
+	                     -DWITH_GIF=1 \
+	                     -DWITH_ORACLESPATIAL=0 \
+	                     -DWITH_ORACLE_PLUGIN=0 \
+	                     -DWITH_MSSQL2008=0 \
+	                     -DWITH_EXEMPI=0 \
+	                     -DWITH_XMLMAPFILE=0 \
+	                     -DWITH_V8=0 \
+	                     -DWITH_PIXMAN=0 \
+	                     -DWITH_PYTHON=1 \
+	                     -DWITH_PHP=1 \
+	                     -DWITH_PERL=1 \
+	                     -DWITH_RUBY=0 \
+	                     -DWITH_JAVA=1 \
+	                     -DWITH_CSHARP=0
 
 override_dh_auto_build:
 	# Create man pages from DocBook XML
