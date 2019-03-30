@@ -2,6 +2,7 @@ Description: Install PHP MapScript.
 Author: Bas Couwenberg <sebastic@debian.org>
 Bug: https://github.com/mapserver/mapserver/issues/5770
 Forwarded: https://github.com/mapserver/mapserver/pull/5771
+Applied-Upstream: https://github.com/mapserver/mapserver/commit/6c9ca2e402eb4ceb3a31bef466d308d836946972
 
 --- a/mapscript/php/CMakeLists.txt
 +++ b/mapscript/php/CMakeLists.txt

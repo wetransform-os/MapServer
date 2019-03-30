@@ -1,6 +1,7 @@
 Description: Fix variables set by find_package(PHP).
 Author: Bas Couwenberg <sebastic@debian.org>
 Forwarded: https://github.com/mapserver/mapserver/pull/5776
+Applied-Upstream: https://github.com/mapserver/mapserver/commit/076701f6a9f83f2a68a2e56872d7d66f88df9e8e
 
 --- a/mapscript/phpng/CMakeLists.txt
 +++ b/mapscript/phpng/CMakeLists.txt
