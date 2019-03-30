@@ -39,9 +39,6 @@ Build-Depends: debhelper (>= 9.20160114),
                python3-all,
                python3-all-dev,
                python3-setuptools,
-               ruby,
-               ruby-dev,
-               gem2deb,
                swig,
                docbook2x,
                docbook-xsl,
@@ -64,8 +61,7 @@ Suggests: cgi-mapserver,
           mapserver-doc,
           libmapscript-perl,
           php-mapscript,
-          python3-mapscript,
-          ruby-mapscript
+          python3-mapscript
 Pre-Depends: ${misc:Pre-Depends}
 Description: Shared library for MapServer
  This package contains the shared library.
@@ -85,8 +81,7 @@ Suggests: cgi-mapserver,
           mapserver-doc,
           libmapscript-perl,
           php-mapscript,
-          python3-mapscript,
-          ruby-mapscript
+          python3-mapscript
 Breaks: libmapserver-6.2.1-dev (<< 6.4.0-1~),
         libmapserver1-dev (<< 7.0.0~)
 Replaces: libmapserver-6.2.1-dev (<< 6.4.0-1~),
@@ -108,8 +103,7 @@ Depends: mapserver-bin,
 Suggests: mapserver-doc,
           libmapscript-perl,
           php-mapscript,
-          python3-mapscript,
-          ruby-mapscript
+          python3-mapscript
 Description: CGI executable for MapServer
  This package contains the mapserv CGI program. It provides the
  MapServer template language, and can be used to implement Web Map
@@ -130,8 +124,7 @@ Suggests: cgi-mapserver,
           shapelib,
           libmapscript-perl,
           php-mapscript,
-          python3-mapscript,
-          ruby-mapscript
+          python3-mapscript
 Description: MapServer utilities
  This package provides command-line utilities for MapServer.
  .
@@ -147,8 +140,7 @@ Depends: ${misc:Depends}
 Suggests: cgi-mapserver,
           libmapscript-perl,
           php-mapscript,
-          python3-mapscript,
-          ruby-mapscript
+          python3-mapscript
 Description: documentation for MapServer
  This package provides some brief documentation for MapServer.
  .
@@ -199,32 +191,6 @@ Suggests: mapserver-bin,
 Provides: ${python3:Provides}
 Description: Python library for MapServer
  Python MapScript provides MapServer functions for Python scripts.
- .
- MapServer is a CGI-based framework for Internet map services which
- supports Open Geospatial Consortium (OGC) standards.
-
-Package: ruby-mapscript
-Architecture: any
-Section: ruby
-Depends: ruby | ruby-interpreter,
-         ${shlibs:Depends},
-         ${misc:Depends}
-Suggests: mapserver-bin,
-          mapserver-doc
-Breaks: libmapscript-ruby (<< 6.4.0-1~),
-        libmapscript-ruby1.8 (<< 6.4.0-1~),
-        libmapscript-ruby1.9.1 (<< 6.4.0-1~)
-Provides: libmapscript-ruby,
-          libmapscript-ruby1.8,
-          libmapscript-ruby1.9.1
-Replaces: libmapscript-ruby (<< 6.4.0-1~),
-          libmapscript-ruby1.8 (<< 6.4.0-1~),
-          libmapscript-ruby1.9.1 (<< 6.4.0-1~)
-XB-Ruby-Versions: all
-Description: MapServer library for Ruby
- Ruby MapScript provides MapServer functions for Ruby scripts.
- .
- This package contains examples and the MapServer functions for Ruby.
  .
  MapServer is a CGI-based framework for Internet map services which
  supports Open Geospatial Consortium (OGC) standards.

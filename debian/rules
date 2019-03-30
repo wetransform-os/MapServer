@@ -83,7 +83,7 @@ override_dh_auto_configure:
 			     -DWITH_PYTHON=1 \
 			     -DWITH_PHP=1 \
 			     -DWITH_PERL=1 \
-			     -DWITH_RUBY=1 \
+			     -DWITH_RUBY=0 \
 			     -DWITH_JAVA=1 \
 			     -DWITH_CSHARP=0
 	

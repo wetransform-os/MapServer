@@ -5,7 +5,7 @@ mapserver (7.4.0~beta1-1) UNRELEASED; urgency=medium
   * Re-enable PHP MapScript, support for PHP 7 available now.
   * Add python-setuptools to build dependencies.
   * Switch Python MapScript to Python 3.
-  * Build Ruby MapScript only for default version.
+  * Drop Ruby MapScript, causes FTBFS.
 
  -- Bas Couwenberg <sebastic@debian.org>  Sat, 30 Mar 2019 07:02:34 +0100
 
