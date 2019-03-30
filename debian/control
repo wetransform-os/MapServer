@@ -100,7 +100,6 @@ Package: cgi-mapserver
 Architecture: any
 Section: web
 Depends: mapserver-bin,
-         ${shlibs:Depends},
          ${misc:Depends}
 Suggests: mapserver-doc,
           libmapscript-perl,
