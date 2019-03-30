@@ -61,6 +61,7 @@ Suggests: cgi-mapserver,
           mapserver-doc,
           libmapscript-perl,
           php-mapscript,
+          php-mapscript-ng,
           python3-mapscript
 Pre-Depends: ${misc:Pre-Depends}
 Description: Shared library for MapServer
@@ -81,6 +82,7 @@ Suggests: cgi-mapserver,
           mapserver-doc,
           libmapscript-perl,
           php-mapscript,
+          php-mapscript-ng,
           python3-mapscript
 Breaks: libmapserver-6.2.1-dev (<< 6.4.0-1~),
         libmapserver1-dev (<< 7.0.0~)
@@ -103,6 +105,7 @@ Depends: mapserver-bin,
 Suggests: mapserver-doc,
           libmapscript-perl,
           php-mapscript,
+          php-mapscript-ng,
           python3-mapscript
 Description: CGI executable for MapServer
  This package contains the mapserv CGI program. It provides the
@@ -124,6 +127,7 @@ Suggests: cgi-mapserver,
           shapelib,
           libmapscript-perl,
           php-mapscript,
+          php-mapscript-ng,
           python3-mapscript
 Description: MapServer utilities
  This package provides command-line utilities for MapServer.
@@ -140,6 +144,7 @@ Depends: ${misc:Depends}
 Suggests: cgi-mapserver,
           libmapscript-perl,
           php-mapscript,
+          php-mapscript-ng,
           python3-mapscript
 Description: documentation for MapServer
  This package provides some brief documentation for MapServer.
@@ -162,6 +167,24 @@ Description: php-cgi module for MapServer
  .
  MapServer is a CGI-based framework for Internet map services which
  supports Open Geospatial Consortium (OGC) standards.
+ .
+ This package provides the traditional MapScript for PHP.
+
+Package: php-mapscript-ng
+Architecture: any
+Section: php
+Depends: ${php:Depends},
+         ${shlibs:Depends},
+         ${misc:Depends}
+Suggests: mapserver-bin,
+          mapserver-doc
+Description: PHP MapServer module (SWIG)
+ PHP MapScript provides MapServer functions for PHP scripts.
+ .
+ MapServer is a CGI-based framework for Internet map services which
+ supports Open Geospatial Consortium (OGC) standards.
+ .
+ This package provides MapScript for PHP based on SWIG.
 
 Package: libmapscript-perl
 Architecture: any

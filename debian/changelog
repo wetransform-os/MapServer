@@ -12,6 +12,7 @@ mapserver (7.4.0~beta1-1) UNRELEASED; urgency=medium
   * Add patch for shebang in Python MapScript example scripts.
   * Set INSTALL_LIB_DIR to Multi-Arch path.
   * Move all CMake options to dh_auto_configure override.
+  * Also build PHPNG MapScript (based on SWIG).
 
  -- Bas Couwenberg <sebastic@debian.org>  Sat, 30 Mar 2019 07:02:34 +0100
 

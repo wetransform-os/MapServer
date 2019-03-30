@@ -3,3 +3,4 @@ java-hardening.patch
 php-mapscript.patch
 spelling-errors.patch
 python-mapscript.patch
+php-mapscript-ng.patch
