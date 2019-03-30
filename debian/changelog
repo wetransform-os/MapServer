@@ -1,4 +1,4 @@
-mapserver (7.4.0~beta1-1) UNRELEASED; urgency=medium
+mapserver (7.4.0~beta1-1~exp1) experimental; urgency=medium
 
   * New upstream beta release.
   * Remove package name from lintian overrides.
@@ -15,7 +15,7 @@ mapserver (7.4.0~beta1-1) UNRELEASED; urgency=medium
   * Also build PHPNG MapScript (based on SWIG).
   * Drop unused shlibs:Depends from cgi-mapserver package.
 
- -- Bas Couwenberg <sebastic@debian.org>  Sat, 30 Mar 2019 07:02:34 +0100
+ -- Bas Couwenberg <sebastic@debian.org>  Sat, 30 Mar 2019 09:59:55 +0100
 
 mapserver (7.2.2-1) unstable; urgency=medium
 
