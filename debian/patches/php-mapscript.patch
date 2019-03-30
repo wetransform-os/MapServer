@@ -1,0 +1,13 @@
+Description: Install PHP MapScript.
+Author: Bas Couwenberg <sebastic@debian.org>
+Bug: https://github.com/mapserver/mapserver/issues/5770
+Forwarded: https://github.com/mapserver/mapserver/pull/5771
+
+--- a/mapscript/php/CMakeLists.txt
++++ b/mapscript/php/CMakeLists.txt
+@@ -43,4 +43,4 @@ target_link_libraries(php_mapscript ${MA
+ ENDIF(WIN32)
+ 
+ set_target_properties(php_mapscript PROPERTIES PREFIX "")
+-#install(TARGETS php_mapscript DESTINATION ${PHP_EXTENSION_DIR})
++install(TARGETS php_mapscript DESTINATION ${PHP_EXTENSION_DIR})
