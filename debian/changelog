@@ -2,6 +2,7 @@ mapserver (7.4.0~beta2-1) UNRELEASED; urgency=medium
 
   * New upstream beta release.
   * Update symbols for other architectures.
+  * Drop patches applied upstream. Refresh remaining patches.
 
  -- Bas Couwenberg <sebastic@debian.org>  Thu, 18 Apr 2019 06:23:43 +0200
 
