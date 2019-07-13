@@ -1,4 +1,4 @@
-mapserver (7.4.0-1~bpo10+1) stretch-backports; urgency=medium
+mapserver (7.4.0-1~bpo10+2) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.
   * Update branch in gbp.conf & Vcs-Git URL.
