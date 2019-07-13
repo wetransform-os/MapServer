@@ -1,3 +1,10 @@
+mapserver (7.4.0-1~bpo10+1) stretch-backports; urgency=medium
+
+  * Rebuild for buster-backports.
+  * Update branch in gbp.conf & Vcs-Git URL.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Sat, 13 Jul 2019 06:53:57 +0200
+
 mapserver (7.4.0-1) unstable; urgency=medium
 
   * Update symbols for other architectures.
