@@ -45,7 +45,7 @@ Build-Depends: debhelper (>= 9.20160114),
                docbook-xml,
                xsltproc
 Build-Conflicts: libcurl3-openssl-dev
-Standards-Version: 4.3.0
+Standards-Version: 4.4.0
 Vcs-Browser: https://salsa.debian.org/debian-gis-team/mapserver
 Vcs-Git: https://salsa.debian.org/debian-gis-team/mapserver.git -b buster-backports
 Homepage: http://www.mapserver.org
