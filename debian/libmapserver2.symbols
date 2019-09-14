@@ -1,4 +1,4 @@
-# SymbolsHelper-Confirmed: 7.4.1 amd64 arm64 armel armhf i386 m68k mips64el mipsel powerpc ppc64 ppc64el riscv64 s390x
+# SymbolsHelper-Confirmed: 7.4.2 amd64
 libmapserver.so.2 #PACKAGE# #MINVER#
 * Build-Depends-Package: libmapserver-dev
  BuildExpressionTree@Base 6.2.1
@@ -649,20 +649,8 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZTVN10ClipperLib16clipperExceptionE@Base 6.2.1
  _ZTVN10ClipperLib7ClipperE@Base 6.2.1
  _get_param_value@Base 7.0.0
- _msMetadataGetCharacterString@Base 7.2.0
  _msMetadataGetCodeList@Base 7.2.0
  _msMetadataGetContact@Base 7.2.0
- _msMetadataGetDate@Base 7.2.0
- _msMetadataGetDecimal@Base 7.2.0
- _msMetadataGetDistributionInfo@Base 7.2.0
- _msMetadataGetExtent@Base 7.2.0
- _msMetadataGetGMLTimePeriod@Base 7.2.0
- _msMetadataGetIdentificationInfo@Base 7.2.0
- _msMetadataGetInteger@Base 7.2.0
- _msMetadataGetOnline@Base 7.2.0
- _msMetadataGetReferenceSystemInfo@Base 7.2.0
- _msMetadataGetSpatialRepresentationInfo@Base 7.2.0
- _msMetadataGetURL@Base 7.2.0
  _msSLDParseSizeParameter@Base 6.2.1
  _msValidateTime@Base 6.2.1
  _ms_script_prefix_am@Base 7.0.0
@@ -1524,8 +1512,6 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msMetadataCreateParamsObj@Base 7.2.0
  msMetadataDispatch@Base 7.2.0
  msMetadataFreeParamsObj@Base 7.2.0
- msMetadataGetExceptionReport@Base 7.2.0
- msMetadataGetLayerMetadata@Base 7.2.0
  msMetadataParseRequest@Base 7.2.0
  msMetadataSetGetMetadataURL@Base 7.2.0
  msMoveClassDown@Base 6.2.1
