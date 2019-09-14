@@ -1,3 +1,9 @@
+mapserver (7.4.2-1) UNRELEASED; urgency=medium
+
+  * New upstream release.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Sat, 14 Sep 2019 07:52:38 +0200
+
 mapserver (7.4.1-1) unstable; urgency=medium
 
   * New upstream release.
