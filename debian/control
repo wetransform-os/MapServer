@@ -211,7 +211,6 @@ Depends: ttf-bitstream-vera,
          ${misc:Depends}
 Suggests: mapserver-bin,
           mapserver-doc
-Provides: ${python3:Provides}
 Description: Python library for MapServer
  Python MapScript provides MapServer functions for Python scripts.
  .
