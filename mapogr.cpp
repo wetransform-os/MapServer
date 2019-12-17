@@ -2475,7 +2475,7 @@ static int msOGRFileWhichShapes(layerObj *layer, rectObj rect, msOGRFileInfo *ps
 
         if ( !bOffsetAlreadyAdded && psInfo->bPaging && layer->startindex > 0 ) {
             char szOffset[50];
-            snprintf(szOffset, sizeof(szOffset), " OFFSET %d", layer->startindex);
+            snprintf(szOffset, sizeof(szOffset), " OFFSET %d", layer->startindex-1);
             select = msStringConcatenate(select, szOffset);
         }
 
@@ -3469,7 +3469,7 @@ static int  msOGRExtractTopSpatialFilter( msOGRFileInfo *info,
                                           pSpatialFilterNode);
   }
 
-  if( expr->m_nToken == MS_TOKEN_COMPARISON_INTERSECTS &&
+  if( (expr->m_nToken == MS_TOKEN_COMPARISON_INTERSECTS || expr->m_nToken == MS_TOKEN_COMPARISON_CONTAINS ) &&
       expr->m_aoChildren.size() == 2 &&
       expr->m_aoChildren[1]->m_nToken == MS_TOKEN_LITERAL_SHAPE )
   {
