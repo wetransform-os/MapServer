@@ -1,4 +1,4 @@
-mapserver (7.4.3-1) UNRELEASED; urgency=medium
+mapserver (7.4.3-1) unstable; urgency=medium
 
   * New upstream release.
   * Bump Standards-Version to 4.4.1, no changes.
@@ -10,7 +10,7 @@ mapserver (7.4.3-1) UNRELEASED; urgency=medium
   * Update symbols for amd64.
   * Rename TODO.Debian to TODO.
 
- -- Bas Couwenberg <sebastic@debian.org>  Tue, 17 Dec 2019 05:30:24 +0100
+ -- Bas Couwenberg <sebastic@debian.org>  Tue, 17 Dec 2019 05:34:32 +0100
 
 mapserver (7.4.2-1) unstable; urgency=medium
 
