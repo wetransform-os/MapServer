@@ -6,6 +6,7 @@ mapserver (7.4.3-1) UNRELEASED; urgency=medium
   * Change python3-all{,-dev} build dependency to python3{,-dev},
     only the default interpreter is used.
   * Drop Name field from upstream metadata.
+  * Drop unused overrides for file-references-package-build-path.
 
  -- Bas Couwenberg <sebastic@debian.org>  Tue, 17 Dec 2019 05:30:24 +0100
 
