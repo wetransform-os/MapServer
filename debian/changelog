@@ -1,3 +1,17 @@
+mapserver (7.4.3-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Bump Standards-Version to 4.4.1, no changes.
+  * Drop Provides: ${python3:Provides}.
+  * Change python3-all{,-dev} build dependency to python3{,-dev},
+    only the default interpreter is used.
+  * Drop Name field from upstream metadata.
+  * Drop unused overrides for file-references-package-build-path.
+  * Update symbols for amd64.
+  * Rename TODO.Debian to TODO.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Tue, 17 Dec 2019 05:34:32 +0100
+
 mapserver (7.4.2-1~bpo10+1) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.

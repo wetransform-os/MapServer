@@ -1,8 +1,7 @@
-# SymbolsHelper-Confirmed: 7.4.2 amd64
+# SymbolsHelper-Confirmed: 7.4.3 amd64
 libmapserver.so.2 #PACKAGE# #MINVER#
 * Build-Depends-Package: libmapserver-dev
  BuildExpressionTree@Base 6.2.1
- CleanVSIDir@Base 6.2.1
  CompareEllipseRegion@Base 6.2.1
  CompareRectangleRegion@Base 6.2.1
  DefineAxis@Base 6.2.1
@@ -942,6 +941,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msCircleDrawLineSymbol@Base 7.0.0
  msCircleDrawShadeSymbol@Base 6.2.1
  msClassifyRasterBuffer@Base 6.2.1
+ msCleanVSIDir@Base 7.4.3
  msCleanup@Base 6.2.1
  msCleanupKernelDensityDataset@Base 7.0.0
  msClipPolygonRect@Base 6.2.1
