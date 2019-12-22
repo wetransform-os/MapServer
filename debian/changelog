@@ -1,3 +1,9 @@
+mapserver (7.4.3-1~bpo10+1) buster-backports; urgency=medium
+
+  * Rebuild for buster-backports.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Sun, 22 Dec 2019 06:37:42 +0100
+
 mapserver (7.4.3-1) unstable; urgency=medium
 
   * New upstream release.
