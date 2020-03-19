@@ -29,7 +29,6 @@ BUILD_DATE := $(shell LC_ALL=C date -u "+%d %B %Y" -d "@$(SOURCE_DATE_EPOCH)")
 
 %:
 	dh $@ --with php,python3,pkgkde_symbolshelper \
-	      --parallel \
 	      --buildsystem cmake
 
 override_dh_auto_clean:
