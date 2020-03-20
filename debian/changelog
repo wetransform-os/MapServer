@@ -1,6 +1,7 @@
 mapserver (7.4.4-1) UNRELEASED; urgency=medium
 
   * New upstream release.
+  * Drop mapscript-buffer-overflow.patch, included upstream.
 
  -- Bas Couwenberg <sebastic@debian.org>  Fri, 20 Mar 2020 21:13:54 +0100
 
