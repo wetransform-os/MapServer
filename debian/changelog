@@ -1,3 +1,9 @@
+mapserver (7.4.4-1) UNRELEASED; urgency=medium
+
+  * New upstream release.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Fri, 20 Mar 2020 21:13:54 +0100
+
 mapserver (7.4.3-3) unstable; urgency=high
 
   * Bump debhelper compat to 10, changes:
