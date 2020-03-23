@@ -1,4 +1,4 @@
-mapserver (7.6.0~beta1-1~exp1) experimental; urgency=medium
+mapserver (7.6.0~beta1-1~exp1) UNRELEASED; urgency=medium
 
   * New upstream beta release.
   * Drop obsolete CMake options.
