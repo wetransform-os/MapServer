@@ -3,6 +3,7 @@ mapserver (7.6.0~beta1-1) UNRELEASED; urgency=medium
   * New upstream beta release.
   * Drop obsolete CMake options.
   * Update copyright years for copyright holders.
+  * Drop swig-4.0.1.patch, included upstream.
 
  -- Bas Couwenberg <sebastic@debian.org>  Mon, 23 Mar 2020 05:50:18 +0100
 
