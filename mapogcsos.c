@@ -362,7 +362,15 @@ void  msSOSAddGeometryNode(xmlNsPtr psNsGml, xmlNsPtr psNsMs, xmlNodePtr psParen
 
   if (psParent && psShape) {
     if (msProjectionsDiffer(&map->projection, &lp->projection) == MS_TRUE) {
-      msProjectShape(&lp->projection, &map->projection, psShape);
+      if( lp->reprojectorLayerToMap == NULL )
+      {
+        lp->reprojectorLayerToMap = msProjectCreateReprojector(
+            &lp->projection, &map->projection);
+      }
+      if( lp->reprojectorLayerToMap )
+      {
+        msProjectShapeEx(lp->reprojectorLayerToMap, psShape);
+      }
       msOWSGetEPSGProj(&(map->projection), &(lp->metadata), "SO", MS_TRUE, &pszEpsg_buf);
       pszEpsg = pszEpsg_buf;
     }
@@ -770,11 +778,19 @@ void msSOSAddMemberNode(xmlNsPtr psNsGml, xmlNsPtr psNsOm, xmlNsPtr psNsSwe, xml
       <om:result uom="units.xml#cm">29.00</om:result> */
 
 
-
-#ifdef USE_PROJ
     if(msProjectionsDiffer(&(lp->projection), &(map->projection)))
-      msProjectShape(&lp->projection, &lp->projection, &sShape);
-#endif
+    {
+      if( lp->reprojectorLayerToMap == NULL )
+      {
+        lp->reprojectorLayerToMap = msProjectCreateReprojector(
+            &lp->projection, &map->projection);
+      }
+      if( lp->reprojectorLayerToMap )
+      {
+        msProjectShapeEx(lp->reprojectorLayerToMap, &sShape);
+      }
+    }
+
     psNode = xmlNewChild(psNode, psNsGml, BAD_CAST "featureMember", NULL);
     /* xmlSetNs(psNode,xmlNewNs(psNode, BAD_CAST "http://www.opengis.net/gml", BAD_CAST "gml")); */
 
@@ -790,14 +806,14 @@ void msSOSAddMemberNode(xmlNsPtr psNsGml, xmlNsPtr psNsOm, xmlNsPtr psNsSwe, xml
       xmlSetNs(psLayerNode,psNsMs);
 
     /*bbox*/
-#ifdef USE_PROJ
+
     msOWSGetEPSGProj(&(map->projection), &(lp->metadata), "SO", MS_TRUE, &pszEpsg);
     if (!pszEpsg)
       msOWSGetEPSGProj(&(lp->projection), &(lp->metadata), "SO", MS_TRUE, &pszEpsg);
 
     if (msProjectionsDiffer(&map->projection, &lp->projection) == MS_TRUE)
       msProjectRect(&lp->projection, &map->projection, &sShape.bounds);
-#endif
+
     psNode = xmlAddChild(psLayerNode, msGML3BoundedBy(psNsGml, sShape.bounds.minx, sShape.bounds.miny, sShape.bounds.maxx, sShape.bounds.maxy, pszEpsg));
 
     /*geometry*/
@@ -1922,10 +1938,8 @@ this request. Check sos/ows_enable_request settings.", "msSOSGetObservation()", 
             /* HACK END */
 
             pszBuffer = NULL;
-            if (&lp->filter) {
-              if (lp->filter.string && strlen(lp->filter.string) > 0)
-                msFreeExpression(&lp->filter);
-            }
+            if (lp->filter.string && strlen(lp->filter.string) > 0)
+              msFreeExpression(&lp->filter);
 
             /*The filter should reflect the underlying db*/
             /*for ogr add a where clause */
@@ -2124,6 +2138,7 @@ this request. Check sos/ows_enable_request settings.", "msSOSGetObservation()", 
 
             /* project MAP.EXTENT to this SRS */
             msInitProjection(&po);
+            msProjectionInheritContextFrom(&po, &map->projection);
 
             snprintf(srsbuffer, sizeof(srsbuffer), "+init=epsg:%.20s", sosparams->pszSrsName+strlen("EPSG:"));
 

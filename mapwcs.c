@@ -905,9 +905,7 @@ static int msWCSGetCapabilities_ContentMetadata(mapObj *map, wcsParamsObj *param
         continue;
 
       if(msWCSGetCapabilities_CoverageOfferingBrief((GET_LAYER(map, i)), params, script_url_encoded) != MS_SUCCESS ) {
-        msIO_printf("</ContentMetadata>\n");
-        msFree(script_url_encoded);
-        return MS_FAILURE;
+        msIO_printf("  <!-- WARNING: There was a problem with one of layers. See server log for details. -->\n");
       }
     }
   }
@@ -1770,6 +1768,7 @@ static int msWCSGetCoverage(mapObj *map, cgiRequestObj *request,
     projectionObj proj;
 
     msInitProjection( &proj );
+    msProjectionInheritContextFrom(&proj, &(map->projection));
     if( msLoadProjectionString( &proj, (char *) params->crs ) == 0 ) {
       msAxisNormalizePoints( &proj, 1,
                              &(params->bbox.minx),
@@ -1958,6 +1957,7 @@ this request. Check wcs/ows_enable_request settings.", "msWCSGetCoverage()", par
     projectionObj tmp_proj;
 
     msInitProjection(&tmp_proj);
+    msProjectionInheritContextFrom(&tmp_proj, &(map->projection));
     if (msLoadProjectionString(&tmp_proj, (char *) params->crs) != 0) {
       msWCSFreeCoverageMetadata(&cm);
       return msWCSException( map, NULL, NULL, params->version);
@@ -2712,8 +2712,12 @@ int msWCSGetCoverageMetadata( layerObj *layer, coverageMetadataObj *cm )
       return MS_FAILURE;
 
     msAcquireLock( TLOCK_GDAL );
-
-    hDS = GDALOpen( decrypted_path, GA_ReadOnly );
+    {
+        char** connectionoptions = msGetStringListFromHashTable(&(layer->connectionoptions));
+        hDS = GDALOpenEx( decrypted_path, GDAL_OF_RASTER, NULL,
+                          (const char* const*)connectionoptions, NULL);
+        CSLDestroy(connectionoptions);
+    }
     if( hDS == NULL ) {
       const char *cpl_error_msg = CPLGetLastErrorMsg();
 
@@ -2788,14 +2792,14 @@ int msWCSGetCoverageMetadata( layerObj *layer, coverageMetadataObj *cm )
   cm->llextent = cm->extent;
 
   /* Already in latlong .. use directly. */
-  if( layer->projection.proj != NULL && pj_is_latlong(layer->projection.proj)) {
+  if( layer->projection.proj != NULL && msProjIsGeographicCRS(&(layer->projection))) {
     /* no change */
   }
 
-  else if (layer->projection.numargs > 0 && !pj_is_latlong(layer->projection.proj)) /* check the layer projection */
+  else if (layer->projection.numargs > 0 && !msProjIsGeographicCRS(&(layer->projection))) /* check the layer projection */
     msProjectRect(&(layer->projection), NULL, &(cm->llextent));
 
-  else if (layer->map->projection.numargs > 0 && !pj_is_latlong(layer->map->projection.proj)) /* check the map projection */
+  else if (layer->map->projection.numargs > 0 && !msProjIsGeographicCRS(&(layer->map->projection))) /* check the map projection */
     msProjectRect(&(layer->map->projection), NULL, &(cm->llextent));
 
   else { /* projection was specified in the metadata only (EPSG:... only at the moment)  */
@@ -2803,6 +2807,7 @@ int msWCSGetCoverageMetadata( layerObj *layer, coverageMetadataObj *cm )
     char projstring[32];
 
     msInitProjection(&proj); /* or bad things happen */
+    msProjectionInheritContextFrom(&proj, &(layer->map->projection));
 
     snprintf(projstring, sizeof(projstring), "init=epsg:%.20s", cm->srs_epsg+5);
     if (msLoadProjectionString(&proj, projstring) != 0) return MS_FAILURE;
