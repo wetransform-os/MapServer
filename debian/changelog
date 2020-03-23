@@ -4,6 +4,7 @@ mapserver (7.6.0~beta1-1~exp1) UNRELEASED; urgency=medium
   * Drop obsolete CMake options.
   * Update copyright years for copyright holders.
   * Drop swig-4.0.1.patch, included upstream.
+  * Add -D_GNU_SOURCE to CPPFLAGS.
 
  -- Bas Couwenberg <sebastic@debian.org>  Mon, 23 Mar 2020 05:56:30 +0100
 
