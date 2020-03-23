@@ -1,11 +1,11 @@
-mapserver (7.6.0~beta1-1) UNRELEASED; urgency=medium
+mapserver (7.6.0~beta1-1~exp1) experimental; urgency=medium
 
   * New upstream beta release.
   * Drop obsolete CMake options.
   * Update copyright years for copyright holders.
   * Drop swig-4.0.1.patch, included upstream.
 
- -- Bas Couwenberg <sebastic@debian.org>  Mon, 23 Mar 2020 05:50:18 +0100
+ -- Bas Couwenberg <sebastic@debian.org>  Mon, 23 Mar 2020 05:56:30 +0100
 
 mapserver (7.4.4-1) unstable; urgency=high
 
