@@ -57,12 +57,6 @@
  * ================================================================== */
 #ifdef USE_WMS_SVR
 
-#ifdef USE_OGR
-int ogrEnabled = 1;
-#else
-int ogrEnabled = 0;
-#endif /* USE_OGR */
-
 /*
 ** msWMSException()
 **
@@ -173,9 +167,6 @@ int msWMSException(mapObj *map, int nVersion, const char *exception_code,
 
 int msWMSSetTimePattern(const char *timepatternstring, char *timestring, int checkonly)
 {
-  char **atimes, **ranges, **patterns;
-  int numtimes, numpatterns, numranges, i, j, k;
-  char *tmpstr = NULL;
   int ret = MS_SUCCESS;
 
   if (timepatternstring && timestring) {
@@ -183,20 +174,23 @@ int msWMSSetTimePattern(const char *timepatternstring, char *timestring, int che
     /* time value can be dicrete times (eg 2004-09-21), */
     /* multiple times (2004-09-21, 2004-09-22, ...) */
     /* and range(s) (2004-09-21/2004-09-25, 2004-09-27/2004-09-29) */
-    atimes = msStringSplit(timestring, ',', &numtimes);
+    int numtimes = 0;
+    char** atimes = msStringSplit(timestring, ',', &numtimes);
     
     /* get the pattern to use */
     if (numtimes > 0) {
-      patterns = msStringSplit(timepatternstring, ',', &numpatterns);
+      int numpatterns = 0;
+      char** patterns = msStringSplit(timepatternstring, ',', &numpatterns);
 
-      for (j=0; j<numtimes;++j) {
-        ranges = msStringSplit(atimes[j],  '/', &numranges);
-        for (k=0; k<numranges;++k) {
+      for (int j=0; j<numtimes;++j) {
+        int numranges = 0;
+        char** ranges = msStringSplit(atimes[j],  '/', &numranges);
+        for (int k=0; k<numranges;++k) {
           int match = MS_FALSE;
-          for (i=0; i<numpatterns; ++i) {
+          for (int i=0; i<numpatterns; ++i) {
             if (patterns[i] && strlen(patterns[i]) > 0) {
               msStringTrimBlanks(patterns[i]);
-              tmpstr = msStringTrimLeft(patterns[i]);
+              char* tmpstr = msStringTrimLeft(patterns[i]);
               if (msTimeMatchPattern(ranges[k], tmpstr) == MS_TRUE) {
                 if (!checkonly) msSetLimitedPatternsToUse(tmpstr);
                 match = MS_TRUE;
@@ -264,7 +258,7 @@ int msWMSApplyTime(mapObj *map, int version, char *time, char *wms_exception_for
           }
         } else {
           /* 
-	  ** Check to see if there is a list of possible patterns defined. If it is the case, use 
+	        ** Check to see if there is a list of possible patterns defined. If it is the case, use 
           ** it to set the time pattern to use for the request.
           **
           ** Last argument is set to TRUE (checkonly) to not trigger the patterns info setting, rather 
@@ -316,7 +310,7 @@ int msWMSApplyTime(mapObj *map, int version, char *time, char *wms_exception_for
 ** Apply the FILTER parameter to layers (RFC118)
 */
 int msWMSApplyFilter(mapObj *map, int version, const char *filter,
-		     int def_srs_needs_axis_swap, char *wms_exception_format)
+		     int def_srs_needs_axis_swap, char *wms_exception_format, owsRequestObj *ows_request)
 {
   int i=0, numlayers;
   int numfilters=0, curfilter=0;
@@ -330,20 +324,20 @@ int msWMSApplyFilter(mapObj *map, int version, const char *filter,
   if (!map)
     return MS_FAILURE;  
 
-  /* Count number of requested layers 
+  /* Count number of requested layers / groups / etc.
    * Only layers with STATUS ON were in the LAYERS request param.
    * Layers with STATUS DEFAULT were set in the mapfile and are
    * not expected to have a corresponding filter in the request
    */
-   for(i=0, numlayers=0; i<map->numlayers; i++) {
-     layerObj *lp=NULL;
+  for(i=0, numlayers=0; i<map->numlayers; i++) {
+    layerObj *lp=NULL;
 
-     if(map->layerorder[i] != -1) {
-       lp = (GET_LAYER(map,  map->layerorder[i]));
-       if (lp->status == MS_ON)
-	 numlayers++;
-     }
-   }
+    if(map->layerorder[i] != -1) {
+      lp = (GET_LAYER(map,  map->layerorder[i]));
+      if (lp->status == MS_ON)
+        numlayers++;
+    }
+  }
    
   /* -------------------------------------------------------------------- */
   /*      Parse the Filter parameter. If there are several Filter         */
@@ -353,25 +347,21 @@ int msWMSApplyFilter(mapObj *map, int version, const char *filter,
   if (filter[0] == '(') {
     paszFilters = FLTSplitFilters(filter, &numfilters);
 
-    if ( paszFilters && numfilters > 0 && numlayers != numfilters ) {
-      msFreeCharArray(paszFilters, numfilters);
-      paszFilters = NULL;
-    }
   } else if (numlayers == 1) {
     numfilters=1;
     paszFilters = (char **)msSmallMalloc(sizeof(char *)*numfilters);
     paszFilters[0] = msStrdup(filter);
   }
 
-  if (numlayers != numfilters) {
-    msSetError(MS_WMSERR, "Wrong number of filter elements, one filter must be specified for each requested layer.",
+  if (numfilters != ows_request->numwmslayerargs) {
+    msSetError(MS_WMSERR, "Wrong number of filter elements, one filter must be specified for each requested layer or groups.",
 	       "msWMSApplyFilter" );
     msFreeCharArray(paszFilters, numfilters);
     return msWMSException(map, version, "InvalidParameterValue", wms_exception_format);
   }
 
   /* We're good to go. Apply each filter to the corresponding layer */
-  for(i=0, curfilter=0; i<map->numlayers && curfilter<numfilters; i++) {
+  for(i=0; i<map->numlayers; i++) {
     layerObj *lp=NULL;
 
     if(map->layerorder[i] != -1)
@@ -381,9 +371,10 @@ int msWMSApplyFilter(mapObj *map, int version, const char *filter,
     if (lp == NULL || lp->status != MS_ON)
       continue;
 
+    curfilter = ows_request->layerwmsfilterindex[lp->index];
+
     /* Skip empty filters */
     if (paszFilters[curfilter][0] == '\0') {
-      curfilter++;
       continue;
     }
     
@@ -405,7 +396,7 @@ int msWMSApplyFilter(mapObj *map, int version, const char *filter,
      * elements inside the filter(s)
      */
     if (version >= OWS_1_3_0)
-      FLTDoAxisSwappingIfNecessary(psNode, def_srs_needs_axis_swap);
+      FLTDoAxisSwappingIfNecessary(map, psNode, def_srs_needs_axis_swap);
 
 #ifdef do_we_need_this
     FLTProcessPropertyIsNull(psNode, map, lp->index);
@@ -459,7 +450,29 @@ int msWMSApplyFilter(mapObj *map, int version, const char *filter,
 #endif
 
     /* Apply filter to this layer */
-    if( FLTApplyFilterToLayer(psNode, map, lp->index) != MS_SUCCESS ) {
+
+    /* But first, start by removing any wfs_use_default_extent_for_getfeature metadata item */
+    /* that could result in the BBOX to be removed */
+    char* old_value_wfs_use_default_extent_for_getfeature = NULL;
+    {
+        const char* old_value_tmp = msLookupHashTable(
+            &(lp->metadata), "wfs_use_default_extent_for_getfeature");
+        if( old_value_tmp )
+        {
+            old_value_wfs_use_default_extent_for_getfeature = msStrdup(old_value_tmp);
+            msRemoveHashTable(&(lp->metadata), "wfs_use_default_extent_for_getfeature");
+        }
+    }
+
+    int ret = FLTApplyFilterToLayer(psNode, map, lp->index);
+    if( old_value_wfs_use_default_extent_for_getfeature )
+    {
+        msInsertHashTable(&(lp->metadata), "wfs_use_default_extent_for_getfeature",
+                          old_value_wfs_use_default_extent_for_getfeature);
+        msFree(old_value_wfs_use_default_extent_for_getfeature);
+    }
+
+    if( ret != MS_SUCCESS ) {
       errorObj* ms_error = msGetErrorObj();
 
       if(ms_error->code != MS_NOTFOUND) {
@@ -572,7 +585,7 @@ void msWMSPrepareNestedGroups(mapObj* map, int nVersion, char*** nestedGroups, i
 int msWMSValidateDimensionValue(char *value, const char *dimensionextent, int forcecharcter)
 {
   char **extents=NULL, **ranges=NULL, **onerange=NULL;
-  int numextents, numranges, numonerange;
+  int numextents=0, numranges=0, numonerange=0;
   char **aextentvalues = NULL;
   int nextentvalues=0;
   pointObj *aextentranges=NULL;
@@ -965,9 +978,9 @@ int msWMSLoadGetMapParams(mapObj *map, int nVersion,
   outputFormatObj *format = NULL;
   int validlayers = 0;
   char *styles = NULL;
-  int numlayers = 0;
+  int numwmslayerargs = 0;
   char **layers = NULL;
-  int layerfound =0;
+  int layerfound = MS_FALSE;
   int invalidlayers = 0;
   char epsgbuf[100];
   char srsbuffer[100];
@@ -1011,10 +1024,6 @@ int msWMSLoadGetMapParams(mapObj *map, int nVersion,
       if (sldenabled == NULL)
         sldenabled = "true";
 
-      if (ogrEnabled == 0) {
-        msSetError(MS_WMSERR, "OGR support is not available.", "msWMSLoadGetMapParams()");
-        return msWMSException(map, nVersion, NULL, wms_exception_format);
-      } else {
         if (strcasecmp(sldenabled, "true") == 0) {
           if (strcasecmp(names[i], "SLD") == 0) {
             sld_url =  values[i];
@@ -1023,7 +1032,6 @@ int msWMSLoadGetMapParams(mapObj *map, int nVersion,
             sld_body =  values[i];
           }
         }
-      }
     }
   }
 
@@ -1044,11 +1052,11 @@ int msWMSLoadGetMapParams(mapObj *map, int nVersion,
       layerOrder = (int*)malloc(map->numlayers * sizeof(int));
       MS_CHECK_ALLOC(layerOrder, map->numlayers * sizeof(int), MS_FAILURE)
 
-      layers = msStringSplit(values[i], ',', &numlayers);
-      if (layers==NULL || strlen(values[i]) <=0 ||   numlayers < 1) {
-        numlayers = 0;
+      layers = msStringSplit(values[i], ',', &numwmslayerargs);
+      if (layers==NULL || strlen(values[i]) <=0 ||   numwmslayerargs < 1) {
+        numwmslayerargs = 0;
         if (sld_url == NULL &&   sld_body == NULL) {
-          msFreeCharArray(layers,numlayers);
+          msFreeCharArray(layers,numwmslayerargs);
           msFree(layerOrder);
           msSetError(MS_WMSERR, "At least one layer name required in LAYERS.",
                      "msWMSLoadGetMapParams()");
@@ -1059,8 +1067,8 @@ int msWMSLoadGetMapParams(mapObj *map, int nVersion,
       if (nVersion >= OWS_1_3_0) {
         layerlimit = msOWSLookupMetadata(&(map->web.metadata), "MO", "layerlimit");
         if(layerlimit) {
-          if (numlayers > atoi(layerlimit)) {
-            msFreeCharArray(layers,numlayers);
+          if (numwmslayerargs > atoi(layerlimit)) {
+            msFreeCharArray(layers,numwmslayerargs);
             msFree(layerOrder);
             msSetError(MS_WMSERR, "Number of layers requested exceeds LayerLimit.",
                        "msWMSLoadGetMapParams()");
@@ -1090,8 +1098,16 @@ int msWMSLoadGetMapParams(mapObj *map, int nVersion,
       isUsedInNestedGroup = (int*)msSmallCalloc(map->numlayers, sizeof(int));
       msWMSPrepareNestedGroups(map, nVersion, nestedGroups, numNestedGroups, isUsedInNestedGroup);
 
-      for (k=0; k<numlayers; k++) {
-        layerfound = 0;
+      if (ows_request->layerwmsfilterindex != NULL)
+        msFree(ows_request->layerwmsfilterindex);
+      ows_request->layerwmsfilterindex = (int*)msSmallMalloc(map->numlayers * sizeof(int));
+      for(j=0; j<map->numlayers; j++) {
+        ows_request->layerwmsfilterindex[j] = -1;
+      }
+      ows_request->numwmslayerargs = numwmslayerargs;
+
+      for (k=0; k<numwmslayerargs; k++) {
+        layerfound = MS_FALSE;
         for (j=0; j<map->numlayers; j++) {
           /* Turn on selected layers only. */
           if ( ((GET_LAYER(map, j)->name &&
@@ -1107,11 +1123,12 @@ int msWMSLoadGetMapParams(mapObj *map, int nVersion,
                 GET_LAYER(map, j)->status = MS_ON;
               }
             }
+            ows_request->layerwmsfilterindex[j] = k; /* Assign the corresponding filter */
             validlayers++;
-            layerfound = 1;
+            layerfound = MS_TRUE;
           }
         }
-        if (layerfound == 0 && numlayers>0)
+        if (layerfound == MS_FALSE && numwmslayerargs>0)
           invalidlayers++;
 
       }
@@ -1134,7 +1151,7 @@ int msWMSLoadGetMapParams(mapObj *map, int nVersion,
       }
 
       free(layerOrder);
-      msFreeCharArray(layers, numlayers);
+      msFreeCharArray(layers, numwmslayerargs);
     } else if (strcasecmp(names[i], "STYLES") == 0) {
       styles = values[i];
 
@@ -1329,6 +1346,7 @@ int msWMSLoadGetMapParams(mapObj *map, int nVersion,
     /*try to adjust the axes if necessary*/
     if (strlen(srsbuffer) > 1) {
       msInitProjection(&proj);
+      msProjectionInheritContextFrom(&proj, &(map->projection));
       if (msLoadProjectionStringEPSG(&proj, (char *)srsbuffer) == 0 &&
 	  (need_axis_swap = msIsAxisInvertedProj(&proj) ) ) {
         msAxisNormalizePoints( &proj, 1, &rect.minx, &rect.miny );
@@ -1604,6 +1622,7 @@ this request. Check wms/ows_enable_request settings.",
     }
 
     msInitProjection(&newProj);
+    msProjectionInheritContextFrom(&newProj, &map->projection);
     if (strlen(srsbuffer) > 1) {
       int nTmp;
 
@@ -1628,8 +1647,7 @@ this request. Check wms/ows_enable_request settings.",
   /* that the srs given as parameter is valid for all layers */
   if (strlen(srsbuffer) > 1) {
     int nTmp;
-    msFreeProjection(&map->projection);
-    msInitProjection(&map->projection);
+    msFreeProjectionExceptContext(&map->projection);
     if (nVersion >= OWS_1_3_0)
       nTmp = msLoadProjectionStringEPSG(&(map->projection), srsbuffer);
     else
@@ -1897,7 +1915,7 @@ this request. Check wms/ows_enable_request settings.",
       return msWMSException(map, nVersion, NULL, wms_exception_format);
     }
 
-    if (msWMSApplyFilter(map, nVersion, filter, need_axis_swap, wms_exception_format) == MS_FAILURE) {
+    if (msWMSApplyFilter(map, nVersion, filter, need_axis_swap, wms_exception_format, ows_request) == MS_FAILURE) {
       return MS_FAILURE;/* msWMSException(map, nVersion, "InvalidFilterRequest"); */
     }
   }
@@ -4663,7 +4681,7 @@ int msWMSLegendGraphic(mapObj *map, int nVersion, char **names,
         pszFormat = values[i];
       else if (strcasecmp(names[i], "SCALE") == 0)
         psScale = values[i];
-#ifdef USE_OGR
+
       /* -------------------------------------------------------------------- */
       /*      SLD support :                                                   */
       /*        - check if the SLD parameter is there. it is supposed to      */
@@ -4681,7 +4699,7 @@ int msWMSLegendGraphic(mapObj *map, int nVersion, char **names,
         psRule = values[i];
       else if (strcasecmp(names[i], "STYLE") == 0)
         pszStyle = values[i];
-#endif
+
       /* -------------------------------------------------------------------- */
       /*      SLD support:                                                    */
       /*        - because the request parameter "sld_version" is required in  */

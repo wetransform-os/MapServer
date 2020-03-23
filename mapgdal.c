@@ -32,14 +32,9 @@
 #include <assert.h>
 
 
-
-#if defined(USE_GDAL) || defined(USE_OGR)
 #include "cpl_conv.h"
 #include "cpl_string.h"
 #include "ogr_srs_api.h"
-#endif
-
-#ifdef USE_GDAL
 
 #include "gdal.h"
 
@@ -72,10 +67,7 @@ void msGDALCleanup( void )
 {
   if( bGDALInitialized ) {
     int iRepeat = 5;
-    msAcquireLock( TLOCK_GDAL );
 
-#if GDAL_RELEASE_DATE > 20101207
-    {
       /*
       ** Cleanup any unreferenced but open datasets as will tend
       ** to exist due to deferred close requests.  We are careful
@@ -83,11 +75,13 @@ void msGDALCleanup( void )
       ** list as closing some datasets may cause others to be
       ** closed (subdatasets in a VRT for instance).
       */
-      GDALDatasetH *pahDSList = NULL;
-      int nDSCount = 0;
-      int bDidSomething;
+    GDALDatasetH *pahDSList = NULL;
+    int nDSCount = 0;
+    int bDidSomething;
 
-      do {
+    msAcquireLock( TLOCK_GDAL );
+
+    do {
         int i;
         GDALGetOpenDatasets( &pahDSList, &nDSCount );
         bDidSomething = FALSE;
@@ -98,9 +92,7 @@ void msGDALCleanup( void )
           } else
             GDALDereferenceDataset( pahDSList[i] );
         }
-      } while( bDidSomething );
-    }
-#endif
+    } while( bDidSomething );
 
     while( iRepeat-- )
       CPLPopErrorHandler();
@@ -283,21 +275,22 @@ int msSaveImageGDAL( mapObj *map, imageObj *image, const char *filenameIn )
     int iBand;
 
     for( iBand = 0; iBand < nBands; iBand++ ) {
+      CPLErr eErr;
       GDALRasterBandH hBand = GDALGetRasterBand( hMemDS, iBand+1 );
 
       if( format->imagemode == MS_IMAGEMODE_INT16 ) {
-        GDALRasterIO( hBand, GF_Write, 0, iLine, image->width, 1,
+        eErr = GDALRasterIO( hBand, GF_Write, 0, iLine, image->width, 1,
                       image->img.raw_16bit + iLine * image->width
                       + iBand * image->width * image->height,
                       image->width, 1, GDT_Int16, 2, 0 );
 
       } else if( format->imagemode == MS_IMAGEMODE_FLOAT32 ) {
-        GDALRasterIO( hBand, GF_Write, 0, iLine, image->width, 1,
+        eErr = GDALRasterIO( hBand, GF_Write, 0, iLine, image->width, 1,
                       image->img.raw_float + iLine * image->width
                       + iBand * image->width * image->height,
                       image->width, 1, GDT_Float32, 4, 0 );
       } else if( format->imagemode == MS_IMAGEMODE_BYTE ) {
-        GDALRasterIO( hBand, GF_Write, 0, iLine, image->width, 1,
+        eErr = GDALRasterIO( hBand, GF_Write, 0, iLine, image->width, 1,
                       image->img.raw_byte + iLine * image->width
                       + iBand * image->width * image->height,
                       image->width, 1, GDT_Byte, 1, 0 );
@@ -324,13 +317,14 @@ int msSaveImageGDAL( mapObj *map, imageObj *image, const char *filenameIn )
           msReleaseLock( TLOCK_GDAL );
           msSetError( MS_MISCERR, "Missing RGB or A buffer.\n",
                       "msSaveImageGDAL()" );
+          GDALClose(hMemDS);
           return MS_FAILURE;
         }
 
         pabyData = (GByte *)(pixptr + iLine*rb.data.rgba.row_step);
 
         if( rb.data.rgba.a == NULL || iBand == 3 ) {
-          GDALRasterIO( hBand, GF_Write, 0, iLine, image->width, 1,
+          eErr = GDALRasterIO( hBand, GF_Write, 0, iLine, image->width, 1,
                         pabyData, image->width, 1, GDT_Byte,
                         rb.data.rgba.pixel_step, 0 );
         } else { /* We need to un-pre-multiple RGB by alpha. */
@@ -353,10 +347,17 @@ int msSaveImageGDAL( mapObj *map, imageObj *image, const char *filenameIn )
             }
           }
 
-          GDALRasterIO( hBand, GF_Write, 0, iLine, image->width, 1,
+          eErr = GDALRasterIO( hBand, GF_Write, 0, iLine, image->width, 1,
                         pabyUPM, image->width, 1, GDT_Byte, 1, 0 );
           free( pabyUPM );
         }
+      }
+      if( eErr != CE_None ) {
+          msReleaseLock( TLOCK_GDAL );
+          msSetError( MS_MISCERR, "GDALRasterIO() failed.\n",
+                      "msSaveImageGDAL()" );
+          GDALClose(hMemDS);
+          return MS_FAILURE;
       }
     }
   }
@@ -562,13 +563,24 @@ int msInitDefaultGDALOutputFormat( outputFormatObj *format )
   return MS_SUCCESS;
 }
 
-#else
+char** msGetStringListFromHashTable(hashTableObj* table)
+{
+  struct hashObj *tp = NULL;
+  int i;
+  char** papszRet = NULL;
 
-void msGDALInitialize( void ) {}
-void msGDALCleanup(void) {}
+  if(!table) return NULL;
+  if(msHashIsEmpty(table)) return NULL;
 
-
-#endif /* def USE_GDAL */
+  for (i=0; i<MS_HASHSIZE; ++i) {
+    if (table->items[i] != NULL) {
+      for (tp=table->items[i]; tp!=NULL; tp=tp->next) {
+        papszRet = CSLSetNameValue(papszRet, tp->key, tp->data);
+      }
+    }
+  }
+  return papszRet;
+}
 
 
 /************************************************************************/
@@ -585,15 +597,6 @@ void msGDALCleanup(void) {}
 char *msProjectionObj2OGCWKT( projectionObj *projection )
 
 {
-
-#if !defined(USE_GDAL) && !defined(USE_OGR)
-  msSetError(MS_OGRERR,
-             "Not implemented since neither OGR nor GDAL is enabled.",
-             "msProjectionObj2OGCWKT()");
-  return NULL;
-
-#else /* defined USE_GDAL or USE_OGR */
-
   OGRSpatialReferenceH hSRS;
   char *pszWKT=NULL, *pszProj4, *pszInitEpsg=NULL;
   int  nLength = 0, i;
@@ -648,7 +651,6 @@ char *msProjectionObj2OGCWKT( projectionObj *projection )
     return pszWKT2;
   } else
     return NULL;
-#endif /* defined USE_GDAL or USE_OGR */
 }
 
 
