@@ -5,6 +5,7 @@ mapserver (7.6.0~beta1-1~exp1) UNRELEASED; urgency=medium
   * Update copyright years for copyright holders.
   * Drop swig-4.0.1.patch, included upstream.
   * Add -D_GNU_SOURCE to CPPFLAGS.
+  * Update symbols for amd64.
 
  -- Bas Couwenberg <sebastic@debian.org>  Mon, 23 Mar 2020 05:56:30 +0100
 

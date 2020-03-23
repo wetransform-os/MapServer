@@ -1,4 +1,4 @@
-# SymbolsHelper-Confirmed: 7.4.3 amd64
+# SymbolsHelper-Confirmed: 7.6.0~beta1 amd64
 libmapserver.so.2 #PACKAGE# #MINVER#
 * Build-Depends-Package: libmapserver-dev
  BuildExpressionTree@Base 6.2.1
@@ -25,17 +25,12 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  FLTGetCommonExpression@Base 6.2.1
  FLTGetDuring@Base 7.0.0
  FLTGetExpressionForValuesRanges@Base 6.2.1
- FLTGetFeatureIdCommonExpression@Base 6.2.1
  FLTGetGeosOperator@Base 6.2.1
- FLTGetIsBetweenComparisonCommonExpresssion@Base 6.2.1
  FLTGetIsBetweenComparisonSQLExpresssion@Base 6.2.1
- FLTGetIsLikeComparisonCommonExpression@Base 6.2.1
  FLTGetIsLikeComparisonSQLExpression@Base 6.2.1
- FLTGetLogicalComparisonCommonExpression@Base 6.2.1
  FLTGetLogicalComparisonSQLExpresssion@Base 6.2.1
  FLTGetSQLExpression@Base 6.2.1
  FLTGetShape@Base 6.2.1
- FLTGetSpatialComparisonCommonExpression@Base 6.2.1
  FLTGetTimeExpression@Base 7.0.0
  FLTHasSpatialFilter@Base 6.2.1
  FLTInsertElementInNode@Base 6.2.1
@@ -56,6 +51,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  FLTIsTemporalFilterType@Base 7.0.0
  FLTLayerApplyCondSQLFilterToLayer@Base 6.2.1
  FLTLayerApplyPlainFilterToLayer@Base 6.2.1
+ FLTLayerSetInvalidRectIfSupported@Base 7.6.0~beta1
  FLTNumberOfFilterType@Base 6.2.1
  FLTParseFilterEncoding@Base 6.2.1
  FLTParseGMLBox@Base 6.2.1
@@ -124,8 +120,8 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _Z18encodeForRenderingj@Base 7.0.0
  _Z18utfgridCreateImageiiP15outputFormatObjP8colorObj@Base 7.0.0
  _Z19agg2RenderLineTiledP8imageObjP8shapeObjS0_@Base 6.2.1
- _Z19utfgridRenderGlyphsP8imageObjP11textPathObjP8colorObjS4_i@Base 7.0.0
- _Z20agg2RenderGlyphsPathP8imageObjP11textPathObjP8colorObjS4_i@Base 7.0.0
+ _Z19utfgridRenderGlyphsP8imageObjP11textPathObjP8colorObjS4_ii@Base 7.6.0~beta1
+ _Z20agg2RenderGlyphsPathP8imageObjP11textPathObjP8colorObjS4_ii@Base 7.6.0~beta1
  (optional=templinst)_Z20decompose_ft_outlineIN9mapserver9path_baseINS0_20vertex_block_storageIdLj8ELj256EEEEEEbRK11FT_Outline_bRKNS0_12trans_affineERT_@Base 7.0.0
  (optional=templinst)_Z20renderPolygonHatchesIN9mapserver12conv_clipperI15polygon_adaptorNS0_11conv_strokeINS0_9conv_dashINS0_9path_baseINS0_20vertex_block_storageIdLj8ELj256EEEEENS0_12null_markersEEES9_EEEEEiP8imageObjRT_P8colorObj@Base 7.0.0
  (optional=templinst)_Z20renderPolygonHatchesIN9mapserver12conv_clipperI15polygon_adaptorNS0_11conv_strokeINS0_9path_baseINS0_20vertex_block_storageIdLj8ELj256EEEEENS0_12null_markersEEEEEEiP8imageObjRT_P8colorObj@Base 7.0.0
@@ -144,6 +140,9 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _Z25utfgridRenderPixmapSymbolP8imageObjddP9symbolObjP14symbolStyleObj@Base 7.0.0
  _Z25utfgridRenderVectorSymbolP8imageObjddP9symbolObjP14symbolStyleObj@Base 7.0.0
  _Z26utfgridRenderEllipseSymbolP8imageObjddP9symbolObjP14symbolStyleObj@Base 7.0.0
+ _Z31FLTGetFeatureIdCommonExpressionP11_FilterNodeP8layerObj@Base 7.6.0~beta1
+ _Z39FLTGetLogicalComparisonCommonExpressionP11_FilterNodeP8layerObj@Base 7.6.0~beta1
+ _Z39FLTGetSpatialComparisonCommonExpressionP11_FilterNodeP8layerObj@Base 7.6.0~beta1
  _Z9growTableP11lookupTable@Base 7.0.0
  _ZN10ClipperLib10SwapPointsERNS_8IntPointES1_@Base 6.2.1
  _ZN10ClipperLib11ClipperBase10AddPolygonERKSt6vectorINS_8IntPointESaIS2_EENS_8PolyTypeE@Base 6.2.1
@@ -650,7 +649,6 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _get_param_value@Base 7.0.0
  _msMetadataGetCodeList@Base 7.2.0
  _msMetadataGetContact@Base 7.2.0
- _msSLDParseSizeParameter@Base 6.2.1
  _msValidateTime@Base 6.2.1
  _ms_script_prefix_am@Base 7.0.0
  _ms_script_prefix_ar@Base 7.0.0
@@ -844,11 +842,6 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  intersectTextSymbol@Base 7.0.0
  isOn@Base 6.2.1
  isScaleInRange@Base 6.2.1
- jpeg_buffer_empty_output_buffer@Base 6.2.1
- jpeg_buffer_term_destination@Base 6.2.1
- jpeg_init_destination@Base 6.2.1
- jpeg_stream_empty_output_buffer@Base 6.2.1
- jpeg_stream_term_destination@Base 6.2.1
  lineLayerDrawShape@Base 6.2.1
  loadClass@Base 6.2.1
  loadCluster@Base 6.2.1
@@ -1129,6 +1122,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msEndShapeKml@Base 6.4.0
  msEscapeJSonString@Base 7.0.0
  msEvalContext@Base 6.2.1
+ msEvalDoubleExpression@Base 7.6.0~beta1
  msEvalExpression@Base 6.2.1
  msEvalRegex@Base 6.2.1
  msEvalTextExpression@Base 7.0.0
@@ -1161,6 +1155,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msFreeOutputFormat@Base 6.2.1
  msFreeProjTransformer@Base 6.2.1
  msFreeProjection@Base 6.2.1
+ msFreeProjectionExceptContext@Base 7.6.0~beta1
  msFreeQuery@Base 6.2.1
  msFreeRasterBuffer@Base 6.2.1
  msFreeShape@Base 6.2.1
@@ -1277,6 +1272,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msGetQueryResultBounds@Base 6.2.1
  msGetRasterBufferKml@Base 6.4.0
  msGetShapeRAMSize@Base 7.2.0
+ msGetStringListFromHashTable@Base 7.6.0~beta1
  msGetStringSize@Base 7.0.0
  msGetSymbol@Base 6.2.1
  msGetSymbolIndex@Base 6.2.1
@@ -1548,6 +1544,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msOGRUpdateStyleFromString@Base 6.2.1
  msOGRWriteFromQuery@Base 6.2.1
  msOWSBuildURLFilename@Base 6.2.1
+ msOWSClearRequestObj@Base 7.6.0~beta1
  msOWSCommonBoundingBox@Base 6.2.1
  msOWSCommonExceptionReport@Base 6.2.1
  msOWSCommonNegotiateVersion@Base 6.2.1
@@ -1573,6 +1570,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msOWSGetProjURN@Base 6.2.1
  msOWSGetSchemasLocation@Base 6.2.1
  msOWSGetVersionString@Base 6.2.1
+ msOWSInitRequestObj@Base 7.6.0~beta1
  msOWSIpDisabled@Base 6.4.0
  msOWSIpInList@Base 6.4.0
  msOWSIpInMetadata@Base 6.4.0
@@ -1703,15 +1701,26 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msProcessProjection@Base 6.2.1
  msProcessQueryTemplate@Base 6.2.1
  msProcessTemplate@Base 6.2.1
+ msProjIsGeographicCRS@Base 7.6.0~beta1
  msProjLibInitFromEnv@Base 7.0.0
  msProjTransformer@Base 6.2.1
+ msProjectCreateReprojector@Base 7.6.0~beta1
+ msProjectDestroyReprojector@Base 7.6.0~beta1
  msProjectHasLonWrap@Base 7.0.7
  msProjectLine@Base 6.2.1
+ msProjectLineEx@Base 7.6.0~beta1
  msProjectPoint@Base 6.2.1
+ msProjectPointEx@Base 7.6.0~beta1
  msProjectRect@Base 6.2.1
- msProjectRectGrid@Base 6.2.1
  msProjectShape@Base 6.2.1
+ msProjectShapeEx@Base 7.6.0~beta1
+ msProjectTransformPoints@Base 7.6.0~beta1
+ msProjectionContextGetFromPool@Base 7.6.0~beta1
+ msProjectionContextPoolCleanup@Base 7.6.0~beta1
+ msProjectionContextReleaseToPool@Base 7.6.0~beta1
+ msProjectionInheritContextFrom@Base 7.6.0~beta1
  msProjectionObj2OGCWKT@Base 6.2.1
+ msProjectionSetContext@Base 7.6.0~beta1
  msProjectionsDiffer@Base 6.2.1
  msQuantizeRasterBuffer@Base 6.2.1
  msQueryByFeatures@Base 6.2.1
@@ -1831,6 +1840,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msSLDParseLineSymbolizer@Base 6.2.1
  msSLDParseLogicalExpression@Base 6.2.1
  msSLDParseNamedLayer@Base 6.2.1
+ msSLDParseOgcExpression@Base 7.6.0~beta1
  msSLDParsePointSymbolizer@Base 6.2.1
  msSLDParsePolygonFill@Base 6.2.1
  msSLDParsePolygonSymbolizer@Base 6.2.1
@@ -1891,6 +1901,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msShapeFromWKT@Base 6.2.1
  msShapeGetClass@Base 6.2.1
  msShapeGetLabelAnnotation@Base 7.0.0
+ msShapeGetNextClass@Base 7.6.0~beta1
  msShapeToRange@Base 6.2.1
  msShapeToWKT@Base 6.2.1
  msShapefileClose@Base 6.2.1
@@ -1907,6 +1918,11 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msStartNewLayerKml@Base 6.4.0
  msStartShapeKml@Base 6.4.0
  msStrdup@Base 6.2.1
+ msStringBufferAlloc@Base 7.6.0~beta1
+ msStringBufferAppend@Base 7.6.0~beta1
+ msStringBufferFree@Base 7.6.0~beta1
+ msStringBufferGetString@Base 7.6.0~beta1
+ msStringBufferReleaseStringAndFree@Base 7.6.0~beta1
  msStringChop@Base 6.2.1
  msStringConcatenate@Base 6.2.1
  msStringEscape@Base 6.2.1
@@ -1967,6 +1983,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msTryBuildPath3@Base 6.2.1
  msTryBuildPath@Base 6.2.1
  msUTF8ToUniChar@Base 6.2.1
+ msUVRASTERGetSearchRect@Base 7.6.0~beta1
  msUVRASTERLayerClose@Base 6.2.1
  msUVRASTERLayerFreeItemInfo@Base 6.2.1
  msUVRASTERLayerGetExtent@Base 6.2.1
@@ -2115,7 +2132,6 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  ms_regerror@Base 6.2.1
  ms_regexec@Base 6.2.1
  ms_regfree@Base 6.2.1
- ms_timeFormats@Base 6.2.1
  ms_time_inited@Base 6.2.1
  msyy_create_buffer@Base 6.2.1
  msyy_delete_buffer@Base 6.2.1
@@ -2167,16 +2183,11 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msyywrap@Base 6.2.1
  mvtWriteShape@Base 7.2.0
  offsetAndTest@Base 6.2.1
- ogrEnabled@Base 6.2.1
  path@Base 6.2.1
  pieLayerProcessDynamicDiameter@Base 6.2.1
  plustospace@Base 6.2.1
- png_flush_data@Base 6.2.1
- png_write_data_to_buffer@Base 6.2.1
- png_write_data_to_stream@Base 6.2.1
  pointArrayFree@Base 6.2.1
  pointArrayNew@Base 6.2.1
- pointLayerDrawShape@Base 6.2.1
  polygonLayerDrawShape@Base 6.2.1
  populateRendererVTableCairoVector@Base 6.2.1
  postgresTimeStampForTimeString@Base 6.2.1
