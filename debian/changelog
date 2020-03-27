@@ -1,3 +1,26 @@
+mapserver (7.4.4-1) unstable; urgency=high
+
+  * New upstream release.
+  * Drop mapscript-buffer-overflow.patch, included upstream.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Fri, 20 Mar 2020 21:15:45 +0100
+
+mapserver (7.4.3-3) unstable; urgency=high
+
+  * Bump debhelper compat to 10, changes:
+    - Drop --parallel option, enabled by default
+  * Add upstream patch to fix PHPMapScript error handling vulnerabilities.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Fri, 20 Mar 2020 20:40:37 +0100
+
+mapserver (7.4.3-2) unstable; urgency=medium
+
+  * Bump Standards-Version to 4.5.0, no changes.
+  * Add upstream patch to fix FTBFS with SWIG 4.0.1.
+    (closes: #951886)
+
+ -- Bas Couwenberg <sebastic@debian.org>  Sat, 22 Feb 2020 19:25:03 +0100
+
 mapserver (7.4.3-1~bpo10+2) buster-backports; urgency=high
 
   * Add upstream patch to fix PHPMapScript error handling vulnerabilities.
