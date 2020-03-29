@@ -15,7 +15,7 @@ include /usr/share/dpkg/pkg-info.mk
 
 DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 
-CPPFLAGS := $(shell dpkg-buildflags --get CPPFLAGS) -D_GNU_SOURCE
+CPPFLAGS := $(shell dpkg-buildflags --get CPPFLAGS)
 CFLAGS   := $(shell dpkg-buildflags --get CFLAGS)
 LDFLAGS  := $(shell dpkg-buildflags --get LDFLAGS)
 

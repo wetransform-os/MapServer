@@ -1,6 +1,7 @@
 mapserver (7.6.0~beta2-1) UNRELEASED; urgency=medium
 
   * New upstream beta release.
+  * Drop -D_GNU_SOURCE, fixed upstream.
 
  -- Bas Couwenberg <sebastic@debian.org>  Sun, 29 Mar 2020 08:42:41 +0200
 
