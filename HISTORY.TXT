@@ -12,6 +12,13 @@ For a complete change history, please see the Git log comments.  For more
 details about recent point releases, please see the online changelog at:
 http://mapserver.org/development/changelog/
 
+7.6.0-beta2 release (2020-03-28)
+--------------------------------
+
+- fixed build with PHPNG + gnu_source (#6015)
+
+- fixed rendermode with geomtransform (#6021)
+
 7.6.0-beta1 release (2020-03-22)
 --------------------------------
 
@@ -19,7 +26,7 @@ http://mapserver.org/development/changelog/
 
 - Enable PointZM data support (X,Y,Z,M coordinates) by default
 
-- SLD support enhancements (RFC 124)
+- SLD support enhancements (RFC 124) except PR#5832
 
 - CONNECTIONOPTIONS support in mapfile LAYER (RFC 125)
 
