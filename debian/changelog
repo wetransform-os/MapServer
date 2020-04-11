@@ -1,8 +1,8 @@
-mapserver (7.6.0~rc2-1) UNRELEASED; urgency=medium
+mapserver (7.6.0~rc2-1~exp1) experimental; urgency=medium
 
   * New upstream release candidate.
 
- -- Bas Couwenberg <sebastic@debian.org>  Sat, 11 Apr 2020 06:45:59 +0200
+ -- Bas Couwenberg <sebastic@debian.org>  Sat, 11 Apr 2020 06:47:59 +0200
 
 mapserver (7.6.0~rc1-1~exp1) experimental; urgency=medium
 
