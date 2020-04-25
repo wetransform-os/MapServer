@@ -1,10 +1,10 @@
-mapserver (7.6.0~rc3-1) UNRELEASED; urgency=medium
+mapserver (7.6.0~rc3-1~exp1) experimental; urgency=medium
 
   * New upstream release candidate.
   * Update symbols for amd64.
   * Add override for mailing-list-obsolete-in-debian-infrastructure.
 
- -- Bas Couwenberg <sebastic@debian.org>  Sat, 25 Apr 2020 06:43:44 +0200
+ -- Bas Couwenberg <sebastic@debian.org>  Sat, 25 Apr 2020 06:45:11 +0200
 
 mapserver (7.6.0~rc2-1~exp1) experimental; urgency=medium
 
