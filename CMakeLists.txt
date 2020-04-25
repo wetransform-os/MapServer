@@ -18,7 +18,7 @@ include(CheckCSourceCompiles)
 set (MapServer_VERSION_MAJOR 7)
 set (MapServer_VERSION_MINOR 6)
 set (MapServer_VERSION_REVISION 0)
-set (MapServer_VERSION_SUFFIX "-rc2")
+set (MapServer_VERSION_SUFFIX "-rc3")
 
 # Set C++ version
 # Make CMAKE_CXX_STANDARD available as cache option overridable by user
@@ -282,7 +282,7 @@ mapraster.c mapuvraster.c mapdummyrenderer.c mapobject.c maprasterquery.c
 mapwcs.c maperror.c mapogcfilter.c mapregex.c mapwcs11.c mapfile.c
 mapogcfiltercommon.cpp maprendering.c mapwcs20.c mapogcsld.c mapmetadata.c
 mapresample.c mapwfs.c mapgdal.c mapogcsos.c mapscale.c mapwfs11.c mapwfs20.c
-mapgeomtransform.c mapogroutput.c mapwfslayer.c mapagg.cpp mapkml.cpp
+mapgeomtransform.c mapogroutput.cpp mapwfslayer.c mapagg.cpp mapkml.cpp
 mapgeomutil.cpp mapkmlrenderer.cpp fontcache.c textlayout.c maputfgrid.cpp
 mapogr.cpp mapcontour.c mapsmoothing.c mapv8.cpp ${REGEX_SOURCES} kerneldensity.c 
 mapcompositingfilter.c mapmvt.c)
