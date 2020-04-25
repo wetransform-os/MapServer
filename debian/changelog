@@ -1,6 +1,7 @@
 mapserver (7.6.0~rc3-1) UNRELEASED; urgency=medium
 
   * New upstream release candidate.
+  * Update symbols for amd64.
 
  -- Bas Couwenberg <sebastic@debian.org>  Sat, 25 Apr 2020 06:43:44 +0200
 
