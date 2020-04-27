@@ -1,6 +1,3 @@
 # Not worth the effort
 testsuite-autopkgtest-missing
 
-# https://wiki.debian.org/Alioth/MailingListContinuation
-mailing-list-obsolete-in-debian-infrastructure *
-
