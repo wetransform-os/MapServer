@@ -1,6 +1,7 @@
 mapserver (7.6.0~rc3-1~exp2) UNRELEASED; urgency=medium
 
   * Drop override for mailing-list-obsolete-in-debian-infrastructure.
+  * Update symbols for other architectures.
 
  -- Bas Couwenberg <sebastic@debian.org>  Mon, 27 Apr 2020 10:47:11 +0200
 

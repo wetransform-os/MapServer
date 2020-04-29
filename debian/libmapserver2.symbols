@@ -1,4 +1,4 @@
-# SymbolsHelper-Confirmed: 7.6.0~rc3 amd64
+# SymbolsHelper-Confirmed: 7.6.0~rc3 amd64 arm64 armel armhf i386 m68k mips64el mipsel powerpc ppc64 ppc64el riscv64
 libmapserver.so.2 #PACKAGE# #MINVER#
 * Build-Depends-Package: libmapserver-dev
  BuildExpressionTree@Base 6.2.1
@@ -329,7 +329,11 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  _ZN19polygon_adaptor_utfD0Ev@Base 7.0.0
  _ZN19polygon_adaptor_utfD1Ev@Base 7.0.0
  _ZN19polygon_adaptor_utfD2Ev@Base 7.0.0
+ (optional=templinst|arch=powerpc)_ZN9__gnu_cxx12__to_xstringINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEcEET_PFiPT0_jPKS8_P13__va_list_tagEjSB_z@Base 7.6.0~rc3
  (optional=templinst)_ZN9__gnu_cxx12__to_xstringINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEcEET_PFiPT0_mPKS8_P13__va_list_tagEmSB_z@Base 7.6.0~rc3
+ (optional=templinst|arch=i386 ppc64 ppc64el|subst)_ZN9__gnu_cxx12__to_xstringINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEcEET_PFiPT0_{size_t}PKS8_PcE{size_t}SB_z@Base 7.6.0~rc3
+ (optional=templinst|arch=m68k mips64el mipsel riscv64|subst)_ZN9__gnu_cxx12__to_xstringINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEcEET_PFiPT0_{size_t}PKS8_PvE{size_t}SB_z@Base 7.6.0~rc3
+ (optional=templinst|arch=arm64 armel armhf|subst)_ZN9__gnu_cxx12__to_xstringINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEcEET_PFiPT0_{size_t}PKS8_St9__va_listE{size_t}SB_z@Base 7.6.0~rc3
  (optional=templinst|arch=alpha amd64 arm64 hppa ia64 kfreebsd-amd64 mips64el ppc64 ppc64el riscv64 s390 s390x sh4 sparc sparc64 x32)_ZN9mapserver10conv_curveINS_20path_storage_integerIiLj6EEENS_6curve3ENS_6curve4EE6vertexEPdS6_@Base 6.4.0
  (optional=templinst|arch=alpha amd64 arm64 hppa ia64 kfreebsd-amd64 mips64el ppc64 ppc64el riscv64 s390 s390x sh4 sparc sparc64 x32)_ZN9mapserver10conv_curveINS_20path_storage_integerIsLj6EEENS_6curve3ENS_6curve4EE6vertexEPdS6_@Base 6.4.0
  (optional=templinst|arch=sparc)_ZN9mapserver10conv_curveINS_31serialized_integer_path_adaptorIsLj6EEENS_6curve3ENS_6curve4EED1Ev@Base 6.4.1
