@@ -1,10 +1,11 @@
-mapserver (7.6.0-1) UNRELEASED; urgency=medium
+mapserver (7.6.0-1) unstable; urgency=medium
 
   * New upstream release.
   * Update 7.6.0~rc4 symbols for other architectures.
   * Strip pre-releases from symbols version.
+  * Move from experimental to unstable.
 
- -- Bas Couwenberg <sebastic@debian.org>  Fri, 08 May 2020 17:34:51 +0200
+ -- Bas Couwenberg <sebastic@debian.org>  Fri, 08 May 2020 17:38:17 +0200
 
 mapserver (7.6.0~rc4-1~exp1) experimental; urgency=medium
 
