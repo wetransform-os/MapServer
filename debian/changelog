@@ -2,6 +2,7 @@ mapserver (7.6.0-1) UNRELEASED; urgency=medium
 
   * New upstream release.
   * Update 7.6.0~rc4 symbols for other architectures.
+  * Strip pre-releases from symbols version.
 
  -- Bas Couwenberg <sebastic@debian.org>  Fri, 08 May 2020 17:34:51 +0200
 
