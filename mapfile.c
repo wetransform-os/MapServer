@@ -41,13 +41,6 @@
 #include "mapthread.h"
 #include "maptime.h"
 
-#ifdef USE_GDAL
-#  include "cpl_conv.h"
-#  include "gdal.h"
-#endif
-
-
-
 extern int msyylex(void);
 extern void msyyrestart(FILE *);
 extern int msyylex_destroy(void);
@@ -306,7 +299,7 @@ int msBuildPluginLibraryPath(char **dest, const char *lib_str, mapObj *map)
   char szLibPath[MS_MAXPATHLEN] = { '\0' };
   char szLibPathExt[MS_MAXPATHLEN] = { '\0' };
   const char *plugin_dir = NULL;
-  
+
   if (map)
     plugin_dir = msLookupHashTable(&(map->configoptions), "MS_PLUGIN_DIR");
 
@@ -979,7 +972,7 @@ static int loadFeature(layerObj *player, int type)
         msFreeShape(shape);
         msFree(shape);
         if(getString(&string) == MS_FAILURE) return(MS_FAILURE);
-        
+
         if((shape = msShapeFromWKT(string)) == NULL)
           status = MS_FAILURE;
 
@@ -1113,249 +1106,11 @@ static void writeGrid(FILE *stream, int indent, graticuleObj *pGraticule)
   writeBlockEnd(stream, indent, "GRID");
 }
 
-/*
-** Initialize, load and free a projectionObj structure
-*/
-int msInitProjection(projectionObj *p)
-{
-  p->gt.need_geotransform = MS_FALSE;
-  p->numargs = 0;
-  p->args = NULL;
-  p->wellknownprojection = wkp_none;
-#ifdef USE_PROJ
-  p->proj = NULL;
-  p->args = (char **)malloc(MS_MAXPROJARGS*sizeof(char *));
-  MS_CHECK_ALLOC(p->args, MS_MAXPROJARGS*sizeof(char *), -1);
-#if PJ_VERSION >= 480
-  p->proj_ctx = NULL;
-#endif
-#endif
-  return(0);
-}
-
-void msFreeProjection(projectionObj *p)
-{
-#ifdef USE_PROJ
-  if(p->proj) {
-    pj_free(p->proj);
-    p->proj = NULL;
-  }
-#if PJ_VERSION >= 480
-  if(p->proj_ctx) {
-    pj_ctx_free(p->proj_ctx);
-    p->proj_ctx = NULL;
-  }
-#endif
-
-  msFreeCharArray(p->args, p->numargs);
-  p->args = NULL;
-  p->numargs = 0;
-#endif
-}
-
-/*
-** Handle OGC WMS/WFS AUTO projection in the format:
-**    "AUTO:proj_id,units_id,lon0,lat0"
-*/
-#ifdef USE_PROJ
-static int _msProcessAutoProjection(projectionObj *p)
-{
-  char **args;
-  int numargs, nProjId, nUnitsId, nZone;
-  double dLat0, dLon0;
-  const char *pszUnits = "m";
-  char szProjBuf[512]="";
-
-  /* WMS/WFS AUTO projection: "AUTO:proj_id,units_id,lon0,lat0" */
-  args = msStringSplit(p->args[0], ',', &numargs);
-  if (numargs != 4 ||
-      (strncasecmp(args[0], "AUTO:", 5) != 0 &&
-       strncasecmp(args[0], "AUTO2:", 6) != 0)) {
-    msSetError(MS_PROJERR,
-               "WMS/WFS AUTO/AUTO2 PROJECTION must be in the format "
-               "'AUTO:proj_id,units_id,lon0,lat0' or 'AUTO2:crs_id,factor,lon0,lat0'(got '%s').\n",
-               "_msProcessAutoProjection()", p->args[0]);
-    return -1;
-  }
-
-  if (strncasecmp(args[0], "AUTO:", 5)==0)
-    nProjId = atoi(args[0]+5);
-  else
-    nProjId = atoi(args[0]+6);
-
-  nUnitsId = atoi(args[1]);
-  dLon0 = atof(args[2]);
-  dLat0 = atof(args[3]);
-
-
-  /*There is no unit parameter for AUTO2. The 2nd parameter is
-   factor. Set the units to always be meter*/
-  if (strncasecmp(args[0], "AUTO2:", 6) == 0)
-    nUnitsId = 9001;
-
-  msFreeCharArray(args, numargs);
-
-  /* Handle EPSG Units.  Only meters for now. */
-  switch(nUnitsId) {
-    case 9001:  /* Meters */
-      pszUnits = "m";
-      break;
-    default:
-      msSetError(MS_PROJERR,
-                 "WMS/WFS AUTO PROJECTION: EPSG Units %d not supported.\n",
-                 "_msProcessAutoProjection()", nUnitsId);
-      return -1;
-  }
-
-  /* Build PROJ4 definition.
-   * This is based on the definitions found in annex E of the WMS 1.1.1
-   * spec and online at http://www.digitalearth.org/wmt/auto.html
-   * The conversion from the original WKT definitions to PROJ4 format was
-   * done using the MapScript setWKTProjection() function (based on OGR).
-   */
-  switch(nProjId) {
-    case 42001: /** WGS 84 / Auto UTM **/
-      nZone = (int) floor( (dLon0 + 180.0) / 6.0 ) + 1;
-      sprintf( szProjBuf,
-               "+proj=tmerc+lat_0=0+lon_0=%.16g+k=0.999600+x_0=500000"
-               "+y_0=%.16g+ellps=WGS84+datum=WGS84+units=%s",
-               -183.0 + nZone * 6.0,
-               (dLat0 >= 0.0) ? 0.0 : 10000000.0,
-               pszUnits);
-      break;
-    case 42002: /** WGS 84 / Auto Tr. Mercator **/
-      sprintf( szProjBuf,
-               "+proj=tmerc+lat_0=0+lon_0=%.16g+k=0.999600+x_0=500000"
-               "+y_0=%.16g+ellps=WGS84+datum=WGS84+units=%s",
-               dLon0,
-               (dLat0 >= 0.0) ? 0.0 : 10000000.0,
-               pszUnits);
-      break;
-    case 42003: /** WGS 84 / Auto Orthographic **/
-      sprintf( szProjBuf,
-               "+proj=ortho+lon_0=%.16g+lat_0=%.16g+x_0=0+y_0=0"
-               "+ellps=WGS84+datum=WGS84+units=%s",
-               dLon0, dLat0, pszUnits );
-      break;
-    case 42004: /** WGS 84 / Auto Equirectangular **/
-      /* Note that we have to pass lon_0 as lon_ts for this one to */
-      /* work.  Either a PROJ4 bug or a PROJ4 documentation issue. */
-      sprintf( szProjBuf,
-               "+proj=eqc+lon_ts=%.16g+lat_ts=%.16g+x_0=0+y_0=0"
-               "+ellps=WGS84+datum=WGS84+units=%s",
-               dLon0, dLat0, pszUnits);
-      break;
-    case 42005: /** WGS 84 / Auto Mollweide **/
-      sprintf( szProjBuf,
-               "+proj=moll+lon_0=%.16g+x_0=0+y_0=0+ellps=WGS84"
-               "+datum=WGS84+units=%s",
-               dLon0, pszUnits);
-      break;
-    default:
-      msSetError(MS_PROJERR,
-                 "WMS/WFS AUTO PROJECTION %d not supported.\n",
-                 "_msProcessAutoProjection()", nProjId);
-      return -1;
-  }
-
-  /* msDebug("%s = %s\n", p->args[0], szProjBuf); */
-
-  /* OK, pass the definition to pj_init() */
-  args = msStringSplit(szProjBuf, '+', &numargs);
-
-  msAcquireLock( TLOCK_PROJ );
-  if( !(p->proj = pj_init(numargs, args)) ) {
-    int *pj_errno_ref = pj_get_errno_ref();
-    msReleaseLock( TLOCK_PROJ );
-    msSetError(MS_PROJERR, "proj error \"%s\" for \"%s\"",
-               "msProcessProjection()", pj_strerrno(*pj_errno_ref), szProjBuf) ;
-    return(-1);
-  }
-
-  msReleaseLock( TLOCK_PROJ );
-
-  msFreeCharArray(args, numargs);
-
-  return(0);
-}
-#endif /* USE_PROJ */
-
-int msProcessProjection(projectionObj *p)
-{
-#ifdef USE_PROJ
-  assert( p->proj == NULL );
-
-  if( strcasecmp(p->args[0],"GEOGRAPHIC") == 0 ) {
-    msSetError(MS_PROJERR,
-               "PROJECTION 'GEOGRAPHIC' no longer supported.\n"
-               "Provide explicit definition.\n"
-               "ie. proj=latlong\n"
-               "    ellps=clrk66\n",
-               "msProcessProjection()");
-    return(-1);
-  }
-
-  if (strcasecmp(p->args[0], "AUTO") == 0) {
-    p->proj = NULL;
-    return 0;
-  }
-
-  if (strncasecmp(p->args[0], "AUTO:", 5) == 0 ||
-      strncasecmp(p->args[0], "AUTO2:", 6) == 0) {
-    /* WMS/WFS AUTO projection: "AUTO:proj_id,units_id,lon0,lat0" */
-    /*WMS 1.3.0: AUTO2:auto_crs_id,factor,lon0,lat0*/
-    return _msProcessAutoProjection(p);
-  }
-  msAcquireLock( TLOCK_PROJ );
-#if PJ_VERSION < 480
-  if( !(p->proj = pj_init(p->numargs, p->args)) ) {
-#else
-  p->proj_ctx = pj_ctx_alloc();
-  if( !(p->proj=pj_init_ctx(p->proj_ctx, p->numargs, p->args)) ) {
-#endif
-
-    int *pj_errno_ref = pj_get_errno_ref();
-    msReleaseLock( TLOCK_PROJ );
-    if(p->numargs>1) {
-      msSetError(MS_PROJERR, "proj error \"%s\" for \"%s:%s\"",
-                 "msProcessProjection()", pj_strerrno(*pj_errno_ref), p->args[0],p->args[1]) ;
-    } else {
-      msSetError(MS_PROJERR, "proj error \"%s\" for \"%s\"",
-                 "msProcessProjection()", pj_strerrno(*pj_errno_ref), p->args[0]) ;
-    }
-    return(-1);
-  }
-
-  msReleaseLock( TLOCK_PROJ );
-
-#ifdef USE_PROJ_FASTPATHS
-  if(strcasestr(p->args[0],"epsg:4326")) {
-    p->wellknownprojection = wkp_lonlat;
-  } else if(strcasestr(p->args[0],"epsg:3857")) {
-    p->wellknownprojection = wkp_gmerc;
-  } else {
-    p->wellknownprojection = wkp_none;
-  }
-#endif
-
-
-  return(0);
-#else
-  msSetError(MS_PROJERR, "Projection support is not available.",
-             "msProcessProjection()");
-  return(-1);
-#endif
-}
-
 static int loadProjection(projectionObj *p)
 {
-#ifdef USE_PROJ
   int i=0;
-#endif
 
   p->gt.need_geotransform = MS_FALSE;
-
-#ifdef USE_PROJ
 
   if ( p->proj != NULL ) {
     msSetError(MS_MISCERR, "Projection is already initialized. Multiple projection definitions are not allowed in this object. (line %d)",
@@ -1397,10 +1152,6 @@ static int loadProjection(projectionObj *p)
         return(-1);
     }
   } /* next token */
-#else
-  msSetError(MS_PROJERR, "Projection support is not available.", "loadProjection()");
-  return(-1);
-#endif
 }
 
 
@@ -1498,9 +1249,9 @@ static int msLoadProjectionStringCRSLike(projectionObj *p, const char *value,
 /************************************************************************/
 int msLoadProjectionStringEPSG(projectionObj *p, const char *value)
 {
-#ifdef USE_PROJ
   assert(p);
-  msFreeProjection(p);
+
+  msFreeProjectionExceptContext(p);
 
   p->gt.need_geotransform = MS_FALSE;
 #ifdef USE_PROJ_FASTPATHS
@@ -1519,12 +1270,6 @@ int msLoadProjectionStringEPSG(projectionObj *p, const char *value)
   }
 
   return msLoadProjectionString(p, value);
-
-#else
-  msSetError(MS_PROJERR, "Projection support is not available.",
-             "msLoadProjectionStringEPSG()");
-  return(-1);
-#endif
 }
 
 int msLoadProjectionString(projectionObj *p, const char *value)
@@ -1532,9 +1277,7 @@ int msLoadProjectionString(projectionObj *p, const char *value)
   assert(p);
   p->gt.need_geotransform = MS_FALSE;
 
-#ifdef USE_PROJ
-  msFreeProjection(p);
-
+  msFreeProjectionExceptContext(p);
 
   /*
    * Handle new style definitions, the same as they would be given to
@@ -1590,16 +1333,10 @@ int msLoadProjectionString(projectionObj *p, const char *value)
   }
 
   return msProcessProjection( p );
-#else
-  msSetError(MS_PROJERR, "Projection support is not available.",
-             "msLoadProjectionString()");
-  return(-1);
-#endif
 }
 
 static void writeProjection(FILE *stream, int indent, projectionObj *p)
 {
-#ifdef USE_PROJ
   int i;
 
   if(!p || p->numargs <= 0) return;
@@ -1608,7 +1345,6 @@ static void writeProjection(FILE *stream, int indent, projectionObj *p)
   for(i=0; i<p->numargs; i++)
     writeString(stream, indent, NULL, NULL, p->args[i]);
   writeBlockEnd(stream, indent, "PROJECTION");
-#endif
 }
 
 void initLeader(labelLeaderObj *leader)
@@ -1675,9 +1411,11 @@ void initLabel(labelObj *label)
   label->styles = NULL;
 
   label->numbindings = 0;
+  label->nexprbindings = 0;
   for(i=0; i<MS_LABEL_BINDING_LENGTH; i++) {
     label->bindings[i].item = NULL;
     label->bindings[i].index = -1;
+    msInitExpression(&(label->exprBindings[i]));
   }
 
   msInitExpression(&(label->expression));
@@ -1718,8 +1456,10 @@ int freeLabel(labelObj *label)
   }
   msFree(label->styles);
 
-  for(i=0; i<MS_LABEL_BINDING_LENGTH; i++)
+  for(i=0; i<MS_LABEL_BINDING_LENGTH; i++) {
     msFree(label->bindings[i].item);
+    msFreeExpression(&(label->exprBindings[i]));
+  }
 
   msFreeExpression(&(label->expression));
   msFreeExpression(&(label->text));
@@ -1789,7 +1529,16 @@ static int loadLabel(labelObj *label)
         }
         break;
       case(ALIGN):
-        if((label->align = getSymbol(3, MS_ALIGN_LEFT,MS_ALIGN_CENTER,MS_ALIGN_RIGHT)) == -1) return(-1);
+        if((symbol = getSymbol(4, MS_ALIGN_LEFT,MS_ALIGN_CENTER,MS_ALIGN_RIGHT,MS_BINDING)) == -1)
+          return(-1);
+        if((symbol == MS_ALIGN_LEFT)||(symbol == MS_ALIGN_CENTER)||(symbol == MS_ALIGN_RIGHT)) {
+          label->align = symbol;
+        } else {
+          if (label->bindings[MS_LABEL_BINDING_ALIGN].item != NULL)
+            msFree(label->bindings[MS_LABEL_BINDING_ALIGN].item);
+          label->bindings[MS_LABEL_BINDING_ALIGN].item = msStrdup(msyystring_buffer);
+          label->numbindings++;
+        }
         break;
       case(ANTIALIAS): /*ignore*/
         msyylex();
@@ -1893,8 +1642,25 @@ static int loadLabel(labelObj *label)
         if(getInteger(&(label->minsize)) == -1) return(-1);
         break;
       case(OFFSET):
-        if(getInteger(&(label->offsetx)) == -1) return(-1);
-        if(getInteger(&(label->offsety)) == -1) return(-1);
+        if((symbol = getSymbol(2, MS_NUMBER,MS_BINDING)) == -1) return(MS_FAILURE);
+        if(symbol == MS_NUMBER)
+          label->offsetx = (int) msyynumber;
+        else {
+          if (label->bindings[MS_LABEL_BINDING_OFFSET_X].item != NULL)
+            msFree(label->bindings[MS_LABEL_BINDING_OFFSET_X].item);
+          label->bindings[MS_LABEL_BINDING_OFFSET_X].item = msStrdup(msyystring_buffer);
+          label->numbindings++;
+        }
+
+        if((symbol = getSymbol(2, MS_NUMBER,MS_BINDING)) == -1) return(MS_FAILURE);
+        if(symbol == MS_NUMBER)
+          label->offsety = (int) msyynumber;
+        else {
+          if (label->bindings[MS_LABEL_BINDING_OFFSET_Y].item != NULL)
+            msFree(label->bindings[MS_LABEL_BINDING_OFFSET_Y].item);
+          label->bindings[MS_LABEL_BINDING_OFFSET_Y].item = msStrdup(msyystring_buffer);
+          label->numbindings++;
+        }
         break;
       case(OUTLINECOLOR):
         if(loadColor(&(label->outlinecolor), &(label->bindings[MS_LABEL_BINDING_OUTLINECOLOR])) != MS_SUCCESS) return(-1);
@@ -1963,8 +1729,12 @@ static int loadLabel(labelObj *label)
           label->bindings[MS_LABEL_BINDING_SIZE].item = NULL;
           label->numbindings--;
         }
+        if (label->exprBindings[MS_LABEL_BINDING_SIZE].string) {
+          msFreeExpression(&label->exprBindings[MS_LABEL_BINDING_SIZE]);
+          label->nexprbindings--;
+        }
 
-        if((symbol = getSymbol(7, MS_NUMBER,MS_BINDING,MS_TINY,MS_SMALL,MS_MEDIUM,MS_LARGE,MS_GIANT)) == -1)
+        if((symbol = getSymbol(8, MS_EXPRESSION,MS_NUMBER,MS_BINDING,MS_TINY,MS_SMALL,MS_MEDIUM,MS_LARGE,MS_GIANT)) == -1)
           return(-1);
 
         if(symbol == MS_NUMBER) {
@@ -1972,6 +1742,11 @@ static int loadLabel(labelObj *label)
         } else if(symbol == MS_BINDING) {
           label->bindings[MS_LABEL_BINDING_SIZE].item = msStrdup(msyystring_buffer);
           label->numbindings++;
+        } else if (symbol == MS_EXPRESSION) {
+          msFree(label->exprBindings[MS_LABEL_BINDING_SIZE].string);
+          label->exprBindings[MS_LABEL_BINDING_SIZE].string = msStrdup(msyystring_buffer);
+          label->exprBindings[MS_LABEL_BINDING_SIZE].type = MS_EXPRESSION;
+          label->nexprbindings++;
         } else
           label->size = symbol;
         break;
@@ -2018,7 +1793,7 @@ int msUpdateLabelFromString(labelObj *label, char *string, int url_string)
   if(!label || !string) return MS_FAILURE;
 
   msAcquireLock( TLOCK_PARSER );
-  
+
   if(url_string)
     msyystate = MS_TOKENIZE_URL_STRING;
   else
@@ -2218,7 +1993,7 @@ void msFreeExpression(expressionObj *exp)
 
 int loadExpression(expressionObj *exp)
 {
-  /* TODO: should we fall msFreeExpression if exp->string != NULL? We do some checking to avoid a leak but is it enough... */ 
+  /* TODO: should we fall msFreeExpression if exp->string != NULL? We do some checking to avoid a leak but is it enough... */
 
   msyystring_icase = MS_TRUE;
   if((exp->type = getSymbol(6, MS_STRING,MS_EXPRESSION,MS_REGEX,MS_ISTRING,MS_IREGEX,MS_LIST)) == -1) return(-1);
@@ -2599,9 +2374,11 @@ int initStyle(styleObj *style)
   style->linejoinmaxsize = MS_CJC_DEFAULT_JOIN_MAXSIZE;
 
   style->numbindings = 0;
+  style->nexprbindings = 0;
   for(i=0; i<MS_STYLE_BINDING_LENGTH; i++) {
     style->bindings[i].item = NULL;
     style->bindings[i].index = -1;
+    msInitExpression(&(style->exprBindings[i]));
   }
 
   return MS_SUCCESS;
@@ -2920,8 +2697,10 @@ int freeStyle(styleObj *style)
   msFreeExpression(&style->_geomtransform);
   msFree(style->rangeitem);
 
-  for(i=0; i<MS_STYLE_BINDING_LENGTH; i++)
+  for(i=0; i<MS_STYLE_BINDING_LENGTH; i++) {
     msFree(style->bindings[i].item);
+    msFreeExpression(&(style->exprBindings[i]));
+  }
 
   return MS_SUCCESS;
 }
@@ -3076,6 +2855,7 @@ int initClass(classObj *class)
   class->status = MS_ON;
   class->debug = MS_OFF;
   MS_REFCNT_INIT(class);
+  class->isfallback = FALSE;
 
   msInitExpression(&(class->expression));
   class->name = NULL;
@@ -3754,6 +3534,7 @@ int initLayer(layerObj *layer, mapObj *map)
   layer->group = NULL;
   layer->status = MS_OFF;
   layer->data = NULL;
+  layer->rendermode = MS_FIRST_MATCHING_CLASS;
 
   layer->map = map; /* point back to the encompassing structure */
 
@@ -3787,7 +3568,15 @@ int initLayer(layerObj *layer, mapObj *map)
 
   layer->units = MS_METERS;
   if(msInitProjection(&(layer->projection)) == -1) return(-1);
+
+  if( map )
+  {
+    msProjectionInheritContextFrom(&(layer->projection), &(map->projection));
+  }
+
   layer->project = MS_TRUE;
+  layer->reprojectorLayerToMap = NULL;
+  layer->reprojectorMapToLayer = NULL;
 
   initCluster(&layer->cluster);
 
@@ -3864,14 +3653,16 @@ int initLayer(layerObj *layer, mapObj *map)
   msInitExpression(&(layer->utfdata));
   layer->utfitem = NULL;
   layer->utfitemindex = -1;
-  
+
   layer->encoding = NULL;
-  
+
   layer->sortBy.nProperties = 0;
   layer->sortBy.properties = NULL;
   layer->orig_st = NULL;
 
   layer->compositer = NULL;
+
+  initHashTable(&(layer->connectionoptions));
 
   return(0);
 }
@@ -3931,9 +3722,11 @@ int freeLayer(layerObj *layer)
   msFree(layer->vtable);
   msFree(layer->classgroup);
 
+  msProjectDestroyReprojector(layer->reprojectorLayerToMap);
+  msProjectDestroyReprojector(layer->reprojectorMapToLayer);
   msFreeProjection(&(layer->projection));
   msFreeExpression(&layer->_geomtransform);
-  
+
   freeCluster(&layer->cluster);
 
   for(i=0; i<layer->maxclasses; i++) {
@@ -3987,9 +3780,9 @@ int freeLayer(layerObj *layer)
   if(layer->maskimage) {
     msFreeImage(layer->maskimage);
   }
-  
+
   if(layer->compositer) {
-    freeLayerCompositer(layer->compositer);    
+    freeLayerCompositer(layer->compositer);
   }
 
   if (layer->grid) {
@@ -3999,10 +3792,12 @@ int freeLayer(layerObj *layer)
 
   msFreeExpression(&(layer->utfdata));
   msFree(layer->utfitem);
-  
+
   for(i=0;i<layer->sortBy.nProperties;i++)
       msFree(layer->sortBy.properties[i].item);
   msFree(layer->sortBy.properties);
+
+  if(&(layer->connectionoptions))  msFreeHashItems(&layer->connectionoptions);
 
   return MS_SUCCESS;
 }
@@ -4073,7 +3868,7 @@ int loadScaletoken(scaleTokenObj *token, layerObj *layer) {
              case(EOF):
                msSetError(MS_EOFERR, NULL, "loadScaletoken()");
                return(MS_FAILURE);
-             case(END): 
+             case(END):
                stop = 1;
                if(token->n_entries == 0) {
                  msSetError(MS_PARSEERR,"Scaletoken (line:%d) has no VALUES defined","loadScaleToken()",msyylineno);
@@ -4084,7 +3879,7 @@ int loadScaletoken(scaleTokenObj *token, layerObj *layer) {
              case(MS_STRING):
                /* we have a key */
                token->tokens = msSmallRealloc(token->tokens,(token->n_entries+1)*sizeof(scaleTokenEntryObj));
-               
+
                if(1 != sscanf(msyystring_buffer,"%lf",&token->tokens[token->n_entries].minscale)) {
                  msSetError(MS_PARSEERR, "failed to parse SCALETOKEN VALUE (%s):(line %d), expecting \"minscale\"", "loadScaletoken()",
                          msyystring_buffer,msyylineno);
@@ -4346,7 +4141,7 @@ int loadLayer(layerObj *layer, mapObj *map)
         if(getString(&layer->encoding) == MS_FAILURE) return(-1);
         break;
       case(END):
-        if(layer->type == -1) {
+        if((int)layer->type == -1) {
           msSetError(MS_MISCERR, "Layer type not set.", "loadLayer()");
           return(-1);
         }
@@ -4365,7 +4160,7 @@ int loadLayer(layerObj *layer, mapObj *map)
         break;
       }
       case(FEATURE):
-        if(layer->type == -1) {
+        if((int)layer->type == -1) {
           msSetError(MS_MISCERR, "Layer type must be set before defining inline features.", "loadLayer()");
           return(-1);
         }
@@ -4540,6 +4335,11 @@ int loadLayer(layerObj *layer, mapObj *map)
       case(OFFSITE):
         if(loadColor(&(layer->offsite), NULL) != MS_SUCCESS) return(-1);
         break;
+
+      case(CONNECTIONOPTIONS):
+        if(loadHashTable(&(layer->connectionoptions)) != MS_SUCCESS) return(-1);
+        break;
+
       case(OPACITY):
       case(TRANSPARENCY): /* keyword supported for mapfile backwards compatability */
       {
@@ -4873,6 +4673,7 @@ static void writeLayer(FILE *stream, int indent, layerObj *layer)
   writeLayerCompositer(stream, indent, layer->compositer);
   writeString(stream, indent, "CONNECTION", NULL, layer->connection);
   writeKeyword(stream, indent, "CONNECTIONTYPE", layer->connectiontype, 10, MS_OGR, "OGR", MS_POSTGIS, "POSTGIS", MS_WMS, "WMS", MS_ORACLESPATIAL, "ORACLESPATIAL", MS_WFS, "WFS", MS_PLUGIN, "PLUGIN", MS_UNION, "UNION", MS_UVRASTER, "UVRASTER", MS_CONTOUR, "CONTOUR", MS_KERNELDENSITY, "KERNELDENSITY");
+  writeHashTableInline(stream, indent, "CONNECTIONOPTIONS", &(layer->connectionoptions));
   writeString(stream, indent, "DATA", NULL, layer->data);
   writeNumber(stream, indent, "DEBUG", 0, layer->debug); /* is this right? see loadLayer() */
   writeString(stream, indent, "ENCODING", NULL, layer->encoding);
@@ -4886,7 +4687,7 @@ static void writeLayer(FILE *stream, int indent, layerObj *layer)
     writeIndent(stream, indent + 1);
     fprintf(stream, "GEOMTRANSFORM (%s)\n", layer->_geomtransform.string);
   }
-  
+
   writeString(stream, indent, "HEADER", NULL, layer->header);
   /* join - see below */
   writeKeyword(stream, indent, "LABELCACHE", layer->labelcache, 1, MS_OFF, "OFF");
@@ -5239,7 +5040,7 @@ static int loadOutputFormat(mapObj *map)
       }
       case(NAME):
         msFree( name );
-        if((name = getToken()) == NULL) 
+        if((name = getToken()) == NULL)
           goto load_output_error;
         break;
       case(MIMETYPE):
@@ -6055,6 +5856,7 @@ int msUpdateWebFromString(webObj *web, char *string, int url_string)
 ** This really belongs in mapobject.c, but currently it also depends on
 ** lots of other init methods in this file.
 */
+
 int initMap(mapObj *map)
 {
   int i=0;
@@ -6131,18 +5933,21 @@ int initMap(mapObj *map)
   initReferenceMap(&map->reference);
   initQueryMap(&map->querymap);
 
-#ifdef USE_PROJ
+  map->projContext = msProjectionContextGetFromPool();
+
   if(msInitProjection(&(map->projection)) == -1)
     return(-1);
   if(msInitProjection(&(map->latlon)) == -1)
     return(-1);
+
+  msProjectionSetContext(&(map->projection), map->projContext);
+  msProjectionSetContext(&(map->latlon), map->projContext);
 
   /* initialize a default "geographic" projection */
   map->latlon.numargs = 2;
   map->latlon.args[0] = msStrdup("proj=latlong");
   map->latlon.args[1] = msStrdup("ellps=WGS84"); /* probably want a different ellipsoid */
   if(msProcessProjection(&(map->latlon)) == -1) return(-1);
-#endif
 
   map->templatepattern = map->datapattern = NULL;
 
@@ -6378,7 +6183,7 @@ int msSaveMap(mapObj *map, char *filename)
 {
   FILE *stream;
   char szPath[MS_MAXPATHLEN];
-  
+
   if(!map) {
     msSetError(MS_MISCERR, "Map is undefined.", "msSaveMap()");
     return(-1);
@@ -6519,7 +6324,7 @@ static int loadMapInternal(mapObj *map)
         if((map->interlace = getSymbol(2, MS_ON,MS_OFF)) == -1) return MS_FAILURE;
         break;
       case(LATLON):
-        msFreeProjection(&map->latlon);
+        msFreeProjectionExceptContext(&map->latlon);
         if(loadProjection(&map->latlon) == -1) return MS_FAILURE;
         break;
       case(LAYER):
@@ -6595,7 +6400,7 @@ static int loadMapInternal(mapObj *map)
         if((map->transparent = getSymbol(2, MS_ON,MS_OFF)) == -1) return MS_FAILURE;
         break;
       case(UNITS):
-        if((map->units = getSymbol(7, MS_INCHES,MS_FEET,MS_MILES,MS_METERS,MS_KILOMETERS,MS_NAUTICALMILES,MS_DD)) == -1) return MS_FAILURE;
+        if((int)(map->units = getSymbol(7, MS_INCHES,MS_FEET,MS_MILES,MS_METERS,MS_KILOMETERS,MS_NAUTICALMILES,MS_DD)) == -1) return MS_FAILURE;
         break;
       case(WEB):
         if(loadWeb(&(map->web), map) == -1) return MS_FAILURE;
@@ -6613,7 +6418,7 @@ static int loadMapInternal(mapObj *map)
 mapObj *msLoadMapFromString(char *buffer, char *new_mappath)
 {
   mapObj *map;
-  struct mstimeval starttime, endtime;
+  struct mstimeval starttime = {0}, endtime = {0};
   char szPath[MS_MAXPATHLEN], szCWDPath[MS_MAXPATHLEN];
   char *mappath=NULL;
   int debuglevel;
@@ -6691,10 +6496,10 @@ mapObj *msLoadMapFromString(char *buffer, char *new_mappath)
 /*
 ** Sets up file-based mapfile loading and calls loadMapInternal to do the work.
 */
-mapObj *msLoadMap(char *filename, char *new_mappath)
+mapObj *msLoadMap(const char *filename, const char *new_mappath)
 {
   mapObj *map;
-  struct mstimeval starttime, endtime;
+  struct mstimeval starttime={0}, endtime={0};
   char szPath[MS_MAXPATHLEN], szCWDPath[MS_MAXPATHLEN];
   int debuglevel;
 
@@ -7015,7 +6820,7 @@ int msUpdateMapFromURL(mapObj *map, char *variable, char *string)
           msyystring = string;
           msyylex();
 
-          if((map->units = getSymbol(7, MS_INCHES,MS_FEET,MS_MILES,MS_METERS,MS_KILOMETERS,MS_NAUTICALMILES,MS_DD)) == -1) break;
+          if((int)(map->units = getSymbol(7, MS_INCHES,MS_FEET,MS_MILES,MS_METERS,MS_KILOMETERS,MS_NAUTICALMILES,MS_DD)) == -1) break;
           break;
         case(WEB):
           return msUpdateWebFromString(&(map->web), string, MS_TRUE);
@@ -7064,7 +6869,7 @@ static void layerSubstituteString(layerObj *layer, const char *from, const char 
   if(layer->tileindex) layer->tileindex = msCaseReplaceSubstring(layer->tileindex, from, to);
   if(layer->connection) layer->connection = msCaseReplaceSubstring(layer->connection, from, to);
   if(layer->filter.string) layer->filter.string = msCaseReplaceSubstring(layer->filter.string, from, to);
-  
+
   /* The bindvalues are most useful when able to substitute values from the URL */
   hashTableSubstituteString(&layer->bindvals, from, to);
   hashTableSubstituteString(&layer->metadata, from, to);
@@ -7098,7 +6903,7 @@ static void applyOutputFormatDefaultSubstitutions(outputFormatObj *format, const
     char *tmpfilename = msStrdup(filename);
     const char *default_key = msFirstKeyFromHashTable(table);
     while(default_key) {
-      if(!strncmp(default_key,"default_",8)) {
+      if(!strncasecmp(default_key,"default_",8)) {
         char *new_filename = NULL;
         size_t buffer_size = (strlen(default_key)-5);
         char *tag = (char *)msSmallMalloc(buffer_size);
@@ -7122,7 +6927,7 @@ static void applyClassDefaultSubstitutions(classObj *class, hashTableObj *table)
 {
   const char *default_key = msFirstKeyFromHashTable(table);
   while(default_key) {
-    if(!strncmp(default_key,"default_",8)) {
+    if(!strncasecmp(default_key,"default_",8)) {
       size_t buffer_size = (strlen(default_key)-5);
       char *tag = (char *)msSmallMalloc(buffer_size);
       snprintf(tag, buffer_size, "%%%s%%", &(default_key[8]));
@@ -7141,7 +6946,7 @@ static void applyLayerDefaultSubstitutions(layerObj *layer, hashTableObj *table)
   int i;
   const char *default_key = msFirstKeyFromHashTable(table);
   while(default_key) {
-    if(!strncmp(default_key,"default_",8)) {
+    if(!strncasecmp(default_key,"default_",8)) {
       size_t buffer_size = (strlen(default_key)-5);
       const char *to = msLookupHashTable(table, default_key);
       char *tag = (char *)msSmallMalloc(buffer_size);
@@ -7162,7 +6967,7 @@ static void applyHashTableDefaultSubstitutions(hashTableObj *hashTab, hashTableO
 {
 	const char *default_key = msFirstKeyFromHashTable(table);
 	while (default_key) {
-		if (!strncmp(default_key, "default_", 8)) {
+		if (!strncasecmp(default_key, "default_", 8)) {
 			size_t buffer_size = (strlen(default_key) - 5);
 			const char *to = msLookupHashTable(table, default_key);
 			char *tag = (char *)msSmallMalloc(buffer_size);

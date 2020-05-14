@@ -223,8 +223,8 @@ imageObj *msDrawMap(mapObj *map, int querymap)
   layerObj *lp=NULL;
   int status = MS_FAILURE;
   imageObj *image = NULL;
-  struct mstimeval mapstarttime, mapendtime;
-  struct mstimeval starttime, endtime;
+  struct mstimeval mapstarttime = {0}, mapendtime = {0};
+  struct mstimeval starttime = {0}, endtime = {0};
 
 #if defined(USE_WMS_LYR) || defined(USE_WFS_LYR)
   enum MS_CONNECTION_TYPE lastconnectiontype;
@@ -924,6 +924,7 @@ int msDrawVectorLayer(mapObj *map, layerObj *layer, imageObj *image)
   int         drawmode=MS_DRAWMODE_FEATURES;
   char        annotate=MS_TRUE;
   shapeObj    shape;
+  shapeObj    savedShape;
   rectObj     searchrect;
   char        cache=MS_FALSE;
   int         maxnumstyles=1;
@@ -964,112 +965,25 @@ int msDrawVectorLayer(mapObj *map, layerObj *layer, imageObj *image)
   /* identify target shapes */
   if(layer->transform == MS_TRUE) {
     searchrect = map->extent;
-#ifdef USE_PROJ
+
     if((map->projection.numargs > 0) && (layer->projection.numargs > 0)) {
       int bDone = MS_FALSE;
 
-#ifdef USE_GDAL
       if( layer->connectiontype == MS_UVRASTER )
       {
           /* Nasty hack to make msUVRASTERLayerWhichShapes() aware that the */
           /* original area of interest is (map->extent, map->projection)... */
           /* Useful when dealin with UVRASTER that extend beyond 180 deg */
           msUVRASTERLayerUseMapExtentAndProjectionForNextWhichShapes( layer, map );
-      }
-#endif
 
-      /* For UVRaster, it is important that the searchrect is not too large */
-      /* to avoid insufficient intermediate raster resolution, which could */
-      /* happen if we use the default code path, given potential reprojection */
-      /* issues when using a map extent that is not in the validity area of */
-      /* the layer projection. */
-      if( layer->connectiontype == MS_UVRASTER &&
-          !layer->projection.gt.need_geotransform &&
-          !(pj_is_latlong(map->projection.proj) &&
-            pj_is_latlong(layer->projection.proj)) ) {
-        rectObj layer_ori_extent;
-
-        if( msLayerGetExtent(layer, &layer_ori_extent) == MS_SUCCESS ) {
-          projectionObj map_proj;
-
-          double map_extent_minx = map->extent.minx;
-          double map_extent_miny = map->extent.miny;
-          double map_extent_maxx = map->extent.maxx;
-          double map_extent_maxy = map->extent.maxy;
-          rectObj layer_extent = layer_ori_extent;
-
-          /* Create a variant of map->projection without geotransform for */
-          /* conveniency */
-          msInitProjection(&map_proj);
-          msCopyProjection(&map_proj, &map->projection);
-          map_proj.gt.need_geotransform = MS_FALSE;
-          if( map->projection.gt.need_geotransform ) {
-            map_extent_minx = map->projection.gt.geotransform[0]
-                + map->projection.gt.geotransform[1] * map->extent.minx
-                + map->projection.gt.geotransform[2] * map->extent.miny;
-            map_extent_miny = map->projection.gt.geotransform[3]
-                + map->projection.gt.geotransform[4] * map->extent.minx
-                + map->projection.gt.geotransform[5] * map->extent.miny;
-            map_extent_maxx = map->projection.gt.geotransform[0]
-                + map->projection.gt.geotransform[1] * map->extent.maxx
-                + map->projection.gt.geotransform[2] * map->extent.maxy;
-            map_extent_maxy = map->projection.gt.geotransform[3]
-                + map->projection.gt.geotransform[4] * map->extent.maxx
-                + map->projection.gt.geotransform[5] * map->extent.maxy;
-          }
-
-          /* Reproject layer extent to map projection */
-          msProjectRect(&layer->projection, &map_proj, &layer_extent);
-
-          if( layer_extent.minx <= map_extent_minx &&
-              layer_extent.miny <= map_extent_miny &&
-              layer_extent.maxx >= map_extent_maxx &&
-              layer_extent.maxy >= map_extent_maxy ) {
-            /* do nothing special if area to map is inside layer extent */
-          }
-          else {
-            if( layer_extent.minx >= map_extent_minx &&
-                layer_extent.maxx <= map_extent_maxx &&
-                layer_extent.miny >= map_extent_miny &&
-                layer_extent.maxy <= map_extent_maxy ) {
-              /* if the area to map is larger than the layer extent, then */
-              /* use full layer extent and add some margin to reflect the */
-              /* proportion of the useful area over the requested bbox */
-              double extra_x =
-                (map_extent_maxx - map_extent_minx) /
-                  (layer_extent.maxx - layer_extent.minx) *
-                  (layer_ori_extent.maxx -  layer_ori_extent.minx);
-              double extra_y =
-                 (map_extent_maxy - map_extent_miny) /
-                  (layer_extent.maxy - layer_extent.miny) *
-                  (layer_ori_extent.maxy -  layer_ori_extent.miny);
-              searchrect.minx = layer_ori_extent.minx - extra_x / 2;
-              searchrect.maxx = layer_ori_extent.maxx + extra_x / 2;
-              searchrect.miny = layer_ori_extent.miny - extra_y / 2;
-              searchrect.maxy = layer_ori_extent.maxy + extra_y / 2;
-            }
-            else
-            {
-              /* otherwise clip the map extent with the reprojected layer */
-              /* extent */
-              searchrect.minx = MS_MAX( map_extent_minx, layer_extent.minx );
-              searchrect.maxx = MS_MIN( map_extent_maxx, layer_extent.maxx );
-              searchrect.miny = MS_MAX( map_extent_miny, layer_extent.miny );
-              searchrect.maxy = MS_MIN( map_extent_maxy, layer_extent.maxy );
-              /* and reproject into the layer projection */
-              msProjectRect(&map_proj, &layer->projection, &searchrect);
-            }
-            bDone = MS_TRUE;
-          }
-
-          msFreeProjection(&map_proj);
-        }
+          searchrect = msUVRASTERGetSearchRect( layer, map );
+          bDone = MS_TRUE;
       }
 
       if( !bDone )
         msProjectRect(&map->projection, &layer->projection, &searchrect); /* project the searchrect to source coords */
     }
-#endif
+
   } else {
     searchrect.minx = searchrect.miny = 0;
     searchrect.maxx = map->width-1;
@@ -1078,12 +992,10 @@ int msDrawVectorLayer(mapObj *map, layerObj *layer, imageObj *image)
 
   status = msLayerWhichShapes(layer, searchrect, MS_FALSE);
 
-#ifdef USE_GDAL
   if( layer->connectiontype == MS_UVRASTER )
   {
     msUVRASTERLayerUseMapExtentAndProjectionForNextWhichShapes( layer, NULL );
   }
-#endif
 
   if(status == MS_DONE) { /* no overlap */
     msLayerClose(layer);
@@ -1093,9 +1005,6 @@ int msDrawVectorLayer(mapObj *map, layerObj *layer, imageObj *image)
     return MS_FAILURE;
   }
 
-  /* step through the target shapes */
-  msInitShape(&shape);
-
   nclasses = 0;
   classgroup = NULL;
   if(layer->classgroup && layer->numclasses > 0)
@@ -1104,24 +1013,85 @@ int msDrawVectorLayer(mapObj *map, layerObj *layer, imageObj *image)
   if(layer->minfeaturesize > 0)
     minfeaturesize = Pix2LayerGeoref(map, layer, layer->minfeaturesize);
 
-  while((status = msLayerNextShape(layer, &shape)) == MS_SUCCESS) {
+  // Select how to render classes
+  //    MS_FIRST_MATCHING_CLASS: Default and historic MapServer behavior
+  //    MS_ALL_MATCHING_CLASSES: SLD behavior
+  int ref_rendermode;
+  char * rendermodestr = msLayerGetProcessingKey(layer, "RENDERMODE");
+  if (layer->rendermode == MS_ALL_MATCHING_CLASSES)
+  {
+    // SLD takes precedence
+    ref_rendermode = MS_ALL_MATCHING_CLASSES;
+  }
+  else if (!rendermodestr)
+  {
+    // Default Mapfile
+    ref_rendermode = MS_FIRST_MATCHING_CLASS;
+  }
+  else if (!strcmp(rendermodestr,"FIRST_MATCHING_CLASS"))
+  {
+    // Explicit default Mapfile
+    ref_rendermode = MS_FIRST_MATCHING_CLASS;
+  }
+  else if (!strcmp(rendermodestr,"ALL_MATCHING_CLASSES"))
+  {
+    // SLD-like Mapfile
+    ref_rendermode = MS_ALL_MATCHING_CLASSES;
+  }
+  else
+  {
+    msLayerClose(layer);
+    msSetError(MS_MISCERR,
+    "Unknown RENDERMODE: %s, should be one of: FIRST_MATCHING_CLASS, ALL_MATCHING_CLASSES.",
+    "msDrawVectorLayer()",
+    rendermodestr);
+    return MS_FAILURE;
+  }
 
-    /* Check if the shape size is ok to be drawn */
-    if((shape.type == MS_SHAPE_LINE || shape.type == MS_SHAPE_POLYGON) && (minfeaturesize > 0) && (msShapeCheckSize(&shape, minfeaturesize) == MS_FALSE)) {
-      if(layer->debug >= MS_DEBUGLEVEL_V)
-        msDebug("msDrawVectorLayer(): Skipping shape (%ld) because LAYER::MINFEATURESIZE is bigger than shape size\n", shape.index);
+  /* step through the target shapes and their classes */
+  msInitShape(&shape);
+  int classindex = -1;
+  int classcount = 0;
+  for (;;) {
+    int rendermode;
+    if (classindex == -1) {
       msFreeShape(&shape);
-      continue;
+      status = msLayerNextShape(layer, &shape);
+      if (status != MS_SUCCESS) {
+        break;
+      }
+
+      /* Check if the shape size is ok to be drawn */
+      if((shape.type == MS_SHAPE_LINE || shape.type == MS_SHAPE_POLYGON) && (minfeaturesize > 0) && (msShapeCheckSize(&shape, minfeaturesize) == MS_FALSE)) {
+        if(layer->debug >= MS_DEBUGLEVEL_V)
+          msDebug("msDrawVectorLayer(): Skipping shape (%ld) because LAYER::MINFEATURESIZE is bigger than shape size\n", shape.index);
+        continue;
+      }
+      classcount = 0;
     }
 
-    shape.classindex = msShapeGetClass(layer, map, &shape, classgroup, nclasses);
-    if((shape.classindex == -1) || (layer->class[shape.classindex]->status == MS_OFF)) {
-      msFreeShape(&shape);
+    classindex = msShapeGetNextClass(classindex, layer, map, &shape, classgroup, nclasses);
+    if((classindex == -1) || (layer->class[classindex]->status == MS_OFF)) {
       continue;
+    }
+    shape.classindex = classindex;
+
+    // When only one class is applicable, rendering mode is forced to its default,
+    // i.e. only the first applicable class is actually applied. As a consequence,
+    // cache can be enabled when relevant.
+    classcount++;
+    rendermode = ref_rendermode;
+    if ((classcount == 1) && (msShapeGetNextClass(classindex, layer, map, &shape, classgroup, nclasses) == -1))
+    {
+      rendermode = MS_FIRST_MATCHING_CLASS;
+    }
+
+    if (rendermode == MS_FIRST_MATCHING_CLASS)
+    {
+      classindex = -1;
     }
 
     if(maxfeatures >=0 && featuresdrawn >= maxfeatures) {
-      msFreeShape(&shape);
       status = MS_DONE;
       break;
     }
@@ -1144,19 +1114,24 @@ int msDrawVectorLayer(mapObj *map, layerObj *layer, imageObj *image)
       if(strcasecmp(layer->styleitem, "AUTO") == 0) {
         if(msLayerGetAutoStyle(map, layer, layer->class[shape.classindex], &shape) != MS_SUCCESS) {
           retcode = MS_FAILURE;
-          msFreeShape(&shape);
           break;
         }
       } else {
         /* Generic feature style handling as per RFC-61 */
         if(msLayerGetFeatureStyle(map, layer, layer->class[shape.classindex], &shape) != MS_SUCCESS) {
           retcode = MS_FAILURE;
-          msFreeShape(&shape);
           break;
         }
       }
 
       /* __TODO__ For now, we can't cache features with 'AUTO' style */
+      cache = MS_FALSE;
+    }
+
+    if (rendermode == MS_ALL_MATCHING_CLASSES)
+    {
+      // Cache is designed to handle only one class. Therefore it is
+      // disabled when using SLD "painters model" rendering mode.
       cache = MS_FALSE;
     }
 
@@ -1170,6 +1145,16 @@ int msDrawVectorLayer(mapObj *map, layerObj *layer, imageObj *image)
 
     if (layer->type == MS_LAYER_LINE && msLayerGetProcessingKey(layer, "POLYLINE_NO_CLIP")) {
       drawmode |= MS_DRAWMODE_UNCLIPPEDLINES;
+    }
+
+    if (rendermode == MS_ALL_MATCHING_CLASSES)
+    {
+      // In SLD "painters model" rendering mode, all applicable classes are actually applied.
+      // Coordinates stored in the shape must keep their original values for
+      // the shape to be drawn multiple times.
+      // Here the original shape is saved.
+      msInitShape(&savedShape);
+      msCopyShape(&shape, &savedShape);
     }
 
     if (cache) {
@@ -1198,20 +1183,29 @@ int msDrawVectorLayer(mapObj *map, layerObj *layer, imageObj *image)
 
     else
       status = msDrawShape(map, layer, &shape, image, -1, drawmode); /* all styles  */
-    if(status != MS_SUCCESS) {
+
+    if (rendermode == MS_ALL_MATCHING_CLASSES)
+    {
+      // In SLD "painters model" rendering mode, all applicable classes are actually applied.
+      // Coordinates stored in the shape must keep their original values for
+      // the shape to be drawn multiple times.
+      // Here the original shape is restored.
       msFreeShape(&shape);
+      msCopyShape(&savedShape, &shape);
+      msFreeShape(&savedShape);
+    }
+
+    if(status != MS_SUCCESS) {
       retcode = MS_FAILURE;
       break;
     }
     
     if(shape.numlines == 0) { /* once clipped the shape didn't need to be drawn */
-      msFreeShape(&shape);
       continue;
     }
 
     if(cache) {
       if(insertFeatureList(&shpcache, &shape) == NULL) {
-        msFreeShape(&shape);
         retcode = MS_FAILURE; /* problem adding to the cache */
         break;
       }
@@ -1219,8 +1213,8 @@ int msDrawVectorLayer(mapObj *map, layerObj *layer, imageObj *image)
 
     maxnumstyles = MS_MAX(maxnumstyles, layer->class[shape.classindex]->numstyles);
 
-    msFreeShape(&shape);
   }
+  msFreeShape(&shape);
 
   if (classgroup)
     msFree(classgroup);
@@ -1686,10 +1680,8 @@ int circleLayerDrawShape(mapObj *map, imageObj *image, layerObj *layer, shapeObj
 
   if (layer->transform == MS_TRUE) {
 
-#ifdef USE_PROJ
     if (layer->project)
       msProjectPoint(&layer->projection, &map->projection, &center);
-#endif
 
     center.x = MS_MAP2IMAGE_X(center.x, map->extent.minx, map->cellsize);
     center.y = MS_MAP2IMAGE_Y(center.y, map->extent.maxy, map->cellsize);
@@ -1710,16 +1702,26 @@ int circleLayerDrawShape(mapObj *map, imageObj *image, layerObj *layer, shapeObj
   /* TODO: need to handle circle annotation */
 }
 
+static
 int pointLayerDrawShape(mapObj *map, imageObj *image, layerObj *layer, shapeObj *shape, int drawmode)
 {
   int l, c = shape->classindex, j, i, s;
   pointObj *point;
   int ret = MS_FAILURE;
 
-#ifdef USE_PROJ
   if (layer->project && layer->transform == MS_TRUE)
-    msProjectShape(&layer->projection, &map->projection, shape);
-#endif
+  {
+      if( layer->reprojectorLayerToMap == NULL )
+      {
+          layer->reprojectorLayerToMap = msProjectCreateReprojector(
+              &layer->projection, &map->projection);
+        if( layer->reprojectorLayerToMap == NULL )
+        {
+            return MS_FAILURE;
+        }
+      }
+      msProjectShapeEx(layer->reprojectorLayerToMap, shape);
+  }
 
   // Only take into account map rotation if the label and style angles are
   // non-zero.
@@ -2044,10 +2046,19 @@ int msDrawShape(mapObj *map, layerObj *layer, shapeObj *shape, imageObj *image, 
     return (MS_FAILURE);
   }
 
-#ifdef USE_PROJ
   if (layer->project && layer->transform == MS_TRUE)
-    msProjectShape(&layer->projection, &map->projection, shape);
-#endif
+  {
+      if( layer->reprojectorLayerToMap == NULL )
+      {
+          layer->reprojectorLayerToMap = msProjectCreateReprojector(
+              &layer->projection, &map->projection);
+        if( layer->reprojectorLayerToMap == NULL )
+        {
+            return MS_FAILURE;
+        }
+      }
+      msProjectShapeEx(layer->reprojectorLayerToMap, shape);
+  }
 
   /* check if we'll need the unclipped shape */
   if (shape->type != MS_SHAPE_POINT) {
@@ -2227,18 +2238,23 @@ draw_shape_cleanup:
 int msDrawPoint(mapObj *map, layerObj *layer, pointObj *point, imageObj *image, int classindex, char *labeltext)
 {
   int s,ret;
-  classObj *theclass=layer->class[classindex];
+  classObj *theclass=NULL;
   labelObj *label=NULL;
 
-#ifdef USE_PROJ
-  if(layer->transform == MS_TRUE && layer->project)
-    msProjectPoint(&layer->projection, &map->projection, point);
-#endif
-
+  if(layer->transform == MS_TRUE && layer->project && msProjectionsDiffer(&(layer->projection), &(map->projection))) {
+    msProjectPoint(&(layer->projection), &(map->projection), point);
+  }
+  
+  if(classindex > layer->numclasses) {
+    msSetError(MS_MISCERR, "Invalid classindex (%d)", "msDrawPoint()", classindex);
+    return MS_FAILURE; 
+  }
+  theclass = layer->class[classindex];
+  
   if(labeltext && theclass->numlabels > 0) {
     label = theclass->labels[0];
   }
-
+  
   switch(layer->type) {
     case MS_LAYER_POINT:
       if(layer->transform == MS_TRUE) {
@@ -2254,7 +2270,7 @@ int msDrawPoint(mapObj *map, layerObj *layer, pointObj *point, imageObj *image, 
             return MS_FAILURE;
           }
       }
-      if(labeltext && *labeltext) {
+      if(label && labeltext && *labeltext) {
         textSymbolObj *ts = msSmallMalloc(sizeof(textSymbolObj));
         initTextSymbol(ts);
         msPopulateTextSymbolForLabelAndString(ts, label, msStrdup(labeltext), layer->scalefactor, image->resolutionfactor, layer->labelcache);
@@ -2288,10 +2304,10 @@ int msDrawPoint(mapObj *map, layerObj *layer, pointObj *point, imageObj *image, 
 int msDrawLabel(mapObj *map, imageObj *image, pointObj labelPnt, char *string, labelObj *label, double scalefactor)
 {
   shapeObj labelPoly;
-  label_bounds lbounds;
+  label_bounds lbounds = {0};
   lineObj labelPolyLine;
   pointObj labelPolyPoints[5];
-  textSymbolObj ts;
+  textSymbolObj ts = {0};
   int needLabelPoly=MS_TRUE;
   int needLabelPoint=MS_TRUE;
   int haveLabelText=MS_TRUE;
@@ -2315,7 +2331,7 @@ int msDrawLabel(mapObj *map, imageObj *image, pointObj labelPnt, char *string, l
   labelPoly.line->numpoints = 5;
 
   if(label->position != MS_XY) {
-    pointObj p;
+    pointObj p = {0};
 
     if(label->numstyles > 0) {
       int i;
@@ -2958,7 +2974,7 @@ static int getLabelPositionFromString(char *pszString) {
 int msDrawLabelCache(mapObj *map, imageObj *image)
 {
   int nReturnVal = MS_SUCCESS;
-  struct mstimeval starttime, endtime;
+  struct mstimeval starttime={0}, endtime={0};
 
   if(map->debug >= MS_DEBUGLEVEL_TUNING) msGettimeofday(&starttime, NULL);
 
@@ -2982,7 +2998,7 @@ int msDrawLabelCache(mapObj *map, imageObj *image)
        */
       lineObj labelpoly_line;
       pointObj labelpoly_points[5];
-      label_bounds labelpoly_bounds;
+      label_bounds labelpoly_bounds = {0};
       lineObj  label_marker_line;
       pointObj label_marker_points[5];
       label_bounds label_marker_bounds;

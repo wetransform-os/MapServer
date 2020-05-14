@@ -1,3 +1,58 @@
+mapserver (7.6.0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Update 7.6.0~rc4 symbols for other architectures.
+  * Strip pre-releases from symbols version.
+  * Move from experimental to unstable.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Fri, 08 May 2020 17:38:17 +0200
+
+mapserver (7.6.0~rc4-1~exp1) experimental; urgency=medium
+
+  * New upstream release candidate.
+  * Drop override for mailing-list-obsolete-in-debian-infrastructure.
+  * Update symbols for other architectures.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Tue, 05 May 2020 05:46:51 +0200
+
+mapserver (7.6.0~rc3-1~exp1) experimental; urgency=medium
+
+  * New upstream release candidate.
+  * Update symbols for amd64.
+  * Add override for mailing-list-obsolete-in-debian-infrastructure.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Sat, 25 Apr 2020 06:45:11 +0200
+
+mapserver (7.6.0~rc2-1~exp1) experimental; urgency=medium
+
+  * New upstream release candidate.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Sat, 11 Apr 2020 06:47:59 +0200
+
+mapserver (7.6.0~rc1-1~exp1) experimental; urgency=medium
+
+  * New upstream release candidate.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Mon, 06 Apr 2020 05:56:37 +0200
+
+mapserver (7.6.0~beta2-1~exp1) experimental; urgency=medium
+
+  * New upstream beta release.
+  * Drop -D_GNU_SOURCE, fixed upstream.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Sun, 29 Mar 2020 08:46:12 +0200
+
+mapserver (7.6.0~beta1-1~exp1) experimental; urgency=medium
+
+  * New upstream beta release.
+  * Drop obsolete CMake options.
+  * Update copyright years for copyright holders.
+  * Drop swig-4.0.1.patch, included upstream.
+  * Add -D_GNU_SOURCE to CPPFLAGS.
+  * Update symbols for amd64.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Mon, 23 Mar 2020 06:51:15 +0100
+
 mapserver (7.4.4-1~bpo10+1) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.

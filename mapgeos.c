@@ -137,6 +137,7 @@ void msGEOSCleanup()
 {
 #ifndef USE_THREAD
   finishGEOS_r(geos_handle);
+  geos_handle = NULL;
 #else
   geos_thread_info_t *link;
   msAcquireLock( TLOCK_GEOS );
@@ -942,6 +943,7 @@ pointObj *msGEOSGetCentroid(shapeObj *shape)
   if(!g1) return NULL;
 
   g2 = GEOSGetCentroid_r(handle,g1);
+  if (!g2) return NULL;
 
   point = (pointObj *) malloc(sizeof(pointObj));
 
@@ -951,7 +953,7 @@ pointObj *msGEOSGetCentroid(shapeObj *shape)
   GEOSCoordSeq_getY_r(handle,coords, 0, &(point->y));
   /* GEOSCoordSeq_getZ(coords, 0, &(point->z)); */
 
-  GEOSCoordSeq_destroy_r(handle,coords);
+  GEOSGeom_destroy_r(handle, g2);
 
   return point;
 #else

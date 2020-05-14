@@ -29,8 +29,10 @@
 #include "mapserver.h"
 #include "mapows.h"
 
+#include "cpl_vsi.h"
 
-#if defined(USE_WMS_LYR) && defined(USE_OGR)
+
+#if defined(USE_WMS_LYR)
 
 /* There is a dependency to GDAL/OGR for the GML driver and MiniXML parser */
 #include "cpl_minixml.h"
@@ -47,12 +49,12 @@
 char * msGetMapContextFileText(char *filename)
 {
   char *pszBuffer;
-  FILE *stream;
+  VSILFILE *stream;
   int  nLength;
 
   /* open file */
   if(filename != NULL && strlen(filename) > 0) {
-    stream = fopen(filename, "rb");
+    stream = VSIFOpenL(filename, "rb");
     if(!stream) {
       msSetError(MS_IOERR, "(%s)", "msGetMapContextFileText()", filename);
       return NULL;
@@ -62,32 +64,32 @@ char * msGetMapContextFileText(char *filename)
     return NULL;
   }
 
-  fseek( stream, 0, SEEK_END );
-  nLength = ftell( stream );
-  fseek( stream, 0, SEEK_SET );
+  VSIFSeekL( stream, 0, SEEK_END );
+  nLength = (int) VSIFTellL( stream );
+  VSIFSeekL( stream, 0, SEEK_SET );
 
   pszBuffer = (char *) malloc(nLength+1);
   if( pszBuffer == NULL ) {
     msSetError(MS_MEMERR, "(%s)", "msGetMapContextFileText()", filename);
-    fclose( stream );
+    VSIFCloseL( stream );
     return NULL;
   }
 
-  if(fread( pszBuffer, nLength, 1, stream ) == 0 &&  !feof(stream)) {
+  if(VSIFReadL( pszBuffer, nLength, 1, stream ) == 0) {
     free( pszBuffer );
-    fclose( stream );
+    VSIFCloseL( stream );
     msSetError(MS_IOERR, "(%s)", "msGetMapContextFileText()", filename);
     return NULL;
   }
   pszBuffer[nLength] = '\0';
 
-  fclose( stream );
+  VSIFCloseL( stream );
 
   return pszBuffer;
 }
 
 
-#if defined(USE_WMS_LYR) && defined(USE_OGR)
+#if defined(USE_WMS_LYR)
 
 /*
 **msGetMapContextXMLHashValue()
@@ -835,7 +837,7 @@ int msLoadMapContextLayer(mapObj *map, CPLXMLNode *psLayer, int nVersion,
   /* Status */
   pszValue = (char*)CPLGetXMLValue(psLayer, "hidden", "1");
   if((pszValue != NULL) && (atoi(pszValue) == 0 &&
-                            !strcasecmp(pszValue, "true") == 0))
+                            strcasecmp(pszValue, "true") != 0))
     layer->status = MS_ON;
   else
     layer->status = MS_OFF;
@@ -1066,7 +1068,7 @@ int msLoadMapContextLayer(mapObj *map, CPLXMLNode *psLayer, int nVersion,
 
 int msLoadMapContextURL(mapObj *map, char *urlfilename, int unique_layer_names)
 {
-#if defined(USE_WMS_LYR) && defined(USE_OGR)
+#if defined(USE_WMS_LYR)
   char *pszTmpFile = NULL;
   int status = 0;
 
@@ -1106,7 +1108,7 @@ int msLoadMapContextURL(mapObj *map, char *urlfilename, int unique_layer_names)
 */
 int msLoadMapContext(mapObj *map, char *filename, int unique_layer_names)
 {
-#if defined(USE_WMS_LYR) && defined(USE_OGR)
+#if defined(USE_WMS_LYR)
   char *pszWholeText, *pszValue;
   CPLXMLNode *psRoot, *psMapContext, *psLayer, *psLayerList, *psChild;
   char szPath[MS_MAXPATHLEN];
@@ -1274,8 +1276,8 @@ int msLoadMapContext(mapObj *map, char *filename, int unique_layer_names)
 */
 int msSaveMapContext(mapObj *map, char *filename)
 {
-#if defined(USE_WMS_LYR) && defined(USE_OGR)
-  FILE *stream;
+#if defined(USE_WMS_LYR)
+  VSILFILE *stream;
   char szPath[MS_MAXPATHLEN];
   int nStatus;
 
@@ -1308,7 +1310,7 @@ int msSaveMapContext(mapObj *map, char *filename)
 
 int msWriteMapContext(mapObj *map, FILE *stream)
 {
-#if defined(USE_WMS_LYR) && defined(USE_OGR)
+#if defined(USE_WMS_LYR)
   const char * version;
   char *pszEPSG;
   char * tabspace=NULL, *pszChar,*pszSLD=NULL,*pszURL,*pszSLD2=NULL;

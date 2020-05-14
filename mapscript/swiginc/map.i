@@ -111,6 +111,17 @@
     {
         return msMapSetSize(self, width, height);
     }
+
+    void pixelToGeoref(double pixPosX, double pixPosY, pointObj *geoPos)
+    {
+       geoPos->x = self->gt.geotransform[0] + self->gt.geotransform[1] * pixPosX + self->gt.geotransform[2] * pixPosY;
+       geoPos->y = self->gt.geotransform[3] + self->gt.geotransform[4] * pixPosX + self->gt.geotransform[5] * pixPosY;
+    }
+
+    double getRotation() 
+    {
+        return self->gt.rotation_angle;
+    }
     
     int setRotation( double rotation_angle ) 
     {
@@ -458,8 +469,8 @@
     }
     
     %newobject generateSLD;
-    char *generateSLD() {
-        return (char *) msSLDGenerateSLD(self, -1, NULL);
+    char *generateSLD(char *sldVersion=NULL) {
+        return (char *) msSLDGenerateSLD(self, -1, sldVersion);
     }
 
 
@@ -509,4 +520,24 @@
         return msWriteMapToString(self);
     }
 
+    %feature("autodoc", "3");
+    %feature("docstring") applyDefaultSubstitutions 
+    "Apply any default values 
+defined in a VALIDATION block used for runtime substitutions"
+    void applyDefaultSubstitutions()
+    {
+        msApplyDefaultSubstitutions(self);
+    }
+
+    %feature("autodoc", "3");
+    %feature("docstring") applySubstitutions
+"Pass in runtime substitution 
+keys and values and apply them to the map. 
+
+**Note** This method is currently enabled for Python only. 
+Typemaps are needed for other mapscript languages."
+    void applySubstitutions(char **names, char **values, int npairs)
+    {
+        msApplySubstitutions(self, names, values, npairs);
+    }
 }

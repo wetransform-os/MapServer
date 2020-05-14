@@ -56,7 +56,6 @@
 int msCopyProjectionExtended(projectionObj *dst, projectionObj *src, char ** args, int num_args)
 {
 
-#ifdef USE_PROJ
   int i;
 
   MS_COPYSTELEM(numargs);
@@ -70,11 +69,11 @@ int msCopyProjectionExtended(projectionObj *dst, projectionObj *src, char ** arg
   for(i=0 ; i< num_args; i++) {
     dst->args[dst->numargs++] = msStrdup(args[i]);
   }
+  msProjectionInheritContextFrom(dst, src);
   if (dst->numargs != 0) {
     if (msProcessProjection(dst) != MS_SUCCESS)
       return MS_FAILURE;
   }
-#endif
   MS_COPYSTELEM(wellknownprojection);
   return MS_SUCCESS;
 }
@@ -319,8 +318,11 @@ int msCopyLabel(labelObj *dst, labelObj *src)
   for(i=0; i<MS_LABEL_BINDING_LENGTH; i++) {
     MS_COPYSTRING(dst->bindings[i].item, src->bindings[i].item);
     dst->bindings[i].index = src->bindings[i].index; /* no way to use the macros */
+    MS_COPYSTRING(dst->exprBindings[i].string, src->exprBindings[i].string);
+    dst->exprBindings[i].type = src->exprBindings[i].type;
   }
   MS_COPYSTELEM(numbindings);
+  MS_COPYSTELEM(nexprbindings);
 
   MS_COPYSTRING(dst->font, src->font);
 
@@ -473,8 +475,11 @@ int msCopyStyle(styleObj *dst, styleObj *src)
   for(i=0; i<MS_STYLE_BINDING_LENGTH; i++) {
     MS_COPYSTRING(dst->bindings[i].item, src->bindings[i].item);
     dst->bindings[i].index = src->bindings[i].index; /* no way to use the macros */
+    MS_COPYSTRING(dst->exprBindings[i].string, src->exprBindings[i].string);
+    dst->exprBindings[i].type = src->exprBindings[i].type;
   }
   MS_COPYSTELEM(numbindings);
+  MS_COPYSTELEM(nexprbindings);
 
   MS_COPYCOLOR(&(dst->color), &(src->color));
   MS_COPYCOLOR(&(dst->outlinecolor),&(src->outlinecolor));
@@ -536,6 +541,7 @@ int msCopyClass(classObj *dst, classObj *src, layerObj *layer)
   }
 
   MS_COPYSTELEM(status);
+  MS_COPYSTELEM(isfallback);
 
   /* free any previous styles on the dst layer */
   for(i=0; i<dst->numstyles; i++) { /* each style */
@@ -1028,6 +1034,7 @@ int msCopyLayer(layerObj *dst, layerObj *src)
   MS_COPYSTRING(dst->data, src->data);
   MS_COPYSTRING(dst->encoding, src->encoding);
 
+  MS_COPYSTELEM(rendermode);
   MS_COPYSTELEM(status);
   MS_COPYSTELEM(type);
   MS_COPYSTELEM(tolerance);
@@ -1278,8 +1285,10 @@ int msCopyMap(mapObj *dst, mapObj *src)
     return MS_FAILURE;
   }
 
-  for (i = 0; i < dst->numlayers; i++) {
-    MS_COPYSTELEM(layerorder[i]);
+  if( src->layerorder ) {
+    for (i = 0; i < dst->numlayers; i++) {
+        MS_COPYSTELEM(layerorder[i]);
+    }
   }
   MS_COPYSTELEM(debug);
   MS_COPYSTRING(dst->datapattern, src->datapattern);
