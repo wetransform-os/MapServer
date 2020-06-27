@@ -1,11 +1,11 @@
-mapserver (7.6.0-2) UNRELEASED; urgency=medium
+mapserver (7.6.0-2) unstable; urgency=medium
 
   * Add upstream patch to install mapscript.php.
     (LP: #1884854)
   * Include mapscript.php in php-mapscript-ng.
   * Add lintian overrides for breakout-link.
 
- -- Bas Couwenberg <sebastic@debian.org>  Sat, 27 Jun 2020 15:44:13 +0200
+ -- Bas Couwenberg <sebastic@debian.org>  Sat, 27 Jun 2020 20:32:54 +0200
 
 mapserver (7.6.0-1) unstable; urgency=medium
 
