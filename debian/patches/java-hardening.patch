@@ -6,7 +6,7 @@ Forwarded: not-needed
 
 --- a/mapscript/java/CMakeLists.txt
 +++ b/mapscript/java/CMakeLists.txt
-@@ -20,6 +20,23 @@ else ()
+@@ -26,6 +26,23 @@ else ()
      swig_add_module(javamapscript java ../mapscript.i)
  endif ()
  
@@ -30,7 +30,7 @@ Forwarded: not-needed
  swig_link_libraries(javamapscript ${MAPSERVER_LIBMAPSERVER})
  
  add_custom_command(TARGET javamapscript
-@@ -31,4 +48,5 @@ add_custom_command(TARGET javamapscript
+@@ -37,4 +54,5 @@ add_custom_command(TARGET javamapscript
                        )
  
  set(mapscript_files $<TARGET_FILE:${SWIG_MODULE_javamapscript_REAL_NAME}>)
