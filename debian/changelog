@@ -3,6 +3,7 @@ mapserver (7.6.1-1) UNRELEASED; urgency=medium
   * New upstream release.
   * Drop phpng-mapscript.patch, included upstream.
   * Update symbols for amd64.
+  * Add lintian overrides for file-references-package-build-path.
 
  -- Bas Couwenberg <sebastic@debian.org>  Fri, 31 Jul 2020 19:33:28 +0200
 
