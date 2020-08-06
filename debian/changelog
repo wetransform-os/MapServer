@@ -1,3 +1,19 @@
+mapserver (7.6.1-1) unstable; urgency=medium
+
+  * Update symbols for other architectures.
+  * Move from experimental to unstable.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Sat, 01 Aug 2020 08:05:35 +0200
+
+mapserver (7.6.1-1~exp1) experimental; urgency=medium
+
+  * New upstream release.
+  * Drop phpng-mapscript.patch, included upstream.
+  * Update symbols for amd64.
+  * Add lintian overrides for file-references-package-build-path.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Fri, 31 Jul 2020 19:35:49 +0200
+
 mapserver (7.6.0-2~bpo10+1) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.
