@@ -1876,6 +1876,10 @@ static void msWCSPrepareNamespaces20(xmlDocPtr pDoc, xmlNodePtr psRootNode, mapO
   xsi_schemaLocation = msStringConcatenate(xsi_schemaLocation, schemaLocation);
   xsi_schemaLocation = msStringConcatenate(xsi_schemaLocation, MS_OWSCOMMON_WCS_20_SCHEMAS_LOCATION);
   xsi_schemaLocation = msStringConcatenate(xsi_schemaLocation, " ");
+  xsi_schemaLocation = msStringConcatenate(xsi_schemaLocation, MS_OWSCOMMON_GMLCOV_10_NAMESPACE_URI);
+  xsi_schemaLocation = msStringConcatenate(xsi_schemaLocation, " ");
+  xsi_schemaLocation = msStringConcatenate(xsi_schemaLocation, MS_OWSCOMMON_SCHEMAS_LOCATION);
+  xsi_schemaLocation = msStringConcatenate(xsi_schemaLocation, MS_OWSCOMMON_GMLCOV_SCHEMA_LOCATION);
 
   if (addInspire) {
     xsi_schemaLocation = msStringConcatenate(xsi_schemaLocation, MS_INSPIRE_DLS_NAMESPACE_URI " ");
@@ -4934,11 +4938,13 @@ this request. Check wcs/ows_enable_request settings.", "msWCSGetCoverage20()", p
     return msWCSException(map, NULL, NULL, params->version );
   }
 
+  // TODO GML only when FORMAT=application/gml+xml
+
   /* GML+Image */
   /* Embed the image into multipart message */
   if(params->multipart == MS_TRUE) {
     xmlDocPtr psDoc = NULL;       /* document pointer */
-    xmlNodePtr psRootNode, psRangeSet, psFile, psRangeParameters;
+    xmlNodePtr psRootNode, psMetadata, psElGridCovMetadata, psOiCovMetadata, psRangeSet, psFile, psRangeParameters;
     xmlNsPtr psGmlNs = NULL,
              psGmlcovNs = NULL,
              psSweNs = NULL,
@@ -5024,6 +5030,131 @@ this request. Check wcs/ows_enable_request settings.", "msWCSGetCoverage20()", p
     xmlNewChild(psFile, psGmlNs, BAD_CAST "mimeType", BAD_CAST MS_IMAGE_MIME_TYPE(map->outputformat));
 
     msWCSCommon20_CreateRangeType(layer, &cm, bandlist, psGmlNs, psGmlcovNs, psSweNs, psXLinkNs, psRootNode);
+
+    const char *coverageType = msOWSLookupMetadata(&(layer->metadata), "C", "coverage_type");
+    if (coverageType != NULL) {
+      const char *localIdValue = msOWSLookupMetadata(&(layer->metadata), "C", "inspireId_localId");
+      const char *namespaceValue = msOWSLookupMetadata(&(layer->metadata), "C", "inspireId_namespace");
+      const char *egcMetadataNamespace = msOWSLookupMetadata(&(layer->metadata), "C", "elevation_metadata_namespace");
+      const char *egcMetadataSchemaLocation = msOWSLookupMetadata(&(layer->metadata), "C", "elevation_metadata_schemalocation");
+      const char *oicMetadataNamespace = msOWSLookupMetadata(&(layer->metadata), "C", "orthoimagery_metadata_namespace");
+      const char *oicMetadataSchemaLocation = msOWSLookupMetadata(&(layer->metadata), "C", "orthoimagery_metadata_schemalocation");
+
+      if (strcmp(coverageType, "ElevationGridCoverage") == 0) {
+        psMetadata = xmlNewChild(psRootNode, psGmlcovNs, BAD_CAST "metadata", NULL);
+        xmlNodePtr psGmlCovExtension = xmlNewChild(psMetadata, psGmlcovNs, BAD_CAST "Extension", NULL);
+        psElGridCovMetadata = xmlNewChild(psGmlCovExtension, NULL, BAD_CAST "ElevationGridCoverageMetadata", NULL);
+
+        xmlNewNs(psElGridCovMetadata, BAD_CAST "http://inspire.ec.europa.eu/schemas/ad/4.0", BAD_CAST "ad");
+        xmlNewNs(psElGridCovMetadata, BAD_CAST "http://inspire.ec.europa.eu/schemas/base/3.3", BAD_CAST "base");
+        xmlNewNs(psElGridCovMetadata, BAD_CAST "http://inspire.ec.europa.eu/schemas/base2/2.0", BAD_CAST "base2");
+        xmlNsPtr psElCovMdNs = xmlNewNs(psElGridCovMetadata, BAD_CAST egcMetadataNamespace, BAD_CAST "el-covmd");
+        xmlSetNs(psElGridCovMetadata, psElCovMdNs);
+        xmlNsPtr psInspireBaseNs = xmlSearchNs(psDoc, psElGridCovMetadata, BAD_CAST "base");
+        xmlNsPtr psNsGco = xmlNewNs(psElGridCovMetadata, BAD_CAST "http://www.isotc211.org/2005/gco", BAD_CAST "gco");
+        xmlNsPtr psNsGmd = xmlNewNs(psElGridCovMetadata, BAD_CAST "http://www.isotc211.org/2005/gmd", BAD_CAST "gmd");
+
+        xmlNsPtr psXsiNs = xmlSearchNs(psDoc, psRootNode, BAD_CAST MS_OWSCOMMON_W3C_XSI_NAMESPACE_PREFIX);
+        char *xsi_schemaLocation = msStrdup(egcMetadataNamespace);
+        xsi_schemaLocation = msStringConcatenate(xsi_schemaLocation, " ");
+        xsi_schemaLocation = msStringConcatenate(xsi_schemaLocation, egcMetadataSchemaLocation);
+
+        xmlNewNsProp(psElGridCovMetadata, psXsiNs, BAD_CAST "schemaLocation", BAD_CAST xsi_schemaLocation);
+
+        msFree(xsi_schemaLocation);
+
+        const char *beginLifespanVersionValue = msOWSLookupMetadata(&(layer->metadata), "C", "begin_lifespan_version");
+        if (beginLifespanVersionValue != NULL) {
+          xmlNewChild(psElGridCovMetadata, psElCovMdNs, BAD_CAST "beginLifespanVersion", BAD_CAST beginLifespanVersionValue);
+        }
+
+        xmlNodePtr psDomainExtent = xmlNewChild(psElGridCovMetadata, psElCovMdNs, BAD_CAST "domainExtent", NULL);
+        xmlAddChild(psDomainExtent, msMetadataGetExtent0(psNsGmd, psDomainExtent, layer, &psNsGco));
+
+        const char *endLifespanVersionValue = msOWSLookupMetadata(&(layer->metadata), "C", "end_lifespan_version");
+        if (endLifespanVersionValue != NULL) {
+          xmlNewChild(psElGridCovMetadata, psElCovMdNs, BAD_CAST "endLifespanVersion", BAD_CAST endLifespanVersionValue);
+        }
+
+        if (localIdValue != NULL && namespaceValue != NULL) {
+          xmlNodePtr psInspireId = xmlNewChild(psElGridCovMetadata, psElCovMdNs, BAD_CAST "inspireId", NULL);
+          xmlNodePtr psIdentifier = xmlNewChild(psInspireId, psInspireBaseNs, BAD_CAST "Identifier", NULL);
+          xmlNewChild(psIdentifier, psInspireBaseNs, BAD_CAST "localId", BAD_CAST localIdValue);
+          xmlNewChild(psIdentifier, psInspireBaseNs, BAD_CAST "namespace", BAD_CAST namespaceValue);
+        }
+
+        const char *propertyTypeValue = msOWSLookupMetadata(&(layer->metadata), "C", "elevation_propertyType");
+        xmlNewChild(psElGridCovMetadata, psElCovMdNs, BAD_CAST "propertyType", BAD_CAST propertyTypeValue);
+
+        const char *surfaceTypeValue = msOWSLookupMetadata(&(layer->metadata), "C", "elevation_surfaceType");
+        xmlNewChild(psElGridCovMetadata, psElCovMdNs, BAD_CAST "surfaceType", BAD_CAST surfaceTypeValue);
+      }
+      else if (strcmp(coverageType, "OrthoimageCoverage") == 0) {
+        psMetadata = xmlNewChild(psRootNode, psGmlcovNs, BAD_CAST "metadata", NULL);
+        xmlNodePtr psGmlCovExtension = xmlNewChild(psMetadata, psGmlcovNs, BAD_CAST "Extension", NULL);
+        psOiCovMetadata = xmlNewChild(psGmlCovExtension, NULL, BAD_CAST "OrthoimageCoverageMetadata", NULL);
+
+        xmlNewNs(psOiCovMetadata, BAD_CAST "http://inspire.ec.europa.eu/schemas/ad/4.0", BAD_CAST "ad");
+        xmlNewNs(psOiCovMetadata, BAD_CAST "http://inspire.ec.europa.eu/schemas/base/3.3", BAD_CAST "base");
+        xmlNewNs(psOiCovMetadata, BAD_CAST "http://inspire.ec.europa.eu/schemas/base2/2.0", BAD_CAST "base2");
+        xmlNsPtr psOiCovMdNs = xmlNewNs(psOiCovMetadata, BAD_CAST oicMetadataNamespace, BAD_CAST "oi-covmd");
+        xmlSetNs(psOiCovMetadata, psOiCovMdNs);
+        xmlNsPtr psInspireBaseNs = xmlSearchNs(psDoc, psOiCovMetadata, BAD_CAST "base");
+        xmlNsPtr psNsGco = xmlNewNs(psOiCovMetadata, BAD_CAST "http://www.isotc211.org/2005/gco", BAD_CAST "gco");
+        xmlNsPtr psNsGmd = xmlNewNs(psOiCovMetadata, BAD_CAST "http://www.isotc211.org/2005/gmd", BAD_CAST "gmd");
+
+        xmlNsPtr psXsiNs = xmlSearchNs(psDoc, psRootNode, BAD_CAST MS_OWSCOMMON_W3C_XSI_NAMESPACE_PREFIX);
+        char *xsi_schemaLocation = msStrdup(oicMetadataNamespace);
+        xsi_schemaLocation = msStringConcatenate(xsi_schemaLocation, " ");
+        xsi_schemaLocation = msStringConcatenate(xsi_schemaLocation, oicMetadataSchemaLocation);
+
+        xmlNewNsProp(psOiCovMetadata, psXsiNs, BAD_CAST "schemaLocation", BAD_CAST xsi_schemaLocation);
+
+        if (localIdValue != NULL && namespaceValue != NULL) {
+          xmlNodePtr psInspireId = xmlNewChild(psOiCovMetadata, psOiCovMdNs, BAD_CAST "inspireId", NULL);
+          xmlNodePtr psIdentifier = xmlNewChild(psInspireId, psInspireBaseNs, BAD_CAST "Identifier", NULL);
+          xmlNewChild(psIdentifier, psInspireBaseNs, BAD_CAST "localId", BAD_CAST localIdValue);
+          xmlNewChild(psIdentifier, psInspireBaseNs, BAD_CAST "namespace", BAD_CAST namespaceValue);
+        }
+
+        xmlNodePtr psDomainExtent = xmlNewChild(psOiCovMetadata, psOiCovMdNs, BAD_CAST "domainExtent", NULL);
+        xmlAddChild(psDomainExtent, msMetadataGetExtent0(psNsGmd, psDomainExtent, layer, &psNsGco));
+
+        xmlNodePtr psFootprint = xmlNewChild(psOiCovMetadata, psOiCovMdNs, BAD_CAST "footprint", NULL);
+        xmlNewProp(psFootprint, BAD_CAST "xsi:nil", BAD_CAST "true");
+        xmlNewProp(psFootprint, BAD_CAST "nilReason", BAD_CAST "other:unpopulated");
+
+        xmlNodePtr psInterpolationType = xmlNewChild(psOiCovMetadata, psOiCovMdNs, BAD_CAST "interpolationType", NULL);
+        xmlNewProp(psInterpolationType, BAD_CAST "xlink:href", BAD_CAST "http://inspire.ec.europa.eu/codelist/InterpolationMethodValue/nearestNeighbour");
+
+        xmlNodePtr psName = xmlNewChild(psOiCovMetadata, psOiCovMdNs, BAD_CAST "name", BAD_CAST layer->name);
+
+        const char *phenomenonTimeStart = msOWSLookupMetadata(&(layer->metadata), "C", "orthoimagery_phenomenonTime_start");
+        const char *phenomenonTimeEnd = msOWSLookupMetadata(&(layer->metadata), "C", "orthoimagery_phenomenonTime_end");
+        xmlNodePtr psPhenomenonTime = xmlNewChild(psOiCovMetadata, psOiCovMdNs, BAD_CAST "phenomenonTime", NULL);
+        if (phenomenonTimeStart != NULL && phenomenonTimeEnd != NULL) {
+          xmlNodePtr psTimePeriod = xmlNewChild(psPhenomenonTime, psGmlNs, BAD_CAST "TimePeriod", NULL);
+          xmlNewChild(psTimePeriod, psGmlNs, BAD_CAST "beginPosition", BAD_CAST phenomenonTimeStart);
+          xmlNewChild(psTimePeriod, psGmlNs, BAD_CAST "endPosition", BAD_CAST phenomenonTimeEnd);
+        }
+        else {
+          xmlNewProp(psPhenomenonTime, BAD_CAST "xsi:nil", BAD_CAST "true");
+          xmlNewProp(psPhenomenonTime, BAD_CAST "nilReason", BAD_CAST "other:unpopulated");
+        }
+
+        const char *beginLifespanVersionValue = msOWSLookupMetadata(&(layer->metadata), "C", "begin_lifespan_version");
+        if (beginLifespanVersionValue != NULL) {
+          xmlNewChild(psOiCovMetadata, psOiCovMdNs, BAD_CAST "beginLifespanVersion", BAD_CAST beginLifespanVersionValue);
+        }
+
+        const char *endLifespanVersionValue = msOWSLookupMetadata(&(layer->metadata), "C", "end_lifespan_version");
+        if (endLifespanVersionValue != NULL) {
+          xmlNewChild(psOiCovMetadata, psOiCovMdNs, BAD_CAST "endLifespanVersion", BAD_CAST endLifespanVersionValue);
+        }
+
+        msFree(xsi_schemaLocation);
+      }
+    }
 
     msIO_setHeader("Content-Type","multipart/related; boundary=wcs");
     msIO_sendHeaders();

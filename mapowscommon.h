@@ -111,6 +111,7 @@
 
 #define MS_OWSCOMMON_GMLCOV_10_NAMESPACE_URI    "http://www.opengis.net/gmlcov/1.0"
 #define MS_OWSCOMMON_GMLCOV_NAMESPACE_PREFIX    "gmlcov"
+#define MS_OWSCOMMON_GMLCOV_SCHEMA_LOCATION     "/gmlcov/1.0/gmlcovAll.xsd"
 
 /* SWE namespaces */
 #define MS_OWSCOMMON_SWE_20_NAMESPACE_URI   "http://www.opengis.net/swe/2.0"
