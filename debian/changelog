@@ -5,6 +5,7 @@ mapserver (7.6.2-1) UNRELEASED; urgency=medium
   * Bump watch file version to 4.
   * Update lintian overrides.
   * Bump Standards-Version to 4.5.1, no changes.
+  * Require at least cmake 3.0.
 
  -- Bas Couwenberg <sebastic@debian.org>  Tue, 08 Dec 2020 05:21:48 +0100
 
