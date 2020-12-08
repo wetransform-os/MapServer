@@ -47,8 +47,10 @@ static char *olUrl = "//www.mapserver.org/lib/OpenLayers-ms60.js";
 static char *olTemplate = \
                           "<html>\n"
                           "<head>\n"
+                          "<meta content=\"text/html;charset=utf-8\" http-equiv=\"Content-Type\">\n"
                           "  <title>MapServer Simple Viewer</title>\n"
                           "    <script type=\"text/javascript\" src=\"[openlayers_js_url]\"></script>\n"
+                          "    <link rel=\"shortcut icon\" type=\"image/x-icon\" href=\"//www.mapserver.org/_static/mapserver.ico\"/>\n"
                           "    </head>\n"
                           "    <body>\n"
                           "      <div style=\"width:[mapwidth]; height:[mapheight]\" id=\"map\"></div>\n"
@@ -4610,6 +4612,7 @@ mapservObj *msAllocMapServObj()
   mapserv->ShapeIndex=-1;
   mapserv->TileIndex=-1;
   mapserv->TileMode=TILE_GMAP;
+  mapserv->TileCoords=NULL;
   mapserv->QueryCoordSource=NONE;
   mapserv->ZoomSize=0; /* zoom absolute magnitude (i.e. > 0) */
 
@@ -4648,6 +4651,8 @@ void msFreeMapServObj(mapservObj* mapserv)
     msFree(mapserv->QueryLayer);
     msFree(mapserv->SelectLayer);
     msFree(mapserv->QueryFile);
+
+    msFree(mapserv->TileCoords);
 
     msFree(mapserv);
   }
