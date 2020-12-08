@@ -1,4 +1,4 @@
-mapserver (7.6.2-1) UNRELEASED; urgency=medium
+mapserver (7.6.2-1~exp1) experimental; urgency=medium
 
   * New upstream release.
   * Update symbols for other architectures.
@@ -11,7 +11,7 @@ mapserver (7.6.2-1) UNRELEASED; urgency=medium
   * Update Homepage URL to use HTTPS.
   * Update symbols for amd64.
 
- -- Bas Couwenberg <sebastic@debian.org>  Tue, 08 Dec 2020 05:21:48 +0100
+ -- Bas Couwenberg <sebastic@debian.org>  Tue, 08 Dec 2020 05:29:11 +0100
 
 mapserver (7.6.1-1) unstable; urgency=medium
 
