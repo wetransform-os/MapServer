@@ -9,6 +9,7 @@ mapserver (7.6.2-1) UNRELEASED; urgency=medium
   * Update copyright file.
   * Update upstream metadata.
   * Update Homepage URL to use HTTPS.
+  * Update symbols for amd64.
 
  -- Bas Couwenberg <sebastic@debian.org>  Tue, 08 Dec 2020 05:21:48 +0100
 

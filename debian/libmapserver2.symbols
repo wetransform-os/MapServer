@@ -1,4 +1,4 @@
-# SymbolsHelper-Confirmed: 7.6.1 amd64 arm64 armel armhf i386 mips64el mipsel powerpc ppc64el riscv64 sh4 sparc64
+# SymbolsHelper-Confirmed: 7.6.2 amd64
 libmapserver.so.2 #PACKAGE# #MINVER#
 * Build-Depends-Package: libmapserver-dev
  BuildExpressionTree@Base 6.2.1
@@ -1194,6 +1194,7 @@ libmapserver.so.2 #PACKAGE# #MINVER#
  msFreeSymbolSet@Base 6.2.1
  msFreeWmsParamsObj@Base 6.2.1
  msGDALCleanup@Base 6.2.1
+ msGDALDriverSupportsVirtualIOOutput@Base 7.6.2
  msGDALInitialize@Base 6.2.1
  msGEOSArea@Base 6.2.1
  msGEOSBoundary@Base 6.2.1
