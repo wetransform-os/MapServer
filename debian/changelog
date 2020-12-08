@@ -8,6 +8,7 @@ mapserver (7.6.2-1) UNRELEASED; urgency=medium
   * Require at least cmake 3.0.
   * Update copyright file.
   * Update upstream metadata.
+  * Update Homepage URL to use HTTPS.
 
  -- Bas Couwenberg <sebastic@debian.org>  Tue, 08 Dec 2020 05:21:48 +0100
 
