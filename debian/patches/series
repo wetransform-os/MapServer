@@ -1,2 +1,3 @@
 perl-mapscript-install.patch
 java-hardening.patch
+interpreter-path.path
