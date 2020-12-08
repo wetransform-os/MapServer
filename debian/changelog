@@ -7,6 +7,7 @@ mapserver (7.6.2-1) UNRELEASED; urgency=medium
   * Bump Standards-Version to 4.5.1, no changes.
   * Require at least cmake 3.0.
   * Update copyright file.
+  * Update upstream metadata.
 
  -- Bas Couwenberg <sebastic@debian.org>  Tue, 08 Dec 2020 05:21:48 +0100
 
