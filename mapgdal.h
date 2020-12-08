@@ -2,11 +2,11 @@
  * $Id$
  *
  * Project:  MapServer
- * Purpose:  MapServer Tile Access API
- * Author:   Paul Ramsey <pramsey@cleverelephant.ca>
+ * Purpose:  GDAL interface
+ * Author:   Even Rouault <even.rouault at spatialys.com>
  *
  ******************************************************************************
- * Copyright (c) 2008, Paul Ramsey
+ * Copyright (c) 2020, Even Rouault <even.rouault at spatialys.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,26 +27,20 @@
  * DEALINGS IN THE SOFTWARE.
  ****************************************************************************/
 
+#ifndef MAPGDAL_H
+#define MAPGDAL_H
+
 #include "mapserver.h"
-#include "maptemplate.h"
+#include "gdal.h"
 
-#define USE_TILE_API 1
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#define SPHEREMERC_PROJ4 "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +units=m +k=1.0 +nadgrids=@null"
-#define SPHEREMERC_GROUND_SIZE (20037508.34*2)
-#define SPHEREMERC_IMAGE_SIZE 0x0100
+int msGDALDriverSupportsVirtualIOOutput( GDALDriverH hDriver );
 
-enum tileModes { TILE_GMAP, TILE_VE };
+#ifdef __cplusplus
+}
+#endif
 
-MS_DLL_EXPORT int msTileSetup(mapservObj *msObj);
-MS_DLL_EXPORT int msTileSetExtent(mapservObj *msObj);
-MS_DLL_EXPORT int msTileSetProjections(mapObj *map);
-MS_DLL_EXPORT imageObj* msTileDraw(mapservObj *msObj);
-
-typedef struct {
-  int metatile_level; /* In zoom levels above tile request: best bet is 0, 1 or 2 */
-  int tile_size; /* In pixels */
-  int map_edge_buffer; /* In pixels */
-} tileParams;
-
-
+#endif /* MAPGDAL_H */
