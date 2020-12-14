@@ -1,6 +1,7 @@
 # Not a problem
 breakout-link usr/lib/python3/dist-packages/mapscript/tests/data/vera/Vera.ttf -> usr/share/fonts/truetype/ttf-bitstream-vera/Vera.ttf
 breakout-link usr/lib/python3/dist-packages/mapscript/tests/data/vera/VeraBd.ttf -> usr/share/fonts/truetype/ttf-bitstream-vera/VeraBd.ttf
+package-contains-documentation-outside-usr-share-doc *
 
 # Cannot easily be fixed
 file-references-package-build-path *

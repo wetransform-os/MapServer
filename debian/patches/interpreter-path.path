@@ -1,0 +1,36 @@
+Description: Fix example-unusual-interpreter lintian issue.
+Author: Bas Couwenberg <sebastic@debian.org>
+Forwarded: not-needed
+
+--- a/mapscript/python/examples/project_csv.py
++++ b/mapscript/python/examples/project_csv.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python3
+ 
+ """
+ Simple example to read a csv file and reproject point x/y data
+--- a/mapscript/python/examples/shpdump.py
++++ b/mapscript/python/examples/shpdump.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python3
+ 
+ """
+ Dump the contents of the passed in Shapefile
+--- a/mapscript/python/examples/shpinfo.py
++++ b/mapscript/python/examples/shpinfo.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python3
+ 
+ """
+ Extracts basic descriptive information from a Shapefile
+--- a/mapscript/python/examples/wxs.py
++++ b/mapscript/python/examples/wxs.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python3
+ 
+ """
+ Output WMS GetCapabilities response for a Mapfile
