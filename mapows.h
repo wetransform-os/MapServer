@@ -484,6 +484,8 @@ int msMetadataParseRequest(mapObj *map, cgiRequestObj *request, owsRequestObj *o
                       metadataParamsObj *metadataparams);
 int msMetadataDispatch(mapObj *map, cgiRequestObj *requestobj, owsRequestObj *ows_request);
 void msMetadataSetGetMetadataURL(layerObj *lp, const char *url);
+xmlNodePtr msMetadataGetExtent(xmlNsPtr xmlNamespace, layerObj *layer, xmlNsPtr *ppsNsGco);
+xmlNodePtr msMetadataGetExtent0(xmlNsPtr xmlNamespace, xmlNodePtr psNode, layerObj *layer, xmlNsPtr *ppsNsGco);
 
 /*====================================================================
  *   mapwfs.c
