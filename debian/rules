@@ -74,7 +74,7 @@ override_dh_auto_configure:
 	                     -DWITH_XMLMAPFILE=0 \
 	                     -DWITH_V8=0 \
 	                     -DWITH_PIXMAN=0 \
-	                     -DWITH_PYTHON=1 \
+	                     -DWITH_PYTHON=0 \
 	                     -DWITH_PHP=1 \
 	                     -DWITH_PHPNG=1 \
 	                     -DWITH_PERL=1 \
