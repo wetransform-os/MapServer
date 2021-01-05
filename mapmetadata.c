@@ -307,14 +307,18 @@ xmlNodePtr _msMetadataGetGMLTimePeriod(char **temporal)
 /*            Create a gmd:extent element pattern                       */
 /************************************************************************/
 
-static
-xmlNodePtr _msMetadataGetExtent(xmlNsPtr namespace, layerObj *layer, xmlNsPtr *ppsNsGco)
+xmlNodePtr msMetadataGetExtent(xmlNsPtr namespace, layerObj *layer, xmlNsPtr *ppsNsGco)
+{
+  xmlNodePtr psNode = xmlNewNode(namespace, BAD_CAST "extent");
+  return msMetadataGetExtent0(namespace, psNode, layer, ppsNsGco);
+}
+
+xmlNodePtr msMetadataGetExtent0(xmlNsPtr namespace, xmlNodePtr psNode, layerObj *layer, xmlNsPtr *ppsNsGco)
 {
   int n = 0;
   int status;
   char *value = NULL;
   char **temporal = NULL;
-  xmlNodePtr psNode = NULL;
   xmlNodePtr psEXNode = NULL;
   xmlNodePtr psGNode = NULL;
   xmlNodePtr psGNode2 = NULL;
@@ -324,7 +328,6 @@ xmlNodePtr _msMetadataGetExtent(xmlNsPtr namespace, layerObj *layer, xmlNsPtr *p
 
   rectObj rect;
 
-  psNode = xmlNewNode(namespace, BAD_CAST "extent");
   psEXNode = xmlNewChild(psNode, namespace, BAD_CAST "EX_Extent", NULL);
 
   /* scan for geospatial extent */
@@ -551,7 +554,7 @@ xmlNodePtr _msMetadataGetIdentificationInfo(xmlNsPtr namespace, mapObj *map, lay
   }
 
   xmlAddChild(psDINode, _msMetadataGetCharacterString(namespace, "language", (char *)msOWSGetLanguage(map, "exception"), ppsNsGco));
-  xmlAddChild(psDINode, _msMetadataGetExtent(namespace, layer, ppsNsGco));
+  xmlAddChild(psDINode, msMetadataGetExtent(namespace, layer, ppsNsGco));
 
   return psNode;
 }
