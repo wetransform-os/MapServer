@@ -1880,6 +1880,7 @@ static void msWCSPrepareNamespaces20(xmlDocPtr pDoc, xmlNodePtr psRootNode, mapO
   xsi_schemaLocation = msStringConcatenate(xsi_schemaLocation, " ");
   xsi_schemaLocation = msStringConcatenate(xsi_schemaLocation, MS_OWSCOMMON_SCHEMAS_LOCATION);
   xsi_schemaLocation = msStringConcatenate(xsi_schemaLocation, MS_OWSCOMMON_GMLCOV_SCHEMA_LOCATION);
+  xsi_schemaLocation = msStringConcatenate(xsi_schemaLocation, " ");
 
   if (addInspire) {
     xsi_schemaLocation = msStringConcatenate(xsi_schemaLocation, MS_INSPIRE_DLS_NAMESPACE_URI " ");
