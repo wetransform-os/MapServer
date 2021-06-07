@@ -542,6 +542,13 @@ imageObj *msDrawMap(mapObj *map, int querymap)
   if(map->legend.status == MS_EMBED && map->legend.postlabelcache)
     if(UNLIKELY(MS_FAILURE == msEmbedLegend(map, image))) {
       msFreeImage( image );
+#if defined(USE_WMS_LYR) || defined(USE_WFS_LYR)
+      /* Cleanup WMS/WFS Request stuff */
+      if (pasOWSReqInfo) {
+        msHTTPFreeRequestObj(pasOWSReqInfo, numOWSRequests);
+        msFree(pasOWSReqInfo);
+      }
+#endif
       return NULL;
     }
 
@@ -551,7 +558,6 @@ imageObj *msDrawMap(mapObj *map, int querymap)
     /* the scalebar as it uses the extent to recompute cellsize. */
     if(map->gt.need_geotransform)
       msMapRestoreRealExtent(map);
-
 
     if(MS_SUCCESS != msEmbedScalebar(map, image)) {
       msFreeImage( image );
@@ -1947,7 +1953,7 @@ int polygonLayerDrawShape(mapObj *map, imageObj *image, layerObj *layer,
 {
 
   int c = shape->classindex;
-  pointObj annopnt;
+  pointObj annopnt = {0,0,0,0}; // initialize
   int i;
 
   if(MS_DRAW_FEATURES(drawmode)) {
@@ -2831,7 +2837,7 @@ int computeMarkerBounds(mapObj *map, pointObj *annopoint, textSymbolObj *ts, lab
       double aox,aoy;
       symbolObj *symbol = map->symbolset.symbol[style->symbol];
       if(msGetMarkerSize(map, style, &sx, &sy, ts->scalefactor) != MS_SUCCESS)
-        return MS_FALSE;
+        return -1; /* real error, different from MS_FALSE, return -1 so we can trap it */
       if(style->angle) {
         pointObj *point = poly->poly->point;
         point[0].x = sx / 2.0;
@@ -3119,6 +3125,7 @@ int msDrawLabelCache(mapObj *map, imageObj *image)
                   break; /* the marker collided, break from multi-label loop */
                 }
               }
+              if(have_label_marker == -1) return MS_FAILURE; /* error occured (symbol not found, etc...) */
 
               if(textSymbolPtr->annotext) {
                 /*

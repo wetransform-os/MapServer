@@ -2202,15 +2202,12 @@ static int msWFSRunBasicGetFeature(mapObj* map,
                 status = msLoadProjectionString(&(map->projection), pszMapSRS);
 
             if (status != 0) {
-                msSetError(MS_WFSERR, "msLoadProjectionString() failed: %s",
-                            "msWFSGetFeature()", pszMapSRS);
+                msSetError(MS_WFSERR, "msLoadProjectionString() failed: %s", "msWFSGetFeature()", pszMapSRS);
                 msFree(pszMapSRS);
-                return msWFSException(map, "mapserv", MS_OWS_ERROR_NO_APPLICABLE_CODE,
-                                paramsObj->pszVersion);
+                return msWFSException(map, "mapserv", MS_OWS_ERROR_NO_APPLICABLE_CODE, paramsObj->pszVersion);
             }
-            msFree(pszMapSRS);
-
         }
+        msFree(pszMapSRS);
 
         /*make sure that the layer projection is loaded.
             It could come from a ows/wfs_srs metadata*/
@@ -5182,10 +5179,12 @@ int msWFSParseRequest(mapObj *map, cgiRequestObj *request, owsRequestObj *ows_re
           }
           /* these are unsupported requests. Just set the  */
           /* request value and return; */
-          else if (msWFSGetIndexUnsupportedOperation(psOperation->pszValue) >= 0) {
+          else {
             int idx = msWFSGetIndexUnsupportedOperation(psOperation->pszValue);
-            wfsparams->pszRequest = msStrdup(wfsUnsupportedOperations[idx]);
-            break;
+            if( idx >= 0 ) {
+              wfsparams->pszRequest = msStrdup(wfsUnsupportedOperations[idx]);
+              break;
+            }
           }
         }
       }

@@ -69,7 +69,7 @@ License
 
 ::
 
-  Copyright (c) 2008-2020 Open Source Geospatial Foundation.
+  Copyright (c) 2008-2021 Open Source Geospatial Foundation.
   Copyright (c) 1996-2008 Regents of the University of Minnesota.
 
   Permission is hereby granted, free of charge, to any person obtaining a copy 
@@ -91,7 +91,7 @@ License
   SOFTWARE.
 
 
-.. |Build Status| image:: https://travis-ci.com/MapServer/MapServer.svg?branch=master
+.. |Build Status| image:: https://travis-ci.com/MapServer/MapServer.svg?branch=main
    :target: https://travis-ci.com/MapServer/MapServer
 
 .. |Appveyor Build Status| image:: https://ci.appveyor.com/api/projects/status/vw1n07095a8bg23u?svg=true

@@ -97,6 +97,16 @@ int msValidateParameter(const char *value, const char *pattern1, const char *pat
   return(MS_FAILURE);
 }
 
+int msIsValidRegex(const char* e) {
+  ms_regex_t re;
+  if(ms_regcomp(&re, e, MS_REG_EXTENDED|MS_REG_NOSUB) != 0) {
+    msSetError(MS_REGEXERR, "Failed to compile expression (%s).", "msEvalRegex()", e);
+    return(MS_FALSE);
+  }
+  ms_regfree(&re);
+  return MS_TRUE;
+}
+
 int msEvalRegex(const char *e, const char *s)
 {
   ms_regex_t re;
@@ -104,6 +114,26 @@ int msEvalRegex(const char *e, const char *s)
   if(!e || !s) return(MS_FALSE);
 
   if(ms_regcomp(&re, e, MS_REG_EXTENDED|MS_REG_NOSUB) != 0) {
+    msSetError(MS_REGEXERR, "Failed to compile expression (%s).", "msEvalRegex()", e);
+    return(MS_FALSE);
+  }
+
+  if(ms_regexec(&re, s, 0, NULL, 0) != 0) { /* no match */
+    ms_regfree(&re);
+    return(MS_FALSE);
+  }
+  ms_regfree(&re);
+
+  return(MS_TRUE);
+}
+
+int msCaseEvalRegex(const char *e, const char *s)
+{
+  ms_regex_t re;
+
+  if(!e || !s) return(MS_FALSE);
+
+  if(ms_regcomp(&re, e, MS_REG_EXTENDED|MS_REG_ICASE|MS_REG_NOSUB) != 0) {
     msSetError(MS_REGEXERR, "Failed to compile expression (%s).", "msEvalRegex()", e);
     return(MS_FALSE);
   }
@@ -1933,12 +1963,8 @@ char* msWriteLabelToString(labelObj *label)
 
 void msInitExpression(expressionObj *exp)
 {
+  memset(exp, 0, sizeof(*exp));
   exp->type = MS_STRING;
-  exp->string = NULL;
-  exp->native_string = NULL;
-  exp->compiled = MS_FALSE;
-  exp->flags = 0;
-  exp->tokens = exp->curtoken = NULL;
 }
 
 void msFreeExpressionTokens(expressionObj *exp)
@@ -1993,7 +2019,7 @@ void msFreeExpression(expressionObj *exp)
 
 int loadExpression(expressionObj *exp)
 {
-  /* TODO: should we fall msFreeExpression if exp->string != NULL? We do some checking to avoid a leak but is it enough... */
+  /* TODO: should we call msFreeExpression if exp->string != NULL? We do some checking to avoid a leak but is it enough... */
 
   msyystring_icase = MS_TRUE;
   if((exp->type = getSymbol(6, MS_STRING,MS_EXPRESSION,MS_REGEX,MS_ISTRING,MS_IREGEX,MS_LIST)) == -1) return(-1);
@@ -2002,6 +2028,7 @@ int loadExpression(expressionObj *exp)
     msFree(exp->native_string);
   }
   exp->string = msStrdup(msyystring_buffer);
+  exp->native_string = NULL;
 
   if(exp->type == MS_ISTRING) {
     exp->flags = exp->flags | MS_EXP_INSENSITIVE;
@@ -2729,7 +2756,7 @@ void writeStyle(FILE *stream, int indent, styleObj *style)
     msIO_fprintf(stream, "GEOMTRANSFORM (%s)\n", style->_geomtransform.string);
   }
   else if(style->_geomtransform.type != MS_GEOMTRANSFORM_NONE) {
-    writeKeyword(stream, indent, "GEOMTRANSFORM", style->_geomtransform.type, 7,
+    writeKeyword(stream, indent, "GEOMTRANSFORM", style->_geomtransform.type, 8,
                  MS_GEOMTRANSFORM_BBOX, "\"bbox\"",
                  MS_GEOMTRANSFORM_END, "\"end\"",
                  MS_GEOMTRANSFORM_LABELPOINT, "\"labelpnt\"",
@@ -3374,12 +3401,15 @@ int loadClass(classObj *class, layerObj *layer)
 static int classResolveSymbolNames(classObj *class)
 {
   int i,j;
+  int try_addimage_if_notfound = MS_TRUE;
+
+  if(msyysource == MS_URL_TOKENS) try_addimage_if_notfound = MS_FALSE;
 
   /* step through styles and labels to resolve symbol names */
   /* class styles */
   for(i=0; i<class->numstyles; i++) {
     if(class->styles[i]->symbolname) {
-      if((class->styles[i]->symbol =  msGetSymbolIndex(&(class->layer->map->symbolset), class->styles[i]->symbolname, MS_TRUE)) == -1) {
+      if((class->styles[i]->symbol =  msGetSymbolIndex(&(class->layer->map->symbolset), class->styles[i]->symbolname, try_addimage_if_notfound)) == -1) {
         msSetError(MS_MISCERR, "Undefined symbol \"%s\" in class, style %d of layer %s.", "classResolveSymbolNames()", class->styles[i]->symbolname, i, class->layer->name);
         return MS_FAILURE;
       }
@@ -3390,7 +3420,7 @@ static int classResolveSymbolNames(classObj *class)
   for(i=0; i<class->numlabels; i++) {
     for(j=0; j<class->labels[i]->numstyles; j++) {
       if(class->labels[i]->styles[j]->symbolname) {
-        if((class->labels[i]->styles[j]->symbol =  msGetSymbolIndex(&(class->layer->map->symbolset), class->labels[i]->styles[j]->symbolname, MS_TRUE)) == -1) {
+        if((class->labels[i]->styles[j]->symbol =  msGetSymbolIndex(&(class->layer->map->symbolset), class->labels[i]->styles[j]->symbolname, try_addimage_if_notfound)) == -1) {
           msSetError(MS_MISCERR, "Undefined symbol \"%s\" in class, label style %d of layer %s.", "classResolveSymbolNames()", class->labels[i]->styles[j]->symbolname, j, class->layer->name);
           return MS_FAILURE;
         }
@@ -6443,7 +6473,7 @@ mapObj *msLoadMapFromString(char *buffer, char *new_mappath)
   MS_CHECK_ALLOC(map, sizeof(mapObj), NULL);
 
   if(initMap(map) == -1) { /* initialize this map */
-    msFree(map);
+    msFreeMap(map);
     return(NULL);
   }
 
@@ -6535,7 +6565,7 @@ mapObj *msLoadMap(const char *filename, const char *new_mappath)
   MS_CHECK_ALLOC(map, sizeof(mapObj), NULL);
 
   if(initMap(map) == -1) { /* initialize this map */
-    msFree(map);
+    msFreeMap(map);
     return(NULL);
   }
 
@@ -6636,17 +6666,6 @@ int msUpdateMapFromURL(mapObj *map, char *variable, char *string)
   switch(msyylex()) {
     case(MAP):
       switch(msyylex()) {
-        case(CONFIG): {
-          char *key=NULL, *value=NULL;
-          if((getString(&key) != MS_FAILURE) && (getString(&value) != MS_FAILURE)) {
-            msSetConfigOption( map, key, value );
-            free( key );
-            key=NULL;
-            free( value );
-            value=NULL;
-          }
-        }
-        break;
         case(EXTENT):
           msyystate = MS_TOKENIZE_URL_STRING;
           msyystring = string;
@@ -6748,22 +6767,9 @@ int msUpdateMapFromURL(mapObj *map, char *variable, char *string)
             if(msUpdateLayerFromString((GET_LAYER(map, i)), string, MS_TRUE) != MS_SUCCESS) return MS_FAILURE;
           }
 
-          /* make sure any symbol names for this layer have been resolved (bug #2700) */
-          for(j=0; j<GET_LAYER(map, i)->numclasses; j++) {
-            for(k=0; k<GET_LAYER(map, i)->class[j]->numstyles; k++) {
-              if(GET_LAYER(map, i)->class[j]->styles[k]->symbolname && GET_LAYER(map, i)->class[j]->styles[k]->symbol == 0) {
-                if((GET_LAYER(map, i)->class[j]->styles[k]->symbol =  msGetSymbolIndex(&(map->symbolset), GET_LAYER(map, i)->class[j]->styles[k]->symbolname, MS_TRUE)) == -1) {
-                  msSetError(MS_MISCERR, "Undefined symbol \"%s\" in class %d, style %d of layer %s.", "msUpdateMapFromURL()", GET_LAYER(map, i)->class[j]->styles[k]->symbolname, j, k, GET_LAYER(map, i)->name);
-                  return MS_FAILURE;
-                }
-              }
-              if(!MS_IS_VALID_ARRAY_INDEX(GET_LAYER(map, i)->class[j]->styles[k]->symbol, map->symbolset.numsymbols)) {
-                msSetError(MS_MISCERR, "Invalid symbol index in class %d, style %d of layer %s.", "msUpdateMapFromURL()", j, k, GET_LAYER(map, i)->name);
-                return MS_FAILURE;
-              }
-            }
-          }
-
+          // make sure symbols are resolved
+          if (resolveSymbolNames(map) == MS_FAILURE) return MS_FAILURE;
+ 
           break;
         case(LEGEND):
           if(msyylex() == LABEL) {
