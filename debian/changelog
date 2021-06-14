@@ -1,3 +1,9 @@
+mapserver (7.6.2-inspire-1~bpo10+2) buster-backports; urgency=medium
+
+  * Add patch for schemaLocation in GetCapabilities
+
+ -- Florian Esser <fe@wetransform.to>  Mon, 07 Jun 2021 20:54:23 +0200
+
 mapserver (7.6.2-inspire-1~bpo10+1) buster-backports; urgency=medium
 
   * New release with INSPIRE metadata extensions
